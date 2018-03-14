@@ -1,0 +1,240 @@
+/******************PLANTILLA PRINCIPAL CSS***************/
+
+/******************Pantalla Login***************/
+
+#bodyInicio{
+  background-color: #34495E;
+}
+
+.drop-shadow {
+        -webkit-box-shadow: 0 0 10px 2px rgba(0, 0, 0, .5);
+        box-shadow: 0 0 10px 2px rgba(0, 0, 0, .5);
+}
+
+
+
+header{
+	background: #34495E;
+	color: #DADADA;
+	box-shadow: 0 0 5px #595959;
+	border-bottom: 1px solid #273748;
+}
+footer{
+  position: relative;
+  bottom:0px;
+	background: #34495E;
+	color: white;
+}
+.contenedorSesion{
+  position: static;
+  padding-top: 100px;
+}
+.logo {
+  width: 75px;
+margin-top:10px;
+  margin-bottom: 10px;
+}
+
+.logoe {
+  width: 75px;
+  margin-top:10px;
+  margin-bottom: 10px;
+  float: right;
+}
+
+.contenido{
+	padding-bottom: 20px;
+}
+
+.titulo1{
+	margin-top: 10px;
+}
+/* Para menu usuario dropdown */
+#menuUsuario{
+	right: 0px;
+}
+.titulo2 {
+	color: #5CC6D0;
+	text-transform: uppercase;
+	margin-top: 0;
+}
+
+.titulo3 {
+	margin-top: 0px;
+}
+
+menu{
+	
+	color: #DADADA;
+	height: 100%;
+	position: fixed;
+}
+
+menu,ul,li{
+	color:black;
+}
+
+.alert
+{
+	display: none;
+}
+.mio-container
+{
+	margin: 17px 0 17px 0;
+}
+.mio-panel
+{
+	/*background-color: #DFDFDF;*/
+	padding: 20px 10px;
+}
+form
+{
+	margin: 10px 10px;
+}
+
+.Updated
+{
+	display: none;
+}
+#filaPpal
+{
+	padding-top: 20px;
+	margin-right: 0px;
+	margin-left: 0px;
+}
+ body .modal-content{
+    /* new custom width */
+    width: 120%;
+    
+    /* must be half of the width, minus scrollbar on the left (30px) */
+   
+}
+ body .modal{
+ 	margin: 0 auto !important;
+ }
+
+/* *******Hoja de estilos Paneles*************************/
+.panel-primary > .panel-heading {
+    background-color: #34495E;
+    border-color: #34495E;
+    color: #FFFFFF;
+}
+.panel-info > .panel-heading {
+    background-color: #222E32;
+    border-color: #34495E;
+    color: #FFFFFF;
+}
+.panel-primary {
+    border-color: #333;
+}
+.panel-info {
+    border-color: #333;
+}
+.btn-primary {
+    background-color: #2A577E;
+    border-color: #2A577E;
+    color: #fff;
+}
+.btn-danger {
+    background-color: #933835;
+    border-color: #933835;
+    color: #fff;
+}
+.btn-success {
+    background-color: #346934;
+    border-color: #346934;
+    color: #fff;
+}
+
+.form-control:focus{
+    border-color: #34495E;
+}
+
+/* *******Hoja de estilos menu lateral****************************/
+
+ /* Hacer la barra de navegacion vertical */ 
+@media (min-width: 768px) {
+  .sidebar-nav .navbar .navbar-collapse {
+    
+    max-height: none;
+  }
+  .sidebar-nav{
+    padding-left: 20px;
+  }
+  .sidebar-nav .navbar ul {
+    float: none;
+  }
+  .sidebar-nav .navbar ul:not {
+    display: block;
+  }
+  .sidebar-nav .navbar li {
+    float: none;
+    display: block;
+  }
+  .sidebar-nav .navbar li a {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    padding-left: 0px;
+  }
+}
+.navbar {
+  background-color:#222E32!important;
+}
+
+.navbar-default .navbar-nav > li > a {
+    color: #AAAAAA;
+}
+
+.navbar-default .navbar-nav > li > a:hover,
+.navbar-default .navbar-nav > li > a:focus {
+    color: #FFFFFF;
+}
+
+.navbar-nav li > a > .glyphicon {
+    width: 20px !important;
+}
+
+.navbar-nav li > a > .fa {
+    width: 20px !important;
+}
+
+.dropdown-menu {
+  background-color:#FFFFFF!important;
+  padding-left: 30px;
+  
+}
+
+.dropdown-menu > li > a:hover,
+.dropdown-menu > li > a:focus{
+  background-color:#222E32!important;
+  color:#FFFFFF!important;
+}
+.dropdown-menu > li > a{
+  background-color:#222E32!important;
+  color:#AAAAAA;
+}
+.open .dropdown-toggle {
+  background-color:#222E32!important;
+  color:#FFFFFF;
+}
+.navbar-default .navbar-nav > .open > a, .navbar-default .navbar-nav > .open > a:hover, .navbar-default .navbar-nav > .open > a:focus {
+    background-color: #e7e7e7;
+    color: #FFFFFF;
+}
+
+
+@media (min-width: 768px) {
+  .container {
+    width: 640px !important;;
+  }
+}
+@media (min-width: 992px) {
+  .container {
+    width: 750px !important;;
+  }
+}
+@media (min-width: 1200px) {
+  .container {
+    width: 970px !important;;
+  }
+}

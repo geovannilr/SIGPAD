@@ -1,0 +1,1 @@
+copiar la carpeta sendmail a c:\wamp
