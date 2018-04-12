@@ -1,0 +1,33 @@
+.modal-footer {   border-top: 0px; }
+
+body{   background-color:#555;}
+
+.boton{   background-color:#F2F5A9;}
+.btn:hover{
+  background: #fbe18d;
+}
+.logo{width: 197px ; height: 247px;}
+.modal-content{
+  background: black;
+}
+h3{
+  color: white;
+}
+.modal-header
+{
+  border-bottom:none;
+}
+.modal-body{
+  border-top: none;
+}
+.modal-footer{
+  border-top: none;
+}
+.form-control:focus
+{
+  border-color: #FFC400;
+}
+.btn
+{
+  background:  #FFC400;
+}
