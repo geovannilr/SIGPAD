@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\TrabajoGraduacion;
 
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use Session;
 use Redirect;
 use \App\gen_UsuarioModel;
@@ -34,10 +35,8 @@ class ConformarGrupoController extends Controller
      */
     public function create()
     {
-        //$perfiles =tbl_perfil::lists('nombrePerfil', 'idPerfil');
-       // return view('usuario.create',compact('perfiles'));
-        $roles = [''=>'Seleccione un rol'] + Role::pluck('name', 'id')->toArray();
-    	return view('usuario.create',compact('roles'));
+       
+    	return view('TrabajoGraduacion\ConformarGrupo.create');
     }
 
     /**
@@ -124,5 +123,20 @@ class ConformarGrupoController extends Controller
         gen_UsuarioModel::destroy($id);
         Session::flash('message','Usuario Eliminado Correctamente!');
         return Redirect::to('/usuario');
+    }
+
+    public function getAlumno(Request $request) // FUNCION PARA COMBO DINAMICOS
+    {
+        if ($request->ajax()) {
+           $usuario=gen_UsuarioModel::where('user', '=',$request['carnet'])->get();
+           
+           if (sizeof($usuario) == 0){
+            return response()->json(['errorCode'=>1,'errorMessage'=>'No se encontró ningún alumno con ese Carnet','msg'=>""]);
+           }else{
+             return response()->json(['errorCode'=>0,'errorMessage'=>'Servicio ejecutado con éxito','msg'=>$usuario]);
+           }
+           
+        }
+       
     }
 }

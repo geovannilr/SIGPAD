@@ -26,3 +26,7 @@ Route::get('/login', function () {
 
 //Rol
 Route::resource('rol','RolController');
+
+//TRABAJO DE GRADUACIÓN
+Route::resource('grupo','TrabajoGraduacion\ConformarGrupoController');
+Route::post('getAlumno', 'TrabajoGraduacion\ConformarGrupoController@getAlumno');
