@@ -83,7 +83,7 @@
 							<a class="btn btn-primary" href="{{route('rol.edit',$rol->id)}}"><i class="fa fa-pencil"></i></a>
 						</td>
 						<td>
-							{!! Form::open(['route'=>['usuario.destroy',$rol->id],'method'=>'DELETE','class' => 'deleteButton']) !!}
+							{!! Form::open(['route'=>['rol.destroy',$rol->id],'method'=>'DELETE','class' => 'deleteButton']) !!}
 						 		<div class="btn-group">
 									<button type="submit" class="btn btn-danger"><i class="fa fa-trash"></i></button>
 								</div>
