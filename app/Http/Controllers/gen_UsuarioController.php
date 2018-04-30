@@ -24,7 +24,17 @@ class gen_UsuarioController extends Controller
     public function index()
     {
         $usuarios =gen_UsuarioModel::all();
-        return view('usuario.index',compact('usuarios'));
+        foreach ($usuarios as $usuario ) {
+            $user=User::find($usuario->id);
+            $roles=$user->getRoles();
+            $linea="";
+            foreach ($roles as $rol) {
+                $linea.=$rol."#";
+            }
+            $username=$usuario->user;
+            $rolesView[$username]=$linea;
+        }
+        return view('usuario.index',compact('usuarios','rolesView'));
     }
 
     /**
@@ -36,7 +46,8 @@ class gen_UsuarioController extends Controller
     {
         //$perfiles =tbl_perfil::lists('nombrePerfil', 'idPerfil');
        // return view('usuario.create',compact('perfiles'));
-        $roles = [''=>'Seleccione un rol'] + Role::pluck('name', 'id')->toArray();
+        //$roles = [''=>'Seleccione un rol'] + Role::pluck('name', 'id')->toArray();
+        $roles =  Role::pluck('name', 'id')->toArray();
     	return view('usuario.create',compact('roles'));
     }
 
@@ -65,7 +76,10 @@ class gen_UsuarioController extends Controller
             ]);
            
                $usuario= User::find($lastId->id);
-               $usuario->assignRole($request['rol']);       
+               foreach ($request['rol'] as $rol) {
+                   $usuario->assignRole($rol);
+               }
+               //$usuario->assignRole($request['rol']);       
         Return redirect('/usuario')->with('message','Usuario Registrado correctamente!') ;
     }
 
@@ -91,10 +105,23 @@ class gen_UsuarioController extends Controller
         $usuario=gen_UsuarioModel::find($id);
         $user=User::find($id);
         $roles=$user->getRoles();
-        return view('usuario.edit',compact(['usuario','roles']));
-       // $perfiles =tbl_perfil::lists('nombrePerfil', 'idPerfil');
-    
-        //return view('usuario.edit',compact(['usuario','perfiles']));
+        $rolesBd = Role::all();
+        $select = "<select name='rol[]' multiple ='multiple' class='form-control' id='roles'>"; 
+        foreach ($rolesBd as $rolBd ) {
+           $flag=0;
+           foreach ($roles as $rol ) {
+               if ($rolBd->slug == $rol ) {
+                   $flag=1;
+               }
+           }
+           if ($flag == 1) {
+               $select .= "<option value='".$rolBd->id."' selected>".$rolBd->name."</option>"; 
+           }else{
+                $select .= "<option value='".$rolBd->id."'>".$rolBd->name."</option>"; 
+           }
+        }
+        $select .= "</select>";
+       return view('usuario.edit',compact(['usuario','select','roles']));
     }
 
     /**
@@ -107,8 +134,10 @@ class gen_UsuarioController extends Controller
     public function update(Request $request, $id)
     {
         $usuario=gen_UsuarioModel::find($id);
+        $user=User::find($id);
         $usuario->fill($request->all()); 
         $usuario->save();
+        $user->syncRoles($request['rol']);
         Session::flash('message','Usuario Modificado correctamente!');
         return Redirect::to('/usuario');
     }
@@ -121,6 +150,8 @@ class gen_UsuarioController extends Controller
      */
     public function destroy($id)
     {
+         $user=User::find($id);
+         $user->revokeAllRoles();
         gen_UsuarioModel::destroy($id);
         Session::flash('message','Usuario Eliminado Correctamente!');
         return Redirect::to('/usuario');

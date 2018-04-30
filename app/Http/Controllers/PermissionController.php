@@ -1,13 +1,13 @@
 <?php
 
 namespace App\Http\Controllers;
+use Illuminate\Http\Request;
 use Session;
 use Redirect;
-use Illuminate\Http\Request;
 use Caffeinated\Shinobi\Models\Permission;
 use Caffeinated\Shinobi\Models\Role;
 
-class RolController extends Controller
+class PermissionController extends Controller
 {
     public function __construct(){
         $this->middleware('auth');
@@ -20,8 +20,8 @@ class RolController extends Controller
      */
     public function index()
     {
-        $roles =Role::all();
-        return view('rol.index',compact('roles'));
+        $permisos =Permission::all();
+        return view('permiso.index',compact('permisos'));
     }
 
     /**
@@ -31,8 +31,7 @@ class RolController extends Controller
      */
     public function create()
     {
-        $permisos =  Permission::pluck('name', 'id')->toArray();
-    	return view('rol.create',compact('permisos'));
+    	return view('permiso.create');
     }
 
     /**
@@ -49,18 +48,14 @@ class RolController extends Controller
             ]);
             $slug=strtolower($request['name']);
             $newSlg=str_replace(' ','_',$slug);
-            Role::create
+            Permission::create
             ([
                 'name'       	 => $request['name'],
                 'description'    => $request['description'],
                 'slug'  		 => $newSlg
             ]);
-            $rol= Role::find($lastId->id);
-               foreach ($request['permiso'] as $permiso) {
-                   $rol->assignPermission($permiso);
-               }
 
-        Return redirect('/rol')->with('message','Rol Registrado correctamente!') ;
+        Return redirect('permiso')->with('message','Permiso Registrado correctamente!') ;
     }
 
     /**
@@ -82,25 +77,8 @@ class RolController extends Controller
      */
     public function edit($id)
     {
-        $rol=Role::find($id);
-        $permisos=$rol->getPermissions();
-        $permisosBd = Permission::all();
-        $select = "<select name='permiso[]' multiple ='multiple' class='form-control' id='permisos'>"; 
-        foreach ($permisosBd as $permisoBd ) {
-           $flag=0;
-           foreach ($permisos as $permiso ) {
-               if ($permisoBd->slug == $permiso ) {
-                   $flag=1;
-               }
-           }
-           if ($flag == 1) {
-               $select .= "<option value='".$permisoBd->id."' selected>".$permisoBd->name."</option>"; 
-           }else{
-                $select .= "<option value='".$permisoBd->id."'>".$permisoBd->name."</option>"; 
-           }
-        }
-        $select .= "</select>";
-        return view('rol.edit',compact(['rol','select']));
+        $permiso=Permission::find($id);
+        return view('permiso.edit',compact(['permiso']));
     }
 
     /**
@@ -112,12 +90,11 @@ class RolController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $rol=Role::find($id);
-        $rol->fill($request->all()); 
-        $rol->save();
-        $rol->syncPermissions($request['permiso']);
-        Session::flash('message','Rol Modificado correctamente!');
-        return Redirect::to('/rol');
+        $permiso=Permission::find($id);
+        $permiso->fill($request->all()); 
+        $permiso->save();
+        Session::flash('message','Permiso Modificado correctamente!');
+        return Redirect::to('permiso');
     }
 
     /**
@@ -128,11 +105,8 @@ class RolController extends Controller
      */
     public function destroy($id)
     {
-        
-        $rol=Role::find($id);
-        $rol->revokeAllPermissions();
-        Role::destroy($id);
-        Session::flash('message','Rol Eliminado Correctamente!');
-        return Redirect::to('/rol');
+        Permission::destroy($id);
+        Session::flash('message','Permiso Eliminado Correctamente!');
+        return Redirect::to('permiso');
     }
 }

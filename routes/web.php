@@ -27,6 +27,8 @@ Route::get('/login', function () {
 //Rol
 Route::resource('rol','RolController');
 
+//PERMISOS
+Route::resource('permiso','PermissionController');
 //TRABAJO DE GRADUACIÓN
 Route::resource('grupo','TrabajoGraduacion\ConformarGrupoController');
 Route::post('getAlumno', 'TrabajoGraduacion\ConformarGrupoController@getAlumno');

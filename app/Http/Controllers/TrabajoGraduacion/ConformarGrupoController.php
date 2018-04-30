@@ -133,7 +133,7 @@ class ConformarGrupoController extends Controller
            if (sizeof($usuario) == 0){
             return response()->json(['errorCode'=>1,'errorMessage'=>'No se encontró ningún alumno con ese Carnet','msg'=>""]);
            }else{
-             return response()->json(['errorCode'=>0,'errorMessage'=>'Servicio ejecutado con éxito','msg'=>$usuario]);
+             return response()->json(['errorCode'=>0,'errorMessage'=>'Alumno agregado a grupo de Trabajo de Graduación','msg'=>$usuario]);
            }
            
         }

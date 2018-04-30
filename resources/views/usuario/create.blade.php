@@ -26,5 +26,11 @@
 				</div> 
 			  {!! Form:: close() !!}
   </div>
-
+  <script type="text/javascript">
+  // run pre selected options
+  $('#roles').multiSelect({
+    selectableHeader: "<div class='custom-header'>Disponibles</div>",
+    selectionHeader: "<div class='custom-header'>Seleccionados</div>"
+    });
+</script>
 @stop

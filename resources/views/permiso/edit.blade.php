@@ -3,13 +3,13 @@
 
     		<ol class="breadcrumb">
           <li class="breadcrumb-item">
-            <h5>ROL</h5>
+            <h5>PERMISO</h5>
           </li>
           <li class="breadcrumb-item active">Actualizar registro</li>
         </ol>
     		<div class="panel-body">
-      		{!! Form:: model($rol,['route'=>['rol.update',$rol->id],'method'=>'PUT']) !!}
-      			@include('rol.forms.formCreate')
+      		{!! Form:: model($permiso,['route'=>['permiso.update',$permiso->id],'method'=>'PUT']) !!}
+      			@include('permiso.forms.formCreate')
             <div class="row">
               <div class="form-group col-sm-6">
                 {!!Form::submit('Actualizar',['class'=>'btn btn-primary'])!!}
@@ -18,11 +18,4 @@
   				</div>
   			{!! Form:: close() !!}
 </div>
-<script type="text/javascript">
-  // run pre selected options
-  $('#permisos').multiSelect({
-    selectableHeader: "<div class='custom-header'>Disponibles</div>",
-    selectionHeader: "<div class='custom-header'>Seleccionados</div>"
-    });
-</script>
 @stop

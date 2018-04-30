@@ -74,15 +74,26 @@
   				<thead>
 					<th>Usuario</th>
 					<th>Nombre</th>
+					<th>Roles</th>
 					<th>Fecha de Registro</th>
 					<th>Modificar</th>
 					<th>Eliminar</th>
   				</thead>
   				<tbody>
+
   				@foreach($usuarios as $usuario)
 					<tr>
 						<td>{{ $usuario->user }}</td>
 						<td>{{ $usuario->name }}</td>
+						<td><?php
+							$split=explode("#",$rolesView[$usuario->user]);
+							foreach ($split as $key) {
+								if ($key != "") {
+									echo '<span class="badge badge-info">'.strtoupper($key).'</span>&nbsp;';
+								}
+							}
+						?>
+						</td>
 						<td>{{$usuario->created_at->format('d/m/Y H:i:s')}}</td>
 						<td>
 							<a class="btn btn-primary" href="{{route('usuario.edit',$usuario->id)}}"><i class="fa fa-pencil"></i></a>
