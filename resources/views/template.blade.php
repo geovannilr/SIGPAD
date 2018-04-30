@@ -52,7 +52,7 @@
               {!! link_to_route('usuario.create', $title ='Nuevo',null,$attributes = ['class'=>'nav-link']); !!}
             </li>
             <li>
-              {!! link_to_route('usuario.index', $title ='Usuario',null,$attributes = ['class'=>'nav-link']); !!}
+              {!! link_to_route('usuario.index', $title ='Ver',null,$attributes = ['class'=>'nav-link']); !!}
             </li>
           </ul>
         </li>
@@ -66,7 +66,7 @@
               {!! link_to_route('rol.create', $title ='Nuevo',null,$attributes = ['class'=>'nav-link']); !!}
             </li>
             <li>
-              {!! link_to_route('rol.index', $title ='Usuario',null,$attributes = ['class'=>'nav-link']); !!}
+              {!! link_to_route('rol.index', $title ='Ver',null,$attributes = ['class'=>'nav-link']); !!}
             </li>
           </ul>
         </li>

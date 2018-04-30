@@ -49,7 +49,7 @@ class RolController extends Controller
             ]);
             $slug=strtolower($request['name']);
             $newSlg=str_replace(' ','_',$slug);
-            Role::create
+            $lastId =Role::create
             ([
                 'name'       	 => $request['name'],
                 'description'    => $request['description'],
