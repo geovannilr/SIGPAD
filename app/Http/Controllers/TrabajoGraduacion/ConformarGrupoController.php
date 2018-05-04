@@ -76,7 +76,9 @@ class ConformarGrupoController extends Controller
      */
     public function show($id)
     {
-        //
+       $usuario = new gen_UsuarioModel();
+       $test = $usuario->testSp();
+       return var_dump($test);
     }
 
     /**

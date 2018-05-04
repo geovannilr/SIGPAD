@@ -6,6 +6,7 @@ use Session;
 use Redirect;
 use Caffeinated\Shinobi\Models\Permission;
 use Caffeinated\Shinobi\Models\Role;
+use Illuminate\Support\Facades\Auth;
 
 class PermissionController extends Controller
 {
@@ -19,9 +20,15 @@ class PermissionController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index()
-    {
-        $permisos =Permission::all();
-        return view('permiso.index',compact('permisos'));
+    {   $userLogin=Auth::user();
+        if ($userLogin->can(['permiso.index'])) {
+            $permisos =Permission::all();
+            return view('permiso.index',compact('permisos'));
+        }else{
+            Session::flash('message-error', 'No tiene permisos para acceder a esta opción');
+            return  view('template');
+        }
+        
     }
 
     /**
@@ -30,8 +37,14 @@ class PermissionController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function create()
-    {
-    	return view('permiso.create');
+    {   $userLogin=Auth::user();
+        if ($userLogin->can(['permiso.create'])) {
+            return view('permiso.create');
+        }else{
+            Session::flash('message-error', 'No tiene permisos para acceder a esta opción');
+            return  view('template');
+        }
+    	
     }
 
     /**
@@ -76,9 +89,15 @@ class PermissionController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
-    {
-        $permiso=Permission::find($id);
-        return view('permiso.edit',compact(['permiso']));
+    {   $userLogin=Auth::user();
+        if ($userLogin->can(['permiso.edit'])) {
+            $permiso=Permission::find($id);
+            return view('permiso.edit',compact(['permiso']));
+        }else{
+            Session::flash('message-error', 'No tiene permisos para acceder a esta opción');
+            return  view('template');
+        }
+        
     }
 
     /**
@@ -104,9 +123,15 @@ class PermissionController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
-    {
-        Permission::destroy($id);
-        Session::flash('message','Permiso Eliminado Correctamente!');
-        return Redirect::to('permiso');
+    {   $userLogin=Auth::user();
+        if ($userLogin->can(['permiso.destroy'])) {
+            Permission::destroy($id);
+            Session::flash('message','Permiso Eliminado Correctamente!');
+            return Redirect::to('permiso');
+        }else{
+            Session::flash('message-error', 'No tiene permisos para acceder a esta opción');
+            return  view('template');
+        }
+        
     }
 }

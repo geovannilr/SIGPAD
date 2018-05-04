@@ -64,7 +64,11 @@
   <div class="col-sm-3"></div>
   <div class="col-sm-3"></div>
    <div class="col-sm-3"></div>
-  <div class="col-sm-3">Nuevo  <a class="btn btn-primary" href="{{route('usuario.create')}}"><i class="fa fa-plus"></i></a></div>
+  @can('usuario.create')
+	  <div class="col-sm-3">Nuevo 
+	  	 <a class="btn btn-primary" href="{{route('usuario.create')}}"><i class="fa fa-plus"></i></a>
+	  </div>
+  @endcan
 </div> 
 
 		<br>
@@ -76,13 +80,18 @@
 					<th>Nombre</th>
 					<th>Roles</th>
 					<th>Fecha de Registro</th>
-					<th>Modificar</th>
-					<th>Eliminar</th>
+					@can('usuario.edit')
+						<th>Modificar</th>
+					@endcan
+					@can('usuario.destroy')
+						<th>Eliminar</th>
+					@endcan
   				</thead>
   				<tbody>
 
   				@foreach($usuarios as $usuario)
-					<tr>
+  				@if(Auth::user()->id != $usuario->id)
+  						<tr>
 						<td>{{ $usuario->user }}</td>
 						<td>{{ $usuario->name }}</td>
 						<td><?php
@@ -95,17 +104,23 @@
 						?>
 						</td>
 						<td>{{$usuario->created_at->format('d/m/Y H:i:s')}}</td>
-						<td>
-							<a class="btn btn-primary" href="{{route('usuario.edit',$usuario->id)}}"><i class="fa fa-pencil"></i></a>
-						</td>
-						<td>
-							{!! Form::open(['route'=>['usuario.destroy',$usuario->id],'method'=>'DELETE','class' => 'deleteButton']) !!}
-						 		<div class="btn-group">
-									<button type="submit" class="btn btn-danger"><i class="fa fa-trash"></i></button>
-								</div>
-							{!! Form:: close() !!}
-						</td>
+						@can('usuario.edit')
+							<td>
+								<a class="btn btn-primary" href="{{route('usuario.edit',$usuario->id)}}"><i class="fa fa-pencil"></i></a>
+							</td>
+						@endcan
+						@can('usuario.destroy')
+							<td>
+								{!! Form::open(['route'=>['usuario.destroy',$usuario->id],'method'=>'DELETE','class' => 'deleteButton']) !!}
+							 		<div class="btn-group">
+										<button type="submit" class="btn btn-danger"><i class="fa fa-trash"></i></button>
+									</div>
+								{!! Form:: close() !!}
+							</td>
+						@endcan
 					</tr>
+  				@endif
+				
 				@endforeach 
 				</tbody>
 			</table>

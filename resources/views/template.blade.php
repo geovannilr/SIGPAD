@@ -42,13 +42,14 @@
     </button>
     <div class="collapse navbar-collapse" id="navbarResponsive">
       <ul class="navbar-nav navbar-sidenav" id="exampleAccordion">
+        @can('usuario.create','usuario.edit','usuario.destroy','usuario.index')
         <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Usuarios">
           <a class="nav-link nav-link-collapse collapsed" data-toggle="collapse" href="#collapseUsuarios" data-parent="#exampleAccordion">
             <i class="fa fa-fw fa-user"></i>
             <span class="nav-link-text">Usuarios</span>
           </a>
-          <ul class="sidenav-second-level collapse" id="collapseUsuarios">
-            <li>
+           <ul class="sidenav-second-level collapse" id="collapseUsuarios">
+             <li>
               {!! link_to_route('usuario.create', $title ='Nuevo',null,$attributes = ['class'=>'nav-link']); !!}
             </li>
             <li>
@@ -56,21 +57,25 @@
             </li>
           </ul>
         </li>
-         <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Roles">
-          <a class="nav-link nav-link-collapse collapsed" data-toggle="collapse" href="#collapseRoles" data-parent="#exampleAccordion">
-            <i class="fa fa-fw fa-group"></i>
-            <span class="nav-link-text">Roles</span>
-          </a>
-          <ul class="sidenav-second-level collapse" id="collapseRoles">
-            <li>
-              {!! link_to_route('rol.create', $title ='Nuevo',null,$attributes = ['class'=>'nav-link']); !!}
-            </li>
-            <li>
-              {!! link_to_route('rol.index', $title ='Ver',null,$attributes = ['class'=>'nav-link']); !!}
-            </li>
-          </ul>
-        </li>
-         <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Components">
+        @endcan
+        @can('rol.create','rol.edit','rol.destroy','rol.index')
+           <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Roles">
+            <a class="nav-link nav-link-collapse collapsed" data-toggle="collapse" href="#collapseRoles" data-parent="#exampleAccordion">
+              <i class="fa fa-fw fa-group"></i>
+              <span class="nav-link-text">Roles</span>
+            </a>
+            <ul class="sidenav-second-level collapse" id="collapseRoles">
+              <li>
+                {!! link_to_route('rol.create', $title ='Nuevo',null,$attributes = ['class'=>'nav-link']); !!}
+              </li>
+              <li>
+                {!! link_to_route('rol.index', $title ='Ver',null,$attributes = ['class'=>'nav-link']); !!}
+              </li>
+            </ul>
+          </li>
+        @endcan
+        @can('permiso.create','permiso.edit','permiso.destroy','permiso.index')
+         <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Permisos">
           <a class="nav-link nav-link-collapse collapsed" data-toggle="collapse" href="#collapsePermisos" data-parent="#exampleAccordion">
             <i class="fa fa-fw fa-lock"></i>
             <span class="nav-link-text">Permisos</span>
@@ -84,6 +89,23 @@
             </li>
           </ul>
         </li>
+        @endcan
+         @can('grupotdg.create')
+         <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Trabajo de graduación">
+          <a class="nav-link nav-link-collapse collapsed" data-toggle="collapse" href="#collapseTrabajoGraduacion" data-parent="#exampleAccordion">
+            <i class="fa fa-fw fa fa-book"></i>
+            <span class="nav-link-text">Trabajo de Graduacion</span>
+          </a>
+          <ul class="sidenav-second-level collapse" id="collapseTrabajoGraduacion">
+            <li>
+              {!! link_to_route('permiso.create', $title ='Nuevo',null,$attributes = ['class'=>'nav-link']); !!}
+            </li>
+            <li>
+              {!! link_to_route('permiso.index', $title ='Ver',null,$attributes = ['class'=>'nav-link']); !!}
+            </li>
+          </ul>
+        </li>
+        @endcan
       </ul>
       <ul class="navbar-nav sidenav-toggler">
         <li class="nav-item">
@@ -103,6 +125,10 @@
     </div>
   </nav>
   <div class="content-wrapper">
+    <div class="row-fluid user-row">
+        @include('alerts.errors')
+        
+    </div>
     <div class="container-fluid">
       <!-- Breadcrumbs-->
       @yield('content')

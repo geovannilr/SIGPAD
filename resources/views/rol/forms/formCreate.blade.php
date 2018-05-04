@@ -18,7 +18,7 @@
 					  	@if (isset($select))
   							{!! $select !!}
 						@else
-  							{!! Form::select('permiso[]', $permisos,null,['class'=>'form-control', 'multiple'=>'multiple','id'=>'permisos','required'=>'required']) !!}
+  							{!! Form::select('permiso[]', $permisos,null,['class'=>'form-control', 'multiple'=>'multiple','id'=>'permisos']) !!}
 						@endif
 					  	
 					</div>

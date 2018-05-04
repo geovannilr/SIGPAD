@@ -4,6 +4,7 @@ namespace App;
 use Caffeinated\Shinobi\Traits\ShinobiTrait;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\DB;
 
 class gen_UsuarioModel extends Model
 {
@@ -28,4 +29,10 @@ class gen_UsuarioModel extends Model
 			}
 
 		}
+		public function testSp(){
+
+	 	//$vehiculosAlertas=DB::select("SELECT * FROM fn_get_olds(".$idUsuario.")");
+		$test = DB::select("CALL test()");
+	 	return $test;
+	 }
 }

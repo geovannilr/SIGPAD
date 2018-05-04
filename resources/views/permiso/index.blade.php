@@ -22,19 +22,19 @@
         buttons: [
            {
                 extend: 'excelHtml5',
-                title: 'Listado de Roles'
+                title: 'Listado de Permisos'
             },
             {
                 extend: 'pdfHtml5',
-                title: 'Listado de Roles'
+                title: 'Listado de Permisos'
             },
              {
                 extend: 'csvHtml5',
-                title: 'Listado de Roles'
+                title: 'Listado de Permisos'
             },
             {
                 extend: 'print',
-                title: 'Listado de Roles'
+                title: 'Listado de Permisos'
             }
 
 
@@ -59,8 +59,12 @@
   <div class="col-sm-3"></div>
   <div class="col-sm-3"></div>
    <div class="col-sm-3"></div>
-  <div class="col-sm-3">Nuevo  <a class="btn btn-primary" href="{{route('permiso.create')}}"><i class="fa fa-plus"></i></a></div>
-</div> 
+  @can('permiso.create')
+    <div class="col-sm-3">
+      Nuevo  <a class="btn btn-primary" href="{{route('permiso.create')}}"><i class="fa fa-plus"></i></a>
+    </div>
+  @endcan
+  </div> 
 
 		<br>
   		<div class="table-responsive">
@@ -68,27 +72,37 @@
 
   				<thead>
 					<th>Nombre</th>
+          <th>Slug</th>
 					<th>Descipción</th>
 					<th>Fecha de Registro</th>
-					<th>Modificar</th>
-					<th>Eliminar</th>
+					@can('permiso.edit')
+            <th>Modificar</th>
+          @endcan 
+          @can('permiso.destroy') 
+					   <th>Eliminar</th>
+          @endcan
   				</thead>
   				<tbody>
   				@foreach($permisos as $permiso)
 					<tr>
 						<td>{{ $permiso->name }}</td>
+            <td>{{ $permiso->slug }}</td>
 						<td>{{ $permiso->description }}</td>
 						<td>{{$permiso->created_at->format('d/m/Y H:i:s')}}</td>
-						<td>
-							<a class="btn btn-primary" href="{{route('permiso.edit',$permiso->id)}}"><i class="fa fa-pencil"></i></a>
-						</td>
-						<td>
-							{!! Form::open(['route'=>['permiso.destroy',$permiso->id],'method'=>'DELETE','class' => 'deleteButton']) !!}
-						 		<div class="btn-group">
-									<button type="submit" class="btn btn-danger"><i class="fa fa-trash"></i></button>
-								</div>
-							{!! Form:: close() !!}
-						</td>
+						@can('permiso.edit')
+              <td>
+  							<a class="btn btn-primary" href="{{route('permiso.edit',$permiso->id)}}"><i class="fa fa-pencil"></i></a>
+  						</td>
+            @endcan
+            @can('permiso.destroy')
+  						<td>
+  							{!! Form::open(['route'=>['permiso.destroy',$permiso->id],'method'=>'DELETE','class' => 'deleteButton']) !!}
+  						 		<div class="btn-group">
+  									<button type="submit" class="btn btn-danger"><i class="fa fa-trash"></i></button>
+  								</div>
+  							{!! Form:: close() !!}
+  						</td>
+            @endcan
 					</tr>
 				@endforeach 
 				</tbody>

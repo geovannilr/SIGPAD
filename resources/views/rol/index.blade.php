@@ -59,7 +59,11 @@
   <div class="col-sm-3"></div>
   <div class="col-sm-3"></div>
    <div class="col-sm-3"></div>
-  <div class="col-sm-3">Nuevo  <a class="btn btn-primary" href="{{route('rol.create')}}"><i class="fa fa-plus"></i></a></div>
+   @can('rol.create')
+    <div class="col-sm-3">
+      Nuevo  <a class="btn btn-primary" href="{{route('rol.create')}}"><i class="fa fa-plus"></i></a>
+    </div>
+  @endcan
 </div> 
 
 		<br>
@@ -70,8 +74,12 @@
 					<th>Nombre</th>
 					<th>Descipción</th>
 					<th>Fecha de Registro</th>
-					<th>Modificar</th>
-					<th>Eliminar</th>
+					@can('rol.edit')
+            <th>Modificar</th>
+          @endcan
+          @can('rol.destroy')
+					 <th>Eliminar</th>
+          @endcan
   				</thead>
   				<tbody>
   				@foreach($roles as $rol)
@@ -79,9 +87,12 @@
 						<td>{{ $rol->name }}</td>
 						<td>{{ $rol->description }}</td>
 						<td>{{$rol->created_at->format('d/m/Y H:i:s')}}</td>
-						<td>
-							<a class="btn btn-primary" href="{{route('rol.edit',$rol->id)}}"><i class="fa fa-pencil"></i></a>
-						</td>
+						@can('rol.edit')
+                <td>
+    							<a class="btn btn-primary" href="{{route('rol.edit',$rol->id)}}"><i class="fa fa-pencil"></i></a>
+    						</td>
+            @endcan
+            @can('rol.destroy')
 						<td>
 							{!! Form::open(['route'=>['rol.destroy',$rol->id],'method'=>'DELETE','class' => 'deleteButton']) !!}
 						 		<div class="btn-group">
@@ -89,6 +100,7 @@
 								</div>
 							{!! Form:: close() !!}
 						</td>
+            @endcan
 					</tr>
 				@endforeach 
 				</tbody>

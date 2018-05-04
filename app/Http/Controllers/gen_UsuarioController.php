@@ -9,12 +9,14 @@ use \App\gen_UsuarioModel;
 use \App\User;
 use Caffeinated\Shinobi\Models\Permission;
 use Caffeinated\Shinobi\Models\Role;
+use Illuminate\Support\Facades\Auth;
 
 class gen_UsuarioController extends Controller
 {
     public function __construct(){
         $this->middleware('auth');
     }
+
 	/**
 	/**
      * Display a listing of the resource.
@@ -23,18 +25,24 @@ class gen_UsuarioController extends Controller
      */
     public function index()
     {
-        $usuarios =gen_UsuarioModel::all();
-        foreach ($usuarios as $usuario ) {
-            $user=User::find($usuario->id);
-            $roles=$user->getRoles();
-            $linea="";
-            foreach ($roles as $rol) {
-                $linea.=$rol."#";
+        $userLogin=Auth::user();
+        if ($userLogin->can(['usuario.index'])) {
+            $usuarios =gen_UsuarioModel::all();
+            foreach ($usuarios as $usuario ) {
+                $user=User::find($usuario->id);
+                $roles=$user->getRoles();
+                $linea="";
+                foreach ($roles as $rol) {
+                    $linea.=$rol."#";
+                }
+                $username=$usuario->user;
+                $rolesView[$username]=$linea;
             }
-            $username=$usuario->user;
-            $rolesView[$username]=$linea;
+            return view('usuario.index',compact('usuarios','rolesView'));
+        }else{
+            Session::flash('message-error', 'No tiene permisos para acceder a esta opción');
+            return  view('template');
         }
-        return view('usuario.index',compact('usuarios','rolesView'));
     }
 
     /**
@@ -43,12 +51,15 @@ class gen_UsuarioController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function create()
-    {
-        //$perfiles =tbl_perfil::lists('nombrePerfil', 'idPerfil');
-       // return view('usuario.create',compact('perfiles'));
-        //$roles = [''=>'Seleccione un rol'] + Role::pluck('name', 'id')->toArray();
-        $roles =  Role::pluck('name', 'id')->toArray();
-    	return view('usuario.create',compact('roles'));
+    {   $userLogin=Auth::user();
+        if ($userLogin->can(['usuario.create'])) {
+            $roles =  Role::pluck('name', 'id')->toArray();
+            return view('usuario.create',compact('roles'));
+        }else{
+            Session::flash('message-error', 'No tiene permisos para acceder a esta opción');
+            return  view('template');
+        }
+        
     }
 
     /**
@@ -100,28 +111,34 @@ class gen_UsuarioController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
-    {
-        $usuario=gen_UsuarioModel::find($id);
-        $user=User::find($id);
-        $roles=$user->getRoles();
-        $rolesBd = Role::all();
-        $select = "<select name='rol[]' multiple ='multiple' class='form-control' id='roles'>"; 
-        foreach ($rolesBd as $rolBd ) {
-           $flag=0;
-           foreach ($roles as $rol ) {
-               if ($rolBd->slug == $rol ) {
-                   $flag=1;
+    public function edit($id){
+
+           $userLogin=Auth::user();
+            if ($userLogin->can(['usuario.edit'])) {
+            $usuario=gen_UsuarioModel::find($id);
+            $user=User::find($id);
+            $roles=$user->getRoles();
+            $rolesBd = Role::all();
+            $select = "<select name='rol[]' multiple ='multiple' class='form-control' id='roles'>"; 
+            foreach ($rolesBd as $rolBd ) {
+               $flag=0;
+               foreach ($roles as $rol ) {
+                   if ($rolBd->slug == $rol ) {
+                       $flag=1;
+                   }
                }
-           }
-           if ($flag == 1) {
-               $select .= "<option value='".$rolBd->id."' selected>".$rolBd->name."</option>"; 
-           }else{
-                $select .= "<option value='".$rolBd->id."'>".$rolBd->name."</option>"; 
-           }
+               if ($flag == 1) {
+                   $select .= "<option value='".$rolBd->id."' selected>".$rolBd->name."</option>"; 
+               }else{
+                    $select .= "<option value='".$rolBd->id."'>".$rolBd->name."</option>"; 
+               }
+            }
+            $select .= "</select>";
+           return view('usuario.edit',compact(['usuario','select','roles']));
+        }else{
+            Session::flash('message-error', 'No tiene permisos para acceder a esta opción');
+            return  view('template');
         }
-        $select .= "</select>";
-       return view('usuario.edit',compact(['usuario','select','roles']));
     }
 
     /**
@@ -133,6 +150,12 @@ class gen_UsuarioController extends Controller
      */
     public function update(Request $request, $id)
     {
+         $validatedData = $request->validate([
+                'name' => 'required|max:50',
+                'user' => 'required|max:30',
+                'email' => 'required|max:250|email',
+                'rol' => 'required'
+        ]);
         $usuario=gen_UsuarioModel::find($id);
         $user=User::find($id);
         $usuario->fill($request->all()); 
@@ -150,12 +173,17 @@ class gen_UsuarioController extends Controller
      */
     public function destroy($id)
     {
-         $user=User::find($id);
-         $user->revokeAllRoles();
-        gen_UsuarioModel::destroy($id);
-        Session::flash('message','Usuario Eliminado Correctamente!');
-        return Redirect::to('/usuario');
-    }
-
-    
+        $userLogin=Auth::user();
+        if ($userLogin->can(['usuario.destroy'])) {
+            $user=User::find($id);
+            $user->revokeAllRoles();
+            gen_UsuarioModel::destroy($id);
+            Session::flash('message','Usuario Eliminado Correctamente!');
+            return Redirect::to('/usuario');
+        }else{
+            Session::flash('message-error', 'No tiene permisos para acceder a esta opción');
+            return  view('template');
+        }
+        
+    } 
 }

@@ -6,6 +6,7 @@ use Redirect;
 use Illuminate\Http\Request;
 use Caffeinated\Shinobi\Models\Permission;
 use Caffeinated\Shinobi\Models\Role;
+use Illuminate\Support\Facades\Auth;
 
 class RolController extends Controller
 {
@@ -20,8 +21,15 @@ class RolController extends Controller
      */
     public function index()
     {
-        $roles =Role::all();
-        return view('rol.index',compact('roles'));
+        $userLogin=Auth::user();
+        if ($userLogin->can(['rol.index'])) {
+             $roles =Role::all();
+            return view('rol.index',compact('roles'));
+        }else{
+            Session::flash('message-error', 'No tiene permisos para acceder a esta opción');
+            return  view('template');
+        }
+       
     }
 
     /**
@@ -30,9 +38,15 @@ class RolController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function create()
-    {
-        $permisos =  Permission::pluck('name', 'id')->toArray();
-    	return view('rol.create',compact('permisos'));
+    {   $userLogin=Auth::user();
+        if ($userLogin->can(['rol.create'])) {
+            $permisos =  Permission::pluck('name', 'id')->toArray();
+        return view('rol.create',compact('permisos'));
+        }else{
+            Session::flash('message-error', 'No tiene permisos para acceder a esta opción');
+            return  view('template');
+        }
+        
     }
 
     /**
@@ -82,25 +96,32 @@ class RolController extends Controller
      */
     public function edit($id)
     {
-        $rol=Role::find($id);
-        $permisos=$rol->getPermissions();
-        $permisosBd = Permission::all();
-        $select = "<select name='permiso[]' multiple ='multiple' class='form-control' id='permisos'>"; 
-        foreach ($permisosBd as $permisoBd ) {
-           $flag=0;
-           foreach ($permisos as $permiso ) {
-               if ($permisoBd->slug == $permiso ) {
-                   $flag=1;
+        $userLogin=Auth::user();
+        if ($userLogin->can(['rol.create'])) {
+            $rol=Role::find($id);
+            $permisos=$rol->getPermissions();
+            $permisosBd = Permission::all();
+            $select = "<select name='permiso[]' multiple ='multiple' class='form-control' id='permisos'>"; 
+            foreach ($permisosBd as $permisoBd ) {
+               $flag=0;
+               foreach ($permisos as $permiso ) {
+                   if ($permisoBd->slug == $permiso ) {
+                       $flag=1;
+                   }
                }
-           }
-           if ($flag == 1) {
-               $select .= "<option value='".$permisoBd->id."' selected>".$permisoBd->name."</option>"; 
-           }else{
-                $select .= "<option value='".$permisoBd->id."'>".$permisoBd->name."</option>"; 
-           }
+               if ($flag == 1) {
+                   $select .= "<option value='".$permisoBd->id."' selected>".$permisoBd->name."</option>"; 
+               }else{
+                    $select .= "<option value='".$permisoBd->id."'>".$permisoBd->name."</option>"; 
+               }
+            }
+            $select .= "</select>";
+            return view('rol.edit',compact(['rol','select']));
+        }else{
+            Session::flash('message-error', 'No tiene permisos para acceder a esta opción');
+            return  view('template');
         }
-        $select .= "</select>";
-        return view('rol.edit',compact(['rol','select']));
+       
     }
 
     /**
@@ -128,11 +149,17 @@ class RolController extends Controller
      */
     public function destroy($id)
     {
+        $userLogin=Auth::user();
+        if ($userLogin->can(['rol.destroy'])) {
+            $rol=Role::find($id);
+            $rol->revokeAllPermissions();
+            Role::destroy($id);
+            Session::flash('message','Rol Eliminado Correctamente!');
+            return Redirect::to('/rol');
+        }else{
+            Session::flash('message-error', 'No tiene permisos para acceder a esta opción');
+            return  view('template');
+        }
         
-        $rol=Role::find($id);
-        $rol->revokeAllPermissions();
-        Role::destroy($id);
-        Session::flash('message','Rol Eliminado Correctamente!');
-        return Redirect::to('/rol');
     }
 }

@@ -2,7 +2,7 @@
 					<div class="form-group col-sm-4">
 					
 						{!! Form::label('Nombre') !!}
-						{!!Form::text('name',null,['class'=>'form-control ','placeholder'=>'Ingrese nombre Completo'])  !!}
+						{!!Form::text('name',null,['class'=>'form-control','placeholder'=>'Ingrese nombre Completo'])  !!}
 
 					</div>
 					<div class="form-group col-sm-4">
