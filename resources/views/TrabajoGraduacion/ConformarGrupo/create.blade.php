@@ -1,5 +1,8 @@
 @extends('template')
 @section('content')
+<script type="text/javascript">
+  addAlumno('{{Auth::user()->user}}',0);
+</script>
 <ol class="breadcrumb">
         <li class="breadcrumb-item">
           <h5>Trabajo de Graduación</h5>
@@ -31,7 +34,7 @@
 
         <div class="row">
           <div class="form-group col-sm-12">
-            {!! Form::submit('Enviar Grupo',['class'=>'btn btn-primary']) !!}
+            {!! Form::submit('Conformar Grupo',['class'=>'btn btn-primary']) !!}
           </div>
         </div>
 			</div> 

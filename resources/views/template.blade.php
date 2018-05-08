@@ -98,10 +98,7 @@
           </a>
           <ul class="sidenav-second-level collapse" id="collapseTrabajoGraduacion">
             <li>
-              {!! link_to_route('permiso.create', $title ='Nuevo',null,$attributes = ['class'=>'nav-link']); !!}
-            </li>
-            <li>
-              {!! link_to_route('permiso.index', $title ='Ver',null,$attributes = ['class'=>'nav-link']); !!}
+              {!! link_to_route('grupo.create', $title ='Nuevo',null,$attributes = ['class'=>'nav-link']); !!}
             </li>
           </ul>
         </li>

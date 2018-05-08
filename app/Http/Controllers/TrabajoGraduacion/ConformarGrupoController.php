@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use Session;
 use Redirect;
 use \App\gen_UsuarioModel;
+use \App\gen_EstudianteModel;
 use \App\User;
 use Caffeinated\Shinobi\Models\Permission;
 use Caffeinated\Shinobi\Models\Role;
@@ -47,7 +48,8 @@ class ConformarGrupoController extends Controller
      */
     public function store(Request $request)
     {
-        $fecha=date('Y-m-d');
+        $xmlRequest="";
+        /*$fecha=date('Y-m-d');
             $validatedData = $request->validate([
                 'name' => 'required|max:50',
                 'user' => 'required|unique:gen_usuario|max:30',
@@ -65,7 +67,20 @@ class ConformarGrupoController extends Controller
            
                $usuario= User::find($lastId->id);
                $usuario->assignRole($request['rol']);       
-        Return redirect('/usuario')->with('message','Usuario Registrado correctamente!') ;
+        Return redirect('/usuario')->with('message','Usuario Registrado correctamente!') ;*/
+        $xmlRequest.="<carnets>";
+        foreach ($request['estudiantes'] as  $estudiante) {
+            $xmlRequest.="<carnet>";
+            $xmlRequest.=$estudiante;
+            $xmlRequest.="</carnet>";
+        }
+        $xmlRequest.="</carnets>";
+        $estudiante = new gen_EstudianteModel();
+        $respuesta = $estudiante->conformarGrupoSp($xmlRequest);
+        if ($respuesta[0]->resultado == '0' ) {
+             return "Grupo de trabajo de gracuación creado exitosamente"; 
+        }
+        return $respuesta; 
     }
 
     /**
@@ -130,12 +145,12 @@ class ConformarGrupoController extends Controller
     public function getAlumno(Request $request) // FUNCION PARA COMBO DINAMICOS
     {
         if ($request->ajax()) {
-           $usuario=gen_UsuarioModel::where('user', '=',$request['carnet'])->get();
+           $estudiante=gen_EstudianteModel::where('carnet_estudiante', '=',$request['carnet'])->get();
            
-           if (sizeof($usuario) == 0){
+           if (sizeof($estudiante) == 0){
             return response()->json(['errorCode'=>1,'errorMessage'=>'No se encontró ningún alumno con ese Carnet','msg'=>""]);
            }else{
-             return response()->json(['errorCode'=>0,'errorMessage'=>'Alumno agregado a grupo de Trabajo de Graduación','msg'=>$usuario]);
+             return response()->json(['errorCode'=>0,'errorMessage'=>'Alumno agregado a grupo de Trabajo de Graduación','msg'=>$estudiante]);
            }
            
         }
