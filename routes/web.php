@@ -32,3 +32,4 @@ Route::resource('permiso','PermissionController');
 //TRABAJO DE GRADUACIÓN
 Route::resource('grupo','TrabajoGraduacion\ConformarGrupoController');
 Route::post('getAlumno', 'TrabajoGraduacion\ConformarGrupoController@getAlumno');
+Route::post('verificarGrupo', 'TrabajoGraduacion\ConformarGrupoController@verificarGrupo');

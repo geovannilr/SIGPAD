@@ -11,6 +11,7 @@ use \App\gen_EstudianteModel;
 use \App\User;
 use Caffeinated\Shinobi\Models\Permission;
 use Caffeinated\Shinobi\Models\Role;
+use Illuminate\Support\Facades\Auth;
 
 class ConformarGrupoController extends Controller
 {
@@ -34,10 +35,58 @@ class ConformarGrupoController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
-    {
-       
-    	return view('TrabajoGraduacion\ConformarGrupo.create');
+    public function create(){  
+        $cards="";
+       $estudiante = new gen_EstudianteModel();
+       $miCarnet=Auth::user()->user;
+       $respuesta =$estudiante->getGrupoCarnet($miCarnet)->getData();  //getdata PARA CAMBIAR LOS VALORES DEL JSON DE PUBLICOS A PRIVADOS
+       if ($respuesta->errorCode == '0') {
+            $estudiantes=json_decode($respuesta->msg->estudiantes);//decode string to json
+            foreach ($estudiantes as $estudiante ) { 
+                $card='';
+                $card.='<div class="col-sm-4" id="card'.$estudiante->carnet.'">';
+                $card.='<div class="card border-primary mb-3">';
+                if ($estudiantes[0]->carnet == $estudiante->carnet){
+                        $card.='<h5 class="card-header"><b>'.strtoupper($estudiante->carnet).'</b> - '.$estudiante->nombre.' <span class="badge badge-info">LIDER</span> </h5>';
+                }else{
+                        $card.='<h5 class="card-header"><b>'.strtoupper($estudiante->carnet).'</b> - '.$estudiante->nombre.'</h5>';
+                }
+                $card.='<div class="card-body">';
+                $card.='<table>
+                            <tr>
+                                <td>
+                                    <h5 class="card-title">Estado</h5>
+                                    <p class="card-text">Pendiente de confirmación</p><br>
+                                </td>
+                                <td>';
+                 if ($miCarnet == $estudiante->carnet) {
+                    $card.='
+                                 <button type="button" class="btn btn-success">
+                                    <i class="fa fa-check"></i>
+                                </button>&nbsp;&nbsp;
+                                <button type="button" class="btn btn-danger">
+                                    <i class="fa fa-remove"></i>
+                                </button>
+                            
+                           ';
+                }else{
+                   // $card.='<div class="row"></div>';
+                }
+                $card.='</td>
+                            </tr>
+                        </table>';  
+                $card.='</div></div></div>'; 
+                $cards.=$card;                  
+            }
+            
+           return view('TrabajoGraduacion\ConformarGrupo.create',compact(['cards']));
+       }else if($respuesta->errorCode == '1'){
+            return view('TrabajoGraduacion\ConformarGrupo.create');
+       }else{
+            return view('TrabajoGraduacion\ConformarGrupo.create');
+       }
+    	//return view('TrabajoGraduacion\ConformarGrupo.create',compact(['respuesta']));
+       return $cards;
     }
 
     /**
@@ -46,28 +95,8 @@ class ConformarGrupoController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
-    {
+    public function store(Request $request){
         $xmlRequest="";
-        /*$fecha=date('Y-m-d');
-            $validatedData = $request->validate([
-                'name' => 'required|max:50',
-                'user' => 'required|unique:gen_usuario|max:30',
-                'password' => 'required|confirmed|min:6',
-                'email' => 'required|unique:gen_usuario|max:250|email',
-                'rol' => 'required'
-            ]);
-           $lastId = gen_UsuarioModel::create
-            ([
-                'name'       	 => $request['name'],
-                'user'       	 => $request['user'],
-                'email'  		 => $request['email'],
-                'password'       => $request['password']
-            ]);
-           
-               $usuario= User::find($lastId->id);
-               $usuario->assignRole($request['rol']);       
-        Return redirect('/usuario')->with('message','Usuario Registrado correctamente!') ;*/
         $xmlRequest.="<carnets>";
         foreach ($request['estudiantes'] as  $estudiante) {
             $xmlRequest.="<carnet>";
@@ -78,8 +107,10 @@ class ConformarGrupoController extends Controller
         $estudiante = new gen_EstudianteModel();
         $respuesta = $estudiante->conformarGrupoSp($xmlRequest);
         if ($respuesta[0]->resultado == '0' ) {
-             return "Grupo de trabajo de gracuación creado exitosamente"; 
+             //return "Grupo de trabajo de gracuación creado exitosamente"; 
+             return redirect()->route('grupo.create');
         }
+    
         return $respuesta; 
     }
 
@@ -142,13 +173,13 @@ class ConformarGrupoController extends Controller
         return Redirect::to('/usuario');
     }
 
-    public function getAlumno(Request $request) // FUNCION PARA COMBO DINAMICOS
+    public function getAlumno(Request $request) 
     {
         if ($request->ajax()) {
-           $estudiante=gen_EstudianteModel::where('carnet_estudiante', '=',$request['carnet'])->get();
+           $estudiante=gen_EstudianteModel::where('carnet_gen_est', '=',$request['carnet'])->get();
            
            if (sizeof($estudiante) == 0){
-            return response()->json(['errorCode'=>1,'errorMessage'=>'No se encontró ningún alumno con ese Carnet','msg'=>""]);
+            return response()->json(['errorCode'=>1,'errorMessage'=>'No se encontró ningún Alumno con ese Carnet','msg'=>""]);
            }else{
              return response()->json(['errorCode'=>0,'errorMessage'=>'Alumno agregado a grupo de Trabajo de Graduación','msg'=>$estudiante]);
            }
@@ -156,4 +187,26 @@ class ConformarGrupoController extends Controller
         }
        
     }
+    public function confirmarGrupo(Request $request) 
+    {
+        if ($request->ajax()) {
+           /*$estudiante=gen_EstudianteModel::where('carnet_estudiante', '=',$request['carnet'])->get();
+           
+           if (sizeof($estudiante) == 0){
+            return response()->json(['errorCode'=>1,'errorMessage'=>'No se encontró ningún alumno con ese Carnet','msg'=>""]);
+           }else{
+             return response()->json(['errorCode'=>0,'errorMessage'=>'Alumno agregado a grupo de Trabajo de Graduación','msg'=>$estudiante]);
+           }*/
+           
+        }
+       
+    }
+     public function verificarGrupo(Request $request) {
+        if ($request->ajax()) {
+            $estudiante = new gen_EstudianteModel();
+            $respuesta = $estudiante->getGrupoCarnet($request['carnet']);
+            return $respuesta; 
+        }
+    }
+     
 }

@@ -1,8 +1,11 @@
 @extends('template')
 @section('content')
-<script type="text/javascript">
-  addAlumno('{{Auth::user()->user}}',0);
-</script>
+@if (!isset($cards)) 
+  <script type="text/javascript">
+    //Me agrego como líder en el caso que no pertenezca a un grupo
+      verificarGrupo('{{Auth::user()->user}}',0);
+  </script>
+@endif
 <ol class="breadcrumb">
         <li class="breadcrumb-item">
           <h5>Trabajo de Graduación</h5>
@@ -29,7 +32,9 @@
             </div>
         </div>
         <div class="row" id="estudiantes">
-          
+          @if (isset($cards)) 
+            {!!$cards!!}
+          @endif
         </div><br><br><br><br>
 
         <div class="row">

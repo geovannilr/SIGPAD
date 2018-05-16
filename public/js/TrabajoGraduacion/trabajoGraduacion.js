@@ -7,7 +7,8 @@ $( document ).ready(function() {
    		}else if (estudianteRepetido($("#inputBuscar").val()) == 1){
    			swal("Estudiante Repetido!", "El estudiante ya se encuentra en tu grupo de trabajo de graduación", "info");
    		}else{
-   			addAlumno($("#inputBuscar").val(),1);
+   			//addAlumno($("#inputBuscar").val(),1);
+   			verificarGrupo($("#inputBuscar").val(),1);
    		}
 	});
 });
@@ -32,21 +33,20 @@ function addAlumno(carnetAlumno,tipo){
            data:{'carnet':carnet},
            success:function(data){
               //console.log(data);
-
               if (data.errorCode == 0) {
-	              card+='<div class="col-sm-4" id="card'+data.msg[0].carnet_estudiante+'">';
+	              card+='<div class="col-sm-4" id="card'+data.msg[0].carnet_gen_est+'">';
 				  card+='<div class="card border-primary mb-3">';
 				  if (tipo == 1){
-				  	card+='<h5 class="card-header"><b>'+data.msg[0].carnet_estudiante.toUpperCase()+'</b> - '+data.msg[0].nombre_estudiante+'</h5>';
+				  	card+='<h5 class="card-header"><b>'+data.msg[0].carnet_gen_est.toUpperCase()+'</b> - '+data.msg[0].nombre_gen_est+'</h5>';
 				  }else{
-				  	card+='<h5 class="card-header"><b>'+data.msg[0].carnet_estudiante.toUpperCase()+'</b> - '+data.msg[0].nombre_estudiante+' <span class="badge badge-info">LIDER</span> </h5>';
+				  	card+='<h5 class="card-header"><b>'+data.msg[0].carnet_gen_est.toUpperCase()+'</b> - '+data.msg[0].nombre_gen_est+' <span class="badge badge-info">LIDER</span> </h5>';
 				  }
 				  
 				  card+='<div class="card-body">';
 				  card+='<h5 class="card-title">Estado de Asignación</h5>';
 				  card+='<p class="card-text">Pendiente de envío</p><br>';
 				  if (tipo==1){
-				  	card+='<a onclick="removerAlumno('+data.msg[0].carnet_estudiante+');" class="btn btn-danger"><i class="fa fa-remove"></i></a>';
+				  	card+='<a onclick="removerAlumno('+data.msg[0].carnet_gen_est+');" class="btn btn-danger"><i class="fa fa-remove"></i></a>';
 				  }else{
 				  	card+='<i class="fa fa-remove"></i>';
 				  }
@@ -66,7 +66,11 @@ function addAlumno(carnetAlumno,tipo){
               	  $("#buscarAlumno").removeAttr('disabled');
               }
               
-           }
+           },
+    		error : function(xhr, status) {
+        		swal("", "Hubo un problema al momento de agregar el estudiante", "error");
+        		$("#buscarAlumno").removeAttr('disabled');
+    		}
         });      
 }
 //FUNCION PARA VERIFICAR SI EL ALUMNO QUE QUEREMOS AGREGAR YA SE ENCUENTRA REPETIDO
@@ -98,4 +102,33 @@ function removerAlumno(elemento){
 			console.log("Alumnos despues de remover"+ alumnos);
 		}
 	}
+}
+
+function verificarGrupo(carnetAlumno,tipo){ // FUNCIONPARA VERIFICAR SI TIENE  GRUPO EL ALUMNO
+	//AGARRAMOS TOKEN DE SESION
+	$.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+    });
+	//SETEAMOS LOS DATOS A ENVIAR VIA POST
+	var carnet = carnetAlumno;
+        $.ajax({
+           type:'POST',
+           url:'http://localhost/SIGPAD/public/verificarGrupo',
+           data:{'carnet':carnet},
+           success:function(data){
+              //console.log(data);
+              if (data.errorCode == 0) {
+	            swal("", "El Alumno ya pertenece a otro grupo de trabajo de graduación", "info");
+	            $("#inputBuscar").val("");
+              }else if (data.errorCode == 1){
+              	addAlumno(carnet,tipo);
+              }
+              
+           },
+    		error : function(xhr, status) {
+        		swal("", "Hubo un problema con el servicio", "error");
+    		}
+        });      
 }
