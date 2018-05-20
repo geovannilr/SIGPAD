@@ -49,5 +49,5 @@ class gen_EstudianteModel extends Model
 		//DB::select("CALL sp_create_grupoTDG('".$xmlRequest."',@resultado)");
 		//$errorCode = DB::select("@resultado)");
 	 	return $resultado;
-	 }		
+	 }	
 }

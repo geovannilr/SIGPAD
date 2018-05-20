@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 16-05-2018 a las 04:31:13
+-- Tiempo de generación: 20-05-2018 a las 05:52:03
 -- Versión del servidor: 5.7.14
 -- Versión de PHP: 7.0.10
 
@@ -24,6 +24,58 @@ DELIMITER $$
 --
 -- Procedimientos
 --
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_pdg_gru_aceptarRechazarGrupo` (IN `acepto` INT, IN `idEst` INT, OUT `result` INT)  BEGIN
+
+-- -------------------------------------------------
+-- -Variables
+-- -------------------------------------------------
+declare idGrupo int default -1;
+   -- acepto=1 No acepto= 2
+    -- -------------------------------------------------
+-- -Manejador de excepciones
+-- -------------------------------------------------
+    	DECLARE EXIT HANDLER FOR SQLEXCEPTION
+	BEGIN
+	GET DIAGNOSTICS CONDITION 1
+		@p2 = MESSAGE_TEXT;
+		SET result = -1;
+		SELECT @p2 as 'resultado';
+	END;
+    
+    
+-- -------------------------------------------------	
+-- -Actualización
+-- -------------------------------------------------
+    START TRANSACTION;
+    set idGrupo= (select id_pdg_gru from pdg_gru_est_grupo_estudiante where pdg_gru_est_grupo_estudiante.id_gen_est=idEst);
+    if (acepto > 0)
+    then -- cambia el estado del estudiante a aceptado para ese grupo
+    update pdg_gru_est_grupo_estudiante 
+    set id_cat_sta=6
+    where pdg_gru_est_grupo_estudiante.id_gen_est=idEst; 
+    
+    if ((select count(id_pdg_gru_est)  from pdg_gru_est_grupo_estudiante where pdg_gru_est_grupo_estudiante.id_pdg_gru=idGrupo and pdg_gru_est_grupo_estudiante.id_cat_sta<>6)=0) -- verifica si ya no hay más estudiantes que no hayan aceptado
+    then
+			if (select count(id_pdg_gru_est)  from pdg_gru_est_grupo_estudiante where id_pdg_gru=idGrupo)>=3	-- falta hacerlo parametrizado select * from gen_par_parametros; 
+            then
+				update pdg_gru_grupo
+				set id_cat_sta=2 -- debe ser parametrizable.
+                where id_pdg_gru=idGrupo;
+                
+            end if;
+    end if;
+
+	SET result = 0;
+	ELSE
+    delete from pdg_gru_est_grupo_estudiante
+    where id_gen_est=idEst and id_pdg_gru=idGrupo;
+		
+		SET result = 0;
+	END IF;
+	SELECT result as 'resultado';
+    	COMMIT;	
+END$$
+
 CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_pdg_gru_create` (IN `carnetsXML` VARCHAR(1000), OUT `result` INT)  BEGIN
 -- -------------------------------------------------
 -- -Variables
@@ -113,7 +165,9 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_pdg_gru_find_ByCarnet` (IN `carn
 								JSON_OBJECT('id',ge.id_gen_est,
 											'nombre',ge.nombre_gen_est,
 											'carnet',ge.carnet_gen_est,
-											'estado',pge.id_cat_sta)
+											'estado',pge.id_cat_sta,
+                                            'lider',pge.eslider_pdg_gru_est,
+                                            'idGrupo',grupoID)
 						),']')
 			INTO carnetsJSON
 			FROM pdg_gru_est_grupo_estudiante pge INNER JOIN gen_est_estudiante ge
@@ -125,6 +179,22 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_pdg_gru_find_ByCarnet` (IN `carn
 		SET result = 1;
 	END IF;
 	SELECT result as 'resultado';
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_pdg_gru_select_gruposPendientesDeAprobacion` ()  BEGIN
+select 
+    gru.id_pdg_gru as ID,
+    est.nombre_gen_est as Lider,
+    st.nombre_cat_sta as Estado, 
+    (select count(id_pdg_gru_est) from pdg_gru_est_grupo_estudiante ge where ge.id_pdg_gru=gru.id_pdg_gru ) as Cant
+    
+    
+    from pdg_gru_grupo as gru 
+			inner join pdg_gru_est_grupo_estudiante gruEst on gru.id_pdg_gru=gruEst.id_pdg_gru
+            inner join gen_est_estudiante est on est.id_gen_est=gruEst.id_gen_est
+            inner join cat_sta_estado st on st.id_cat_sta=gru.id_cat_sta
+	where gruEst.eslider_pdg_gru_est=1;
+            
 END$$
 
 DELIMITER ;
@@ -271,11 +341,11 @@ CREATE TABLE `gen_usuario` (
 --
 
 INSERT INTO `gen_usuario` (`id`, `name`, `user`, `email`, `password`, `remember_token`, `created_at`, `updated_at`) VALUES
-(3, 'Fernando Ernesto Cosme Morales', 'cm11005', 'cosme.92@gmail.com', '$2y$10$BjPijXdO87r91PjefxJA0ODEyOjmgyyhfdr.s0YxRMH77y9vYEzJG', 'nbowshVGl6H3h2anWkcRprn3B6HWUbB3TKSycq3AFu7Hw0LmUcXNUHTBUQET', '2018-04-01 09:23:31', '2018-05-02 04:46:29'),
-(30, 'Administrador Central', 'admin', 'administrador@ues.edu.sv', '$2y$10$PdTVSePNsZMz/G/dT7uKM.nx4jwoCFRoU/qQntwPZQ9OtBjehYeiK', '8xZ4bXMx4GBhV51dfUCAOshC550geTfGxQYKPsA0EaZmfhjqkYW09KCRxAG1', '2018-05-02 00:28:30', '2018-05-02 00:28:30'),
-(22, 'Eduardo Rafael Serrano Barrera', 'sb12002', 'rafael31194@hotmail.com', '$2y$10$U4USomU1aYJmniMN0ghXZesIrpGV2laeOMF5A3DfAdHrkmZx17bIS', 'vIBhD1oxEPF3hJwN2JgqWNvy9XK4Qg4L2J9AohIhEMfaMCt2YsrYIleY71rh', '2018-04-12 07:51:07', '2018-04-12 07:51:07'),
+(3, 'Fernando Ernesto Cosme Morales', 'cm11005', 'cosme.92@gmail.com', '$2y$10$BjPijXdO87r91PjefxJA0ODEyOjmgyyhfdr.s0YxRMH77y9vYEzJG', '1mgMSNMvudKdtMYZy3hJLbw8wbw9ddYBPvwRY7kZxEnemWXNL43SFbRomFFH', '2018-04-01 09:23:31', '2018-05-02 04:46:29'),
+(30, 'Administrador Central', 'admin', 'administrador@ues.edu.sv', '$2y$10$PdTVSePNsZMz/G/dT7uKM.nx4jwoCFRoU/qQntwPZQ9OtBjehYeiK', '9epZwHUcwGYroeyjIKTbZM2wUDgXqc9Xhjj5dKZFpkmqKlZ5Tpgv4fi3dEHQ', '2018-05-02 00:28:30', '2018-05-02 00:28:30'),
+(22, 'Eduardo Rafael Serrano Barrera', 'sb12002', 'rafael31194@hotmail.com', '$2y$10$U4USomU1aYJmniMN0ghXZesIrpGV2laeOMF5A3DfAdHrkmZx17bIS', 'rsESMl7fLT2ExWo1yMiOD5HAgCEj7IMBDnE0gpV2Qi2Wc3SX5QkA2qpl2NnB', '2018-04-12 07:51:07', '2018-04-12 07:51:07'),
 (21, 'Edgardo José Ramirez García', 'rg12001', 'edgardo.ramirez94@gmail.com', '$2y$10$x76t/jfOKVu3ZrBFcNMzxee47YyYwmjBpHCCN0ed1zgOF8D0TneGC', '5Qs15kJ7reIIqV6P0nP1X9dOPrB8hzGffHRgN88YAWKlTkHUXs0YgY9v1BoK', '2018-04-12 07:49:39', '2018-04-12 07:49:39'),
-(20, 'Francisco Wilfredo Polanco Portillo', 'pp10005', 'polanco260593@gmail.com', '$2y$10$Db..R7cD93r70/TgPqYzLetuYq.U.vsseOJiiq/c3rw2WnEgY47b6', NULL, '2018-04-12 07:48:34', '2018-04-12 07:48:34');
+(20, 'Francisco Wilfredo Polanco Portillo', 'pp10005', 'polanco260593@gmail.com', '$2y$10$Db..R7cD93r70/TgPqYzLetuYq.U.vsseOJiiq/c3rw2WnEgY47b6', 'm1F2hW1XHKEmnVu17yiQkwbOXyjIV0Wj3dZmxIrxsXx9LhPQ2J2V3vi1PJXo', '2018-04-12 07:48:34', '2018-04-12 07:48:34');
 
 -- --------------------------------------------------------
 
@@ -303,6 +373,15 @@ CREATE TABLE `pdg_gru_est_grupo_estudiante` (
   `eslider_pdg_gru_est` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+--
+-- Volcado de datos para la tabla `pdg_gru_est_grupo_estudiante`
+--
+
+INSERT INTO `pdg_gru_est_grupo_estudiante` (`id_pdg_gru_est`, `id_pdg_gru`, `id_gen_est`, `id_cat_sta`, `eslider_pdg_gru_est`) VALUES
+(7, 3, 2, 6, 1),
+(8, 3, 1, 6, 0),
+(10, 3, 3, 6, 0);
+
 -- --------------------------------------------------------
 
 --
@@ -317,6 +396,13 @@ CREATE TABLE `pdg_gru_grupo` (
   `anio_pdg_gru` varchar(45) NOT NULL,
   `ciclo_pdg_gru` varchar(45) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Volcado de datos para la tabla `pdg_gru_grupo`
+--
+
+INSERT INTO `pdg_gru_grupo` (`id_pdg_gru`, `id_cat_sta`, `numero_pdg_gru`, `correlativo_pdg_gru_gru`, `anio_pdg_gru`, `ciclo_pdg_gru`) VALUES
+(3, 7, NULL, 0, '2018', 'I');
 
 -- --------------------------------------------------------
 
@@ -699,12 +785,12 @@ ALTER TABLE `migrations`
 -- AUTO_INCREMENT de la tabla `pdg_gru_est_grupo_estudiante`
 --
 ALTER TABLE `pdg_gru_est_grupo_estudiante`
-  MODIFY `id_pdg_gru_est` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id_pdg_gru_est` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 --
 -- AUTO_INCREMENT de la tabla `pdg_gru_grupo`
 --
 ALTER TABLE `pdg_gru_grupo`
-  MODIFY `id_pdg_gru` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id_pdg_gru` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 --
 -- AUTO_INCREMENT de la tabla `pdg_not_cri_tra_nota_criterio_trabajo`
 --

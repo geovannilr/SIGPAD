@@ -22,19 +22,19 @@
         buttons: [
            {
                 extend: 'excelHtml5',
-                title: 'Listado de Usuarios'
+                title: 'Listado de Grupos de trabajo de graduación'
             },
             {
                 extend: 'pdfHtml5',
-                title: 'Listado de Usuarios'
+                title: 'Listado de Grupos de trabajo de graduación'
             },
              {
                 extend: 'csvHtml5',
-                title: 'Listado de Usuarios'
+                title: 'Listado de Grupos de trabajo de graduación'
             },
             {
                 extend: 'print',
-                title: 'Listado de Usuarios'
+                title: 'Listado de Grupos de trabajo de graduación'
             }
 
 
@@ -55,8 +55,8 @@
 	
 </script>
 		<ol class="breadcrumb">
-	        <li class="breadcrumb-item">
-	          <h5>USUARIOS</h5>
+	        <li class="breadcrumb-item ">
+	          <h5>Grupos de trabajo de graduación</h5>
 	        </li>
 	        <li class="breadcrumb-item active">Listado</li>
 		</ol>
@@ -64,7 +64,11 @@
   <div class="col-sm-3"></div>
   <div class="col-sm-3"></div>
    <div class="col-sm-3"></div>
-  <div class="col-sm-3">Nuevo  <a class="btn btn-primary" href="{{route('usuario.create')}}"><i class="fa fa-plus"></i></a></div>
+  @can('grupotdg.create')
+	  <div class="col-sm-3">Nuevo 
+	  	 <a class="btn btn-primary" href="{{route('grupo.create')}}"><i class="fa fa-plus"></i></a>
+	  </div>
+  @endcan
 </div> 
 
 		<br>
@@ -72,28 +76,37 @@
   			<table class="table table-hover table-striped  display" id="listTable">
 
   				<thead>
-					<th>Usuario</th>
-					<th>Nombre</th>
-					<th>Fecha de Registro</th>
-					<th>Modificar</th>
-					<th>Eliminar</th>
+					<th>Líder</th>
+					<th>Estado</th>
+					<th>Cantidad</th>
+					@can('usuario.edit')
+						<th>Modificar</th>
+					@endcan
+					@can('usuario.destroy')
+						<th>Eliminar</th>
+					@endcan
   				</thead>
   				<tbody>
-  				@foreach($usuarios as $usuario)
-					<tr>
-						<td>{{ $usuario->user }}</td>
-						<td>{{ $usuario->name }}</td>
-						<td>{{$usuario->created_at->format('d/m/Y H:i:s')}}</td>
-						<td>
-							<a class="btn btn-primary" href="{{route('usuario.edit',$usuario->id)}}"><i class="fa fa-pencil"></i></a>
-						</td>
-						<td>
-							{!! Form::open(['route'=>['usuario.destroy',$usuario->id],'method'=>'DELETE','class' => 'deleteButton']) !!}
-						 		<div class="btn-group">
-									<button type="submit" class="btn btn-danger"><i class="fa fa-trash"></i></button>
-								</div>
-							{!! Form:: close() !!}
-						</td>
+
+  				@foreach($grupos as $grupo)
+  						<tr>
+						<td>{{ $grupo->Lider }}</td>
+						<td>{{ $grupo->Estado }}</td>
+						<td>{{$grupo->Cant}}</td>
+						@can('usuario.edit')
+							<td>
+								<a class="btn btn-primary" href="{{route('usuario.edit',$usuario->id)}}"><i class="fa fa-pencil"></i></a>
+							</td>
+						@endcan
+						@can('usuario.destroy')
+							<td>
+								{!! Form::open(['route'=>['usuario.destroy',$usuario->id],'method'=>'DELETE','class' => 'deleteButton']) !!}
+							 		<div class="btn-group">
+										<button type="submit" class="btn btn-danger"><i class="fa fa-trash"></i></button>
+									</div>
+								{!! Form:: close() !!}
+							</td>
+						@endcan
 					</tr>
 				@endforeach 
 				</tbody>

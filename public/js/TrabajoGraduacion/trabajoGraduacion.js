@@ -11,6 +11,13 @@ $( document ).ready(function() {
    			verificarGrupo($("#inputBuscar").val(),1);
    		}
 	});
+   $("#btnConfirmar").click(function() {
+   	//console.log(this.dataset.id);
+   		alertConfirmarGrupo(this.dataset.id,1);
+   	});
+   $("#btnDenegar").click(function() {
+   		alertConfirmarGrupo(this.dataset.id,2);
+   	});
 });
 
 //BUSCAMOS EL ALUMMNO PARA AGREGARLO AL GRUPO
@@ -48,7 +55,7 @@ function addAlumno(carnetAlumno,tipo){
 				  if (tipo==1){
 				  	card+='<a onclick="removerAlumno('+data.msg[0].carnet_gen_est+');" class="btn btn-danger"><i class="fa fa-remove"></i></a>';
 				  }else{
-				  	card+='<i class="fa fa-remove"></i>';
+				  	
 				  }
 				  card+='</div></div></div>'; 
 				  $("#estudiantes").append(card);
@@ -105,6 +112,7 @@ function removerAlumno(elemento){
 }
 
 function verificarGrupo(carnetAlumno,tipo){ // FUNCIONPARA VERIFICAR SI TIENE  GRUPO EL ALUMNO
+	console.log("idAlumno "+carnetAlumno);
 	//AGARRAMOS TOKEN DE SESION
 	$.ajaxSetup({
         headers: {
@@ -131,4 +139,79 @@ function verificarGrupo(carnetAlumno,tipo){ // FUNCIONPARA VERIFICAR SI TIENE  G
         		swal("", "Hubo un problema con el servicio", "error");
     		}
         });      
+}
+
+function confirmarGrupo(idAlumno,flag){ // FUNCION PARA QUE EL ALUMNO ACEPTE PERTENECER A UN GRUPO TE TRABAJO DE GRADUACION
+	//FLAG 1 ACEPTAR, FLAG 2 RECHAZAR
+	//AGARRAMOS TOKEN DE SESION
+	console.log("idAlumno "+idAlumno);
+	var aceptar;
+	if (flag == 1 ) {
+		aceptar = 1;
+	}else{
+		aceptar =0;
+	}
+	$.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+    });
+        $.ajax({
+           type:'POST',
+           url:'http://localhost/SIGPAD/public/confirmarGrupo',
+           data:{'id':idAlumno,'aceptar':aceptar},
+           success:function(data){
+              console.log(data);
+              if (data.errorCode == 0) {
+	            swal({
+		            title: "",
+		            text: data.errorMessage, 
+		            icon: "success",
+		            confirmButtonClass: "btn-info",
+		            successMode: true,
+	        	})
+	        	.then((aceptar) => {
+		          if (aceptar) {
+		           	location.reload();
+		          } else {
+		            
+		          }
+	        	});
+		           //	swal("", data.errorMessage, "success");
+		           //	location.reload();
+              }else if (data.errorCode == 1){
+              	swal("", data.errorMessage, "error");
+              	console.log(data.msg);
+              }
+              
+           },
+    		error : function(xhr, status) {
+        		swal("", "Hubo un problema al tratar de confirmar Grupo de trabajo de graduación", "error");
+    		}
+        });      
+}
+function alertConfirmarGrupo(idAlumno,flag){
+	 var titulo;
+	 var mensaje;
+	 	if (flag ==1){
+	 		titulo ="Confirmar Grupo";
+	 		mensaje="Estas seguro que quieres formar parte de este grupo de trabajo de graduación?";
+	 	}else{
+	 		titulo ="Rechazar Grupo";
+	 		mensaje="Estas seguro que quieres rechazar este grupo de trabajo de graduación?";
+	 	}
+        swal({
+            title: titulo,
+            text: mensaje, 
+            icon: "warning",
+            buttons: true,
+            successMode: true,
+        })
+        .then((aceptar) => {
+          if (aceptar) {
+           	confirmarGrupo(idAlumno,flag);
+          } else {
+            //swal("Your imaginary file is safe!");
+          }
+        });
 }
