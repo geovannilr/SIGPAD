@@ -215,3 +215,26 @@ function alertConfirmarGrupo(idAlumno,flag){
           }
         });
 }
+function getGrupo(idGrupo){ // Traer el detalle del grupo
+	//AGARRAMOS TOKEN DE SESION
+	$.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+    });
+        $.ajax({
+           type:'get',
+           url:'http://localhost/SIGPAD/public/grupo/'+idGrupo,
+           success:function(data){
+              //console.log(data);
+              $("#modalDetalleBody").html(data.htmlCode);
+              $("#divBoton").html(data.btnHtmlCode);
+              //$("#divBoton").append('<input type="hidden" name="idGrupo" value='+data.idGrupo);
+             // $("#divBoron").append('<button type="submit" class="btn btn-primary">Aprobar</button>');
+              $("#detalleGrupo").modal();
+           },
+    		error : function(xhr, status) {
+        		swal("", "Hubo un problema al obtener el detalle del grupo de trabajo de graduación", "error");
+    		}
+        });      
+}

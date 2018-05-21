@@ -90,7 +90,7 @@
           </ul>
         </li>
         @endcan
-         @can('grupotdg.create')
+         @can('grupotdg.create','grupo.index')
          <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Trabajo de graduación">
           <a class="nav-link nav-link-collapse collapsed" data-toggle="collapse" href="#collapseTrabajoGraduacion" data-parent="#exampleAccordion">
             <i class="fa fa-fw fa fa-book"></i>
@@ -100,6 +100,11 @@
             <li>
               {!! link_to_route('grupo.create', $title ='Nuevo',null,$attributes = ['class'=>'nav-link']); !!}
             </li>
+            @can('grupo.index')
+               <li>
+                {!! link_to_route('grupo.index', $title ='Listado de Grupos',null,$attributes = ['class'=>'nav-link']); !!}
+              </li>
+            @endcan
           </ul>
         </li>
         @endcan

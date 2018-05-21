@@ -9,7 +9,7 @@
 @endif
 <script type="text/javascript">
   var cantidadMinima = {{$cantidadMinima}};
-  console.log("cantidad de estudiantes "+{{$cantidadEstudiantes}});
+ 
 @if (!isset($cards)) 
     //Me agrego como líder en el caso que no pertenezca a un grupo
       verificarGrupo('{{Auth::user()->user}}',0);
@@ -21,8 +21,14 @@ console.log(cantidadMinima);
           <h5>Trabajo de Graduación</h5>
         </li>
         <li class="breadcrumb-item active">Conformar Grupo
-          @if($enviado == 1)
+          @if(isset($estadoGrupo))
+             @if($estadoGrupo == 2)
              <p class="badge badge-info card-text">Listo para Enviar</p>
+             @else
+              @if($estadoGrupo==7)
+                <p class="badge badge-info card-text">Enviado para aprobación</p>
+             @endif
+          @endif
           @endif
         </li>
 </ol>
@@ -59,7 +65,8 @@ console.log(cantidadMinima);
           </div>
         </div>   
         @endif
-         @if ($enviado == 1) 
+         @if(isset($estadoGrupo))
+          @if ($estadoGrupo == 2) 
          {!! Form:: open(['route'=>'enviarGrupo','method'=>'POST']) !!}
              <div class="row">
               <div class="form-group col-sm-12">
@@ -70,6 +77,8 @@ console.log(cantidadMinima);
             </div>
         </div>
         @endif
+         @endif
+         
 			</div> 
 			  {!! Form:: close() !!}
 

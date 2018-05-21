@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 20-05-2018 a las 05:52:03
+-- Tiempo de generación: 21-05-2018 a las 03:10:29
 -- Versión del servidor: 5.7.14
 -- Versión de PHP: 7.0.10
 
@@ -74,6 +74,47 @@ declare idGrupo int default -1;
 	END IF;
 	SELECT result as 'resultado';
     	COMMIT;	
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_pdg_gru_aprobarGrupoTGCoordinador` (IN `idGrupo` INT, OUT `result` INT)  BEGIN
+
+declare correlativo int default 0;
+declare numero varchar(30);
+DECLARE EXIT HANDLER FOR SQLEXCEPTION
+	BEGIN
+		SET result = 1;
+		SELECT result as 'resultado';
+		ROLLBACK;
+       /* GET DIAGNOSTICS CONDITION 1
+		@p2 = MESSAGE_TEXT;
+		SET result = -1;
+		SELECT @p2 as 'resultado';*/
+	END;
+    
+	START TRANSACTION;    
+    
+    if((select id_cat_sta from pdg_gru_grupo where id_pdg_gru =idGrupo )=7)
+    
+    then
+			
+            
+				set correlativo= (SELECT max(correlativo_pdg_gru_gru)+1 
+										FROM pdg_gru_grupo 
+										where pdg_gru_grupo.anio_pdg_gru=(select anio_pdg_gru from pdg_gru_grupo where id_pdg_gru =idGrupo ));
+									
+				set numero= (select concat(lpad(correlativo,2,0),'-',(select anio_pdg_gru from pdg_gru_grupo where id_pdg_gru =idGrupo ))); -- limitado a correlativos de 2 digitos por el lpad.
+				
+				update pdg_gru_grupo
+				set numero_pdg_gru=numero,
+					correlativo_pdg_gru_gru=correlativo,
+                    id_cat_sta=3
+				where pdg_gru_grupo.id_pdg_gru=idGrupo;
+
+		COMMIT;	
+		SET result = 0;
+		SELECT result as 'resultado';
+		
+    end if;
 END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_pdg_gru_create` (IN `carnetsXML` VARCHAR(1000), OUT `result` INT)  BEGIN
@@ -181,11 +222,21 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_pdg_gru_find_ByCarnet` (IN `carn
 	SELECT result as 'resultado';
 END$$
 
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_pdg_gru_grupoDetalleByID` (IN `idGrupo` INT)  BEGIN
+
+
+	select es.id_gen_est as ID_Estudiante,es.carnet_gen_est as carnet, es.nombre_gen_est as Nombre, if (gs.eslider_pdg_gru_est=1,"Lider", "Miembro") as Cargo   from pdg_gru_est_grupo_estudiante as gs 
+			 inner join gen_est_estudiante as es on gs.id_gen_est=es.id_gen_est
+             where gs.id_pdg_gru=idGrupo;
+
+END$$
+
 CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_pdg_gru_select_gruposPendientesDeAprobacion` ()  BEGIN
 select 
     gru.id_pdg_gru as ID,
     est.nombre_gen_est as Lider,
-    st.nombre_cat_sta as Estado, 
+    st.nombre_cat_sta as Estado,
+    st.id_cat_sta as idEstado,
     (select count(id_pdg_gru_est) from pdg_gru_est_grupo_estudiante ge where ge.id_pdg_gru=gru.id_pdg_gru ) as Cant
     
     
@@ -341,11 +392,12 @@ CREATE TABLE `gen_usuario` (
 --
 
 INSERT INTO `gen_usuario` (`id`, `name`, `user`, `email`, `password`, `remember_token`, `created_at`, `updated_at`) VALUES
-(3, 'Fernando Ernesto Cosme Morales', 'cm11005', 'cosme.92@gmail.com', '$2y$10$BjPijXdO87r91PjefxJA0ODEyOjmgyyhfdr.s0YxRMH77y9vYEzJG', '1mgMSNMvudKdtMYZy3hJLbw8wbw9ddYBPvwRY7kZxEnemWXNL43SFbRomFFH', '2018-04-01 09:23:31', '2018-05-02 04:46:29'),
-(30, 'Administrador Central', 'admin', 'administrador@ues.edu.sv', '$2y$10$PdTVSePNsZMz/G/dT7uKM.nx4jwoCFRoU/qQntwPZQ9OtBjehYeiK', '9epZwHUcwGYroeyjIKTbZM2wUDgXqc9Xhjj5dKZFpkmqKlZ5Tpgv4fi3dEHQ', '2018-05-02 00:28:30', '2018-05-02 00:28:30'),
-(22, 'Eduardo Rafael Serrano Barrera', 'sb12002', 'rafael31194@hotmail.com', '$2y$10$U4USomU1aYJmniMN0ghXZesIrpGV2laeOMF5A3DfAdHrkmZx17bIS', 'rsESMl7fLT2ExWo1yMiOD5HAgCEj7IMBDnE0gpV2Qi2Wc3SX5QkA2qpl2NnB', '2018-04-12 07:51:07', '2018-04-12 07:51:07'),
-(21, 'Edgardo José Ramirez García', 'rg12001', 'edgardo.ramirez94@gmail.com', '$2y$10$x76t/jfOKVu3ZrBFcNMzxee47YyYwmjBpHCCN0ed1zgOF8D0TneGC', '5Qs15kJ7reIIqV6P0nP1X9dOPrB8hzGffHRgN88YAWKlTkHUXs0YgY9v1BoK', '2018-04-12 07:49:39', '2018-04-12 07:49:39'),
-(20, 'Francisco Wilfredo Polanco Portillo', 'pp10005', 'polanco260593@gmail.com', '$2y$10$Db..R7cD93r70/TgPqYzLetuYq.U.vsseOJiiq/c3rw2WnEgY47b6', 'm1F2hW1XHKEmnVu17yiQkwbOXyjIV0Wj3dZmxIrxsXx9LhPQ2J2V3vi1PJXo', '2018-04-12 07:48:34', '2018-04-12 07:48:34');
+(3, 'Fernando Ernesto Cosme Morales', 'cm11005', 'cosme.92@gmail.com', '$2y$10$BjPijXdO87r91PjefxJA0ODEyOjmgyyhfdr.s0YxRMH77y9vYEzJG', 'vEkQhV1PjZQOo7eqtWq6LT4LoSAFiXQ1mlTvk2FAzKzPwHokUKg6F9DYBqOr', '2018-04-01 09:23:31', '2018-05-02 04:46:29'),
+(30, 'Administrador Central', 'admin', 'administrador@ues.edu.sv', '$2y$10$PdTVSePNsZMz/G/dT7uKM.nx4jwoCFRoU/qQntwPZQ9OtBjehYeiK', 'eSA7eiPFeLOtUzX9IAmNpWUOqxWFl5C389cppzCsWbEcXltokbtCORP8U4b4', '2018-05-02 00:28:30', '2018-05-02 00:28:30'),
+(22, 'Eduardo Rafael Serrano Barrera', 'sb12002', 'rafael31194@hotmail.com', '$2y$10$U4USomU1aYJmniMN0ghXZesIrpGV2laeOMF5A3DfAdHrkmZx17bIS', 'NO3X4SBe82dBeIkOsDc1cH4OgIVReSJWdPcKefQoJihkIXQTOF8VioMMqgiz', '2018-04-12 07:51:07', '2018-04-12 07:51:07'),
+(21, 'Edgardo José Ramirez García', 'rg12001', 'edgardo.ramirez94@gmail.com', '$2y$10$x76t/jfOKVu3ZrBFcNMzxee47YyYwmjBpHCCN0ed1zgOF8D0TneGC', '9DOn4zhoNss9JDsWFnz5Wo8Ah136ANyPSSuIwtFirgAA3Aae810TiFc8Ib09', '2018-04-12 07:49:39', '2018-04-12 07:49:39'),
+(20, 'Francisco Wilfredo Polanco Portillo', 'pp10005', 'polanco260593@gmail.com', '$2y$10$Db..R7cD93r70/TgPqYzLetuYq.U.vsseOJiiq/c3rw2WnEgY47b6', 'TDP8Qg7W6x5SGOUtMY2VP4wFgbcgMndQi7VVn57qPa5dW6Sutfu58ZG6Ck9H', '2018-04-12 07:48:34', '2018-04-12 07:48:34'),
+(31, 'Yesenia Vigil', 'admin_tdg', 'tdg@ues.edu.sv', '$2y$10$lscTHMSe2IuDSIfItMXMLeEgaDUkal18L1FQjPnMWX3ErzF1EdR7C', 'o4Uw8sW5uHUJYOU5twWgwYAm0PLBkAdydwce2Qgp7kO3QfrTJSrCZExiFTDf', '2018-05-20 16:50:36', '2018-05-20 16:50:36');
 
 -- --------------------------------------------------------
 
@@ -373,15 +425,6 @@ CREATE TABLE `pdg_gru_est_grupo_estudiante` (
   `eslider_pdg_gru_est` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
---
--- Volcado de datos para la tabla `pdg_gru_est_grupo_estudiante`
---
-
-INSERT INTO `pdg_gru_est_grupo_estudiante` (`id_pdg_gru_est`, `id_pdg_gru`, `id_gen_est`, `id_cat_sta`, `eslider_pdg_gru_est`) VALUES
-(7, 3, 2, 6, 1),
-(8, 3, 1, 6, 0),
-(10, 3, 3, 6, 0);
-
 -- --------------------------------------------------------
 
 --
@@ -396,13 +439,6 @@ CREATE TABLE `pdg_gru_grupo` (
   `anio_pdg_gru` varchar(45) NOT NULL,
   `ciclo_pdg_gru` varchar(45) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
--- Volcado de datos para la tabla `pdg_gru_grupo`
---
-
-INSERT INTO `pdg_gru_grupo` (`id_pdg_gru`, `id_cat_sta`, `numero_pdg_gru`, `correlativo_pdg_gru_gru`, `anio_pdg_gru`, `ciclo_pdg_gru`) VALUES
-(3, 7, NULL, 0, '2018', 'I');
 
 -- --------------------------------------------------------
 
@@ -461,7 +497,9 @@ INSERT INTO `permissions` (`id`, `name`, `slug`, `description`, `created_at`, `u
 (10, 'Crear Permisos', 'permiso.create', 'Permite al Usuario registrar nuevos permisos dentro del sistema.', '2018-05-01 22:25:06', '2018-05-01 22:25:06'),
 (11, 'Modificar Permisos', 'permiso.edit', 'Permite  al usuario modificar permisos registrados en el sistema.', '2018-05-01 22:25:29', '2018-05-01 22:25:29'),
 (12, 'Ver Permisos', 'permiso.index', 'Permite ver el listado de permisos registrados en el sistema.', '2018-05-01 22:26:25', '2018-05-01 22:26:25'),
-(13, 'Crear grupo Trabajo de graduación', 'grupotdg.create', 'Permite a los estudiantes que empiezan su proceso de trabajo de graduación conformar grupo con los estudiantes de su afinidad.', '2018-05-01 22:45:27', '2018-05-01 22:45:27');
+(13, 'Crear grupo Trabajo de graduación', 'grupotdg.create', 'Permite a los estudiantes que empiezan su proceso de trabajo de graduación conformar grupo con los estudiantes de su afinidad.', '2018-05-01 22:45:27', '2018-05-01 22:45:27'),
+(14, 'Eliminar Permisos', 'permiso.destroy', 'Permite eliminar permisos del sistema.', '2018-05-20 05:57:14', '2018-05-20 05:57:14'),
+(15, 'Ver grupos de trabajo de graduación', 'grupo.index', 'Permite ver el listado de todos los grupos de trabajo de graduación que se han creado , en esa misma vista se encuentran las opciones de ver el detalle, modificar ,aprobar/denegar  y  eliminar trabajos de graduación.', '2018-05-20 16:41:01', '2018-05-20 16:41:01');
 
 -- --------------------------------------------------------
 
@@ -494,7 +532,10 @@ INSERT INTO `permission_role` (`id`, `permission_id`, `role_id`, `created_at`, `
 (11, 9, 6, '2018-05-01 22:28:23', '2018-05-01 22:28:23'),
 (12, 10, 6, '2018-05-01 22:28:23', '2018-05-01 22:28:23'),
 (13, 11, 6, '2018-05-01 22:28:23', '2018-05-01 22:28:23'),
-(14, 12, 6, '2018-05-01 22:28:23', '2018-05-01 22:28:23');
+(14, 12, 6, '2018-05-01 22:28:23', '2018-05-01 22:28:23'),
+(16, 14, 6, '2018-05-20 05:58:04', '2018-05-20 05:58:04'),
+(17, 15, 7, '2018-05-20 16:43:43', '2018-05-20 16:43:43'),
+(18, 13, 7, '2018-05-20 17:01:33', '2018-05-20 17:01:33');
 
 -- --------------------------------------------------------
 
@@ -558,7 +599,8 @@ CREATE TABLE `roles` (
 INSERT INTO `roles` (`id`, `name`, `slug`, `description`, `created_at`, `updated_at`, `special`) VALUES
 (3, 'Estudiante', 'estudiante', 'Estudiante de la Escuela de ingeniería de Sistemas Informáticos', '2018-04-12 07:47:32', '2018-04-12 07:47:32', NULL),
 (2, 'Docente', 'docente', 'Docente de la escuela de ingeniería de Sistemas', '2018-04-02 03:12:14', '2018-04-02 03:12:14', NULL),
-(6, 'Administrador', 'administrador', 'Rol administrador del sistema, tiene los permisos para la gestion de usuarios, roles y permisos.', '2018-05-01 22:28:23', '2018-05-01 22:28:23', NULL);
+(6, 'Administrador', 'administrador', 'Rol administrador del sistema, tiene los permisos para la gestion de usuarios, roles y permisos.', '2018-05-01 22:28:23', '2018-05-01 22:28:23', NULL),
+(7, 'Coordinador Trabajos de  Graduación', 'coordinador_trabajos_degraduación', 'Es el encargado de la coordinación de todos los grupos de trabajo de graduación y la toma de decisiones sobre las solicitudes y organización de los grupos.', '2018-05-20 16:43:43', '2018-05-20 16:43:55', NULL);
 
 -- --------------------------------------------------------
 
@@ -585,7 +627,8 @@ INSERT INTO `role_user` (`id`, `role_id`, `user_id`, `created_at`, `updated_at`)
 (6, 3, 25, '2018-04-23 00:10:50', '2018-04-23 00:10:50'),
 (7, 2, 25, '2018-04-23 00:10:50', '2018-04-23 00:10:50'),
 (20, 6, 30, '2018-05-02 00:28:30', '2018-05-02 00:28:30'),
-(16, 3, 3, '2018-04-26 10:07:18', '2018-04-26 10:07:18');
+(16, 3, 3, '2018-04-26 10:07:18', '2018-04-26 10:07:18'),
+(21, 7, 31, '2018-05-20 16:50:36', '2018-05-20 16:50:36');
 
 --
 -- Índices para tablas volcadas
@@ -775,7 +818,7 @@ ALTER TABLE `gen_est_estudiante`
 -- AUTO_INCREMENT de la tabla `gen_usuario`
 --
 ALTER TABLE `gen_usuario`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
 --
 -- AUTO_INCREMENT de la tabla `migrations`
 --
@@ -785,12 +828,12 @@ ALTER TABLE `migrations`
 -- AUTO_INCREMENT de la tabla `pdg_gru_est_grupo_estudiante`
 --
 ALTER TABLE `pdg_gru_est_grupo_estudiante`
-  MODIFY `id_pdg_gru_est` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id_pdg_gru_est` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 --
 -- AUTO_INCREMENT de la tabla `pdg_gru_grupo`
 --
 ALTER TABLE `pdg_gru_grupo`
-  MODIFY `id_pdg_gru` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id_pdg_gru` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 --
 -- AUTO_INCREMENT de la tabla `pdg_not_cri_tra_nota_criterio_trabajo`
 --
@@ -805,12 +848,12 @@ ALTER TABLE `pdg_tra_gra_trabajo_graduacion`
 -- AUTO_INCREMENT de la tabla `permissions`
 --
 ALTER TABLE `permissions`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 --
 -- AUTO_INCREMENT de la tabla `permission_role`
 --
 ALTER TABLE `permission_role`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 --
 -- AUTO_INCREMENT de la tabla `permission_user`
 --
@@ -825,12 +868,12 @@ ALTER TABLE `rel_est_pro_estudiante_proceso`
 -- AUTO_INCREMENT de la tabla `roles`
 --
 ALTER TABLE `roles`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 --
 -- AUTO_INCREMENT de la tabla `role_user`
 --
 ALTER TABLE `role_user`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 --
 -- Restricciones para tablas volcadas
 --

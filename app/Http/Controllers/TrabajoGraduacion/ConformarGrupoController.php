@@ -29,10 +29,17 @@ class ConformarGrupoController extends Controller
      */
     public function index()
     {
-        $grupo = new pdg_gru_grupoModel();
-        $grupos= $grupo->getGrupos();
-        //return var_dump($grupos);
+         $userLogin=Auth::user();
+        if ($userLogin->can(['grupo.index'])) {
+            $grupo = new pdg_gru_grupoModel();
+            $grupos= $grupo->getGrupos();
+            //return var_dump($grupos);
        return view('TrabajoGraduacion\ConformarGrupo.index',compact(['grupos']));
+        }else{
+            Session::flash('message-error', 'No tiene permisos para acceder a esta opción');
+            return  view('template');
+        }
+       
     }
 
     /**
@@ -100,10 +107,12 @@ class ConformarGrupoController extends Controller
                 $card.='</div></div></div>'; 
                 $cards.=$card;                  
             }
+            $grupo = pdg_gru_grupoModel::find($idGrupo);
+            $estadoGrupo = $grupo->id_cat_sta;
             if ($cantidadEstudiantes == $contadorAceptado) {
                 $enviado = 1 ; //EL GRUPO YA ESTA LISTO PARA SER ENVIADO
             }
-           return view('TrabajoGraduacion\ConformarGrupo.create',compact(['cards','enviado','cantidadMinima','cantidadEstudiantes','idGrupo']));
+           return view('TrabajoGraduacion\ConformarGrupo.create',compact(['cards','enviado','cantidadMinima','cantidadEstudiantes','idGrupo','estadoGrupo']));
        }else if($respuesta->errorCode == '1'){
             return view('TrabajoGraduacion\ConformarGrupo.create',compact(['cantidadMinima']));
        }else{
@@ -145,7 +154,46 @@ class ConformarGrupoController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function show($id){
-      
+        $respuesta = "";
+            try {
+                $grupo= new pdg_gru_grupoModel();
+                $resultado = $grupo->getDetalleGrupo($id);
+                $respuesta='
+                    <div class="table-responsive">
+                        <table class="table table-hover table-striped  display" id="listTable">
+                            <thead>
+                                <th>Carnet</th>
+                                <th>Nombre</th>
+                                <th>Cargo</th>
+                            </thead>
+                            <tbody>';
+                          
+                foreach ($resultado as $estudiante) {
+                    $respuesta.='
+                        <tr>
+                        <td>'.$estudiante->carnet.'</td>
+                        <td>'.$estudiante->Nombre.'</td>
+                        <td>'.$estudiante->Cargo.'</td>
+                        </tr>';
+                }
+                $respuesta.=' 
+                            </tbody>
+                        </table>
+                    </div>';
+                $btnHTML="";
+                $grupo=pdg_gru_grupoModel::find($id);
+                if ($grupo->id_cat_sta=='7') {
+                    $btnHTML.='<input type="hidden" name="idGrupo" value="'.$id.'">';
+                    $btnHTML.='<button type="submit" class="btn btn-primary">Aprobar</button>';   
+                }
+                   return response()->json(['htmlCode'=>$respuesta,'btnHtmlCode'=>$btnHTML]);
+               // return $respuesta;
+            } catch (Exception $e) {
+               Session::flash('message','Ocurrió un problema al momento de obtener el grupo de trabajo de graduación!');
+               Session::flash('tipo','error');
+               return redirect()->route('grupo.index');
+            }
+        
     }
 
     /**
@@ -231,6 +279,25 @@ class ConformarGrupoController extends Controller
         } catch (Exception $e) {
            Session::flash('message','Ocurrió un problema al momento de enviar el grupo de trabajo de graduación!');
             return redirect()->route('grupo.create');
+        }
+       
+    }
+
+     public function aprobarGrupo(Request $request){
+        try {
+            $grupo=new pdg_gru_grupoModel();
+            $respuesta=$grupo->aprobarGrupo($request['idGrupo']); 
+            if ($respuesta[0]->resultado == '0'){
+                Session::flash('message','Se aprobó el grupo de trabajo de graduación ');
+                return redirect()->route('grupo.index');
+            }else{
+                Session::flash('message','Ocurrió un problema al momento de aprobar el grupo de trabajo de graduación!');
+                return redirect()->route('grupo.index');
+            }
+            
+        } catch (Exception $e) {
+           Session::flash('message','Ocurrió un problema al momento de aprobar el grupo de trabajo de graduación!');
+            return redirect()->route('grupo.index');
         }
        
     }

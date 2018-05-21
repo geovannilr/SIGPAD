@@ -4,14 +4,18 @@
 @if(Session::has('message'))
   		<script type="text/javascript">
   			$( document ).ready(function() {
-    			swal("", "{{Session::get('message')}}", "success");
+  				@if(Session::has('tipo') == 'error')
+  				 	swal("", "{{Session::get('message')}}", "error");
+  				@else
+  					swal("", "{{Session::get('message')}}", "success");
+  				@endif
 			});
   		</script>		
 @endif
 <script type="text/javascript">
 	$( document ).ready(function() {
 		 $('.deleteButton').on('submit',function(e){
-        if(!confirm('Estas seguro que deseas eliminar este Usuario?')){
+        if(!confirm('Estas seguro que deseas eliminar este Grupo de trabajo de graduación?')){
 
               e.preventDefault();
         	}
@@ -64,7 +68,7 @@
   <div class="col-sm-3"></div>
   <div class="col-sm-3"></div>
    <div class="col-sm-3"></div>
-  @can('grupotdg.create')
+  @can('grupo.create')
 	  <div class="col-sm-3">Nuevo 
 	  	 <a class="btn btn-primary" href="{{route('grupo.create')}}"><i class="fa fa-plus"></i></a>
 	  </div>
@@ -78,11 +82,12 @@
   				<thead>
 					<th>Líder</th>
 					<th>Estado</th>
-					<th>Cantidad</th>
+					<th>Cantidad de Estudiantes</th>
+					<th>Datalle</th>
 					@can('usuario.edit')
 						<th>Modificar</th>
 					@endcan
-					@can('usuario.destroy')
+					@can('grupo.destroy')
 						<th>Eliminar</th>
 					@endcan
   				</thead>
@@ -91,16 +96,25 @@
   				@foreach($grupos as $grupo)
   						<tr>
 						<td>{{ $grupo->Lider }}</td>
-						<td>{{ $grupo->Estado }}</td>
+						<td>
+							@if($grupo->idEstado == 7)
+							 <p class="badge badge-info card-text">{{ $grupo->Estado }}</p>
+							 @else
+							 	{{ $grupo->Estado }}
+							@endif
+						</td>
 						<td>{{$grupo->Cant}}</td>
+						<td>
+							 	<a class="btn btn-info" href="#" onclick="getGrupo({{ $grupo->ID }});"><i class="fa fa-eye"></i></a>
+						</td>
 						@can('usuario.edit')
-							<td>
-								<a class="btn btn-primary" href="{{route('usuario.edit',$usuario->id)}}"><i class="fa fa-pencil"></i></a>
+							<td> 
+								<a class="btn btn-primary"  data-toggle="modal" data-target="#exampleModalCenter" href="{{route('usuario.edit',$usuario->id)}}"><i class="fa fa-pencil"></i></a>
 							</td>
 						@endcan
-						@can('usuario.destroy')
+						@can('grupo.destroy')
 							<td>
-								{!! Form::open(['route'=>['usuario.destroy',$usuario->id],'method'=>'DELETE','class' => 'deleteButton']) !!}
+								{!! Form::open(['route'=>['grupo.destroy',$$grupo->ID],'method'=>'DELETE','class' => 'deleteButton']) !!}
 							 		<div class="btn-group">
 										<button type="submit" class="btn btn-danger"><i class="fa fa-trash"></i></button>
 									</div>
@@ -112,24 +126,28 @@
 				</tbody>
 			</table>
 	   </div>
-	   <!-- Modal Confirmar Borrar-->
-		<div class="modal fade" id="modalBorrar" tabindex="-1" role="dialog" aria-labelledby="modalBorrar" aria-hidden="true">
-		  <div class="modal-dialog" role="document">
-		    <div class="modal-content">
-		      <div class="modal-header">
-		        <h5 class="modal-title" id="exampleModalLabel">Estas seguro?</h5>
-		        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-		          <span aria-hidden="true">&times;</span>
-		        </button>
-		      </div>
-		      <div class="modal-body">
-		        El usuario se eliminará permanentemente del Sistema.
-		      </div>
-		      <div class="modal-footer">
-		        <button type="button"   class="btn btn-secondary" data-dismiss="modal">No</button>
-		        <button type="button"   class="btn btn-primary">Sí</button>
-		      </div>
-		    </div>
-		  </div>
-		</div>	
+	  
+<!-- Modal Detalle de grupo -->
+<div class="modal fade" id="detalleGrupo" tabindex="-1" role="dialog" aria-labelledby="Detalle grupo de trabajo de graduación" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle">Detalle de grupo de trabajo de graduación</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div id="modalDetalleBody" class="modal-body">
+        ...
+      </div>
+      <div class="modal-footer" id="footerModal">
+      	{!! Form::open(['route'=>['aprobarGrupo'],'method'=>'POST']) !!}
+			<div class="btn-group" id="divBoton">
+				
+			</div>
+		{!! Form:: close() !!}
+      </div>
+    </div>
+  </div>
+</div>
 @stop

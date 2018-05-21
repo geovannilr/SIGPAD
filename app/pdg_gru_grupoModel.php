@@ -22,5 +22,22 @@ class pdg_gru_grupoModel extends Model
 	function getGrupos (){
 		$resultado = DB::select('CALL sp_pdg_gru_select_gruposPendientesDeAprobacion();');
 		return  $resultado;
-	}		
+	}
+	function getDetalleGrupo ($idGrupo){
+		$resultado =DB::select('call sp_pdg_gru_grupoDetalleByID(:idGrupo);',
+	    	array(
+	        	$idGrupo,
+	    	)
+		);;
+		return  $resultado;
+	}	
+	function aprobarGrupo ($idGrupo){
+		DB::statement('call sp_pdg_gru_aprobarGrupoTGCoordinador(:idGrupo,@result);',
+	    	array(
+	        	$idGrupo,
+	    	)
+		);
+		$errorCode = DB::select('select @result as resultado');
+		return  $errorCode;
+	}				
 }
