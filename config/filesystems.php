@@ -48,6 +48,11 @@ return [
             'root' => storage_path('app'),
         ],
 
+        'prePerfiles' => [
+            'driver' => 'local',
+            'root' => public_path()."/Uploads/PrePerfil",
+        ],
+
         'public' => [
             'driver' => 'local',
             'root' => storage_path('app/public'),

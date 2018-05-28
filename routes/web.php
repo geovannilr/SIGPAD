@@ -29,10 +29,14 @@ Route::resource('rol','RolController');
 
 //PERMISOS
 Route::resource('permiso','PermissionController');
-//TRABAJO DE GRADUACIÓN
+//------------------TRABAJO DE GRADUACIÓN-----------------------------------------------------------
+	//CONFORMAR GRUPO
 Route::resource('grupo','TrabajoGraduacion\ConformarGrupoController');
 Route::post('getAlumno', 'TrabajoGraduacion\ConformarGrupoController@getAlumno');
 Route::post('verificarGrupo', 'TrabajoGraduacion\ConformarGrupoController@verificarGrupo');
 Route::post('confirmarGrupo', 'TrabajoGraduacion\ConformarGrupoController@confirmarGrupo');
 Route::post('enviarGrupo', 'TrabajoGraduacion\ConformarGrupoController@enviarGrupo')->name('enviarGrupo');
 Route::post('aprobarGrupo', 'TrabajoGraduacion\ConformarGrupoController@aprobarGrupo')->name('aprobarGrupo');
+	//PrePerfil
+Route::resource('prePerfil','TrabajoGraduacion\PrePerfilController');
+//------------------------------------------------------------------------------------------------------------------------
