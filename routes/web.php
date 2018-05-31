@@ -39,4 +39,6 @@ Route::post('enviarGrupo', 'TrabajoGraduacion\ConformarGrupoController@enviarGru
 Route::post('aprobarGrupo', 'TrabajoGraduacion\ConformarGrupoController@aprobarGrupo')->name('aprobarGrupo');
 	//PrePerfil
 Route::resource('prePerfil','TrabajoGraduacion\PrePerfilController');
+Route::post('downloadPrePerfil','TrabajoGraduacion\PrePerfilController@downloadPrePerfil')->name('downloadPrePerfil');
+
 //------------------------------------------------------------------------------------------------------------------------

@@ -86,9 +86,9 @@
 					@can('usuario.destroy')
 						<th>Eliminar</th>
 					@endcan
-					@can('usuario.destroy')
+					
 						<th>Descargar</th>
-					@endcan
+					
   				</thead>
   				<tbody>
 
@@ -105,13 +105,23 @@
 						@endcan
 						@can('prePerfil.destroy')
 							<td>
-								{!! Form::open(['route'=>['prePerfil.destroy',$usuario->id],'method'=>'DELETE','class' => 'deleteButton']) !!}
+								{!! Form::open(['route'=>['prePerfil.destroy',$prePerfil->id_pdg_ppe],'method'=>'DELETE','class' => 'deleteButton']) !!}
 							 		<div class="btn-group">
 										<button type="submit" class="btn btn-danger"><i class="fa fa-trash"></i></button>
 									</div>
 								{!! Form:: close() !!}
 							</td>
 						@endcan
+
+							<td>
+								{!! Form::open(['route'=>['downloadPrePerfil'],'method'=>'POST']) !!}
+							 		<div class="btn-group">
+							 			{!!Form::hidden('archivo',$prePerfil->ubicacion_pdg_ppe,['class'=>'form-control'])!!}
+										<button type="submit" class="btn btn-dark"><i class="fa fa-download"></i></button>
+									</div>
+								{!! Form:: close() !!}
+							</td>
+						
 					</tr>				
 				@endforeach 
 				</tbody>

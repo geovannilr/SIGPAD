@@ -11,6 +11,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\File;
 use \App\pdg_ppe_pre_perfilModel;
+use \App\gen_EstudianteModel;
+use \App\pdg_gru_grupoModel;
 class PrePerfilController extends Controller
 {
    public function __construct(){
@@ -25,7 +27,18 @@ class PrePerfilController extends Controller
      */
     public function index()
     {
-        /*$userLogin=Auth::user();
+        $userLogin=Auth::user();
+        $grupo=self::verificarGrupo($userLogin->user)->getData();
+        $estudiantes=json_decode($grupo->msg->estudiantes);
+ 
+        if ($grupo->errorCode == '0'){
+        	$idGrupo = $estudiantes[0]->idGrupo;
+        	$miGrupo = pdg_gru_grupoModel::find($idGrupo);
+        	if ($miGrupo->id_cat_sta == 3 ) {//APROBADO
+        		return "TENGO GRUPO Y ESTA APROBADO :D";
+        	}
+        }
+        /*
         if ($userLogin->can(['usuario.index'])) {
             $usuarios =gen_UsuarioModel::all();
             foreach ($usuarios as $usuario ) {
@@ -53,8 +66,10 @@ class PrePerfilController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function create()
-    {  /* $userLogin=Auth::user();
-        if ($userLogin->can(['usuario.create'])) {
+    {   $userLogin=Auth::user();
+    	$respuesta=self::verificarGrupo($userLogin->user);
+        $json=$respuesta->getData();
+        /*if ($userLogin->can(['usuario.create'])) {
             $roles =  Role::pluck('name', 'id')->toArray();
             return view('usuario.create',compact('roles'));
         }else{
@@ -73,11 +88,12 @@ class PrePerfilController extends Controller
      */
     public function store(Request $request)
     {
+    	
   	   $userLogin=Auth::user();
        //obtenemos el campo file definido en el formulario
       	$file = $request->file('documento');
        //obtenemos el nombre del archivo
-      	$nombre = $file->getClientOriginalName();
+      	$nombre = "Grupo1"."_2018_".date('hms').$file->getClientOriginalName();
        //indicamos que queremos guardar un nuevo archivo en el disco local
         Storage::disk('prePerfiles')->put($nombre, File::get($file));
         $fecha=date('Y-m-d H:m:s');
@@ -86,11 +102,13 @@ class PrePerfilController extends Controller
                 'tema' => 'required|max:80',
                 'documento' => 'required'
             ]);
+            $path= public_path()."\Uploads\PrePerfil\ ";
+
            $lastId = pdg_ppe_pre_perfilModel::create
             ([
                 'tema_pdg_ppe'   				 => $request['tema'],
                 'nombre_archivo_pdg_ppe'       	 =>  $nombre,
-                'ubicacion_pdg_ppe'  		 	 => 'test',
+                'ubicacion_pdg_ppe'  		 	 => trim($path).$nombre,
                 'fecha_creacion_pdg_ppe'       	 => $fecha,
                 'id_pdg_gru'					 => 1,
                 'id_cat_sta'					 => 7,
@@ -192,4 +210,16 @@ class PrePerfilController extends Controller
         }
         
     } 
+
+    public function verificarGrupo($carnet) {
+	    $estudiante = new gen_EstudianteModel();
+	    $respuesta = $estudiante->getGrupoCarnet($carnet);
+	    return $respuesta; 
+	       
+    }
+    function downloadPrePerfil(Request $request){
+    	$path = $request['archivo'];
+    	return response()->download($path);
+    	//return $path;
+    }
 }
