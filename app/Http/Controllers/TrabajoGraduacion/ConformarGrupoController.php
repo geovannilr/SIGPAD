@@ -87,7 +87,7 @@ class ConformarGrupoController extends Controller
                                 </button>
                             
                            ';
-                }else if($estudiante->estado == "6"){
+                }else if($estudiante->estado == "6"){ //ACEPTO
                     $contadorAceptado+=1;
                     $card.='<td>
                                     <h5 class="card-title">Estado</h5>

@@ -90,24 +90,49 @@
           </ul>
         </li>
         @endcan
-         @can('grupotdg.create','grupo.index')
          <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Trabajo de graduación">
           <a class="nav-link nav-link-collapse collapsed" data-toggle="collapse" href="#collapseTrabajoGraduacion" data-parent="#exampleAccordion">
             <i class="fa fa-fw fa fa-book"></i>
             <span class="nav-link-text">Trabajo de Graduacion</span>
           </a>
           <ul class="sidenav-second-level collapse" id="collapseTrabajoGraduacion">
+            @can('grupotdg.create','grupo.index')
             <li>
-              {!! link_to_route('grupo.create', $title ='Nuevo',null,$attributes = ['class'=>'nav-link']); !!}
+              <a class="nav-link-collapse collapsed" data-toggle="collapse" href="#collapseGrupo">Grupo Trabajo de Graduación</a>
+              <ul class="sidenav-third-level collapse" id="collapseGrupo">
+                @can('grupotdg.create')
+                  <li>
+                    {!! link_to_route('grupo.create', $title ='Nuevo',null,$attributes = ['class'=>'nav-link']); !!}
+                  </li>
+                @endcan
+                @can('grupo.index')
+                   <li>
+                    {!! link_to_route('grupo.index', $title ='Listado de Grupos',null,$attributes = ['class'=>'nav-link']); !!}
+                  </li>
+                @endcan
+              </ul>
             </li>
-            @can('grupo.index')
-               <li>
-                {!! link_to_route('grupo.index', $title ='Listado de Grupos',null,$attributes = ['class'=>'nav-link']); !!}
-              </li>
+            @endcan
+            @can('prePerfil.create','prePerfil.index')
+            <li>
+              <a class="nav-link-collapse collapsed" data-toggle="collapse" href="#collapsePrePerfil">Pre-Perfil</a>
+              <ul class="sidenav-third-level collapse" id="collapsePrePerfil">
+                @can('prePerfil.create')
+                  <li>
+                    {!! link_to_route('prePerfil.create', $title ='Nuevo',null,$attributes = ['class'=>'nav-link']); !!}
+                  </li>
+                @endcan
+                @can('prePerfil.index')
+                   <li>
+                    {!! link_to_route('prePerfil.index', $title ='Listado de Pre-Perfiles',null,$attributes = ['class'=>'nav-link']); !!}
+                  </li>
+                @endcan
+              </ul>
+            </li>
             @endcan
           </ul>
+        
         </li>
-        @endcan
       </ul>
       <ul class="navbar-nav sidenav-toggler">
         <li class="nav-item">

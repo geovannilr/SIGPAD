@@ -20,7 +20,7 @@
     			@include('TrabajoGraduacion.PrePerfil.forms.formCreate')
         <div class="row">
           <div class="form-group col-sm-6">
-            {!! Form::submit('Registrar',['class'=>'btn btn-primary']) !!}
+            {!! Form::submit('Enviar',['class'=>'btn btn-primary']) !!}
           </div>
         </div>
 				</div> 

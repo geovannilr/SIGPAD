@@ -58,7 +58,9 @@
 	        <li class="breadcrumb-item">
 	          <h5>Pre-Perfil</h5>
 	        </li>
-	        <li class="breadcrumb-item active">Listado - GRUPO X</li>
+	        @if(isset($numero))
+				 <li class="breadcrumb-item active">Listado Grupo {{$numero}} </li>
+	        @endif
 		</ol>
 		 <div class="row">
   <div class="col-sm-3"></div>
@@ -96,8 +98,8 @@
   						<tr>
 						<td>{{ $prePerfil->tema_pdg_ppe }}</td>
 						<td>{{ date_format(date_create($prePerfil->fecha_creacion_pdg_ppe), 'd/m/Y H:i:s')}}</td>
-						<td><span class="badge badge-info">{{ $prePerfil->id_cat_sta }}</span>&nbsp;</td>
-						<td>{{ $prePerfil->id_cat_tpo_tra_gra}}</td>
+						<td><span class="badge badge-info">{{ $prePerfil->categoriaEstado->nombre_cat_sta }}</span>&nbsp;</td>
+						<td>{{ $prePerfil->tipoTrabajo->nombre_cat_tpo_tra_gra}}</td>
 						@can('usuario.edit')
 							<td>
 								<a class="btn btn-primary" href="{{route('prePerfil.edit',$prePerfil->id_pdg_ppe)}}"><i class="fa fa-pencil"></i></a>

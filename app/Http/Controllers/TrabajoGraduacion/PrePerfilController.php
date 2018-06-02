@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\File;
 use \App\pdg_ppe_pre_perfilModel;
 use \App\gen_EstudianteModel;
 use \App\pdg_gru_grupoModel;
+use \App\cat_tpo_tra_gra_tipo_trabajo_graduacionModel;
 class PrePerfilController extends Controller
 {
    public function __construct(){
@@ -28,36 +29,38 @@ class PrePerfilController extends Controller
     public function index()
     {
         $userLogin=Auth::user();
-        $grupo=self::verificarGrupo($userLogin->user)->getData();
-        $estudiantes=json_decode($grupo->msg->estudiantes);
- 
-        if ($grupo->errorCode == '0'){
-        	$idGrupo = $estudiantes[0]->idGrupo;
-        	$miGrupo = pdg_gru_grupoModel::find($idGrupo);
-        	if ($miGrupo->id_cat_sta == 3 ) {//APROBADO
-        		return "TENGO GRUPO Y ESTA APROBADO :D";
+        if ($userLogin->can(['prePerfil.index'])) {
+        	if (Auth::user()->isRole('administrator_tdg')){
+        		//VERIFICAMOS EL ROL
+        		$prePerfiles =pdg_ppe_pre_perfilModel::all();
+		       	return view('TrabajoGraduacion.PrePerfil.index',compact('prePerfiles'));
+        	}else{
+        		$grupo=self::verificarGrupo($userLogin->user)->getData();
+		        $estudiantes=json_decode($grupo->msg->estudiantes);
+		 
+		        if ($grupo->errorCode == '0'){
+		        	$idGrupo = $estudiantes[0]->idGrupo;
+		        	$miGrupo = pdg_gru_grupoModel::find($idGrupo);
+		        	if ($miGrupo->id_cat_sta == 3 ) {//APROBADO
+		        		$numero=$miGrupo->numero_pdg_gru;
+		        		$prePerfiles =pdg_ppe_pre_perfilModel::where('id_pdg_gru', '=',$idGrupo)->get();
+		        		return view('TrabajoGraduacion.PrePerfil.index',compact('prePerfiles','numero'));
+		        	}else{
+		        		//EL GRUPO AUN NO HA SIDO APROBADO
+		        	Session::flash('message-error', 'Tu grupo de trabajo de graduación aún no ha sido aprobado');
+		            return  view('template');
+		        	}
+		        }else{
+		        	//NO HA CONFORMADO UN GRUPO
+		        	Session::flash('message-error', 'Para poder acceder a esta opción, primero debes conformar un grupo de trabajo de graduación');
+		            return  view('template');
+		        }
         	}
-        }
-        /*
-        if ($userLogin->can(['usuario.index'])) {
-            $usuarios =gen_UsuarioModel::all();
-            foreach ($usuarios as $usuario ) {
-                $user=User::find($usuario->id);
-                $roles=$user->getRoles();
-                $linea="";
-                foreach ($roles as $rol) {
-                    $linea.=$rol."#";
-                }
-                $username=$usuario->user;
-                $rolesView[$username]=$linea;
-            }
-            return view('usuario.index',compact('usuarios','rolesView'));
+	     
         }else{
             Session::flash('message-error', 'No tiene permisos para acceder a esta opción');
             return  view('template');
-        }*/
-        $prePerfiles =pdg_ppe_pre_perfilModel::all();
-        return view('TrabajoGraduacion.PrePerfil.index',compact('prePerfiles'));
+        }
     }
 
     /**
@@ -66,18 +69,30 @@ class PrePerfilController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function create()
-    {   $userLogin=Auth::user();
-    	$respuesta=self::verificarGrupo($userLogin->user);
-        $json=$respuesta->getData();
-        /*if ($userLogin->can(['usuario.create'])) {
-            $roles =  Role::pluck('name', 'id')->toArray();
-            return view('usuario.create',compact('roles'));
+    {    $userLogin=Auth::user();
+    	 if ($userLogin->can(['prePerfil.create'])) {
+	        $grupo=self::verificarGrupo($userLogin->user)->getData();
+	        $estudiantes=json_decode($grupo->msg->estudiantes);
+	        if ($grupo->errorCode == '0'){
+	        	$idGrupo = $estudiantes[0]->idGrupo;
+	        	$miGrupo = pdg_gru_grupoModel::find($idGrupo);
+	        	if ($miGrupo->id_cat_sta == 3 ) {//APROBADO
+	        		$tiposTrabajos =  cat_tpo_tra_gra_tipo_trabajo_graduacionModel::pluck('nombre_cat_tpo_tra_gra', 'id_Cat_tpo_tra_gra')->toArray();
+	        		return view('TrabajoGraduacion.PrePerfil.create',compact('tiposTrabajos'));
+	        	}else{
+	        		//EL GRUPO AUN NO HA SIDO APROBADO
+	        	Session::flash('message-error', 'Tu grupo de trabajo de graduación aún no ha sido aprobado');
+	            return  view('template');
+	        	}
+	        }else{
+	        	//NO HA CONFORMADO UN GRUPO
+	        	Session::flash('message-error', 'Para poder acceder a esta opción, primero debes conformar un grupo de trabajo de graduación');
+	            return  view('template');
+	        }
         }else{
             Session::flash('message-error', 'No tiene permisos para acceder a esta opción');
             return  view('template');
-        }*/
-        return view('TrabajoGraduacion.PrePerfil.create');
-        
+        }   
     }
 
     /**
@@ -88,8 +103,16 @@ class PrePerfilController extends Controller
      */
     public function store(Request $request)
     {
-    	
+    	$validatedData = $request->validate([
+                'tema' => 'required|max:80',
+                'documento' => 'required'
+         ]);
   	   $userLogin=Auth::user();
+  	   $grupo=self::verificarGrupo($userLogin->user)->getData();
+	        $estudiantes=json_decode($grupo->msg->estudiantes);
+	        if ($grupo->errorCode == '0'){
+	        	$idGrupo = $estudiantes[0]->idGrupo;
+	        }
        //obtenemos el campo file definido en el formulario
       	$file = $request->file('documento');
        //obtenemos el nombre del archivo
@@ -97,11 +120,6 @@ class PrePerfilController extends Controller
        //indicamos que queremos guardar un nuevo archivo en el disco local
         Storage::disk('prePerfiles')->put($nombre, File::get($file));
         $fecha=date('Y-m-d H:m:s');
-
-            $validatedData = $request->validate([
-                'tema' => 'required|max:80',
-                'documento' => 'required'
-            ]);
             $path= public_path()."\Uploads\PrePerfil\ ";
 
            $lastId = pdg_ppe_pre_perfilModel::create
@@ -110,9 +128,9 @@ class PrePerfilController extends Controller
                 'nombre_archivo_pdg_ppe'       	 =>  $nombre,
                 'ubicacion_pdg_ppe'  		 	 => trim($path).$nombre,
                 'fecha_creacion_pdg_ppe'       	 => $fecha,
-                'id_pdg_gru'					 => 1,
+                'id_pdg_gru'					 => $idGrupo,
                 'id_cat_sta'					 => 7,
-                'id_cat_tpo_tra_gra'			 => 1,
+                'id_cat_tpo_tra_gra'			 => $request['tipoTrabajo'],
                 'id_gen_usuario'                 => $userLogin->id
             ]); 
        Return redirect('/prePerfil/create')->with('message','Pre-Perfil Registrado correctamente!') ;
