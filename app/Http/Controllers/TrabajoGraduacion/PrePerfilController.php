@@ -202,7 +202,7 @@ class PrePerfilController extends Controller
        		//indicamos que queremos guardar un nuevo archivo en el disco local
         	Storage::disk('prePerfiles')->put($nombre, File::get($file));
         	$fecha=date('Y-m-d H:m:s');
-            $path= public_path()."\Uploads\PrePerfil\ ";
+            $path= public_path()."/Uploads/PrePerfil/ ";
             $prePerfil->nombre_archivo_pdg_ppe = $nombre;
             $prePerfil->ubicacion_pdg_ppe = trim($path).$nombre;
             $prePerfil->fecha_creacion_pdg_ppe = $fecha;
