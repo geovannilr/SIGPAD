@@ -112,11 +112,11 @@ class ConformarGrupoController extends Controller
             if ($cantidadEstudiantes == $contadorAceptado) {
                 $enviado = 1 ; //EL GRUPO YA ESTA LISTO PARA SER ENVIADO
             }
-           return view('TrabajoGraduacion\ConformarGrupo.create',compact(['cards','enviado','cantidadMinima','cantidadEstudiantes','idGrupo','estadoGrupo']));
+           return view('TrabajoGraduacion.ConformarGrupo.create',compact(['cards','enviado','cantidadMinima','cantidadEstudiantes','idGrupo','estadoGrupo']));
        }else if($respuesta->errorCode == '1'){
-            return view('TrabajoGraduacion\ConformarGrupo.create',compact(['cantidadMinima']));
+            return view('TrabajoGraduacion.ConformarGrupo.create',compact(['cantidadMinima']));
        }else{
-            return view('TrabajoGraduacion\ConformarGrupo.create',compact(['cantidadMinima']));
+            return view('TrabajoGraduacion.ConformarGrupo.create',compact(['cantidadMinima']));
        }
     	//return view('TrabajoGraduacion\ConformarGrupo.create',compact(['respuesta']));
        return $cards;
