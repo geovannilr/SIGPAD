@@ -113,7 +113,7 @@
               </ul>
             </li>
             @endcan
-            @can('prePerfil.create','prePerfil.index')
+            @can('prePerfil.index')
             <li>
               <a class="nav-link-collapse collapsed" data-toggle="collapse" href="#collapsePrePerfil">Pre-Perfil</a>
               <ul class="sidenav-third-level collapse" id="collapsePrePerfil">

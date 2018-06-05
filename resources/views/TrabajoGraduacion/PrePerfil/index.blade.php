@@ -8,15 +8,15 @@
 			});
   		</script>		
 @endif
+@if(Session::has('error'))
+  		<script type="text/javascript">
+  			$( document ).ready(function() {
+    			swal("", "{{Session::get('error')}}", "error");
+			});
+  		</script>		
+@endif
 <script type="text/javascript">
 	$( document ).ready(function() {
-		 $('.deleteButton').on('submit',function(e){
-        if(!confirm('Estas seguro que deseas eliminar este Pre-Perfil?')){
-
-              e.preventDefault();
-        	}
-      	});
-		
     	$("#listTable").DataTable({
         dom: '<"top"l>frt<"bottom"Bip><"clear">',
         buttons: [
@@ -46,13 +46,73 @@
         },
         order: [ 1, 'asc' ],
     	});
+    	$(".aprobar").submit(function( event ) {
+    		event.preventDefault();
+    		var titulo;
+   			var mensaje;
+      		titulo ="Aprobar Pre-Perfil";
+      		mensaje="Estas seguro que quiere aprobar este Pre-Perfil?";
+	        swal({
+	            title: titulo,
+	            text: mensaje, 
+	            icon: "warning",
+	            buttons: true,
+	            successMode: true,
+	        })
+	        .then((aceptar) => {
+	          if (aceptar) {
+	            console.log("Aprobar PrePerfil");
+	            this.submit();
+	          } else {
+	            return;
+	          }
+	        });		
+		});
+		$(".rechazar").submit(function( event ) {
+			event.preventDefault();
+    		var titulo;
+   			var mensaje;
+      		titulo ="Rechazar Pre-Perfil";
+      		mensaje="Estas seguro que quiere rechazar este Pre-Perfil?";
+	        swal({
+	            title: titulo,
+	            text: mensaje, 
+	            icon: "warning",
+	            buttons: true,
+	            successMode: true,
+	        })
+	        .then((aceptar) => {
+	          if (aceptar) {
+	            console.log("Rechazar PrePerfil");
+	            this.submit();
+	          } else {
+	            return;
+	          }
+	        });		
+		});
+
+		$(".deleteButton").submit(function( event ) {
+			event.preventDefault();
+    		var titulo;
+   			var mensaje;
+      		titulo ="Eliminar Pre-Perfil";
+      		mensaje="Estas seguro que quiere eliminar este Pre-Perfil?";
+	        swal({
+	            title: titulo,
+	            text: mensaje, 
+	            icon: "warning",
+	            buttons: true,
+	            successMode: true,
+	        })
+	        .then((aceptar) => {
+	          if (aceptar) {
+	            this.submit();
+	          } else {
+	            return;
+	          }
+	        });		
+		});
 	});
-	function borrar(id) {
-		var idUsuario=id;
-		$("#modalBorrar").modal()
-	}
-	
-	
 </script>
 		<ol class="breadcrumb">
 	        <li class="breadcrumb-item">
@@ -66,7 +126,7 @@
   <div class="col-sm-3"></div>
   <div class="col-sm-3"></div>
    <div class="col-sm-3"></div>
-  @can('usuario.create')
+  @can('prePerfil.create')
 	  <div class="col-sm-3">Nuevo 
 	  	 <a class="btn btn-primary" href="{{route('prePerfil.create')}}"><i class="fa fa-plus"></i></a>
 	  </div>
@@ -78,29 +138,40 @@
   			<table class="table table-hover table-striped  display" id="listTable">
 
   				<thead>
+  					@if(!isset($numero))
+  						<th>Grupo</th>
+  					@endif
 					<th>Tema</th>
 					<th>Fecha de Creación</th>
 					<th>Estado</th>
 					<th>Tipo</th>
-					@can('usuario.edit')
+					@can('prePerfil.edit')
 						<th>Modificar</th>
 					@endcan
-					@can('usuario.destroy')
+					@can('prePerfil.destroy')
 						<th>Eliminar</th>
 					@endcan
-					
 						<th>Descargar</th>
-					
+					@can('prePerfil.aprobar')
+						<th>Aprobar</th>
+					@endcan
+					@can('prePerfil.rechazar')
+						<th>Rechazar</th>
+					@endcan	
+						
   				</thead>
   				<tbody>
 
   				@foreach($prePerfiles as $prePerfil)
   						<tr>
+  							@if(!isset($numero))
+  								<td>{{ $prePerfil->grupo->numero_pdg_gru }}</td>
+  							@endif
 						<td>{{ $prePerfil->tema_pdg_ppe }}</td>
 						<td>{{ date_format(date_create($prePerfil->fecha_creacion_pdg_ppe), 'd/m/Y H:i:s')}}</td>
 						<td><span class="badge badge-info">{{ $prePerfil->categoriaEstado->nombre_cat_sta }}</span>&nbsp;</td>
 						<td>{{ $prePerfil->tipoTrabajo->nombre_cat_tpo_tra_gra}}</td>
-						@can('usuario.edit')
+						@can('prePerfil.edit')
 							<td>
 								<a class="btn btn-primary" href="{{route('prePerfil.edit',$prePerfil->id_pdg_ppe)}}"><i class="fa fa-pencil"></i></a>
 							</td>
@@ -118,11 +189,31 @@
 							<td>
 								{!! Form::open(['route'=>['downloadPrePerfil'],'method'=>'POST']) !!}
 							 		<div class="btn-group">
-							 			{!!Form::hidden('archivo',$prePerfil->ubicacion_pdg_ppe,['class'=>'form-control'])!!}
+							 			{!!Form::hidden('archivo',$prePerfil->nombre_archivo_pdg_ppe,['class'=>'form-control'])!!}
 										<button type="submit" class="btn btn-dark"><i class="fa fa-download"></i></button>
 									</div>
 								{!! Form:: close() !!}
 							</td>
+							@can('prePerfil.aprobar')
+								<td>
+									{!! Form::open(['route'=>['aprobarPreperfil'],'method'=>'POST','class'=>'aprobar']) !!}
+								 		<div class="btn-group">
+								 			{!!Form::hidden('idPrePerfil',$prePerfil->id_pdg_ppe,['class'=>'form-control'])!!}
+											<button type="submit" class="btn btn-success"><i class="fa fa-check"></i></button>
+										</div>
+									{!! Form:: close() !!}
+								</td>
+							@endcan
+							@can('prePerfil.rechazar')
+								<td>
+									{!! Form::open(['route'=>['rechazarPrePerfil'],'method'=>'POST','class'=>'rechazar']) !!}
+								 		<div class="btn-group">
+								 			{!!Form::hidden('idPrePerfil',$prePerfil->id_pdg_ppe,['class'=>'form-control'])!!}
+											<button type="submit" class="btn btn-danger"><i class="fa fa-remove"></i></button>
+										</div>
+									{!! Form:: close() !!}
+								</td>
+							@endcan
 						
 					</tr>				
 				@endforeach 

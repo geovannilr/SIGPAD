@@ -31,5 +31,8 @@ class pdg_ppe_pre_perfilModel extends Model
 	 public function usuario(){
 	 	Return $this->belongsTo('App\gen_UsuarioModel','id');
 	 }
+	  public function grupo(){
+	 	Return $this->belongsTo('App\pdg_gru_grupoModel','id_pdg_gru');
+	 }
 	 
 }

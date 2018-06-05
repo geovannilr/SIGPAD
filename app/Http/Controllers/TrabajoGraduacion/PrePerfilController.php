@@ -30,7 +30,7 @@ class PrePerfilController extends Controller
     {
         $userLogin=Auth::user();
         if ($userLogin->can(['prePerfil.index'])) {
-        	if (Auth::user()->isRole('administrator_tdg')){
+        	if (Auth::user()->isRole('administrador_tdg')){
         		//VERIFICAMOS EL ROL
         		$prePerfiles =pdg_ppe_pre_perfilModel::all();
 		       	return view('TrabajoGraduacion.PrePerfil.index',compact('prePerfiles'));
@@ -104,7 +104,8 @@ class PrePerfilController extends Controller
     public function store(Request $request)
     {
     	$validatedData = $request->validate([
-                'tema' => 'required|max:80',
+                'tema_pdg_ppe' => 'required|max:80',
+                'id_cat_tpo_tra_gra' => 'required',
                 'documento' => 'required'
          ]);
   	   $userLogin=Auth::user();
@@ -124,16 +125,17 @@ class PrePerfilController extends Controller
 
            $lastId = pdg_ppe_pre_perfilModel::create
             ([
-                'tema_pdg_ppe'   				 => $request['tema'],
+                'tema_pdg_ppe'   				 => $request['tema_pdg_ppe'],
                 'nombre_archivo_pdg_ppe'       	 =>  $nombre,
                 'ubicacion_pdg_ppe'  		 	 => trim($path).$nombre,
                 'fecha_creacion_pdg_ppe'       	 => $fecha,
                 'id_pdg_gru'					 => $idGrupo,
                 'id_cat_sta'					 => 7,
-                'id_cat_tpo_tra_gra'			 => $request['tipoTrabajo'],
+                'id_cat_tpo_tra_gra'			 => $request['id_cat_tpo_tra_gra'],
                 'id_gen_usuario'                 => $userLogin->id
             ]); 
-       Return redirect('/prePerfil/create')->with('message','Pre-Perfil Registrado correctamente!') ;
+            Session::flash('message','Pre-Perfil Registrado correctamente!');
+        	return Redirect::to('prePerfil');
     }
 
     /**
@@ -156,27 +158,19 @@ class PrePerfilController extends Controller
     public function edit($id){
 
            $userLogin=Auth::user();
-            if ($userLogin->can(['usuario.edit'])) {
-            $usuario=gen_UsuarioModel::find($id);
-            $user=User::find($id);
-            $roles=$user->getRoles();
-            $rolesBd = Role::all();
-            $select = "<select name='rol[]' multiple ='multiple' class='form-control' id='roles'>"; 
-            foreach ($rolesBd as $rolBd ) {
-               $flag=0;
-               foreach ($roles as $rol ) {
-                   if ($rolBd->slug == $rol ) {
-                       $flag=1;
-                   }
-               }
-               if ($flag == 1) {
-                   $select .= "<option value='".$rolBd->id."' selected>".$rolBd->name."</option>"; 
-               }else{
-                    $select .= "<option value='".$rolBd->id."'>".$rolBd->name."</option>"; 
-               }
-            }
-            $select .= "</select>";
-           return view('usuario.edit',compact(['usuario','select','roles']));
+           if ($userLogin->can(['prePerfil.edit'])) {
+           $prePerfil=pdg_ppe_pre_perfilModel::find($id);
+           if ($prePerfil->id_cat_sta == 3){//aprobado
+           		Session::flash('message-error','No puedes modificar un Pre-Perfil una vez ha sido aprobado!');
+        		return Redirect::to('prePerfil');
+           }elseif ($prePerfil->id_cat_sta == 8) { //RECHAZADO
+           		ession::flash('message-error','No puedes modificar un Pre-Perfil una vez ha sido rechazado!');
+        		return Redirect::to('prePerfil');
+           }else{
+           	 $tiposTrabajos =  cat_tpo_tra_gra_tipo_trabajo_graduacionModel::pluck('nombre_cat_tpo_tra_gra', 'id_Cat_tpo_tra_gra')->toArray();
+	       	return view('TrabajoGraduacion.PrePerfil.edit',compact('tiposTrabajos','prePerfil'));
+           }
+          
         }else{
             Session::flash('message-error', 'No tiene permisos para acceder a esta opción');
             return  view('template');
@@ -191,20 +185,41 @@ class PrePerfilController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
-    {
-         $validatedData = $request->validate([
-                'name' => 'required|max:50',
-                'user' => 'required|max:30',
-                'email' => 'required|max:250|email',
-                'rol' => 'required'
-        ]);
-        $usuario=gen_UsuarioModel::find($id);
-        $user=User::find($id);
-        $usuario->fill($request->all()); 
-        $usuario->save();
-        $user->syncRoles($request['rol']);
-        Session::flash('message','Usuario Modificado correctamente!');
-        return Redirect::to('/usuario');
+    {	$userLogin=Auth::user();
+        $validatedData = $request->validate([
+                'tema_pdg_ppe' => 'required|max:80',
+                'id_cat_tpo_tra_gra' => 'required',
+         ]);
+        $file = $request->file('documento');
+        $prePerfil=pdg_ppe_pre_perfilModel::find($id);
+        $prePerfil->tema_pdg_ppe = $request['tema_pdg_ppe'];
+        $prePerfil->id_cat_tpo_tra_gra = $request['id_cat_tpo_tra_gra'];
+
+       if (!is_null($file)) {
+       		//obtenemos el nombre del archivo
+      		$nombre = "Grupo1"."_2018_".date('hms').$file->getClientOriginalName();
+       		Storage::disk('prePerfiles')->delete($prePerfil->nombre_archivo_pdg_ppe);
+       		//indicamos que queremos guardar un nuevo archivo en el disco local
+        	Storage::disk('prePerfiles')->put($nombre, File::get($file));
+        	$fecha=date('Y-m-d H:m:s');
+            $path= public_path()."\Uploads\PrePerfil\ ";
+            $prePerfil->nombre_archivo_pdg_ppe = $nombre;
+            $prePerfil->ubicacion_pdg_ppe = trim($path).$nombre;
+            $prePerfil->fecha_creacion_pdg_ppe = $fecha;
+            $prePerfil->id_gen_usuario = $userLogin->id;
+            $prePerfil->save();
+            Session::flash('message','Pre-Perfil Modificado correctamente!');
+       		return Redirect::to('/prePerfil');
+       }else {
+       	 	$prePerfil->save();
+            Session::flash('message','Pre-Perfil Modificado correctamente!');
+       		return Redirect::to('/prePerfil');
+       }
+        /*
+        //$usuario->fill($request->all()); 
+        $prePerfil->save();
+        Session::flash('message','Pre-Perfil Modificado correctamente!');
+        return Redirect::to('/prePerfil');*/
     }
 
     /**
@@ -216,12 +231,10 @@ class PrePerfilController extends Controller
     public function destroy($id)
     {
         $userLogin=Auth::user();
-        if ($userLogin->can(['usuario.destroy'])) {
-            $user=User::find($id);
-            $user->revokeAllRoles();
-            gen_UsuarioModel::destroy($id);
-            Session::flash('message','Usuario Eliminado Correctamente!');
-            return Redirect::to('/usuario');
+        if ($userLogin->can(['prePerfil.destroy'])) {
+            pdg_ppe_pre_perfilModel::destroy($id);
+            Session::flash('message','Pre-Perfil Eliminado Correctamente!');
+            return Redirect::to('/prePerfil');
         }else{
             Session::flash('message-error', 'No tiene permisos para acceder a esta opción');
             return  view('template');
@@ -232,12 +245,32 @@ class PrePerfilController extends Controller
     public function verificarGrupo($carnet) {
 	    $estudiante = new gen_EstudianteModel();
 	    $respuesta = $estudiante->getGrupoCarnet($carnet);
-	    return $respuesta; 
-	       
+	    return $respuesta;     
+    }
+     public function aprobarPrePerfil(Request $request) {
+	    $prePerfil =pdg_ppe_pre_perfilModel::find($request['idPrePerfil']);
+	    $prePerfil->id_cat_sta = 3 ;//APROBADO
+	    $prePerfil->save();
+	    Session::flash('message','Pre-Perfil Aprobado Correctamente!');
+            return Redirect::to('/prePerfil');     
+    }
+    public function rechazarPrePerfil(Request $request) {
+	    $prePerfil =pdg_ppe_pre_perfilModel::find($request['idPrePerfil']);
+	    $prePerfil->id_cat_sta = 8 ;//RECHAZADO
+	    $prePerfil->save();
+	    Session::flash('message','Pre-Perfil Rechazado Correctamente!');
+            return Redirect::to('/prePerfil');    
     }
     function downloadPrePerfil(Request $request){
-    	$path = $request['archivo'];
-    	return response()->download($path);
+    	$name = $request['archivo'];
+    	$path= public_path()."\Uploads\PrePerfil\ ";
+    	//verificamos si el archivo existe y lo retornamos
+     	if (Storage::disk('prePerfiles')->exists($name)){
+      	  return response()->download(trim($path).$name);
+     	}else{
+     		Session::flash('error','El archivo no se encuentra disponible , es posible que fue borrado');
+             return redirect()->route('prePerfil.index');
+     	}
     	//return $path;
     }
 }
