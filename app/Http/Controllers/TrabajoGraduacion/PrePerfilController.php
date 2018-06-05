@@ -263,7 +263,7 @@ class PrePerfilController extends Controller
     }
     function downloadPrePerfil(Request $request){
     	$name = $request['archivo'];
-    	$path= public_path()."\Uploads\PrePerfil\ ";
+    	$path= public_path()."/Uploads/PrePerfil/ ";
     	//verificamos si el archivo existe y lo retornamos
      	if (Storage::disk('prePerfiles')->exists($name)){
       	  return response()->download(trim($path).$name);
