@@ -1,4 +1,21 @@
 $( document ).ready(function() {
+  $('.documento').change(function (){ //VALIDAR A LA HORA DE SUBIR UN DOCUMENTO EL TAMAÑO
+     var sizeByte = this.files[0].size;
+     var siezekiloByte = parseInt(sizeByte / 1024);
+     var nombre = $(this).val();
+     var extension = nombre.substring(nombre.lastIndexOf('.') + 1).toLowerCase();
+     console.log("Extension "+nombre.substring(nombre.lastIndexOf('.') + 1).toLowerCase());
+     if(siezekiloByte > 3094){
+           swal("", "El tamaño del pre-perfil no debe ser mayor a 3 MB", "error");
+           $(this).val('');
+     }else {
+          if(!(extension =='docx' || extension =='pdf' || extension =='doc')){
+            swal("", "Solo se permiten documentos de formato .pdf, .docx, .doc", "error");
+            $(this).val('');
+          }
+          
+     }
+   });
    $( "#buscarAlumno" ).click(function() {
    		if ($("#inputBuscar").val() == "") {
    			swal("", "Debe ingresar un carnet para buscar", "info");
@@ -226,15 +243,15 @@ function getGrupo(idGrupo){ // Traer el detalle del grupo
            type:'get',
            url:'http://localhost/SIGPAD/public/grupo/'+idGrupo,
            success:function(data){
-              //console.log(data);
               $("#modalDetalleBody").html(data.htmlCode);
               $("#divBoton").html(data.btnHtmlCode);
-              //$("#divBoton").append('<input type="hidden" name="idGrupo" value='+data.idGrupo);
-             // $("#divBoron").append('<button type="submit" class="btn btn-primary">Aprobar</button>');
               $("#detalleGrupo").modal();
            },
     		error : function(xhr, status) {
         		swal("", "Hubo un problema al obtener el detalle del grupo de trabajo de graduación", "error");
     		}
         });      
+}
+function validarArchivoPerfil(){
+
 }

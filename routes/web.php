@@ -42,5 +42,6 @@ Route::resource('prePerfil','TrabajoGraduacion\PrePerfilController');
 Route::post('downloadPrePerfil','TrabajoGraduacion\PrePerfilController@downloadPrePerfil')->name('downloadPrePerfil');
 Route::post('aprobarPreperfil','TrabajoGraduacion\PrePerfilController@aprobarPreperfil')->name('aprobarPreperfil');
 Route::post('rechazarPrePerfil','TrabajoGraduacion\PrePerfilController@rechazarPrePerfil')->name('rechazarPrePerfil');
+Route::get('indexPrePerfil/{id}','TrabajoGraduacion\PrePerfilController@indexPrePerfil')->name('indexPrePerfil');
 
 //------------------------------------------------------------------------------------------------------------------------

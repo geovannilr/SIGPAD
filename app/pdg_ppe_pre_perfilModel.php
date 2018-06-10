@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class pdg_ppe_pre_perfilModel extends Model
 {
@@ -33,6 +34,21 @@ class pdg_ppe_pre_perfilModel extends Model
 	 }
 	  public function grupo(){
 	 	Return $this->belongsTo('App\pdg_gru_grupoModel','id_pdg_gru');
+	 }
+
+
+	 public function getGruposPrePerfil(){
+	 	/*$grupos = DB::table('pdg_ppe_pre_perfil')
+                 ->select('id_pdg_gru', DB::raw('count(*) as cantidadPrePerfiles'))
+                 ->groupBy('id_pdg_gru')
+                 ->get();*/
+        $grupos = pdg_ppe_pre_perfilModel::with('grupo')
+        ->select('id_pdg_gru', DB::raw('count(*) as cantidadPrePerfiles'))
+        ->orderBy('id_pdg_ppe','desc')
+        ->groupBy('id_pdg_gru')
+        ->get();
+        return $grupos;
+
 	 }
 	 
 }
