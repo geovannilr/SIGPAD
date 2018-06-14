@@ -464,7 +464,15 @@ footer.sticky-footer {
   background-color: #e9ecef;
   line-height: 55px;
 }
-
+#loader{
+  
+}
+#imgLoading{
+    display: block;
+    max-width: 50%;
+    width: 50%;
+    height: auto;
+}
 @media (min-width: 992px) {
   footer.sticky-footer {
     width: calc(100% - 250px);
