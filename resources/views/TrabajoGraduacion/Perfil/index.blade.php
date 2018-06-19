@@ -8,29 +8,29 @@
 			});
   		</script>		
 @endif
+@if(Session::has('error'))
+  		<script type="text/javascript">
+  			$( document ).ready(function() {
+    			swal("", "{{Session::get('error')}}", "error");
+			});
+  		</script>		
+@endif
 <script type="text/javascript">
 	$( document ).ready(function() {
-		 $('.deleteButton').on('submit',function(e){
-        if(!confirm('Estas seguro que deseas eliminar este Registro?')){
-
-              e.preventDefault();
-        	}
-      	});
-		
     	$("#listTable").DataTable({
         dom: '<"top"l>frt<"bottom"Bip><"clear">',
         buttons: [
            {
                 extend: 'excelHtml5',
-                title: 'Listado de Perfiles y Pre-Perfiles'
+                title: 'Listado de Perfiles'
             },
             {
                 extend: 'pdfHtml5',
-                title: 'Listado de Perfiles y Pre-Perfiles'
+                title: 'Listado de Perfiles'
             },
              {
                 extend: 'csvHtml5',
-                title: 'Listado de Perfiles y Pre-Perfiles'
+                title: 'Listado de Perfiles'
             },
             {
                 extend: 'print',
@@ -46,27 +46,87 @@
         },
         order: [ 1, 'asc' ],
     	});
+    	$(".aprobar").submit(function( event ) {
+    		event.preventDefault();
+    		var titulo;
+   			var mensaje;
+      		titulo ="Aprobar Perfil";
+      		mensaje="Estas seguro que quiere aprobar este Perfil?";
+	        swal({
+	            title: titulo,
+	            text: mensaje, 
+	            icon: "warning",
+	            buttons: true,
+	            successMode: true,
+	        })
+	        .then((aceptar) => {
+	          if (aceptar) {
+	            this.submit();
+	          } else {
+	            return;
+	          }
+	        });		
+		});
+		$(".rechazar").submit(function( event ) {
+			event.preventDefault();
+    		var titulo;
+   			var mensaje;
+      		titulo ="Rechazar Perfil";
+      		mensaje="Estas seguro que quiere rechazar este Perfil?";
+	        swal({
+	            title: titulo,
+	            text: mensaje, 
+	            icon: "warning",
+	            buttons: true,
+	            successMode: true,
+	        })
+	        .then((aceptar) => {
+	          if (aceptar) {
+	            this.submit();
+	          } else {
+	            return;
+	          }
+	        });		
+		});
+
+		$(".deleteButton").submit(function( event ) {
+			event.preventDefault();
+    		var titulo;
+   			var mensaje;
+      		titulo ="Eliminar Perfil";
+      		mensaje="Estas seguro que quiere eliminar este Perfil?";
+	        swal({
+	            title: titulo,
+	            text: mensaje, 
+	            icon: "warning",
+	            buttons: true,
+	            successMode: true,
+	        })
+	        .then((aceptar) => {
+	          if (aceptar) {
+	            this.submit();
+	          } else {
+	            return;
+	          }
+	        });		
+		});
 	});
-	function borrar(id) {
-		var idUsuario=id;
-		$("#modalBorrar").modal()
-	}
-	
-	
 </script>
 		<ol class="breadcrumb">
 	        <li class="breadcrumb-item">
-	          <h5>Perfiles - GRUPO X</h5>
+	          <h5>Perfil</h5>
 	        </li>
-	        <li class="breadcrumb-item active">Listado</li>
+	        @if(isset($numero))
+				 <li class="breadcrumb-item active">Listado Grupo {{$numero}} </li>
+	        @endif
 		</ol>
 		 <div class="row">
   <div class="col-sm-3"></div>
   <div class="col-sm-3"></div>
    <div class="col-sm-3"></div>
-  @can('usuario.create')
+  @can('prePerfil.create')
 	  <div class="col-sm-3">Nuevo 
-	  	 <a class="btn btn-primary" href="{{route('usuario.create')}}"><i class="fa fa-plus"></i></a>
+	  	 <a class="btn btn-primary" href="{{route('perfil.create')}}"><i class="fa fa-plus"></i></a>
 	  </div>
   @endcan
 </div> 
@@ -76,73 +136,86 @@
   			<table class="table table-hover table-striped  display" id="listTable">
 
   				<thead>
-					<th>Usuario</th>
-					<th>Nombre</th>
-					<th>Roles</th>
-					<th>Fecha de Registro</th>
-					@can('usuario.edit')
+  					@if(!isset($numero))
+  						<th>Grupo</th>
+  					@endif
+					<th>Tema</th>
+					<th>Fecha de Creación</th>
+					<th>Estado</th>
+					<th>Tipo</th>
+					@can('prePerfil.edit')
 						<th>Modificar</th>
 					@endcan
-					@can('usuario.destroy')
+					@can('prePerfil.destroy')
 						<th>Eliminar</th>
 					@endcan
+						<th>Descargar</th>
+					@can('prePerfil.aprobar')
+						<th>Aprobar</th>
+					@endcan
+					@can('prePerfil.rechazar')
+						<th>Rechazar</th>
+					@endcan	
+						
   				</thead>
   				<tbody>
 
-  				@foreach($usuarios as $usuario)
-  				@if(Auth::user()->id != $usuario->id)
+  				@foreach($prePerfiles as $prePerfil)
   						<tr>
-						<td>{{ $usuario->user }}</td>
-						<td>{{ $usuario->name }}</td>
-						<td><?php
-							$split=explode("#",$rolesView[$usuario->user]);
-							foreach ($split as $key) {
-								if ($key != "") {
-									echo '<span class="badge badge-info">'.strtoupper($key).'</span>&nbsp;';
-								}
-							}
-						?>
-						</td>
-						<td>{{$usuario->created_at->format('d/m/Y H:i:s')}}</td>
-						@can('usuario.edit')
+  							@if(!isset($numero))
+  								<td>{{ $prePerfil->grupo->numero_pdg_gru }}</td>
+  							@endif
+						<td>{{ $prePerfil->tema_pdg_ppe }}</td>
+						<td>{{ date_format(date_create($prePerfil->fecha_creacion_pdg_ppe), 'd/m/Y H:i:s')}}</td>
+						<td><span class="badge badge-info">{{ $prePerfil->categoriaEstado->nombre_cat_sta }}</span>&nbsp;</td>
+						<td>{{ $prePerfil->tipoTrabajo->nombre_cat_tpo_tra_gra}}</td>
+						@can('prePerfil.edit')
 							<td>
-								<a class="btn btn-primary" href="{{route('usuario.edit',$usuario->id)}}"><i class="fa fa-pencil"></i></a>
+								<a class="btn btn-primary" href="{{route('prePerfil.edit',$prePerfil->id_pdg_ppe)}}"><i class="fa fa-pencil"></i></a>
 							</td>
 						@endcan
-						@can('usuario.destroy')
+						@can('prePerfil.destroy')
 							<td>
-								{!! Form::open(['route'=>['usuario.destroy',$usuario->id],'method'=>'DELETE','class' => 'deleteButton']) !!}
+								{!! Form::open(['route'=>['prePerfil.destroy',$prePerfil->id_pdg_ppe],'method'=>'DELETE','class' => 'deleteButton']) !!}
 							 		<div class="btn-group">
 										<button type="submit" class="btn btn-danger"><i class="fa fa-trash"></i></button>
 									</div>
 								{!! Form:: close() !!}
 							</td>
 						@endcan
-					</tr>
-  				@endif
-				
+
+							<td>
+								{!! Form::open(['route'=>['downloadPrePerfil'],'method'=>'POST']) !!}
+							 		<div class="btn-group">
+							 			{!!Form::hidden('archivo',$prePerfil->nombre_archivo_pdg_ppe,['class'=>'form-control'])!!}
+										<button type="submit" class="btn btn-dark"><i class="fa fa-download"></i></button>
+									</div>
+								{!! Form:: close() !!}
+							</td>
+							@can('prePerfil.aprobar')
+								<td>
+									{!! Form::open(['route'=>['aprobarPreperfil'],'method'=>'POST','class'=>'aprobar']) !!}
+								 		<div class="btn-group">
+								 			{!!Form::hidden('idPrePerfil',$prePerfil->id_pdg_ppe,['class'=>'form-control'])!!}
+											<button type="submit" class="btn btn-success"><i class="fa fa-check"></i></button>
+										</div>
+									{!! Form:: close() !!}
+								</td>
+							@endcan
+							@can('prePerfil.rechazar')
+								<td>
+									{!! Form::open(['route'=>['rechazarPrePerfil'],'method'=>'POST','class'=>'rechazar']) !!}
+								 		<div class="btn-group">
+								 			{!!Form::hidden('idPrePerfil',$prePerfil->id_pdg_ppe,['class'=>'form-control'])!!}
+											<button type="submit" class="btn btn-danger"><i class="fa fa-remove"></i></button>
+										</div>
+									{!! Form:: close() !!}
+								</td>
+							@endcan
+						
+					</tr>				
 				@endforeach 
 				</tbody>
 			</table>
 	   </div>
-	   <!-- Modal Confirmar Borrar-->
-		<div class="modal fade" id="modalBorrar" tabindex="-1" role="dialog" aria-labelledby="modalBorrar" aria-hidden="true">
-		  <div class="modal-dialog" role="document">
-		    <div class="modal-content">
-		      <div class="modal-header">
-		        <h5 class="modal-title" id="exampleModalLabel">Estas seguro?</h5>
-		        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-		          <span aria-hidden="true">&times;</span>
-		        </button>
-		      </div>
-		      <div class="modal-body">
-		        El usuario se eliminará permanentemente del Sistema.
-		      </div>
-		      <div class="modal-footer">
-		        <button type="button"   class="btn btn-secondary" data-dismiss="modal">No</button>
-		        <button type="button"   class="btn btn-primary">Sí</button>
-		      </div>
-		    </div>
-		  </div>
-		</div>	
 @stop

@@ -1,5 +1,5 @@
 <?php
-header('Access-Control-Allow-Origin: http://localhost/SIGPAD/public/verificarGrupo');
+header('Access-Control-Allow-Origin: *');
 return [
 
     /*
