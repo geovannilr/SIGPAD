@@ -51,4 +51,7 @@ Route::post('aprobarPerfil','TrabajoGraduacion\PerfilController@aprobarPerfil')-
 Route::post('rechazarPerfil','TrabajoGraduacion\PerfilController@rechazarPerfil')->name('rechazarPerfil');
 Route::get('indexPerfil/{id}','TrabajoGraduacion\PerfilController@indexPerfil')->name('indexPerfil');
 
+//Trabajo de graduacion
+Route::get('Dashboard/','TrabajoGraduacion\TrabajoDeGraduacionController@index')->name('Dashboard');
+
 //------------------------------------------------------------------------------------------------------------------------

@@ -125,7 +125,7 @@ class PrePerfilController extends Controller
     public function store(Request $request)
     {
     	$validatedData = $request->validate([
-                'tema_pdg_ppe' => 'required|max:80',
+                'tema_pdg_ppe' => 'required|max:200',
                 'id_cat_tpo_tra_gra' => 'required',
                 'documento' => 'required'
          ]);

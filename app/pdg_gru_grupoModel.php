@@ -39,5 +39,14 @@ class pdg_gru_grupoModel extends Model
 		);
 		$errorCode = DB::select('select @result as resultado');
 		return  $errorCode;
+	}
+
+	function getEtapas($idGrupo){
+		$etapas=DB::select('call getEtapasEvaluativasByGrupo(:idGrupo);',
+	    	array(
+	        	$idGrupo,
+	    	)
+		);
+		return $etapas;
 	}				
 }
