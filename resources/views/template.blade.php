@@ -134,6 +134,9 @@
               </ul>
             </li>
             @endcan
+            <li>
+             {!! link_to_route('prePerfil.create', $title ='Vista Principal',null,$attributes = ['class'=>'nav-link']); !!}
+            </li>
           </ul>
         
         </li>

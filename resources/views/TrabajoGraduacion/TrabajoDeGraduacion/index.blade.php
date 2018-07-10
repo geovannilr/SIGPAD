@@ -67,7 +67,7 @@
       <!-- Icon Cards-->
       <div class="row">
         @if($etapas == "NA")
-          NO SE PUDIERON OBTENER LAS ETAPAS
+          No se han registrado etapas evaluativas asociadas a ti tipo de trabajo de graduación, consulte al administrador
         @else
            @foreach ($etapas as $etapa)
               @if($etapa->nombre_cat_eta_eva == "Analisis y Diseño")
@@ -75,11 +75,11 @@
                   <div class="card text-gray bg-danger o-hidden h-100">
                     <div class="card-body">
                       <div class="card-body-icon">
-                        <i class="fa fa-mortar-board"></i>
+                        <i class="fa fa-mortar-board btn-danger"></i>
                       </div>
-                      <div class="mr-5">{{$etapa->nombre_cat_eta_eva}}</div>
+                      <div class="mr-5 btn-danger">{{$etapa->nombre_cat_eta_eva}}</div>
                     </div>
-                    <a class="card-footer text-gray clearfix small z-1" href="#">
+                    <a class="card-footer text-gray clearfix small z-1" href="{{route('etapaEvaluativa.show',$etapa->id_cat_eta_eva)}}">
                       <span class="float-left btn-danger">Ver Detalles</span>
                       <span class="float-right btn-danger">
                         <i class="fa fa-angle-right"></i>
@@ -96,7 +96,7 @@
                       </div>
                       <div class="mr-5">{{$etapa->nombre_cat_eta_eva}}</div>
                     </div>
-                    <a class="card-footer text-gray clearfix small z-1" href="#">
+                    <a class="card-footer text-gray clearfix small z-1" href="{{route('etapaEvaluativa.show',$etapa->id_cat_eta_eva)}}">
                       <span class="float-left">Ver detalles</span>
                       <span class="float-right">
                         <i class="fa fa-angle-right"></i>

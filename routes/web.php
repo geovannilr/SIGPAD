@@ -53,5 +53,6 @@ Route::get('indexPerfil/{id}','TrabajoGraduacion\PerfilController@indexPerfil')-
 
 //Trabajo de graduacion
 Route::get('Dashboard/','TrabajoGraduacion\TrabajoDeGraduacionController@index')->name('Dashboard');
+Route::resource('etapaEvaluativa','TrabajoGraduacion\EtapaEvaluativaController');
 
 //------------------------------------------------------------------------------------------------------------------------

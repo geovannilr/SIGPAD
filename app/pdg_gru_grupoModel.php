@@ -5,8 +5,7 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 
-class pdg_gru_grupoModel extends Model
-{
+class pdg_gru_grupoModel extends Model{
     protected $table='pdg_gru_grupo';
 	protected $primaryKey='id_pdg_gru';
 	public $timestamps=false;
@@ -42,7 +41,7 @@ class pdg_gru_grupoModel extends Model
 	}
 
 	function getEtapas($idGrupo){
-		$etapas=DB::select('call getEtapasEvaluativasByGrupo(:idGrupo);',
+		$etapas=DB::select('call sp_pdg_getEtapasEvaluativasByGrupo(:idGrupo);',
 	    	array(
 	        	$idGrupo,
 	    	)
