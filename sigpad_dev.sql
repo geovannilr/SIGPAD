@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 03-07-2018 a las 05:16:47
+-- Tiempo de generación: 10-07-2018 a las 03:59:28
 -- Versión del servidor: 5.7.14
 -- Versión de PHP: 7.0.10
 
@@ -24,17 +24,6 @@ DELIMITER $$
 --
 -- Procedimientos
 --
-CREATE DEFINER=`root`@`localhost` PROCEDURE `getEtapasEvaluativasByGrupo` (IN `idGrupo` INT)  BEGIN
-SELECT nombre_cat_eta_eva, nombre_cat_tpo_tra_gra,ttg.tema_pdg_tra_gra,tpo.orden_eta_eva,ttg.id_pdg_gru
- FROM sigpad_dev.pdg_tra_gra_trabajo_graduacion ttg
-inner join sigpad_dev.rel_tpo_tra_eta_tipo_trabajo_etapa tpo on ttg.id_cat_tpo_tra_gra=tpo.id_cat_tpo_tra_gra 
-inner join sigpad_dev.cat_eta_eva_etapa_evaluativa ev on tpo.id_cat_eta_eva=ev.id_cat_eta_eva
-inner join sigpad_dev.cat_tpo_tra_gra_tipo_trabajo_graduacion tt on tt.id_cat_tpo_tra_gra=ttg.id_cat_tpo_tra_gra
-inner join pdg_gru_grupo gp on gp.id_pdg_gru=ttg.id_pdg_gru
-where gp.anio_pdg_gru = tt.anio_cat_tpo_tra_gra and gp.id_pdg_gru = idGrupo
-order by tpo.orden_eta_eva;
-END$$
-
 CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_pdg_enviarParaAprobacion` (IN `idEstudiante` INT, OUT `result` INT)  BEGIN
 
 declare idGrupo int;
@@ -95,6 +84,55 @@ SELECT id_pdg_gru, sta.id_cat_sta,sta.nombre_cat_sta
             
             where gst.id_gen_est=idEst;
 
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_pdg_getDocumentosArchivosEtapasByIdEtapaGrupo` (IN `idEtapa` INT, IN `idGrupo` INT)  BEGIN
+SELECT 
+docs.id_pdg_doc,
+ docs.id_pdg_gru,
+ docs.id_cat_tpo_doc,
+ docs.fecha_creacion_pdg_doc as fechaCreacionDocumento, 
+ tpd.nombre_pdg_tpo_doc as NombreTipoDocumento,
+ tpd.puede_observar_cat_pdg_tpo_doc as SePuedeObservarDocu,
+ arc.id_pdg_arc_doc,
+ arc.nombre_arc_doc as nombreArchivo,
+ arc.ubicacion_arc_doc as UbicacionArchivo,
+ arc.fecha_subida_arc_doc fechaSubidaArchivo,
+ arc.activo as esArchivoActico
+ ,eta.nombre_cat_eta_eva as nombreEtapaEva
+ ,eta.ponderacion_cat_eta_eva as ponderacionEtapa
+ ,eta.tiene_defensas_cat_eta_eva as tieneDefensasLaEtapa
+ ,eta.puede_observar_cat_eta_eva as sePuedeObservarLaEtapa
+
+FROM pdg_doc_documento docs 
+inner join cat_tpo_doc_tipo_documento tpd on docs.id_cat_tpo_doc=tpd.id_cat_tpo_doc
+inner join rel_tpo_doc_eta_eva_tipo_documento_etapa_eva rel on docs.id_cat_tpo_doc=rel.id_cat_tpo_doc
+inner join cat_eta_eva_etapa_evaluativa eta on rel.id_cat_eta_eva=eta.id_cat_eta_eva
+inner join pdg_arc_doc_archivo_documento arc on arc.id_pdg_doc=docs.id_pdg_doc
+
+
+where rel.id_cat_eta_eva=idEtapa and docs.id_pdg_gru=idGrupo;
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_pdg_getDocumentosByEtapa` (IN `idEtapa` INT)  BEGIN
+
+SELECT rel.id_cat_eta_eva,nombre_cat_eta_eva,ponderacion_cat_eta_eva, rel.id_cat_tpo_doc,nombre_pdg_tpo_doc FROM sigpad_dev.rel_tpo_doc_eta_eva_tipo_documento_etapa_eva rel
+inner join cat_eta_eva_etapa_evaluativa eta on rel.id_cat_eta_eva=eta.id_cat_eta_eva
+inner join cat_tpo_doc_tipo_documento tpd on rel.id_cat_tpo_doc=tpd.id_cat_tpo_doc
+
+where rel.id_cat_eta_eva=idEtapa;
+ 
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_pdg_getEtapasEvaluativasByGrupo` (IN `idGrupo` INT)  BEGIN
+SELECT ev.id_cat_eta_eva,nombre_cat_eta_eva, nombre_cat_tpo_tra_gra,ttg.tema_pdg_tra_gra,tpo.orden_eta_eva,ttg.id_pdg_gru
+ FROM sigpad_dev.pdg_tra_gra_trabajo_graduacion ttg
+inner join sigpad_dev.rel_tpo_tra_eta_tipo_trabajo_etapa tpo on ttg.id_cat_tpo_tra_gra=tpo.id_cat_tpo_tra_gra 
+inner join sigpad_dev.cat_eta_eva_etapa_evaluativa ev on tpo.id_cat_eta_eva=ev.id_cat_eta_eva
+inner join sigpad_dev.cat_tpo_tra_gra_tipo_trabajo_graduacion tt on tt.id_cat_tpo_tra_gra=ttg.id_cat_tpo_tra_gra
+inner join pdg_gru_grupo gp on gp.id_pdg_gru=ttg.id_pdg_gru
+where gp.anio_pdg_gru = tt.anio_cat_tpo_tra_gra and gp.id_pdg_gru = idGrupo
+order by tpo.orden_eta_eva;
 END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_pdg_gru_aceptarRechazarGrupo` (IN `acepto` INT, IN `idEst` INT, OUT `result` INT)  BEGIN
@@ -796,6 +834,16 @@ CREATE TABLE `pdg_arc_doc_archivo_documento` (
   `activo` int(11) DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='InnoDB';
 
+--
+-- Volcado de datos para la tabla `pdg_arc_doc_archivo_documento`
+--
+
+INSERT INTO `pdg_arc_doc_archivo_documento` (`id_pdg_arc_doc`, `id_pdg_doc`, `ubicacion_arc_doc`, `fecha_subida_arc_doc`, `nombre_arc_doc`, `activo`) VALUES
+(1, 3, 'esta es la ubicación', '2018-07-08 20:22:43', 'Nombre del archivo', 1),
+(2, 3, 'esta es la otra ubicación', '2018-07-08 20:22:43', 'Nombre del segudo archivo', 0),
+(3, 4, 'Esta es la ubicacion de otro archivo', '2018-07-08 20:22:43', 'Nombre del tercer arhivo', 1),
+(4, 7, 'Archivo de la defensa final', '2018-07-09 20:22:43', 'TOMO FINAL', 1);
+
 -- --------------------------------------------------------
 
 --
@@ -886,6 +934,16 @@ CREATE TABLE `pdg_doc_documento` (
   `id_cat_tpo_doc` int(11) NOT NULL,
   `fecha_creacion_pdg_doc` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Volcado de datos para la tabla `pdg_doc_documento`
+--
+
+INSERT INTO `pdg_doc_documento` (`id_pdg_doc`, `id_pdg_gru`, `id_cat_tpo_doc`, `fecha_creacion_pdg_doc`) VALUES
+(3, 1, 3, '2018-07-09 01:39:27'),
+(4, 1, 4, '2018-07-09 01:39:27'),
+(6, 1, 2, '2018-07-09 01:39:27'),
+(7, 1, 5, '2018-07-09 01:39:27');
 
 -- --------------------------------------------------------
 
@@ -1860,7 +1918,7 @@ ALTER TABLE `pdg_apr_eta_tra_aprobador_etapa_trabajo`
 -- AUTO_INCREMENT de la tabla `pdg_arc_doc_archivo_documento`
 --
 ALTER TABLE `pdg_arc_doc_archivo_documento`
-  MODIFY `id_pdg_arc_doc` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_pdg_arc_doc` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 --
 -- AUTO_INCREMENT de la tabla `pdg_asp_aspectos_evaluativos`
 --
@@ -1885,7 +1943,7 @@ ALTER TABLE `pdg_def_defensa`
 -- AUTO_INCREMENT de la tabla `pdg_doc_documento`
 --
 ALTER TABLE `pdg_doc_documento`
-  MODIFY `id_pdg_doc` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_pdg_doc` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 --
 -- AUTO_INCREMENT de la tabla `pdg_eta_eva_tra_etapa_trabajo`
 --
