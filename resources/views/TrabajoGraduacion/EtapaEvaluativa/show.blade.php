@@ -127,18 +127,18 @@
             <li> <h3>&nbsp;{{$ponderacion}}</h3></li>
           </li>
     </ol>
-  <div class="row">
+  <!--<div class="row">
   <div class="col-sm-3"></div>
   <div class="col-sm-3"></div>
    <div class="col-sm-3"></div>
   @can('prePerfil.create')
     @if($nombreEtapa != "" )
     <div class="col-sm-3">Nuevo 
-       <a class="btn btn-primary" href="{{route('etapaEvaluativa.create')}}"><i class="fa fa-plus"></i></a>
+       <a class="btn btn-primary" href="{{route('nuevoDocumento',$id)}}"><i class="fa fa-plus"></i></a>
     </div>
     @endif
   @endcan
-</div> 
+</div> -->
 
     <br>
     {!!$bodyHtml!!}

@@ -75,6 +75,10 @@ class EtapaEvaluativaController extends Controller{
 	    	$nombreEtapa =$documentos[0]->nombre_cat_eta_eva;
 	    	$ponderacion =$documentos[0]->ponderacion_cat_eta_eva.'%';
 	    	foreach ($documentos as  $doc) {
+	    		$bodyHtml.=' 
+	    					<div class="col-sm-3">
+	    						<p>Nuevo <a class="btn btn-primary" href="'.url("/").'/nuevoDocumento/'.$id.'/'.$doc->id_cat_tpo_doc.'"><i class="fa fa-plus"></i></a></p> 
+    						</div>';
 		    	$bodyHtml.='<h2 class="text-center">Entregables de '.$doc->nombre_pdg_tpo_doc.'</h2>';
 		    	$bodyHtml.= '<div class="table-responsive">';
 	        	$bodyHtml.='<table class="table table-hover table-striped  display" id="listTable">';
@@ -120,7 +124,7 @@ class EtapaEvaluativaController extends Controller{
 
 	    	}
 	    }
-	    return view('TrabajoGraduacion.EtapaEvaluativa.show',compact('bodyHtml','nombreEtapa','ponderacion'));
+	    return view('TrabajoGraduacion.EtapaEvaluativa.show',compact('bodyHtml','nombreEtapa','ponderacion','id'));
 	    //return $bodyHtml;
     }
 
