@@ -19,6 +19,9 @@ $( document ).ready(function() {
     $("#formPrePerfil").submit(function( event ) {
       $("#loader").removeAttr('style');
     });
+    $(".formPrePerfil").submit(function( event ) {
+      $("#loader").removeAttr('style');
+    });
    $( "#buscarAlumno" ).click(function() {
    		if ($("#inputBuscar").val() == "") {
    			swal("", "Debe ingresar un carnet para buscar", "info");

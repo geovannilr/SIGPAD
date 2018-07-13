@@ -50,4 +50,27 @@ class gen_EstudianteModel extends Model
 		//$errorCode = DB::select("@resultado)");
 	 	return $resultado;
 	 }	
+
+	  public function getIdGrupo($carnet){
+		$valor=0;
+	 	DB::statement('call sp_pdg_gru_find_ByCarnet(:carnet,@resultado,@jsonR);',
+	    	array(
+	        	$carnet,
+	    	)
+		);
+		$errorCode = DB::select('select @resultado as resultado');
+		$resultado="";
+		$estudiantes = '';
+		if ($errorCode[0]->resultado == '0'){
+			$estudiantes = DB::select('select @jsonR as estudiantes');
+			$jsonEstudiantes =response()->json($estudiantes)->getData();
+			$estudiantes= $jsonEstudiantes[0]->estudiantes;
+			$decodeEstudiantes = json_decode($estudiantes);
+			$idGrupo=$decodeEstudiantes[0]->idGrupo;
+		}else{
+			$idGrupo ="NA";
+		}
+
+	 	return $idGrupo;
+	 }	
 }
