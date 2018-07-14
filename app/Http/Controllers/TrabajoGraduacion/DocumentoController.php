@@ -8,12 +8,17 @@ use Session;
 use Redirect;
 use Exception;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\File;
 use \App\pdg_ppe_pre_perfilModel;
 use \App\gen_EstudianteModel;
 use \App\pdg_gru_grupoModel;
 use \App\cat_tpo_tra_gra_tipo_trabajo_graduacionModel;
 use \App\cat_eta_eva_etapa_evalutativaModel;
 use \App\cat_tpo_doc_tipo_documentoModel;
+use \App\pdg_doc_documentoModel;
+use \App\pdg_arc_doc_archivo_documentoModel;
+
 
 class DocumentoController extends Controller{
 	public function __construct(){
@@ -26,7 +31,7 @@ class DocumentoController extends Controller{
     	if(sizeof($tipoDocumento)==0 || sizeof($etapa)==0 ){
     		return "LOS PARAMETROS RECIBIDOS NO SON CORRECTOS";
     	}else{ //LOS PARAMETROS VIENEN CORRECTAMENTE
-    		return view('TrabajoGraduacion.DocumentoEtapaEvaluativa.create',compact('etapa','tipoDocumento'));
+    		return view('TrabajoGraduacion.DocumentoEtapaEvaluativa.create',compact('etapa','tipoDocumento','idEtapa','idTipoDoc'));
     	}
     }
 
@@ -34,29 +39,40 @@ class DocumentoController extends Controller{
     	$userLogin=Auth::user();
     	$estudiante = new gen_EstudianteModel();
 	    $idGrupo = $estudiante->getIdGrupo($userLogin->user);
-	    return $idGrupo;
-       //obtenemos el campo file definido en el formulario
-      	/*$file = $request->file('documento');
-       //obtenemos el nombre del archivo
-      	$nombre = "Grupo1"."_2018_".date('hms').$file->getClientOriginalName();
-       //indicamos que queremos guardar un nuevo archivo en el disco local
-        Storage::disk('prePerfiles')->put($nombre, File::get($file));
-        $fecha=date('Y-m-d H:m:s');
-        $path= public_path().$_ENV['PATH_PREPERFIL'];
+	    if ($idGrupo !="NA") {
+	    	$grupo = pdg_gru_grupoModel::find($idGrupo);
+	    	$anioGrupo = $grupo->anio_pdg_gru;
+	    	//obtenemos el campo file definido en el formulario
+	      	$file = $request->file('documento');
+	       //obtenemos el nombre del archivo
+	      	$nombre = "Grupo".$idGrupo."_".$anioGrupo."_".date('hms').$file->getClientOriginalName();
+	       //indicamos que queremos guardar un nuevo archivo en el disco local
+	        Storage::disk('prePerfiles')->put($nombre, File::get($file));
+	        $fecha=date('Y-m-d H:m:s');
+	        $path= public_path().$_ENV['PATH_PREPERFIL'];
            
-           $lastId = pdg_ppe_pre_perfilModel::create
+           $lastIdDocumento = pdg_doc_documentoModel::create
             ([
-                'tema_pdg_ppe'   				 => $request['tema_pdg_ppe'],
-                'nombre_archivo_pdg_ppe'       	 =>  $nombre,
-                'ubicacion_pdg_ppe'  		 	 => trim($path).$nombre,
-                'fecha_creacion_pdg_ppe'       	 => $fecha,
-                'id_pdg_gru'					 => $idGrupo,
-                'id_cat_sta'					 => 7,
-                'id_cat_tpo_tra_gra'			 => $request['id_cat_tpo_tra_gra'],
-                'id_gen_usuario'                 => $userLogin->id
+                'id_pdg_gru'   				     => $idGrupo,
+                'id_cat_tpo_doc'       			 => $request['tipoDocumento'],
+                'fecha_creacion_pdg_doc'       	 => $fecha
             ]); 
-            Session::flash('message','Pre-Perfil Registrado correctamente!');
-        	return Redirect::to('prePerfil');*/
+
+            $lastIdArchivo = pdg_arc_doc_archivo_documentoModel::create
+            ([
+                'id_pdg_doc'					 => $lastIdDocumento->id_pdg_doc,
+                'ubicacion_arc_doc'				 => trim($path).$nombre,
+                'fecha_subida_arc_doc'			 => $fecha,
+                'nombre_arc_doc'                 => $file->getClientOriginalName(),
+                'activo'                         => 1
+            ]);
+           
+            Session::flash('message','Documento Envíado correctamente!');
+        	return Redirect::to('etapaEvaluativa/'.$request['etapa']);
+	    }else{
+	    	// NO POSEE GRUPO
+	    }
+       
     }
 
 }
