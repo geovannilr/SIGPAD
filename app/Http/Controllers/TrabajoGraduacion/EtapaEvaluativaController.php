@@ -101,7 +101,7 @@ class EtapaEvaluativaController extends Controller{
 		        				$bodyHtml.='<tr>
 											<td>'.$archivo->nombreArchivo.'</td>
 											<td>'.$archivo->fechaSubidaArchivo.'</td>
-											<td><a class="btn btn-primary" href="'.url("/").'/documento/'.$archivo->id_pdg_doc.'/edit"><i class="fa fa-pencil"></i></a></td>
+											<td><a class="btn btn-primary" href="'.url("/").'/editDocumento/'.$id.'/'.$archivo->id_pdg_doc.'/'.$doc->id_cat_tpo_doc.'"><i class="fa fa-pencil"></i></a></td>
 											<td>
 												<form method="POST" action="'.url("/").'/documento/'.$archivo->id_pdg_doc.'" class="deleteButton formPost">
 													<input name="_method" value="DELETE" type="hidden">

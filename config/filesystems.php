@@ -52,6 +52,11 @@ return [
             'driver' => 'local',
             'root' => public_path()."/Uploads/PrePerfil",
         ],
+        'Uploads' => [
+            'driver' => 'local',
+            'root' => public_path()."/Uploads",
+        ],
+
 
         'public' => [
             'driver' => 'local',

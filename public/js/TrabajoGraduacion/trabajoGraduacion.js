@@ -19,7 +19,7 @@ $( document ).ready(function() {
     $("#formPrePerfil").submit(function( event ) {
       $("#loader").removeAttr('style');
     });
-    $(".formPrePerfil").submit(function( event ) {
+    $("#formDocumento").submit(function( event ) {
       $("#loader").removeAttr('style');
     });
    $( "#buscarAlumno" ).click(function() {

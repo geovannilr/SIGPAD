@@ -139,17 +139,19 @@ class PrePerfilController extends Controller
       	$file = $request->file('documento');
        //obtenemos el nombre del archivo
       	$nombre = "Grupo1"."_2018_".date('hms').$file->getClientOriginalName();
-       //indicamos que queremos guardar un nuevo archivo en el disco local
-        Storage::disk('prePerfiles')->put($nombre, File::get($file));
+        Storage::disk('Uploads')->put($nombre, File::get($file));
+         //movemos el archivo a la ubicación correspondiente segun grupo y años
+        $nuevaUbicacion=$anioGrupo.'/Grupo'.$correlativo.'PrePerfil/'.$nombre;
+        Storage::disk('Uploads')->move($nombre, $nuevaUbicacion);
         $fecha=date('Y-m-d H:m:s');
         //$path= public_path()."\Uploads\PrePerfil\ ";
-        $path= public_path().$_ENV['PATH_PREPERFIL'];
+         $path= public_path().$_ENV['PATH_UPLOADS'];
            
            $lastId = pdg_ppe_pre_perfilModel::create
             ([
                 'tema_pdg_ppe'   				 => $request['tema_pdg_ppe'],
                 'nombre_archivo_pdg_ppe'       	 =>  $nombre,
-                'ubicacion_pdg_ppe'  		 	 => trim($path).$nombre,
+                'ubicacion_pdg_ppe'  		 	 => trim($path).$nuevaUbicacion,
                 'fecha_creacion_pdg_ppe'       	 => $fecha,
                 'id_pdg_gru'					 => $idGrupo,
                 'id_cat_sta'					 => 7,
