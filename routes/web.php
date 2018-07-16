@@ -44,4 +44,19 @@ Route::post('aprobarPreperfil','TrabajoGraduacion\PrePerfilController@aprobarPre
 Route::post('rechazarPrePerfil','TrabajoGraduacion\PrePerfilController@rechazarPrePerfil')->name('rechazarPrePerfil');
 Route::get('indexPrePerfil/{id}','TrabajoGraduacion\PrePerfilController@indexPrePerfil')->name('indexPrePerfil');
 
+	//Perfil
+Route::resource('perfil','TrabajoGraduacion\PerfilController');
+Route::post('downloadPerfil','TrabajoGraduacion\PerfilController@downloadPerfil')->name('downloadPerfil');
+Route::post('aprobarPerfil','TrabajoGraduacion\PerfilController@aprobarPerfil')->name('aprobarPerfil');
+Route::post('rechazarPerfil','TrabajoGraduacion\PerfilController@rechazarPerfil')->name('rechazarPerfil');
+Route::get('indexPerfil/{id}','TrabajoGraduacion\PerfilController@indexPerfil')->name('indexPerfil');
+
+//Trabajo de graduacion
+Route::get('Dashboard/','TrabajoGraduacion\TrabajoDeGraduacionController@index')->name('Dashboard');
+Route::resource('etapaEvaluativa','TrabajoGraduacion\EtapaEvaluativaController');
+
+//Documentos de trabajo de graduación
+Route::get('nuevoDocumento/{idEtapa}/{idTipoDoc?}','TrabajoGraduacion\DocumentoController@createDocumento')->name('nuevoDocumento');
+Route::get('editDocumento/{idEtapa}/{idDocumento}/{idTipoDoc?}','TrabajoGraduacion\DocumentoController@editDocumento')->name('editDocumento');
+Route::resource('documento','TrabajoGraduacion\DocumentoController');
 //------------------------------------------------------------------------------------------------------------------------

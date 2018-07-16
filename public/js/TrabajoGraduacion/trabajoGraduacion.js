@@ -19,6 +19,9 @@ $( document ).ready(function() {
     $("#formPrePerfil").submit(function( event ) {
       $("#loader").removeAttr('style');
     });
+    $("#formDocumento").submit(function( event ) {
+      $("#loader").removeAttr('style');
+    });
    $( "#buscarAlumno" ).click(function() {
    		if ($("#inputBuscar").val() == "") {
    			swal("", "Debe ingresar un carnet para buscar", "info");
@@ -56,7 +59,7 @@ function addAlumno(carnetAlumno,tipo){
 	var carnet = carnetAlumno;
         $.ajax({
            type:'POST',
-           url:'http://localhost/SIGPAD/public/getAlumno',
+           url:'http://'+getUrl()+'/SIGPAD/public/getAlumno',
            data:{'carnet':carnet},
            success:function(data){
               //console.log(data);
@@ -143,7 +146,7 @@ function verificarGrupo(carnetAlumno,tipo){ // FUNCIONPARA VERIFICAR SI TIENE  G
 	var carnet = carnetAlumno;
         $.ajax({
            type:'POST',
-           url:'http://localhost/SIGPAD/public/verificarGrupo',
+           url:'http://'+getUrl()+'/SIGPAD/public/verificarGrupo',
            data:{'carnet':carnet},
            success:function(data){
               //console.log(data);
@@ -178,7 +181,7 @@ function confirmarGrupo(idAlumno,flag){ // FUNCION PARA QUE EL ALUMNO ACEPTE PER
     });
         $.ajax({
            type:'POST',
-           url:'http://localhost/SIGPAD/public/confirmarGrupo',
+           url:'http://'+getUrl()+'/SIGPAD/public/confirmarGrupo',
            data:{'id':idAlumno,'aceptar':aceptar},
            success:function(data){
               console.log(data);
@@ -244,7 +247,7 @@ function getGrupo(idGrupo){ // Traer el detalle del grupo
     });
         $.ajax({
            type:'get',
-           url:'http://168.232.49.193/SIGPAD/public/grupo/'+idGrupo,
+           url:'http://'+getUrl()+'/SIGPAD/public/grupo/'+idGrupo,
            success:function(data){
               $("#modalDetalleBody").html(data.htmlCode);
               $("#divBoton").html(data.btnHtmlCode);

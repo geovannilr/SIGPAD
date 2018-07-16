@@ -6,7 +6,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta name="description" content="">
   <meta name="author" content="">
-  <meta name="csrf-token" content="{{ csrf_token() }}" 
+  <meta name="csrf-token" content="{{ csrf_token() }}">
+  <meta name="app-url" content="{{ env('APP_URL') }}" >
   <title>SIGPAD</title>
   <!-- CSS-->
   {!!Html::style('https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css')!!}
@@ -28,6 +29,7 @@
     <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.5.1/js/buttons.html5.min.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.5.1/js/buttons.print.min.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/responsive/2.2.1/js/dataTables.responsive.min.js"> </script>
+    {!!Html::script('js/main.js')!!}
     {!!Html::script('js/TrabajoGraduacion/trabajoGraduacion.js')!!}
     {!!Html::script('js/jquery.multi-select.js')!!}
  
@@ -131,6 +133,11 @@
                 @endcan
               </ul>
             </li>
+            @endcan
+            @can('prePerfil.index')
+              <li>
+               {!! link_to_route('Dashboard', $title ='Vista Principal',null,$attributes = ['class'=>'nav-link']); !!}
+              </li>
             @endcan
           </ul>
         
