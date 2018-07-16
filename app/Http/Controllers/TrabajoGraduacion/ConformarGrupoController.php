@@ -34,7 +34,7 @@ class ConformarGrupoController extends Controller
             $grupo = new pdg_gru_grupoModel();
             $grupos= $grupo->getGrupos();
             //return var_dump($grupos);
-       return view('TrabajoGraduacion\ConformarGrupo.index',compact(['grupos']));
+       return view('TrabajoGraduacion.ConformarGrupo.index',compact(['grupos']));
         }else{
             Session::flash('message-error', 'No tiene permisos para acceder a esta opción');
             return  view('template');

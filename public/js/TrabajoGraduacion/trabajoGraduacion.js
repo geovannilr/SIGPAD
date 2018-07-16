@@ -244,7 +244,7 @@ function getGrupo(idGrupo){ // Traer el detalle del grupo
     });
         $.ajax({
            type:'get',
-           url:'http://localhost/SIGPAD/public/grupo/'+idGrupo,
+           url:'http://168.232.49.193/SIGPAD/public/grupo/'+idGrupo,
            success:function(data){
               $("#modalDetalleBody").html(data.htmlCode);
               $("#divBoton").html(data.btnHtmlCode);

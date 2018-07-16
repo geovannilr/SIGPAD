@@ -1,0 +1,16 @@
+
+*** These modified files were found in JOE when it aborted on Wed Jul 11 01:04:17 2018
+*** JOE was aborted because the terminal closed
+
+*** File '(Unnamed)'
+/var/www/html/SIGPAD/.git/MERGE_MSG
+/var/www/html/wordpress/.git/MERGE_MSG
+/var/www/html/wordpress/.git/MERGE_MSG
+/var/www/html/wordpress/.git/MERGE_MSG
+/var/www/html/SIGPAD/.git/COMMIT_EDITMSG
+
+*** File '* Startup Log *'
+Processing '/etc/joe/editorrc'...
+Processing '/etc/joe/ftyperc'...
+Finished processing /etc/joe/ftyperc
+Finished processing /etc/joe/editorrc
