@@ -68,7 +68,21 @@ class DocumentoController extends Controller{
 	        Storage::disk('Uploads')->move($nombre, trim($nuevaUbicacion));
 	        $fecha=date('Y-m-d H:m:s');
 	        $path= public_path().$_ENV['PATH_UPLOADS'];
-           
+	        //cambiamos a 0 el documento que esta activo actualmente de ese tipo
+           $ultimoDocumentoInsertado = pdg_doc_documentoModel::where('id_cat_tpo_doc', $request['tipoDocumento'])
+          						->where('id_pdg_gru', $idGrupo)
+          						->orderBy('id_pdg_doc', 'desc')
+          						->first();
+          	if (sizeof($ultimoDocumentoInsertado)!=0) {
+          		$archivo = pdg_arc_doc_archivo_documentoModel::where('id_pdg_doc', $ultimoDocumentoInsertado->id_pdg_doc)
+          				   ->where('activo','1')
+          				   ->first();
+          		if (sizeof($archivo)!=0) {
+          			$archivo->activo = 0;
+          			$archivo->save();
+          		}
+          		
+          	}	
            $lastIdDocumento = pdg_doc_documentoModel::create
             ([
                 'id_pdg_gru'   				     => $idGrupo,
@@ -114,31 +128,18 @@ class DocumentoController extends Controller{
 	        	$nuevaUbicacion=$anioGrupo.'/Grupo'.$correlativo.'/Etapas/'.$nombre;
 	        }
 	        Storage::disk('Uploads')->move($nombre, trim($nuevaUbicacion));
-	        //Borramos el archivo anterior
-	      	Storage::disk('Uploads')->delete(trim($nuevaUbicacion).$nombre);
 	        $fecha=date('Y-m-d H:m:s');
 	        $path= public_path().$_ENV['PATH_UPLOADS'];
            	//traemos el documento a modificar
            	$documento = pdg_doc_documentoModel::find($id);
            	//traemos el archivo asociado que es el  ultimo activo de todos los de ese tipo 
-           	$archivoDocumento = pdg_arc_doc_archivo_documentoModel::where('activo', 1)
-          						->where('id_pdg_doc', $id);				
-           /*$lastIdDocumento = pdg_doc_documentoModel::create
-            ([
-                'id_pdg_gru'   				     => $idGrupo,
-                'id_cat_tpo_doc'       			 => $request['tipoDocumento'],
-                'fecha_creacion_pdg_doc'       	 => $fecha
-            ]); 
-
-            $lastIdArchivo = pdg_arc_doc_archivo_documentoModel::create
-            ([
-                'id_pdg_doc'					 => $lastIdDocumento->id_pdg_doc,
-                'ubicacion_arc_doc'				 => $path.trim($nuevaUbicacion),
-                'fecha_subida_arc_doc'			 => $fecha,
-                'nombre_arc_doc'                 => $file->getClientOriginalName(),
-                'activo'                         => 1
-            ]);
-           */
+           	$archivoDocumento = pdg_arc_doc_archivo_documentoModel::where('id_pdg_doc', $id)->first();
+           	//Borramos el archivo anterior
+	      	File::delete($archivoDocumento->ubicacion_arc_doc);	
+          	$archivoDocumento->ubicacion_arc_doc =$path.$nuevaUbicacion;
+          	$archivoDocumento->nombre_arc_doc = $file->getClientOriginalName();
+          	$archivoDocumento->fecha_subida_arc_doc = $fecha;
+          	$archivoDocumento->save();
             Session::flash('message','Documento Actualizado correctamente!');
         	return Redirect::to('etapaEvaluativa/'.$request['etapa']);
 	    }else{
@@ -146,5 +147,34 @@ class DocumentoController extends Controller{
 	    }
        
     }
+
+    function downloadDocumento(Request $request){
+    	$idArchvio = $request['documento'];
+    	$archivoDocumento = pdg_arc_doc_archivo_documentoModel::find($idArchvio);
+    	//verificamos si el archivo existe y lo retornamos
+    	$ruta = $archivoDocumento->ubicacion_arc_doc;
+     	if (File::exists($ruta)){
+      	  return response()->download($ruta);
+     	}else{
+     		Session::flash('error','El documento no se encuentra disponible , es posible que haya sido  borrado');
+            return Redirect::to('etapaEvaluativa/'.$request['etapa']);
+     	}
+    	//return $path;
+    }
+
+     public function destroy($id, Request $request){
+    	$archivoDocumento = pdg_arc_doc_archivo_documentoModel::where('id_pdg_doc',$id)->first();
+    	$idArchivo = $archivoDocumento->id_pdg_arc_doc;
+    	//verificamos si el archivo existe y lo retornamos
+    	$ruta = $archivoDocumento->ubicacion_arc_doc;
+     	if (File::exists($ruta)){
+      	  File::delete($ruta);	
+     	}
+     	pdg_arc_doc_archivo_documentoModel::destroy($idArchivo);
+     	pdg_doc_documentoModel::find($id);
+     	Session::flash('message','El documento se ha eliminado con éxito');
+        return Redirect::to('etapaEvaluativa/'.$request['etapa']);
+
+    } 
 
 }

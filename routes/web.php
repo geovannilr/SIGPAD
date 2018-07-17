@@ -59,4 +59,5 @@ Route::resource('etapaEvaluativa','TrabajoGraduacion\EtapaEvaluativaController')
 Route::get('nuevoDocumento/{idEtapa}/{idTipoDoc?}','TrabajoGraduacion\DocumentoController@createDocumento')->name('nuevoDocumento');
 Route::get('editDocumento/{idEtapa}/{idDocumento}/{idTipoDoc?}','TrabajoGraduacion\DocumentoController@editDocumento')->name('editDocumento');
 Route::resource('documento','TrabajoGraduacion\DocumentoController');
+Route::post('downloadDocumento','TrabajoGraduacion\DocumentoController@downloadDocumento')->name('downloadDocumento');
 //------------------------------------------------------------------------------------------------------------------------

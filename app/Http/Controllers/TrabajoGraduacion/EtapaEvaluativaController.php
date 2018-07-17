@@ -100,25 +100,44 @@ class EtapaEvaluativaController extends Controller{
 	        			if ($tipoDocumento == $archivo->id_cat_tpo_doc) {
 		        				$bodyHtml.='<tr>
 											<td>'.$archivo->nombreArchivo.'</td>
-											<td>'.$archivo->fechaSubidaArchivo.'</td>
-											<td><a class="btn btn-primary" href="'.url("/").'/editDocumento/'.$id.'/'.$archivo->id_pdg_doc.'/'.$doc->id_cat_tpo_doc.'"><i class="fa fa-pencil"></i></a></td>
-											<td>
-												<form method="POST" action="'.url("/").'/documento/'.$archivo->id_pdg_doc.'" class="deleteButton formPost">
-													<input name="_method" value="DELETE" type="hidden">
-									 				<div class="btn-group">
-														<button type="submit" class="btn btn-danger"><i class="fa fa-trash"></i></button>
-													</div>
-												</form>
-											</td>
-											<td>
-												<form method="POST" action="http://localhost/SIGPAD/public/downloadPrePerfil" accept-charset="UTF-8" class ="formPost">
-									 				<div class="btn-group">
-									 					<input class="form-control" name="archivo" value="'.$archivo->nombreArchivo.'" type="hidden">
-														<button type="submit" class="btn btn-dark"><i class="fa fa-download"></i></button>
-													</div>
-												</form>
-											</td>
-		        						</tr>';
+											<td>'.$archivo->fechaSubidaArchivo.'</td>';
+											if ($archivo->esArchivoActico == 1) {
+												$bodyHtml.='			
+															<td><a class="btn btn-primary" href="'.url("/").'/editDocumento/'.$id.'/'.$archivo->id_pdg_doc.'/'.$doc->id_cat_tpo_doc.'"><i class="fa fa-pencil"></i></a></td>
+															<td>
+																<form method="POST" action="'.url("/").'/documento/'.$archivo->id_pdg_doc.'" class="deleteButton formPost">
+																	<input name="_method" value="DELETE" type="hidden">
+																	<input class="form-control" name="etapa" value="'.$id.'" type="hidden">
+													 				<div class="btn-group">
+																		<button type="submit" class="btn btn-danger"><i class="fa fa-trash"></i></button>
+																	</div>
+																</form>
+															</td>
+															<td>
+																<form method="POST" action="'.url("/").'/downloadDocumento" accept-charset="UTF-8" class ="formPost">
+													 				<div class="btn-group">
+													 					<input class="form-control" name="documento" value="'.$archivo->id_pdg_arc_doc.'" type="hidden">
+													 					<input class="form-control" name="etapa" value="'.$id.'" type="hidden">
+																		<button type="submit" class="btn btn-dark"><i class="fa fa-download"></i></button>
+																	</div>
+																</form>
+															</td>
+						        						</tr>';
+											}else{
+												$bodyHtml.='			
+														<td></td>
+														<td></td>
+														<td>
+															<form method="POST" action="'.url("/").'/downloadDocumento" accept-charset="UTF-8" class ="formPost">
+												 				<div class="btn-group">
+												 					<input class="form-control" name="documento" value="'.$archivo->id_pdg_arc_doc.'" type="hidden">
+												 					<input class="form-control" name="etapa" value="'.$id.'" type="hidden">
+																	<button type="submit" class="btn btn-dark"><i class="fa fa-download"></i></button>
+																</div>
+															</form>
+														</td>
+					        						</tr>';
+											}
 	        			}
 	        		}
 	        	}
