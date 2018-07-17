@@ -44,7 +44,7 @@
                 type: 'column'
             }
         },
-        order: [ 1, 'asc' ],
+        order: [ 2, 'asc' ],
       });
       $(".aprobar").submit(function( event ) {
         event.preventDefault();
@@ -95,8 +95,8 @@
       event.preventDefault();
         var titulo;
         var mensaje;
-          titulo ="Eliminar Pre-Perfil";
-          mensaje="Estas seguro que quiere eliminar este Pre-Perfil?";
+          titulo ="Eliminar Documento de {{$nombreEtapa}}";
+          mensaje="Estas seguro que quiere eliminar este Documento?";
           swal({
               title: titulo,
               text: mensaje, 

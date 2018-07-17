@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 10-07-2018 a las 03:59:28
+-- Tiempo de generación: 17-07-2018 a las 03:48:03
 -- Versión del servidor: 5.7.14
 -- Versión de PHP: 7.0.10
 
@@ -783,12 +783,12 @@ CREATE TABLE `gen_usuario` (
 --
 
 INSERT INTO `gen_usuario` (`id`, `name`, `user`, `email`, `password`, `remember_token`, `created_at`, `updated_at`, `primer_nombre`, `segundo_nombre`, `primer_apellido`, `segundo_apellido`, `codigo_carnet`) VALUES
-(3, 'Fernando Ernesto Cosme Morales', 'cm11005', 'cosme.92@gmail.com', '$2y$10$BjPijXdO87r91PjefxJA0ODEyOjmgyyhfdr.s0YxRMH77y9vYEzJG', 'ADjRxwoNGKcyrZSn8sjXAR3wpiHJsGB8LdPbVCS6CEP8zuplHG8Lk6DfBCAS', '2018-04-01 21:23:31', '2018-05-02 16:46:29', NULL, NULL, NULL, NULL, NULL),
+(3, 'Fernando Ernesto Cosme Morales', 'cm11005', 'cosme.92@gmail.com', '$2y$10$BjPijXdO87r91PjefxJA0ODEyOjmgyyhfdr.s0YxRMH77y9vYEzJG', 'w7fH6zYwOuWfO3Xxu413qPR3l7vnktebqRQ0I7YnlEuCGa4CC8z2W3vOTYHA', '2018-04-01 21:23:31', '2018-05-02 16:46:29', NULL, NULL, NULL, NULL, NULL),
 (30, 'Administrador Central', 'admin', 'administrador@ues.edu.sv', '$2y$10$PdTVSePNsZMz/G/dT7uKM.nx4jwoCFRoU/qQntwPZQ9OtBjehYeiK', '5ECRfk131eANUOnPbWwfw2AmlnbQpnISrXPQCM1Uv688BiRXo6EC6ak0AYTt', '2018-05-02 12:28:30', '2018-05-02 12:28:30', NULL, NULL, NULL, NULL, NULL),
 (22, 'Eduardo Rafael Serrano Barrera', 'sb12002', 'rafael31194@hotmail.com', '$2y$10$U4USomU1aYJmniMN0ghXZesIrpGV2laeOMF5A3DfAdHrkmZx17bIS', 'THtf4I44kzEQt0ZztHzwkAwpICYQAXewDAFdfTdaXfvdwZkBNCHBI20xNd9P', '2018-04-12 19:51:07', '2018-04-12 19:51:07', NULL, NULL, NULL, NULL, NULL),
 (21, 'Edgardo José Ramirez García', 'rg12001', 'edgardo.ramirez94@gmail.com', '$2y$10$x76t/jfOKVu3ZrBFcNMzxee47YyYwmjBpHCCN0ed1zgOF8D0TneGC', 'XQWXV2nsqqMwTQEip8HSZdYRheN14GYvVu9EIPRaGz7HLkJonEnjHAycPipd', '2018-04-12 19:49:39', '2018-04-12 19:49:39', NULL, NULL, NULL, NULL, NULL),
 (20, 'Francisco Wilfredo Polanco Portillo', 'pp10005', 'polanco260593@gmail.com', '$2y$10$Db..R7cD93r70/TgPqYzLetuYq.U.vsseOJiiq/c3rw2WnEgY47b6', NULL, '2018-04-12 19:48:34', '2018-04-12 19:48:34', NULL, NULL, NULL, NULL, NULL),
-(31, 'Yesenia Vigil', 'admin_tdg', 'tdg@ues.edu.sv', '$2y$10$lscTHMSe2IuDSIfItMXMLeEgaDUkal18L1FQjPnMWX3ErzF1EdR7C', 'optHEIAttpbj8rW5nknAPcMZg4zqQZ1wj6qLmJLVMB4VqgogVnLG5QFYYANC', '2018-05-21 04:50:36', '2018-05-21 04:50:36', NULL, NULL, NULL, NULL, NULL),
+(31, 'Yesenia Vigil', 'admin_tdg', 'tdg@ues.edu.sv', '$2y$10$lscTHMSe2IuDSIfItMXMLeEgaDUkal18L1FQjPnMWX3ErzF1EdR7C', 't5hy4bIbiGWTGxjRJWRfmPVHcyyJiMqUuG5kXhSo4EwEWNjpTx8ZbPR75q2p', '2018-05-21 04:50:36', '2018-05-21 04:50:36', NULL, NULL, NULL, NULL, NULL),
 (32, 'Cesar González', 'cg99005', 'cesargrodriguez@gmail.com', '$2y$10$Hq8qsxVNZ6Wh5wBcQU58Yez8o00vTg22OAylsuenZPgS48ojmOQP2', NULL, '2018-06-25 03:53:40', '2018-06-25 03:53:40', 'Cesar', 'Augusto', 'González', 'Rodriguez', 'cg99005'),
 (33, 'Balmore Ortiz', 'bo96001', 'balmore.ortiz@gmail.com', '$2y$10$whBZB27BBTQD.BE3eBaxyev8FACIqK.uNy10kiHq21zpD/.F5mjpO', NULL, '2018-06-25 03:56:29', '2018-06-25 03:56:29', 'Balmore', NULL, 'Ortiz', NULL, 'bo96001');
 
@@ -833,16 +833,6 @@ CREATE TABLE `pdg_arc_doc_archivo_documento` (
   `nombre_arc_doc` varchar(45) DEFAULT NULL,
   `activo` int(11) DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='InnoDB';
-
---
--- Volcado de datos para la tabla `pdg_arc_doc_archivo_documento`
---
-
-INSERT INTO `pdg_arc_doc_archivo_documento` (`id_pdg_arc_doc`, `id_pdg_doc`, `ubicacion_arc_doc`, `fecha_subida_arc_doc`, `nombre_arc_doc`, `activo`) VALUES
-(1, 3, 'esta es la ubicación', '2018-07-08 20:22:43', 'Nombre del archivo', 1),
-(2, 3, 'esta es la otra ubicación', '2018-07-08 20:22:43', 'Nombre del segudo archivo', 0),
-(3, 4, 'Esta es la ubicacion de otro archivo', '2018-07-08 20:22:43', 'Nombre del tercer arhivo', 1),
-(4, 7, 'Archivo de la defensa final', '2018-07-09 20:22:43', 'TOMO FINAL', 1);
 
 -- --------------------------------------------------------
 
@@ -934,16 +924,6 @@ CREATE TABLE `pdg_doc_documento` (
   `id_cat_tpo_doc` int(11) NOT NULL,
   `fecha_creacion_pdg_doc` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
--- Volcado de datos para la tabla `pdg_doc_documento`
---
-
-INSERT INTO `pdg_doc_documento` (`id_pdg_doc`, `id_pdg_gru`, `id_cat_tpo_doc`, `fecha_creacion_pdg_doc`) VALUES
-(3, 1, 3, '2018-07-09 01:39:27'),
-(4, 1, 4, '2018-07-09 01:39:27'),
-(6, 1, 2, '2018-07-09 01:39:27'),
-(7, 1, 5, '2018-07-09 01:39:27');
 
 -- --------------------------------------------------------
 
@@ -1918,7 +1898,7 @@ ALTER TABLE `pdg_apr_eta_tra_aprobador_etapa_trabajo`
 -- AUTO_INCREMENT de la tabla `pdg_arc_doc_archivo_documento`
 --
 ALTER TABLE `pdg_arc_doc_archivo_documento`
-  MODIFY `id_pdg_arc_doc` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id_pdg_arc_doc` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=36;
 --
 -- AUTO_INCREMENT de la tabla `pdg_asp_aspectos_evaluativos`
 --
@@ -1943,7 +1923,7 @@ ALTER TABLE `pdg_def_defensa`
 -- AUTO_INCREMENT de la tabla `pdg_doc_documento`
 --
 ALTER TABLE `pdg_doc_documento`
-  MODIFY `id_pdg_doc` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id_pdg_doc` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=40;
 --
 -- AUTO_INCREMENT de la tabla `pdg_eta_eva_tra_etapa_trabajo`
 --
