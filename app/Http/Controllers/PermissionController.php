@@ -65,7 +65,7 @@ class PermissionController extends Controller
             ([
                 'name'       	 => $request['name'],
                 'description'    => $request['description'],
-                'slug'  		 => $newSlg
+                'slug'  		 => $request['slug']
             ]);
 
         Return redirect('permiso')->with('message','Permiso Registrado correctamente!') ;
