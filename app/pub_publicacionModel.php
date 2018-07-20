@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class publicacionModel extends Model{
+class pub_publicacionModel extends Model{
  
 	 protected $table='pub_publicacion';
 	protected $primaryKey='id_pub';

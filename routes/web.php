@@ -61,3 +61,10 @@ Route::get('editDocumento/{idEtapa}/{idDocumento}/{idTipoDoc?}','TrabajoGraduaci
 Route::resource('documento','TrabajoGraduacion\DocumentoController');
 Route::post('downloadDocumento','TrabajoGraduacion\DocumentoController@downloadDocumento')->name('downloadDocumento');
 //------------------------------------------------------------------------------------------------------------------------
+
+
+//------------------PUBLICACIONES DE TRABAJOS DE RADUACIÓN----------------------------------------------------------------
+Route::resource('publicacion','Publicaciones\publicacionController');
+
+//------------------------------------------------------------------------------------------------------------------------
+
