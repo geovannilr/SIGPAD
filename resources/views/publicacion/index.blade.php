@@ -52,7 +52,7 @@
     		var titulo;
    			var mensaje;
       		titulo ="Eliminar Pre-Perfil";
-      		mensaje="Estas seguro que quiere eliminar este Pre-Perfil?";
+      		mensaje="Estas seguro que quiere eliminar esta publicación de trabajo de graduación?";
 	        swal({
 	            title: titulo,
 	            text: mensaje, 
@@ -82,7 +82,7 @@
    <div class="col-sm-3"></div>
   @can('prePerfil.create')
 	  <div class="col-sm-3">Nueva Pubicación
-	  	 <a class="btn btn-primary" href="{{route('prePerfil.create')}}"><i class="fa fa-plus"></i></a>
+	  	 <a class="btn btn-primary" href="{{route('publicacion.create')}}"><i class="fa fa-plus"></i></a>
 	  </div>
   @endcan
 </div> 
@@ -96,9 +96,15 @@
   					<th>Cod. Pubicación</th>
 					<th>Año</th>
 					<th>Título</th>
-					<th>Modificar</th>
-					<th>Eliminar</th>
-					<th>Descargar</th>
+					@can('publicacion.edit')
+						<th>Modificar</th>
+					@endcan
+					@can('publicacion.destroy')
+						<th>Eliminar</th>
+					@endcan
+					@can('publicacionDocumento.create')
+						<th>AgregarArchivo</th>
+					@endcan
 					
 						
   				</thead>
@@ -109,29 +115,30 @@
   						<td>{{ $publicacion->codigo_pub }}</td>	
 						<td>{{ $publicacion->anio_pub }}</td>
 						<td>{{ $publicacion->titulo_pub}}</td>
-						@can('prePerfil.edit')
+						@can('publicacion.edit')
 							<td>
-								<a class="btn btn-primary" href="{{route('prePerfil.edit',$publicacion->id_pub)}}"><i class="fa fa-pencil"></i></a>
+								<a class="btn btn-primary" href="{{route('publicacion.edit',$publicacion->id_pub)}}"><i class="fa fa-pencil"></i></a>
 							</td>
 						@endcan
-						@can('prePerfil.destroy')
+						@can('publicacion.destroy')
 							<td>
-								{!! Form::open(['route'=>['prePerfil.destroy',$publicacion->id_pub],'method'=>'DELETE','class' => 'deleteButton']) !!}
+								{!! Form::open(['route'=>['publicacion.destroy',$publicacion->id_pub],'method'=>'DELETE','class' => 'deleteButton']) !!}
 							 		<div class="btn-group">
 										<button type="submit" class="btn btn-danger"><i class="fa fa-trash"></i></button>
 									</div>
 								{!! Form:: close() !!}
 							</td>
 						@endcan
-
+						@can('publicacionDocumento.create')
 							<td>
 								{!! Form::open(['route'=>['downloadPrePerfil'],'method'=>'POST']) !!}
 							 		<div class="btn-group">
 							 			{!!Form::hidden('archivo',$publicacion->id_pub,['class'=>'form-control'])!!}
-										<button type="submit" class="btn btn-dark"><i class="fa fa-download"></i></button>
+										<button type="submit" class="btn btn-dark"><i class="fa fa-plus"></i></button>
 									</div>
 								{!! Form:: close() !!}
 							</td>
+						@endcan	
 					</tr>				
 				@endforeach 
 				</tbody>

@@ -2,10 +2,9 @@
 @section('content')
 <ol class="breadcrumb">
         <li class="breadcrumb-item">
-          <h5>Nuevo Documento</h5>
+          <h5>Nuevo Documento </h5>
         </li>
-        <li class="breadcrumb-item active"><b>Etapa:</b> &nbsp;{{ $etapa->nombre_cat_eta_eva }}&nbsp;&nbsp;<b>Tipo de Documento:&nbsp;</b>{{ $tipoDocumento->nombre_pdg_tpo_doc }}</li>
-          
+        <li class="breadcrumb-item active"><b>Publicacion:</b> &nbsp;{{ $publicacion->codigo_pub }}&nbsp;- {{ $publicacion->titulo_pub }}</li>
 </ol>
   		<div class="panel-body" >
         <div class="row">
@@ -23,15 +22,8 @@
               </ul>
           </div>
         @endif
-    		{!! Form:: open(['route'=>'documento.store','method'=>'POST', 'id'=>'formDocumento','files'=>'true','enctype'=>'multipart/form-data']) !!}
-        <div class="row">
-          <div class="col-sm-12">
-            <p class="text-center">
-            {{ $tipoDocumento->descripcion_pdg_tpo_doc }}
-            </p>
-          </div>
-        </div>
-    			@include('TrabajoGraduacion.DocumentoEtapaEvaluativa.forms.formCreate')
+    		{!! Form:: open(['route'=>'storageDocPublicacion','method'=>'POST', 'id'=>'formDocumento','files'=>'true','enctype'=>'multipart/form-data']) !!}
+    			@include('publicacion.forms.formCreate')
         <div class="row">
           <div class="form-group col-sm-6">
             {!! Form::submit('Enviar',['class'=>'btn btn-primary']) !!}

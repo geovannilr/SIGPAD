@@ -6,7 +6,24 @@ $( document ).ready(function() {
      var extension = nombre.substring(nombre.lastIndexOf('.') + 1).toLowerCase();
      console.log("Extension "+nombre.substring(nombre.lastIndexOf('.') + 1).toLowerCase());
      if(siezekiloByte > 3094){
-           swal("", "El tamaño del pre-perfil no debe ser mayor a 3 MB", "error");
+           swal("", "El tamaño documento no debe ser mayor a 3 MB", "error");
+           $(this).val('');
+     }else {
+          if(!(extension =='docx' || extension =='pdf' || extension =='doc')){
+            swal("", "Solo se permiten documentos de formato .pdf, .docx, .doc", "error");
+            $(this).val('');
+          }
+          
+     }
+   });
+  $('.documentoPublicacion').change(function (){ //VALIDAR A LA HORA DE SUBIR UN DOCUMENTO EL TAMAÑO
+     var sizeByte = this.files[0].size;
+     var siezekiloByte = parseInt(sizeByte / 1024);
+     var nombre = $(this).val();
+     var extension = nombre.substring(nombre.lastIndexOf('.') + 1).toLowerCase();
+     console.log("Extension "+nombre.substring(nombre.lastIndexOf('.') + 1).toLowerCase());
+     if(siezekiloByte > 10240){
+           swal("", "El tamaño documento no debe ser mayor a 10 MB", "error");
            $(this).val('');
      }else {
           if(!(extension =='docx' || extension =='pdf' || extension =='doc')){

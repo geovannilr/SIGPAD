@@ -96,7 +96,7 @@
         @endcan
          <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Trabajo de graduación">
           <a class="nav-link nav-link-collapse collapsed" data-toggle="collapse" href="#collapseTrabajoGraduacion" data-parent="#exampleAccordion">
-            <i class="fa fa-fw fa fa-book"></i>
+            <i class="fa fa-fw fa fa-mortar-board"></i>
             <span class="nav-link-text">Trabajo de Graduacion</span>
           </a>
           <ul class="sidenav-second-level collapse" id="collapseTrabajoGraduacion">
@@ -137,6 +137,13 @@
             @can('prePerfil.index')
               <li>
                {!! link_to_route('Dashboard', $title ='Vista Principal',null,$attributes = ['class'=>'nav-link']); !!}
+              </li>
+            @endcan
+             @can('publicacion.index')
+              <li>
+
+              
+               {!! link_to_route('publicacion.index', $title ='Histórico de trabajos de graduación',null,$attributes = ['class'=>'nav-link']); !!}
               </li>
             @endcan
           </ul>

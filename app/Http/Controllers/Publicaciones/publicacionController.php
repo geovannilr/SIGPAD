@@ -28,4 +28,24 @@ class publicacionController extends Controller{
         $publicaciones = pub_publicacionModel::all();
         return view('publicacion.index',compact('publicaciones'));
     }
+
+    public function createDocumento($idPublicacion){
+    	//VERIFICAMOS SI EXISTEN EN LA BASE DE DATOS ESOS ID
+    	$publicacion = pub_publicacionModel::find($idPublicacion);
+    	if(empty($publicacion)){
+    		return "LOS PARAMETROS RECIBIDOS NO SON CORRECTOS";
+    	}else{ //LOS PARAMETROS VIENEN CORRECTAMENTE
+    		return view('publicacion.createDocumento',compact('publicacion'));
+    	}
+    }
+    public function storeDocumento(Request $request){
+    		$file = $request->file('documento');
+    		$publicacion = pub_publicacionModel::find($request['idPublicacion']);
+	       //obtenemos el nombre del archivo
+	      	$nombre = "Codigo".$publicacion->codigo_pub.date('hms').$file->getClientOriginalName();
+	       //indicamos que queremos guardar un nuevo archivo en el disco local
+	        Storage::disk('Uploads')->put($nombre, File::get($file));
+	        $fecha=date('Y-m-d H:m:s');
+	        $path= public_path().$_ENV['PATH_UPLOADS'];
+    }
 }
