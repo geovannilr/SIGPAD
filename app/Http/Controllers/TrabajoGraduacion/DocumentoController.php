@@ -28,7 +28,7 @@ class DocumentoController extends Controller{
     	//VERIFICAMOS SI EXISTEN EN LA BASE DE DATOS ESOS ID
     	$etapa = cat_eta_eva_etapa_evalutativaModel::find($idEtapa);
     	$tipoDocumento = cat_tpo_doc_tipo_documentoModel::find($idTipoDoc);
-    	if(sizeof($tipoDocumento)==0 || sizeof($etapa)==0 ){
+    	if(empty($tipoDocumento) || empty($etapa) ){
     		return "LOS PARAMETROS RECIBIDOS NO SON CORRECTOS";
     	}else{ //LOS PARAMETROS VIENEN CORRECTAMENTE
     		return view('TrabajoGraduacion.DocumentoEtapaEvaluativa.create',compact('etapa','tipoDocumento','idEtapa','idTipoDoc'));
@@ -38,7 +38,7 @@ class DocumentoController extends Controller{
           $etapa = cat_eta_eva_etapa_evalutativaModel::find($idEtapa);
           $tipoDocumento = cat_tpo_doc_tipo_documentoModel::find($idTipoDoc);
           $documento = pdg_doc_documentoModel::find($idDocumento);
-          if(sizeof($tipoDocumento)==0 || sizeof($etapa)==0 ){
+          if(empty($tipoDocumento) || empty($etapa)){
     		return "LOS PARAMETROS RECIBIDOS NO SON CORRECTOS";
     	}else{ //LOS PARAMETROS VIENEN CORRECTAMENTE
     		return view('TrabajoGraduacion.DocumentoEtapaEvaluativa.edit',compact('etapa','tipoDocumento','idEtapa','idTipoDoc','documento'));
@@ -73,11 +73,11 @@ class DocumentoController extends Controller{
           						->where('id_pdg_gru', $idGrupo)
           						->orderBy('id_pdg_doc', 'desc')
           						->first();
-          	if (sizeof($ultimoDocumentoInsertado)!=0) {
+          	if (!empty($ultimoDocumentoInsertado)) {
           		$archivo = pdg_arc_doc_archivo_documentoModel::where('id_pdg_doc', $ultimoDocumentoInsertado->id_pdg_doc)
           				   ->where('activo','1')
           				   ->first();
-          		if (sizeof($archivo)!=0) {
+          		if (!empty($archivo)) {
           			$archivo->activo = 0;
           			$archivo->save();
           		}

@@ -8,7 +8,7 @@
   <meta name="author" content="">
   <meta name="csrf-token" content="{{ csrf_token() }}">
   <meta name="app-url" content="{{ env('APP_URL') }}" >
-  <title>SIGPAD</title>
+  <title>.::SIGPAD - EISI</title>
   <!-- CSS-->
   {!!Html::style('https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css')!!}
   {!!Html::style('css/sb-admin.css')!!}
@@ -40,7 +40,7 @@
 <body class="fixed-nav sticky-footer bg-dark" id="page-top">
   <!-- Navigation-->
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top" id="mainNav">
-    <a class="navbar-brand" href="index.html">PORTAL ADMINISTRATIVO</a>
+    <a class="navbar-brand" href="{{  url('/') }}">PORTAL ADMINISTRATIVO</a>
     <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
