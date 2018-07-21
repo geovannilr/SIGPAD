@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class pub_publicacionModel extends Model{
  
-	 protected $table='pub_publicacion';
+	protected $table='pub_publicacion';
 	protected $primaryKey='id_pub';
 	public $timestamps=false;
 		protected $fillable=

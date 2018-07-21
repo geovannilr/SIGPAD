@@ -9,7 +9,7 @@ use Redirect;
 use Exception;
 use Illuminate\Support\Facades\Auth;
 use \App\pub_publicacionModel;
-
+use \App\pub_arc_publicacion_archivoModel;
 class publicacionController extends Controller{
 	public function __construct(){
         $this->middleware('auth');
@@ -29,6 +29,13 @@ class publicacionController extends Controller{
         return view('publicacion.index',compact('publicaciones'));
     }
     public function show($id){
+    	$publicacion = pub_publicacionModel::find($id);
+    	if (empty($publicacion)) {
+    		return "PARAMETROS INCORRECTOS";
+    	}else{
+    		$publicacionesArchivos=pub_arc_publicacion_archivoModel::where('id_pub',$id)->get();
+    		return view('publicacion.show',compact('publicacionesArchivos','publicacion'));
+    	}
     	
     }
     public function createDocumento($idPublicacion){

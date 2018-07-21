@@ -67,5 +67,7 @@ Route::post('downloadDocumento','TrabajoGraduacion\DocumentoController@downloadD
 Route::resource('publicacion','Publicaciones\publicacionController');
 Route::get('nuevoDocumentoPublicacion/{idPublicacion}','Publicaciones\publicacionController@createDocumento')->name('nuevoDocumentoPublicacion');
 Route::post('storageDocPublicacion','Publicaciones\publicacionController@storeDocumento')->name('storageDocPublicacion');
+
+
 //------------------------------------------------------------------------------------------------------------------------
 
