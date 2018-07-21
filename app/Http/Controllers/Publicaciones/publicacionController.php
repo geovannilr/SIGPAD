@@ -28,7 +28,9 @@ class publicacionController extends Controller{
         $publicaciones = pub_publicacionModel::all();
         return view('publicacion.index',compact('publicaciones'));
     }
-
+    public function show($id){
+    	
+    }
     public function createDocumento($idPublicacion){
     	//VERIFICAMOS SI EXISTEN EN LA BASE DE DATOS ESOS ID
     	$publicacion = pub_publicacionModel::find($idPublicacion);

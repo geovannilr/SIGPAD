@@ -96,14 +96,14 @@
   					<th>Cod. Pubicación</th>
 					<th>Año</th>
 					<th>Título</th>
+					@can('publicacionDocumento.create')
+						<th>Detalle</th>
+					@endcan
 					@can('publicacion.edit')
 						<th>Modificar</th>
 					@endcan
 					@can('publicacion.destroy')
 						<th>Eliminar</th>
-					@endcan
-					@can('publicacionDocumento.create')
-						<th>AgregarArchivo</th>
 					@endcan
 					
 						
@@ -115,6 +115,11 @@
   						<td>{{ $publicacion->codigo_pub }}</td>	
 						<td>{{ $publicacion->anio_pub }}</td>
 						<td>{{ $publicacion->titulo_pub}}</td>
+						@can('publicacion.show')
+							<td>
+								<a class="btn btn-primary" href="{{route('publicacion.edit',$publicacion->id_pub)}}"><i class="fas fa-eye"></i></a>
+							</td>
+						@endcan	
 						@can('publicacion.edit')
 							<td>
 								<a class="btn btn-primary" href="{{route('publicacion.edit',$publicacion->id_pub)}}"><i class="fa fa-pencil"></i></a>
@@ -129,16 +134,6 @@
 								{!! Form:: close() !!}
 							</td>
 						@endcan
-						@can('publicacionDocumento.create')
-							<td>
-								{!! Form::open(['route'=>['downloadPrePerfil'],'method'=>'POST']) !!}
-							 		<div class="btn-group">
-							 			{!!Form::hidden('archivo',$publicacion->id_pub,['class'=>'form-control'])!!}
-										<button type="submit" class="btn btn-dark"><i class="fa fa-plus"></i></button>
-									</div>
-								{!! Form:: close() !!}
-							</td>
-						@endcan	
 					</tr>				
 				@endforeach 
 				</tbody>
