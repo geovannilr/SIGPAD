@@ -56,7 +56,10 @@ return [
             'driver' => 'local',
             'root' => public_path()."/Uploads",
         ],
-
+        'publicaciones' => [
+            'driver' => 'local',
+            'root' => public_path()."/Uploads/Publicaciones",
+        ],
 
         'public' => [
             'driver' => 'local',

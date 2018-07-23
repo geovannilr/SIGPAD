@@ -51,8 +51,8 @@
 			event.preventDefault();
     		var titulo;
    			var mensaje;
-      		titulo ="Eliminar Pre-Perfil";
-      		mensaje="Estas seguro que quiere eliminar esta publicación de trabajo de graduación?";
+      		titulo ="Eliminar Documento de Publicación de trabajo de graduación";
+      		mensaje="Estas seguro que quiere eliminar este documento de  publicación de trabajo de graduación?";
 	        swal({
 	            title: titulo,
 	            text: mensaje, 
@@ -72,17 +72,17 @@
 </script>
 		<ol class="breadcrumb">
 	        <li class="breadcrumb-item">
-	          <h5>Detalle de Pubicación de Trabajo de Graduació</h5>
+	          <h5>Detalle de Pubicación de Trabajo de Graduación</h5>
 	        </li>
-				 <li class="breadcrumb-item active">PUBLICACION </li>
+				 <li class="breadcrumb-item active"><b>Publicacion:</b> &nbsp;{{ $publicacion->codigo_pub }}&nbsp; - {{ $publicacion->titulo_pub }}</li>
 		</ol>
 		 <div class="row">
   <div class="col-sm-3"></div>
   <div class="col-sm-3"></div>
    <div class="col-sm-3"></div>
   @can('documentoPublicacion.create')
-	  <div class="col-sm-3">Nuevo Documento
-	  	 {!! link_to_route('nuevoDocumentoPublicacion', $title ='Histórico de trabajos de graduación',$publicacion->id_pub,$attributes = []); !!}
+	  <div class="col-sm-3">Nuevo Documento 
+	  	 <a class="btn btn-primary" href="{{route('nuevoDocumentoPublicacion',$publicacion->id_pub)}}"><i class="fa fa-plus"></i></a>
 	  </div>
   @endcan
 </div> 
@@ -95,15 +95,15 @@
   					<th>Nombre</th>
 					<th>Descripcíón</th>
 					<th>Fecha de Subida</th>
-					@can('publicacion.show')
-						<th>Detalle</th>
-					@endcan
 					@can('publicacion.edit')
 						<th>Modificar</th>
 					@endcan
 					@can('publicacion.destroy')
 						<th>Eliminar</th>
 					@endcan	
+					@can('publicacion.show')
+						<th>Descargar</th>
+					@endcan
   				</thead>
   				<tbody>
 
@@ -112,25 +112,28 @@
   						<td>{{ $publicacionArchivo->nombre_pub_arc }}</td>	
 						<td>{{ $publicacionArchivo->descripcion_pub_arc }}</td>
 						<td>{{ $publicacionArchivo->fecha_subida_pub_arc}}</td>
-						@can('publicacion.show')
-							<td>
-								<a class="btn btn-primary" href="{{route('publicacion.show',$publicacionArchivo->id_pub_arc)}}"><i class="fa fa-eye"></i></a>
-							</td>
-						@endcan	
 						@can('publicacion.edit')
 							<td>
-								<a class="btn btn-primary" href="{{route('publicacion.edit',$publicacionArchivo->id_pub_arc)}}"><i class="fa fa-pencil"></i></a>
+								<a class="btn btn-primary" href="{{ url('/')}}/editDocumentoPublicacion/{{ $publicacionArchivo->id_pub }}/{{ $publicacionArchivo->id_pub_arc }}"><i class="fa fa-pencil"></i></a>
+			
 							</td>
 						@endcan
 						@can('publicacion.destroy')
 							<td>
-								{!! Form::open(['route'=>['publicacion.destroy',$publicacionArchivo->id_pub_arc],'method'=>'DELETE','class' => 'deleteButton']) !!}
+								{!! Form::open(['route'=>['deleteDocumentoPublicacion'],'method'=>'POST','class' => 'deleteButton']) !!}
+									{{ Form::hidden('publicacion', $publicacion->id_pub) }}
+									{{ Form::hidden('archivo',$publicacionArchivo->id_pub_arc) }}
 							 		<div class="btn-group">
 										<button type="submit" class="btn btn-danger"><i class="fa fa-trash"></i></button>
 									</div>
 								{!! Form:: close() !!}
 							</td>
 						@endcan
+						@can('publicacion.show')
+							<td>
+								<a class="btn btn-dark" href="{{route('publicacion.show',$publicacionArchivo->id_pub_arc)}}"><i class="fa  fa-download"></i></a>
+							</td>
+						@endcan	
 					</tr>				
 				@endforeach 
 				</tbody>

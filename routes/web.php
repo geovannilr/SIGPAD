@@ -67,6 +67,10 @@ Route::post('downloadDocumento','TrabajoGraduacion\DocumentoController@downloadD
 Route::resource('publicacion','Publicaciones\publicacionController');
 Route::get('nuevoDocumentoPublicacion/{idPublicacion}','Publicaciones\publicacionController@createDocumento')->name('nuevoDocumentoPublicacion');
 Route::post('storageDocPublicacion','Publicaciones\publicacionController@storeDocumento')->name('storageDocPublicacion');
+Route::post('updateDocumentoPublicacion','Publicaciones\publicacionController@updateDocumento')->name('updateDocumentoPublicacion');
+Route::post('deleteDocumentoPublicacion','Publicaciones\publicacionController@deleteDocumento')->name('deleteDocumentoPublicacion');
+Route::get('editDocumentoPublicacion/{idPublicacion}/{idArchivo?}','Publicaciones\publicacionController@editDocumento')->name('editDocumentoPublicacion');
+
 
 
 //------------------------------------------------------------------------------------------------------------------------
