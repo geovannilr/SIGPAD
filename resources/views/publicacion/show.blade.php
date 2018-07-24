@@ -22,19 +22,19 @@
         buttons: [
            {
                 extend: 'excelHtml5',
-                title: 'Listado de Archivos Publicaciones de Trabajos de Graduación'
+                title: 'Listado de Archivos de publicación {{ $publicacion->codigo_pub }} -  {{ $publicacion->titulo_pub }}'
             },
             {
                 extend: 'pdfHtml5',
-                title: 'Listado de Publicaciones de Trabajos de Graduación'
+                title: 'Listado de Archvios de publicación  {{ $publicacion->codigo_pub }} -  {{ $publicacion->titulo_pub }}'
             },
              {
                 extend: 'csvHtml5',
-                title: 'Listado de Publicaciones de Trabajos de Graduación'
+                title: 'Listado de Publicaciones de publicación {{ $publicacion->codigo_pub }} -  {{ $publicacion->titulo_pub }}'
             },
             {
                 extend: 'print',
-                title: 'Listado de Publicaciones de Trabajos de Graduación'
+                title: 'Listado de Publicaciones de publicación {{ $publicacion->codigo_pub }} -  {{ $publicacion->titulo_pub }}'
             }
 
 
@@ -131,7 +131,12 @@
 						@endcan
 						@can('publicacion.show')
 							<td>
-								<a class="btn btn-dark" href="{{route('publicacion.show',$publicacionArchivo->id_pub_arc)}}"><i class="fa  fa-download"></i></a>
+								{!! Form::open(['route'=>['downloadDocumentoPublicacion'],'method'=>'POST']) !!}
+							 		<div class="btn-group">
+							 			{!!Form::hidden('archivo',$publicacionArchivo->id_pub_arc,['class'=>'form-control'])!!}
+										<button type="submit" class="btn btn-dark"><i class="fa fa-download"></i></button>
+									</div>
+								{!! Form:: close() !!}
 							</td>
 						@endcan	
 					</tr>				

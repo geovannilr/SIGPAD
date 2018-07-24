@@ -45,13 +45,14 @@
             }
         },
         order: [ 1, 'desc' ],
+
     	});
 
 		$(".deleteButton").submit(function( event ) {
 			event.preventDefault();
     		var titulo;
    			var mensaje;
-      		titulo ="Eliminar Pre-Perfil";
+      		titulo ="Eliminar Publicación de Trabajo de graduación";
       		mensaje="Estas seguro que quiere eliminar esta publicación de trabajo de graduación?";
 	        swal({
 	            title: titulo,

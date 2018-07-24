@@ -70,7 +70,7 @@ Route::post('storageDocPublicacion','Publicaciones\publicacionController@storeDo
 Route::post('updateDocumentoPublicacion','Publicaciones\publicacionController@updateDocumento')->name('updateDocumentoPublicacion');
 Route::post('deleteDocumentoPublicacion','Publicaciones\publicacionController@deleteDocumento')->name('deleteDocumentoPublicacion');
 Route::get('editDocumentoPublicacion/{idPublicacion}/{idArchivo?}','Publicaciones\publicacionController@editDocumento')->name('editDocumentoPublicacion');
-
+Route::post('downloadDocumentoPublicacion','Publicaciones\publicacionController@downloadDocumento')->name('downloadDocumentoPublicacion');
 
 
 //------------------------------------------------------------------------------------------------------------------------

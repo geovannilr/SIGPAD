@@ -40,6 +40,7 @@ class publicacionController extends Controller{
     	}
     	
     }
+
     public function createDocumento($idPublicacion){
     	//VERIFICAMOS SI EXISTEN EN LA BASE DE DATOS ESOS ID
     	$publicacion = pub_publicacionModel::find($idPublicacion);
@@ -48,6 +49,20 @@ class publicacionController extends Controller{
     	}else{ //LOS PARAMETROS VIENEN CORRECTAMENTE
     		return view('publicacion.createDocumento',compact('publicacion'));
     	}
+    }
+     public function edit($id){
+
+          	$publicaciones = pub_publicacionModel::all();
+          	Session::flash('message-error', 'Funcionalidad no disponible en estos momentos');
+       		 return view('publicacion.index',compact('publicaciones'));
+            
+    }
+    public function destroy($id){
+
+          	$publicaciones = pub_publicacionModel::all();
+          	Session::flash('message-error', 'Funcionalidad no disponible en estos momentos');
+       		 return view('publicacion.index',compact('publicaciones'));
+            
     }
      public function editDocumento($idPublicacion,$idArchivo){
     	//VERIFICAMOS SI EXISTEN EN LA BASE DE DATOS ESOS ID
@@ -118,5 +133,18 @@ class publicacionController extends Controller{
 	        $archivo->save();
             Session::flash('message','Documento Modificado correctamente!');
             return Redirect::to('publicacion/'.$publicacion->id_pub);                            
+    }
+
+     function downloadDocumento(Request $request){
+    	$archivo = pub_arc_publicacion_archivoModel::find($request['archivo']);
+    	//verificamos si el archivo existe y lo retornamos
+    	$ruta = $archivo->ubicacion_pub_arc;
+     	if (File::exists($ruta)){
+      	  return response()->download($ruta);
+     	}else{
+     		Session::flash('error','El documento no se encuentra disponible , es posible que haya sido  borrado');
+            return Redirect::to('publicacion/'.$publicacion->id_pub);
+     	}
+    	//return $path;
     }
 }
