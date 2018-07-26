@@ -52,7 +52,7 @@ Route::post('rechazarPerfil','TrabajoGraduacion\PerfilController@rechazarPerfil'
 Route::get('indexPerfil/{id}','TrabajoGraduacion\PerfilController@indexPerfil')->name('indexPerfil');
 
 //Trabajo de graduacion
-Route::get('Dashboard/','TrabajoGraduacion\TrabajoDeGraduacionController@index')->name('Dashboard');
+Route::get('dashboard/','TrabajoGraduacion\TrabajoDeGraduacionController@index')->name('dashboard');
 Route::resource('etapaEvaluativa','TrabajoGraduacion\EtapaEvaluativaController');
 
 //Documentos de trabajo de graduación

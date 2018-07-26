@@ -94,61 +94,49 @@
           </ul>
         </li>
         @endcan
-         <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Trabajo de graduación">
-          <a class="nav-link nav-link-collapse collapsed" data-toggle="collapse" href="#collapseTrabajoGraduacion" data-parent="#exampleAccordion">
-            <i class="fa fa-fw fa fa-mortar-board"></i>
-            <span class="nav-link-text">Trabajo de Graduacion</span>
-          </a>
-          <ul class="sidenav-second-level collapse" id="collapseTrabajoGraduacion">
-            @can('grupotdg.create','grupo.index')
-            <li>
-              <a class="nav-link-collapse collapsed" data-toggle="collapse" href="#collapseGrupo">Grupo Trabajo de Graduación</a>
-              <ul class="sidenav-third-level collapse" id="collapseGrupo">
-                @can('grupotdg.create')
-                  <li>
-                    {!! link_to_route('grupo.create', $title ='Nuevo',null,$attributes = ['class'=>'nav-link']); !!}
-                  </li>
-                @endcan
-                @can('grupo.index')
-                   <li>
-                    {!! link_to_route('grupo.index', $title ='Listado de Grupos',null,$attributes = ['class'=>'nav-link']); !!}
-                  </li>
-                @endcan
-              </ul>
-            </li>
-            @endcan
-            @can('prePerfil.index')
-            <li>
-              <a class="nav-link-collapse collapsed" data-toggle="collapse" href="#collapsePrePerfil">Pre-Perfil</a>
-              <ul class="sidenav-third-level collapse" id="collapsePrePerfil">
-                @can('prePerfil.create')
-                  <li>
-                    {!! link_to_route('prePerfil.create', $title ='Nuevo',null,$attributes = ['class'=>'nav-link']); !!}
-                  </li>
-                @endcan
-                @can('prePerfil.index')
-                   <li>
-                    {!! link_to_route('prePerfil.index', $title ='Listado de Pre-Perfiles',null,$attributes = ['class'=>'nav-link']); !!}
-                  </li>
-                @endcan
-              </ul>
-            </li>
-            @endcan
-            @can('prePerfil.index')
-              <li>
-               {!! link_to_route('Dashboard', $title ='Vista Principal',null,$attributes = ['class'=>'nav-link']); !!}
+        @can('grupotdg.create','prePerfil.index')
+           <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Trabajo de graduación">
+            <a class="nav-link nav-link-collapse collapsed" data-toggle="collapse" href="#collapseTrabajoGraduacion" data-parent="#exampleAccordion">
+              <i class="fa fa-fw fa fa-mortar-board"></i>
+              <span class="nav-link-text">Trabajo de Graduacion</span>
+            </a>
+            <ul class="sidenav-second-level collapse" id="collapseTrabajoGraduacion">
+              @can('grupotdg.create','grupo.index')
+                <li>
+                  <a class="nav-link" href="{{route('grupo.create')}}">
+                    <i class="fa fa-users"></i>
+                    <span class="nav-link-text">Grupos de TG</span>
+                  </a>  
               </li>
-            @endcan
-             @can('publicacion.index')
+              @endcan
+              @can('prePerfil.index')
               <li>
+                <a class="nav-link" href="{{route('prePerfil.index')}}">
+                  <i class="fa fa-file-o"></i>
+                  <span class="nav-link-text">Pre-Perfil</span>
+                </a>
+                     
+              </li>
+              @endcan
+              @can('prePerfil.index')
+                <li>
+                  <a class="nav-link" href="{{route('dashboard')}}">
+                    <i class="fa fa-area-chart"></i>
+                    <span class="nav-link-text">Dashboard</span>
+                  </a>   
+              </li>
+              @endcan
+               @can('publicacion.index')
+                <li>
 
-              
-               {!! link_to_route('publicacion.index', $title ='Histórico de trabajos de graduación',null,$attributes = ['class'=>'nav-link']); !!}
-              </li>
-            @endcan
-          </ul>
-        
-        </li>
+                
+                 {!! link_to_route('publicacion.index', $title ='Histórico de trabajos de graduación',null,$attributes = ['class'=>'nav-link']); !!}
+                </li>
+              @endcan
+            </ul>
+          
+          </li>
+        @endcan
       </ul>
       <ul class="navbar-nav sidenav-toggler">
         <li class="nav-item">
@@ -201,9 +189,9 @@
               <span aria-hidden="true">×</span>
             </button>
           </div>
-          <div class="modal-body">Estas seguro que deseas cerra sesión?</div>
+          <div class="modal-body">¿Estas seguro que deseas cerrar sesión?</div>
           <div class="modal-footer">
-            <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+            <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancelar</button>
             <a class="btn btn-primary" href="{{route('LogOut')}}">Salir</a>
           </div>
         </div>
