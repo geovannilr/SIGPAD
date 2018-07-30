@@ -19,6 +19,16 @@ class pdg_gru_grupoModel extends Model
 			'ciclo_pdg_gru'
 		];
 
+//EJRG begin
+    /**
+     * Retornar coleccion de relaciones-estudiantes-grupo, relacion One to Many
+     */
+    public function relaciones_gru_est()
+    {
+        return $this->hasMany('App\pdg_gru_est_grupo_estudianteModel','id_pdg_gru','id_pdg_gru');
+    }
+//EJRG end
+
 	function getGrupos (){
 		$resultado = DB::select('CALL sp_pdg_gru_select_gruposPendientesDeAprobacion();');
 		return  $resultado;
@@ -39,5 +49,5 @@ class pdg_gru_grupoModel extends Model
 		);
 		$errorCode = DB::select('select @result as resultado');
 		return  $errorCode;
-	}				
+	}
 }

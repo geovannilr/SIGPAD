@@ -17,6 +17,16 @@ class gen_EstudianteModel extends Model
 			'carnet_estudiante'
 		];
 
+//EJRG begin
+    /**
+     * Retornar la relacion-estudiante-grupo, relacion One to One
+     */
+    public function relacion_gru_est()
+    {
+        return $this->hasOne('App\pdg_gru_est_grupo_estudianteModel','id_gen_est','id_gen_est');
+    }
+//EJRG end
+
 	public function conformarGrupoSp($xmlRequest){
 		$valor=0;
 	 	DB::statement('CALL sp_pdg_gru_create(:carnetsXML, @result);',
@@ -49,5 +59,12 @@ class gen_EstudianteModel extends Model
 		//DB::select("CALL sp_create_grupoTDG('".$xmlRequest."',@resultado)");
 		//$errorCode = DB::select("@resultado)");
 	 	return $resultado;
-	 }	
+	 }
+    public static function getEstudiantesSinGrupo($anio){
+        $estudiantes = DB::table('gen_est_estudiante')
+                            ->leftJoin('pdg_gru_est_grupo_estudiante','gen_est_estudiante.id_gen_est','=','pdg_gru_est_grupo_estudiante.id_gen_est')
+                            //->whereNull('pdg_gru_est_grupo_estudiante.id_pdg_gru_est')
+                            ->get();
+        return $estudiantes;
+    }
 }

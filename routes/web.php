@@ -37,6 +37,10 @@ Route::post('verificarGrupo', 'TrabajoGraduacion\ConformarGrupoController@verifi
 Route::post('confirmarGrupo', 'TrabajoGraduacion\ConformarGrupoController@confirmarGrupo');
 Route::post('enviarGrupo', 'TrabajoGraduacion\ConformarGrupoController@enviarGrupo')->name('enviarGrupo');
 Route::post('aprobarGrupo', 'TrabajoGraduacion\ConformarGrupoController@aprobarGrupo')->name('aprobarGrupo');
+Route::post('verGrupo', 'TrabajoGraduacion\ConformarGrupoController@verGrupo')->name('verGrupo');//EJRG edit
+Route::delete('deleteRelacion','TrabajoGraduacion\ConformarGrupoController@deleteRelacion')->name('delRelacion');//EJRG edit
+Route::get('estSinGrupo/{anio}', 'TrabajoGraduacion\ConformarGrupoController@estSinGrupo')->name('estSinGrupo');//EJRG edit
+
 	//PrePerfil
 Route::resource('prePerfil','TrabajoGraduacion\PrePerfilController');
 Route::post('downloadPrePerfil','TrabajoGraduacion\PrePerfilController@downloadPrePerfil')->name('downloadPrePerfil');

@@ -229,6 +229,9 @@ function getGrupo(idGrupo){ // Traer el detalle del grupo
               //console.log(data);
               $("#modalDetalleBody").html(data.htmlCode);
               $("#divBoton").html(data.btnHtmlCode);
+//EJRG begin
+              $("#divBtnEditarGrupo").html(data.btnEditHtmlCode);
+// EJRG end
               //$("#divBoton").append('<input type="hidden" name="idGrupo" value='+data.idGrupo);
              // $("#divBoron").append('<button type="submit" class="btn btn-primary">Aprobar</button>');
               $("#detalleGrupo").modal();
@@ -237,4 +240,51 @@ function getGrupo(idGrupo){ // Traer el detalle del grupo
         		swal("", "Hubo un problema al obtener el detalle del grupo de trabajo de graduación", "error");
     		}
         });      
+}
+function agregarAlumno(rootUrl,anio){
+    var tblModal = $('#tblEstSinGrupo');
+    if(tblModal.length>0){
+        $("#modalAgregarAlumno").modal();
+    }else{
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+        $.ajax({
+            type:'get',
+            url:rootUrl+'/estSinGrupo/'+anio,
+            success:function(data){
+                alert(data);
+                console.log(data);
+                modalAgregarAlumno(data);
+                /*            $("#modalDetalleBody").html(data.htmlCode);
+                            $("#divBoton").html(data.btnHtmlCode);
+                //EJRG begin
+                            $("#divBtnEditarGrupo").html(data.btnEditHtmlCode);
+                // EJRG end
+                            //$("#divBoton").append('<input type="hidden" name="idGrupo" value='+data.idGrupo);
+                            // $("#divBoron").append('<button type="submit" class="btn btn-primary">Aprobar</button>');
+                            $("#detalleGrupo").modal();*/
+            },
+            error : function(xhr, status) {
+                swal("", "Hubo problemas!", "error");
+            }
+        });
+    }
+    return true;
+}
+function modalAgregarAlumno(data){
+    var table = "<table class='table table-hover table-striped  display' id='tblEstSinGrupo'>";
+    table += '<thead><th>Carnet</th><th>Nombre</th><th>Agregar</th></thead><tbody>';
+    for (var obj in data) {
+        table += "<tr>"
+                +"<td>"+data[obj].carnet_gen_est+"</td>"
+                +"<td>"+data[obj].nombre_gen_est+"</td>"
+                +"<td><button class='btn btn-dark' onclick=alert('"+data[obj].carnet_gen_est+"')><i class='fa fa-check'></i></button></td>"
+                +"</tr>";
+    }
+    table += '</tbody></table>';
+    $('#modalDetalleBody').html(table);
+    $("#modalAgregarAlumno").modal();
 }
