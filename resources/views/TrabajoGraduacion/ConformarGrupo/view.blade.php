@@ -25,7 +25,7 @@
         <div class="col-sm-3"></div>
         @can('grupo.index')
             <div class="col-sm-3" id="divNuevo_viewConformarGrupo">Nuevo
-                <button class="btn btn-primary" onclick="agregarAlumno('{{\Illuminate\Support\Facades\URL::to('/')}}','2018');" id="btnNuevo_viewConformarGrupo"><i class="fa fa-plus"></i></button>
+                <button class="btn btn-primary" onclick="getDisponibles(vg_url,vg_anio);" id="btnNuevo_viewConformarGrupo"><i class="fa fa-plus"></i></button>
             </div>
         @endcan
         <br>
@@ -62,12 +62,19 @@
         </tr>
         @endforeach
         <script type="text/javascript">
+            var vg_anio = null;
+            var vg_id_pdg_gru = null;
+            var vg_url = '{{\Illuminate\Support\Facades\URL::to('/')}}';
             $('.btn-eliminar').click(function(e){
                 e.preventDefault() // No postear hasta confirmación
                 if (confirm('¿Está seguro?')) {
                     $(e.target).closest('form').submit() // Postear el form
                 }
             });
+            @foreach ($relaciones as $relacion)
+                vg_anio = {{$relacion->grupo->anio_pdg_gru}};
+                vg_id_pdg_gru = {{$relacion->id_pdg_gru}};
+            @endforeach
         </script>
         </tbody>
     </table>

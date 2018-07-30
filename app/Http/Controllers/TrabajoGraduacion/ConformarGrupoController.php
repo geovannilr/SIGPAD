@@ -363,5 +363,32 @@ class ConformarGrupoController extends Controller
     public function estSinGrupo($anio){
         return gen_EstudianteModel::getEstudiantesSinGrupo($anio);
     }
+    public function addAlumno(Request $request){
+        $errorCode = -1;
+        $errorMessage = "No se procesaron los datos";
+        $id_gen_est = $request['id'];
+        $id_pdg_gru = $request['grupo'];
+        if($id_gen_est != null && $id_pdg_gru != null){
+            try{
+                $grupo  = pdg_gru_grupoModel::find($id_pdg_gru);
+                $estudiante = gen_EstudianteModel::find($id_gen_est);
+                if($grupo!=null&&$estudiante!=null){
+                    $relacion = new pdg_gru_est_grupo_estudianteModel();
+                    $relacion->id_pdg_gru = $id_pdg_gru;
+                    $relacion->id_gen_est = $id_gen_est;
+                    $relacion->id_cat_sta = '6';
+                    $relacion->eslider_pdg_gru_est = '0';
+                    $relacion->save(['timestamps' => false]);
+                    $errorCode = 0;
+                    $errorMessage = "Grupo modificado satisfactoriamente!";
+                }
+            }catch (Exception $e){
+                $errorCode = 1;
+                $errorMessage = "Su solicitud no pudo ser procesada";
+                //$errorMessage = $e->getMessage();
+            }
+        }
+        return response()->json(['errorCode'=>$errorCode,'errorMessage'=>$errorMessage]);
+    }
 /*EJRG end*/
 }

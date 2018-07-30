@@ -241,7 +241,7 @@ function getGrupo(idGrupo){ // Traer el detalle del grupo
     		}
         });      
 }
-function agregarAlumno(rootUrl,anio){
+function getDisponibles(rootUrl,anio){
     var tblModal = $('#tblEstSinGrupo');
     if(tblModal.length>0){
         $("#modalAgregarAlumno").modal();
@@ -255,7 +255,6 @@ function agregarAlumno(rootUrl,anio){
             type:'get',
             url:rootUrl+'/estSinGrupo/'+anio,
             success:function(data){
-                alert(data);
                 console.log(data);
                 modalAgregarAlumno(data);
                 /*            $("#modalDetalleBody").html(data.htmlCode);
@@ -275,16 +274,50 @@ function agregarAlumno(rootUrl,anio){
     return true;
 }
 function modalAgregarAlumno(data){
-    var table = "<table class='table table-hover table-striped  display' id='tblEstSinGrupo'>";
-    table += '<thead><th>Carnet</th><th>Nombre</th><th>Agregar</th></thead><tbody>';
-    for (var obj in data) {
-        table += "<tr>"
+	if(data.length>0){
+        var table = "<table class='table table-hover table-striped  display' id='tblEstSinGrupo'>";
+        table += '<thead><th>Carnet</th><th>Nombre</th><th>Agregar</th></thead><tbody>';
+        for (var obj in data) {
+            table += "<tr>"
                 +"<td>"+data[obj].carnet_gen_est+"</td>"
                 +"<td>"+data[obj].nombre_gen_est+"</td>"
-                +"<td><button class='btn btn-dark' onclick=alert('"+data[obj].carnet_gen_est+"')><i class='fa fa-check'></i></button></td>"
+                +"<td><button class='btn btn-dark' onclick=agregarAlumno('"+data[obj].id_gen_est+"',vg_id_pdg_gru)><i class='fa fa-check'></i></button></td>"
                 +"</tr>";
-    }
-    table += '</tbody></table>';
-    $('#modalDetalleBody').html(table);
+        }
+        table += '</tbody></table>';
+        $('#modalDetalleBody').html(table);
+	}
     $("#modalAgregarAlumno").modal();
+}
+
+function agregarAlumno(idEst,idGru){
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+    });
+    $.ajax({
+        type:'POST',
+        url: vg_url+'/addAlumno',
+		data: {'id':idEst,'grupo':idGru},
+        success:function(data){
+            if(data.errorCode == 0){
+            	redirectTo(vg_url+'/verGrupo','POST','idGrupo',idGru);
+			}else{
+            	console.log(data.errorMessage);
+			}
+        },
+        error : function(xhr, status) {
+            swal("", "Problemas al procesar su solicitud!", "error");
+        }
+    });
+}
+
+function  redirectTo(url,method,param,data) {
+	var token = $('meta[name="csrf-token"]').attr('content');
+    var form = $('<form action="' + url + '" method="'+ method +'">' +
+        '<input type="hidden" name="'+ param +'" value="' + data + '"></input>'+
+    	'<input type="hidden" name="_token" value="' + token + '"></input>'+ '</form>');
+    $('body').append(form);
+    $(form).submit();
 }

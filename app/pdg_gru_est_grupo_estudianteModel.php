@@ -41,6 +41,14 @@ class pdg_gru_est_grupo_estudianteModel extends Model
     {
         // para inhabilitar el uso de la columna 'updated at'
     }
+    public function setCreatedAt($value)
+    {
+        // para inhabilitar el uso de la columna 'created at'
+    }
+    public function getCreatedAtColumn()
+    {
+        // para inhabilitar el uso de la columna 'created at'
+    }
 //EJRG end
 
 	public function cambiarEstadoGrupo($idAlumno,$aceptar){ // si acepta o rechaza grupo de trabajo de graduación 0 si rechaza 1 si acepta

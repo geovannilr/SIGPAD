@@ -40,6 +40,7 @@ Route::post('aprobarGrupo', 'TrabajoGraduacion\ConformarGrupoController@aprobarG
 Route::post('verGrupo', 'TrabajoGraduacion\ConformarGrupoController@verGrupo')->name('verGrupo');//EJRG edit
 Route::delete('deleteRelacion','TrabajoGraduacion\ConformarGrupoController@deleteRelacion')->name('delRelacion');//EJRG edit
 Route::get('estSinGrupo/{anio}', 'TrabajoGraduacion\ConformarGrupoController@estSinGrupo')->name('estSinGrupo');//EJRG edit
+Route::post('addAlumno', 'TrabajoGraduacion\ConformarGrupoController@addAlumno')->name('addAlumno');//EJRG edit
 
 	//PrePerfil
 Route::resource('prePerfil','TrabajoGraduacion\PrePerfilController');

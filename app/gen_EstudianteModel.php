@@ -63,7 +63,8 @@ class gen_EstudianteModel extends Model
     public static function getEstudiantesSinGrupo($anio){
         $estudiantes = DB::table('gen_est_estudiante')
                             ->leftJoin('pdg_gru_est_grupo_estudiante','gen_est_estudiante.id_gen_est','=','pdg_gru_est_grupo_estudiante.id_gen_est')
-                            //->whereNull('pdg_gru_est_grupo_estudiante.id_pdg_gru_est')
+                            ->whereNull('pdg_gru_est_grupo_estudiante.id_pdg_gru_est')
+                            ->select('gen_est_estudiante.*')
                             ->get();
         return $estudiantes;
     }
