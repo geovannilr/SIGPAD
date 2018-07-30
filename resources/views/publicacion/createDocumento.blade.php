@@ -4,7 +4,7 @@
         <li class="breadcrumb-item">
           <h5>Nuevo Documento </h5>
         </li>
-        <li class="breadcrumb-item active"><b>Publicacion:</b> &nbsp;{{ $publicacion->codigo_pub }}&nbsp;- {{ $publicacion->titulo_pub }}</li>
+        <li class="breadcrumb-item active"><b>Publicación:</b> &nbsp;{{ $publicacion->codigo_pub }}&nbsp; - {{ $publicacion->titulo_pub }}</li>
 </ol>
   		<div class="panel-body" >
         <div class="row">
@@ -30,9 +30,7 @@
           </div>
         </div>
 				</div> 
-			  {!! Form:: close() !!}
-        
-        
+			  {!! Form:: close() !!}  
   </div>
    <div id="loader"></div> 
 @stop

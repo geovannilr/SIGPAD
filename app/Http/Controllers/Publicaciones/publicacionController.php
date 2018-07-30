@@ -45,7 +45,10 @@ class publicacionController extends Controller{
     	//VERIFICAMOS SI EXISTEN EN LA BASE DE DATOS ESOS ID
     	$publicacion = pub_publicacionModel::find($idPublicacion);
     	if(empty($publicacion)){
-    		return "LOS PARAMETROS RECIBIDOS NO SON CORRECTOS";
+    		//return "LOS PARAMETROS RECIBIDOS NO SON CORRECTOS";
+    		$titulo = "Error" ;
+    		$mensaje = "La publicación de trabajo de graduación a la cuál le quiere agregar un nuevo documento no existe.";
+    		return view('error',compact('titulo','mensaje'));
     	}else{ //LOS PARAMETROS VIENEN CORRECTAMENTE
     		return view('publicacion.createDocumento',compact('publicacion'));
     	}
@@ -77,6 +80,17 @@ class publicacionController extends Controller{
 
   
     public function storeDocumento(Request $request){
+    	 	$validatedData = $request->validate([
+                'descripcion_pub_arc' => 'required|max:400',
+                'documento' => 'required'
+            ],
+            [
+    			'descripcion_pub_arc.required' => 'La descripción del documento publicación de trabajo de graduación es obligatoria',
+    			'descripcion_pub_arc.max' => 'La descripción del documento publicación de trabajo de graduación debe contener como máximo 400 caracteres.',
+    			'documento.required' => 'El documento de publicación de trabajo de graduación es obligatorio.'
+
+    		]
+        );
     		$file = $request->file('documento');
     		$publicacion = pub_publicacionModel::find($request['publicacion']);
 	       //obtenemos el nombre del archivo
@@ -88,7 +102,7 @@ class publicacionController extends Controller{
 	         $lastIdDocumento = pub_arc_publicacion_archivoModel::create
             ([
                 'id_pub'   				     => $publicacion->id_pub,
-                'ubicacion_pub_arc'       	 => $path.$nombre,
+                'ubicacion_pub_arc'       	 => $nombre,
                 'fecha_subida_pub_arc'       => $fecha,
                 'nombre_pub_arc'       	 	 => $file->getClientOriginalName(),
                 'descripcion_pub_arc'        => $request['descripcion_pub_arc'],
@@ -101,7 +115,8 @@ class publicacionController extends Controller{
     public function deleteDocumento(Request $request){
     		$publicacion = pub_publicacionModel::find($request['publicacion']);
     		$archivo = pub_arc_publicacion_archivoModel::find($request['archivo']);
-    		$ruta = $archivo->ubicacion_pub_arc;
+    		$path= public_path().$_ENV['PATH_PUBLICACIONES'];
+    		$ruta = $path.$archivo->ubicacion_pub_arc;
     		if (File::exists($ruta)){
       	 		 File::delete($ruta);	
      		}
@@ -127,7 +142,7 @@ class publicacionController extends Controller{
      			}
 	        	
 	        	$archivo->nombre_pub_arc = $file->getClientOriginalName();
-	        	$archivo->ubicacion_pub_arc = $path.$nombre;
+	        	$archivo->ubicacion_pub_arc =$nombre;
 	        	$archivo->fecha_subida_pub_arc = $fecha;
 	        }
 	        $archivo->save();
@@ -137,8 +152,9 @@ class publicacionController extends Controller{
 
      function downloadDocumento(Request $request){
     	$archivo = pub_arc_publicacion_archivoModel::find($request['archivo']);
+    	$path= public_path().$_ENV['PATH_PUBLICACIONES'];
     	//verificamos si el archivo existe y lo retornamos
-    	$ruta = $archivo->ubicacion_pub_arc;
+    	$ruta =$path.$archivo->ubicacion_pub_arc;
      	if (File::exists($ruta)){
       	  return response()->download($ruta);
      	}else{

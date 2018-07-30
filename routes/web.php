@@ -11,7 +11,7 @@
 |
 */
 //HOME
-Route::get('/', 'FrontController@index');
+Route::get('/', 'FrontController@index')->name('inicio');
 
 Route::resource('login','LogController');
 
