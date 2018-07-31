@@ -4,9 +4,9 @@
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-12 text-center">
-                <span class="display-1 d-block">{{$titulo}}</span>
-                <div class="mb-4 lead">{{$mensaje}}</div>
-                <a href="{{route('publicacion.index')}}" class="btn btn-link">Regresar a publicaciones TDG.</a>
+                <span class="display-1 d-block">404</span>
+                <div class="mb-4 lead">La página a la que quiere acceder no esta disponible</div>
+                <a href="{{route('inicio')}}" class="btn btn-link">Regresar a Inicio.</a>
             </div>
         </div>
     </div>

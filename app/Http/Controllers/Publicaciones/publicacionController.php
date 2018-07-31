@@ -33,7 +33,9 @@ class publicacionController extends Controller{
     public function show($id){
     	$publicacion = pub_publicacionModel::find($id);
     	if (empty($publicacion)) {
-    		return "PARAMETROS INCORRECTOS";
+    		$titulo = "Datos Incorrectos" ;
+    		$mensaje = "La publicación de trabajo de graduación de la cúal quiere ver el detalle  no existe.";
+    		return view('error',compact('titulo','mensaje'));
     	}else{
     		$publicacionesArchivos=pub_arc_publicacion_archivoModel::where('id_pub',$id)->get();
     		return view('publicacion.show',compact('publicacionesArchivos','publicacion'));
@@ -46,7 +48,7 @@ class publicacionController extends Controller{
     	$publicacion = pub_publicacionModel::find($idPublicacion);
     	if(empty($publicacion)){
     		//return "LOS PARAMETROS RECIBIDOS NO SON CORRECTOS";
-    		$titulo = "Error" ;
+    		$titulo = "Datos Incorrectos" ;
     		$mensaje = "La publicación de trabajo de graduación a la cuál le quiere agregar un nuevo documento no existe.";
     		return view('error',compact('titulo','mensaje'));
     	}else{ //LOS PARAMETROS VIENEN CORRECTAMENTE
