@@ -311,6 +311,7 @@ body.sidenav-toggled .navbar-sidenav {
 
 body.sidenav-toggled .navbar-sidenav .nav-link-text {
   display: none;
+  color: white;
 }
 
 body.sidenav-toggled .navbar-sidenav .nav-item,
