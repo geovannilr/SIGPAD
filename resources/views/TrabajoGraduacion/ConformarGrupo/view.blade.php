@@ -93,8 +93,8 @@
                 <div id="modalDetalleBody" class="modal-body" style="height:50%; overflow-y: scroll;">
                 ... <!--EJRG: es necesario arreglar el MODAL para que no se extienda demasiado en pantalla-->
                 </div>
-                O busque alguno en específico:
-                {!!Form::text('buscarEstudiante',null,['class'=>'form-control ','placeholder'=>'Filtrar búsqueda...','id'=>'inputBuscar'])!!}
+                <!---O busque alguno en específico:-->
+                <!--Form::text('buscarEstudiante',null,['class'=>'form-control ','placeholder'=>'Filtrar búsqueda...','id'=>'inputBuscar'])-->
             </div>
             <div class="modal-footer" id="footerModal">
                 {!! Form::open(['route'=>['aprobarGrupo'],'method'=>'POST']) !!}
