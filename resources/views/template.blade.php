@@ -37,23 +37,47 @@
     
     
 </head>
-<body class="fixed-nav sticky-footer bg-dark" id="page-top">
+<body class="fixed-nav sticky-footer " id="page-top" style="background-color: #29282b; ">
   <!-- Navigation-->
-  <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top" id="mainNav">
-    <a class="navbar-brand" href="{{  url('/') }}">PORTAL ADMINISTRATIVO</a>
+  <nav class="navbar navbar-expand-lg fixed-top" id="mainNav" style="background-color: #29282b; color: #ffffff;">
+    <a class="navbar-brand" href="{{  url('/') }}"><img src="http://localhost/SIGPAD/public/img/sigpad-logo.png" class="img-responsive" alt="GESTION EISI"/ style="z-index: 1; position:absolute;margin-left: 50px; width: 100px; height: 100px; margin-top: -20px" ></a>
     <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
-    <div class="collapse navbar-collapse" id="navbarResponsive">
-      <ul class="navbar-nav navbar-sidenav" id="exampleAccordion">
-        @can('usuario.create','usuario.edit','usuario.destroy','usuario.index')
-        <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Usuarios">
-          <a class="nav-link nav-link-collapse collapsed" data-toggle="collapse" href="#collapseUsuarios" data-parent="#exampleAccordion">
-            <i class="fa fa-fw fa-user"></i>
-            <span class="nav-link-text">Usuarios</span>
+    <div class="collapse navbar-collapse " id="navbarResponsive" style="background-color: #29282b; color: #ffffff;"  >
+      <ul class="navbar-nav navbar-sidenav " id="exampleAccordion" style="background-color: #29282b;color: #ffffff; z-index: 0; margin-top: 100px;">
+        @can('usuario.index', 'permiso.index', 'rol.index')
+        <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Administracion" style="color: #ffffff">
+          <a class="nav-link nav-link-collapse collapsed" data-toggle="collapse" href="#collapseAdministracion" data-parent="#exampleAccordion" style="color: #ffffff; font-weight: bold;">
+            <i class="fa fa-slack"></i>
+            <span class="nav-link-text" style="color: #ffffff">Administración</span>
           </a>
-           <ul class="sidenav-second-level collapse" id="collapseUsuarios">
-             <li>
+           <ul class="sidenav-second-level collapse" id="collapseAdministracion" >
+            @can('usuario.create','usuario.edit','usuario.destroy','usuario.index')
+                 <li>
+                  <a class="nav-link" href="{{route('usuario.index')}}" style="color: #ffffff">
+                    <i class="fa fa-users"></i>
+                    <span class="nav-link-text">Usuarios</span>
+                  </a>  
+              </li>
+            @endcan
+            @can('rol.create','rol.edit','rol.destroy','rol.index')
+                <li>
+                  <a class="nav-link" href="{{route('rol.index')}}" style="color: #ffffff">
+                    <i class="fa fa-user-times"></i>
+                    <span class="nav-link-text">Roles</span>
+                  </a>  
+              </li>
+            @endcan
+            @can('permiso.create','permiso.edit','permiso.destroy','permiso.index')
+            <li>
+                  <a class="nav-link" href="{{route('permiso.index')}}" style="color: #ffffff" >
+                    <i class="fa fa-lock"></i>
+                    <span class="nav-link-text">Permisos</span>
+                  </a>  
+              </li>
+            @endcan
+            <!--  <li>
               {!! link_to_route('usuario.create', $title ='Nuevo',null,$attributes = ['class'=>'nav-link']); !!}
             </li>
             <li>
@@ -90,20 +114,20 @@
             </li>
             <li>
               {!! link_to_route('permiso.index', $title ='Ver',null,$attributes = ['class'=>'nav-link']); !!}
-            </li>
+            </li> -->
           </ul>
         </li>
         @endcan
         @can('grupotdg.create','prePerfil.index')
            <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Trabajo de graduación">
-            <a class="nav-link nav-link-collapse collapsed" data-toggle="collapse" href="#collapseTrabajoGraduacion" data-parent="#exampleAccordion">
+            <a class="nav-link nav-link-collapse collapsed" data-toggle="collapse" href="#collapseTrabajoGraduacion" data-parent="#exampleAccordion" style="color: #ffffff; font-weight: bold;>
               <i class="fa fa-fw fa fa-mortar-board"></i>
-              <span class="nav-link-text">Trabajo de Graduacion</span>
+              <span class="nav-link-text" style="color: #ffffff" >Trabajo de Graduacion</span>
             </a>
             <ul class="sidenav-second-level collapse" id="collapseTrabajoGraduacion">
               @can('grupotdg.create','grupo.index')
                 <li>
-                  <a class="nav-link" href="{{route('grupo.create')}}">
+                  <a class="nav-link" href="{{route('grupo.create')}}" style="color: #ffffff">
                     <i class="fa fa-users"></i>
                     <span class="nav-link-text">Grupos de TG</span>
                   </a>  
@@ -111,7 +135,7 @@
               @endcan
               @can('prePerfil.index')
               <li>
-                <a class="nav-link" href="{{route('prePerfil.index')}}">
+                <a class="nav-link" href="{{route('prePerfil.index')}}" style="color: #ffffff">
                   <i class="fa fa-file-o"></i>
                   <span class="nav-link-text">Pre-Perfil</span>
                 </a>
@@ -120,7 +144,7 @@
               @endcan
               @can('prePerfil.index')
                 <li>
-                  <a class="nav-link" href="{{route('dashboard')}}">
+                  <a class="nav-link" href="{{route('dashboard')}}" style="color: #ffffff">
                     <i class="fa fa-area-chart"></i>
                     <span class="nav-link-text">Dashboard</span>
                   </a>   

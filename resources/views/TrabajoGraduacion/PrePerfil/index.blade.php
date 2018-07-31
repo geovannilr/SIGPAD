@@ -17,35 +17,35 @@
 @endif
 <script type="text/javascript">
 	$( document ).ready(function() {
-    	$("#listTable").DataTable({
-        dom: '<"top"l>frt<"bottom"Bip><"clear">',
-        buttons: [
-           {
-                extend: 'excelHtml5',
-                title: 'Listado de Pre-Perfiles'
-            },
-            {
-                extend: 'pdfHtml5',
-                title: 'Listado de Pre-Perfiles'
-            },
-             {
-                extend: 'csvHtml5',
-                title: 'Listado de Pre-Perfiles'
-            },
-            {
-                extend: 'print',
-                title: 'Listado de Pre-Perfiles'
-            }
+    	// $("#listTable").DataTable({
+     //    dom: '<"top"l>frt<"bottom"Bip><"clear">',
+     //    buttons: [
+     //       {
+     //            extend: 'excelHtml5',
+     //            title: 'Listado de Pre-Perfiles'
+     //        },
+     //        {
+     //            extend: 'pdfHtml5',
+     //            title: 'Listado de Pre-Perfiles'
+     //        },
+     //         {
+     //            extend: 'csvHtml5',
+     //            title: 'Listado de Pre-Perfiles'
+     //        },
+     //        {
+     //            extend: 'print',
+     //            title: 'Listado de Pre-Perfiles'
+     //        }
 
 
-        ],
-         responsive: {
-            details: {
-                type: 'column'
-            }
-        },
-        order: [ 1, 'asc' ],
-    	});
+     //    ],
+     //     responsive: {
+     //        details: {
+     //            type: 'column'
+     //        }
+     //    },
+     //    order: [ 1, 'asc' ],
+    	// });
     	$(".aprobar").submit(function( event ) {
     		event.preventDefault();
     		var titulo;
