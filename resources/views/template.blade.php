@@ -150,15 +150,17 @@
                   </a>   
               </li>
               @endcan
-               @can('publicacion.index')
-                <li>
-
-                
-                 {!! link_to_route('publicacion.index', $title ='Histórico de trabajos de graduación',null,$attributes = ['class'=>'nav-link']); !!}
-                </li>
-              @endcan
             </ul>
           
+          </li>
+        @endcan
+        @can('publicacion.index')
+          <li>
+                <a class="nav-link" href="{{route('publicacion.index')}}">
+                  <i class="fa fa-history"></i>
+                  <span class="nav-link-text">Histórico de TDG</span>
+                </a>
+                     
           </li>
         @endcan
       </ul>

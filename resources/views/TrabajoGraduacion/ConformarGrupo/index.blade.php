@@ -83,7 +83,7 @@
 					<th>Líder</th>
 					<th>Estado</th>
 					<th>Cantidad de Estudiantes</th>
-					<th>Datalle</th>
+					<th>Detalle</th>
 					@can('usuario.edit')
 						<th>Modificar</th>
 					@endcan
@@ -146,6 +146,13 @@
 				
 			</div>
 		{!! Form:: close() !!}
+	  <!-- EJRG begin -->
+		{!! Form::open(['route'=>['verGrupo'],'method'=>'POST']) !!}
+		  <div class="btn-group" id="divBtnEditarGrupo">
+
+		  </div>
+	  	{!! Form:: close() !!}
+	  <!-- EJRG end-->
       </div>
     </div>
   </div>

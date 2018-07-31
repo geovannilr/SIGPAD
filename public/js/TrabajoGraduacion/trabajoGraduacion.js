@@ -13,7 +13,7 @@ $( document ).ready(function() {
             swal("", "Solo se permiten documentos de formato .pdf, .docx, .doc", "error");
             $(this).val('');
           }
-          
+
      }
    });
   $('.documentoPublicacion').change(function (){ //VALIDAR A LA HORA DE SUBIR UN DOCUMENTO EL TAMAÑO
@@ -30,7 +30,7 @@ $( document ).ready(function() {
             swal("", "Solo se permiten documentos de formato .pdf, .docx, .doc", "error");
             $(this).val('');
           }
-          
+
      }
    });
     $("#formPrePerfil").submit(function( event ) {
@@ -268,6 +268,11 @@ function getGrupo(idGrupo){ // Traer el detalle del grupo
            success:function(data){
               $("#modalDetalleBody").html(data.htmlCode);
               $("#divBoton").html(data.btnHtmlCode);
+//EJRG begin
+              $("#divBtnEditarGrupo").html(data.btnEditHtmlCode);
+// EJRG end
+              //$("#divBoton").append('<input type="hidden" name="idGrupo" value='+data.idGrupo);
+             // $("#divBoron").append('<button type="submit" class="btn btn-primary">Aprobar</button>');
               $("#detalleGrupo").modal();
            },
     		error : function(xhr, status) {
@@ -278,4 +283,83 @@ function getGrupo(idGrupo){ // Traer el detalle del grupo
 function validarArchivoPerfil(){
 
 }
+function getDisponibles(rootUrl,anio){
+    var tblModal = $('#tblEstSinGrupo');
+    if(tblModal.length>0){
+        $("#modalAgregarAlumno").modal();
+    }else{
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+        $.ajax({
+            type:'get',
+            url:rootUrl+'/estSinGrupo/'+anio,
+            success:function(data){
+                console.log(data);
+                modalAgregarAlumno(data);
+                /*            $("#modalDetalleBody").html(data.htmlCode);
+                            $("#divBoton").html(data.btnHtmlCode);
+                //EJRG begin
+                            $("#divBtnEditarGrupo").html(data.btnEditHtmlCode);
+                // EJRG end
+                            //$("#divBoton").append('<input type="hidden" name="idGrupo" value='+data.idGrupo);
+                            // $("#divBoron").append('<button type="submit" class="btn btn-primary">Aprobar</button>');
+                            $("#detalleGrupo").modal();*/
+            },
+            error : function(xhr, status) {
+                swal("", "Hubo problemas!", "error");
+            }
+        });
+    }
+    return true;
+}
+function modalAgregarAlumno(data){
+	if(data.length>0){
+        var table = "<table class='table table-hover table-striped  display' id='tblEstSinGrupo'>";
+        table += '<thead><th>Carnet</th><th>Nombre</th><th>Agregar</th></thead><tbody>';
+        for (var obj in data) {
+            table += "<tr>"
+                +"<td>"+data[obj].carnet_gen_est+"</td>"
+                +"<td>"+data[obj].nombre_gen_est+"</td>"
+                +"<td><button class='btn btn-dark' onclick=agregarAlumno('"+data[obj].id_gen_est+"',vg_id_pdg_gru)><i class='fa fa-check'></i></button></td>"
+                +"</tr>";
+        }
+        table += '</tbody></table>';
+        $('#modalDetalleBody').html(table);
+	}
+    $("#modalAgregarAlumno").modal();
+}
 
+function agregarAlumno(idEst,idGru){
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+    });
+    $.ajax({
+        type:'POST',
+        url: vg_url+'/addAlumno',
+		data: {'id':idEst,'grupo':idGru},
+        success:function(data){
+            if(data.errorCode == 0){
+            	redirectTo(vg_url+'/verGrupo','POST','idGrupo',idGru);
+			}else{
+            	console.log(data.errorMessage);
+			}
+        },
+        error : function(xhr, status) {
+            swal("", "Problemas al procesar su solicitud!", "error");
+        }
+    });
+}
+
+function  redirectTo(url,method,param,data) {
+	var token = $('meta[name="csrf-token"]').attr('content');
+    var form = $('<form action="' + url + '" method="'+ method +'">' +
+        '<input type="hidden" name="'+ param +'" value="' + data + '"></input>'+
+    	'<input type="hidden" name="_token" value="' + token + '"></input>'+ '</form>');
+    $('body').append(form);
+    $(form).submit();
+}
