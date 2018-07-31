@@ -17,6 +17,40 @@ class pdg_gru_est_grupo_estudianteModel extends Model
 			'id_cat_sta',
 			'eslider_pdg_gru_est'
 		];
+//EJRG begin
+    /**
+     * Retornar el estudiante al que pertenece esta relacion, relacion One to One
+     */
+    public function estudiante()
+    {
+        return $this->belongsTo('App\gen_EstudianteModel','id_gen_est','id_gen_est');
+    }
+
+    /**
+     * Retornar el grupo al que pertenece esta relacion, relacion Many to One
+     */
+    public function grupo()
+    {
+        return $this->belongsTo('App\pdg_gru_grupoModel','id_pdg_gru','id_pdg_gru');
+    }
+    public function setUpdatedAt($value)
+    {
+        // para inhabilitar el uso de la columna 'updated at'
+    }
+    public function getUpdatedAtColumn()
+    {
+        // para inhabilitar el uso de la columna 'updated at'
+    }
+    public function setCreatedAt($value)
+    {
+        // para inhabilitar el uso de la columna 'created at'
+    }
+    public function getCreatedAtColumn()
+    {
+        // para inhabilitar el uso de la columna 'created at'
+    }
+//EJRG end
+
 	public function cambiarEstadoGrupo($idAlumno,$aceptar){ // si acepta o rechaza grupo de trabajo de graduación 0 si rechaza 1 si acepta
 	 	/*$resultado=DB::table('pdg_gru_est_grupo_estudiante')
             ->where('id_gen_est', $idAlumno)
