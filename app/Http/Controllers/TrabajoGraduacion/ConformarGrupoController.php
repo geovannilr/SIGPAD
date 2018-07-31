@@ -4,6 +4,7 @@ namespace App\Http\Controllers\TrabajoGraduacion;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Http\Response;
 use Session;
 use Redirect;
 use Exception;
@@ -47,10 +48,10 @@ class ConformarGrupoController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create(){  
-        $cards="";
-        $enviado =0;
-        $cantidadMinima = 4;
+    public function create(){
+       $cards="";
+       $enviado =0;
+       $cantidadMinima = 4;
        $estudiante = new gen_EstudianteModel();
        $miCarnet=Auth::user()->user;
        $respuesta =$estudiante->getGrupoCarnet($miCarnet)->getData();  //getdata PARA CAMBIAR LOS VALORES DEL JSON DE PUBLICOS A PRIVADOS
@@ -181,17 +182,24 @@ class ConformarGrupoController extends Controller
                         </table>
                     </div>';
                 $btnHTML="";
+                $btnEditHTML="";/*EJRG edit*/
                 $grupo=pdg_gru_grupoModel::find($id);
                 if ($grupo->id_cat_sta=='7') {
-                    $btnHTML.='<input type="hidden" name="idGrupo" value="'.$id.'">';
-                    $btnHTML.='<button type="submit" class="btn btn-primary">Aprobar</button>';   
+                    $btnHTML.='<button type="submit" class="btn btn-primary">Aprobar';
+                    $btnHTML.='<input type="hidden" name="idGrupo" value="'.$id.'">';//Input adentro del btn p/no dañar roundcorners
+                    $btnHTML.='</button>';
+/*EJRG begin*/
+                    $btnEditHTML.='<button type="submit" class="btn btn-secondary">Editar';
+                    $btnEditHTML.='<input type="hidden" name="idGrupo" value="'.$id.'"/>';//Input adentro del btn p/no dañar roundcorners
+                    $btnEditHTML.='</button>';
+/*EJRG end*/
                 }
-                   return response()->json(['htmlCode'=>$respuesta,'btnHtmlCode'=>$btnHTML]);
+                   return response()->json(['htmlCode'=>$respuesta,'btnHtmlCode'=>$btnHTML,'btnEditHtmlCode'=>$btnEditHTML]);
                // return $respuesta;
             } catch (Exception $e) {
                Session::flash('message','Ocurrió un problema al momento de obtener el grupo de trabajo de graduación!');
                Session::flash('tipo','error');
-               return redirect()->route('grupo.index');
+               return redirect()->route('grupo.index',compact());
             }
         
     }
@@ -301,5 +309,86 @@ class ConformarGrupoController extends Controller
         }
        
     }
-  
+/*EJRG begin*/
+    public function verGrupo(Request $request){
+        $userLogin=Auth::user();
+        if ($userLogin->can(['grupo.index'])) {
+
+            $id = $request ->input('idGrupo');
+
+            $relaciones = pdg_gru_grupoModel::find($id)->relaciones_gru_est;
+
+            return view('TrabajoGraduacion\ConformarGrupo.view',compact(['relaciones']));
+        }else{
+            Session::flash('message-error', 'No tiene permisos para acceder a esta opción');
+            return  view('template');
+        }
+    }
+    public function deleteRelacion(Request $request){
+        $url = $request ->fullUrl();
+        $var = strpos($url,'?');
+        if ($var !== FALSE){
+            try {
+                $id = substr($url, $var + 1, strlen($url));
+                $relacion = pdg_gru_est_grupo_estudianteModel::find($id);
+
+                $clon = $relacion->getAttributes();
+
+                $relacion -> delete(); //Eliminar la relación del Estudiante con Grupo
+                $grupo  = pdg_gru_grupoModel::find($clon['id_pdg_gru']);
+                $relaciones = $grupo->relaciones_gru_est;
+                if ($relaciones->isEmpty()) {
+                    $grupo -> delete();//Eliminar grupo si no existen relaciones Estudiante-Grupo
+                    Session::flash('message-warning', 'Grupo eliminado por falta de integrantes');
+                    return redirect()->route('grupo.index');
+                }else{
+                    if ($clon['eslider_pdg_gru_est']>0){//Verificar si el alumno eliminado era líder
+                        $nuevoLider = $relaciones->firstWhere('eslider_pdg_gru_est','=',0);
+                        $nuevoLider->eslider_pdg_gru_est = 1;//Asignar nuevo líder
+                        $nuevoLider->save(['timestamps' => false]);
+                    }
+                    Session::flash('message-warning','Estudiante eliminado del grupo');
+                    //return Redirect::to('TrabajoGraduacion\ConformarGrupo.view',compact(['relaciones']));
+                    return view('TrabajoGraduacion\ConformarGrupo.view',compact(['relaciones']));
+                }
+            } catch (Exception $e) {
+                Session::flash('message-error','Ocurrió un problema al momento de borrar el alumno!');
+                return redirect()->route('grupo.index');
+            }
+        }else{
+            return redirect()->route('grupo.index');
+        }
+        return redirect()->route('grupo.index');
+    }
+    public function estSinGrupo($anio){
+        return gen_EstudianteModel::getEstudiantesSinGrupo($anio);
+    }
+    public function addAlumno(Request $request){
+        $errorCode = -1;
+        $errorMessage = "No se procesaron los datos";
+        $id_gen_est = $request['id'];
+        $id_pdg_gru = $request['grupo'];
+        if($id_gen_est != null && $id_pdg_gru != null){
+            try{
+                $grupo  = pdg_gru_grupoModel::find($id_pdg_gru);
+                $estudiante = gen_EstudianteModel::find($id_gen_est);
+                if($grupo!=null&&$estudiante!=null){
+                    $relacion = new pdg_gru_est_grupo_estudianteModel();
+                    $relacion->id_pdg_gru = $id_pdg_gru;
+                    $relacion->id_gen_est = $id_gen_est;
+                    $relacion->id_cat_sta = '6';
+                    $relacion->eslider_pdg_gru_est = '0';
+                    $relacion->save(['timestamps' => false]);
+                    $errorCode = 0;
+                    $errorMessage = "Grupo modificado satisfactoriamente!";
+                }
+            }catch (Exception $e){
+                $errorCode = 1;
+                $errorMessage = "Su solicitud no pudo ser procesada";
+                //$errorMessage = $e->getMessage();
+            }
+        }
+        return response()->json(['errorCode'=>$errorCode,'errorMessage'=>$errorMessage]);
+    }
+/*EJRG end*/
 }
