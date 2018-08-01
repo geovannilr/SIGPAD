@@ -266,6 +266,7 @@ function getGrupo(idGrupo){ // Traer el detalle del grupo
            type:'get',
            url:'http://'+getUrl()+'/SIGPAD/public/grupo/'+idGrupo,
            success:function(data){
+            
               $("#modalDetalleBody").html(data.htmlCode);
               $("#divBoton").html(data.btnHtmlCode);
 //EJRG begin

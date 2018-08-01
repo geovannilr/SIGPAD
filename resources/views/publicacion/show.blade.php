@@ -76,6 +76,62 @@
 	        </li>
 				 <li class="breadcrumb-item active"><b>Publicacion:</b> &nbsp;{{ $publicacion->codigo_pub }}&nbsp; - {{ $publicacion->titulo_pub }}</li>
 		</ol>
+		<p class="text-center"><b>Resumen</b></p>
+		<p class="text-center"> Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+		tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+		quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+		consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+		cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+		proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+      <br>
+      <br>
+		 <div class="row">
+        <div class="col-sm-6">
+              <div class="table-responsive">
+                <table class="table table-hover table-striped">
+                  <th colspan="2">Colaboradores</th>
+                  @if ($colaboradores=="NA")
+                    <tr><td>NO SE HAN REGISTRADO COLABORADORES PARA ESTA PUBLCIACIÓN DE TRABAJO DE GRADUACIÓN</td></tr>
+                  @else
+	                   @foreach($colaboradores as $colaborador)
+	                   		<tr>
+		                   		<td>
+			                      {{$colaborador->nombres_pub_col}} &nbsp;{{$colaborador->apellidos_pub_col}}
+			                    </td>
+			                    <td>
+			                    	<span class="badge badge-pill badge-info">{{$colaborador->nombre_cat_tpo_col_pub}}</span>
+			                    </td> 	
+			                    
+	                   		</tr>
+		                  
+	                   @endforeach
+                   @endif
+                </table>
+              </div>
+        </div>
+        <div class="col-sm-6">
+          <div class="table-responsive">
+                <table class="table table-hover table-striped">
+                  <th>Autores</th>
+                  @if ($autores=="NA")
+                    <tr><td>NO SE HAN REGISTRADO AUTORES PARA ESTA PUBLCIACIÓN DE TRABAJO DE GRADUACIÓN</td></tr>
+                  @else
+	                   @foreach($autores as $autor)
+	                   		<tr>
+		                   		<td>
+			                      {{$autor->nombres_pub_aut}} &nbsp;{{$autor->apellidos_pub_aut}}
+			                    </td> 	
+			                    
+	                   		</tr>
+		                  
+	                   @endforeach
+                   @endif
+                </table>
+          </div>
+        </div>
+      </div>
+      <br>
+      <hr>
 		 <div class="row">
   <div class="col-sm-3"></div>
   <div class="col-sm-3"></div>
