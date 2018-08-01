@@ -127,8 +127,8 @@
   <div class="col-sm-3"></div>
    <div class="col-sm-3"></div>
   @can('prePerfil.create')
-	  <div class="col-sm-3">Nuevo 
-	  	 <a class="btn btn-primary" href="{{route('prePerfil.create')}}"><i class="fa fa-plus"></i></a>
+	  <div class="col-sm-3"> 
+	  	 <a class="btn btn-primary" href="{{route('prePerfil.create')}}"><i class="fa fa-plus"></i> Nuevo </a>
 	  </div>
   @endcan
 </div> 
