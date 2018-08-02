@@ -21,8 +21,8 @@
 <script type="text/javascript">
   // run pre selected options
   $('#permisos').multiSelect({
-    selectableHeader: "<div class='custom-header'>Disponibles</div>",
-    selectionHeader: "<div class='custom-header'>Seleccionados</div>"
+    selectableHeader: "<div class='custom-header'>Disponibles<br><input type='text' class='search-input form-control' autocomplete='off' placeholder='Buscar'></div>",
+    selectionHeader: "<div class='custom-header'>Seleccionados<br><input type='text' class='search-input form-control' autocomplete='off' placeholder='Buscar'></div>"
     });
 </script>
 @stop

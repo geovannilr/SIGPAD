@@ -151,15 +151,13 @@
   					<th>Nombre</th>
 					<th>Descripcíón</th>
 					<th>Fecha de Subida</th>
-					@can('publicacion.edit')
+					@can('documentoPublicacion.edit')
 						<th>Modificar</th>
 					@endcan
-					@can('publicacion.destroy')
+					@can('documentoPublicacion.destroy')
 						<th>Eliminar</th>
 					@endcan	
-					@can('publicacion.show')
 						<th>Descargar</th>
-					@endcan
   				</thead>
   				<tbody>
 
@@ -168,13 +166,13 @@
   						<td>{{ $publicacionArchivo->nombre_pub_arc }}</td>	
 						<td>{{ $publicacionArchivo->descripcion_pub_arc }}</td>
 						<td>{{ $publicacionArchivo->fecha_subida_pub_arc}}</td>
-						@can('publicacion.edit')
+						@can('documentoPublicacion.edit')
 							<td>
 								<a class="btn btn-primary" href="{{ url('/')}}/editDocumentoPublicacion/{{ $publicacionArchivo->id_pub }}/{{ $publicacionArchivo->id_pub_arc }}"><i class="fa fa-pencil"></i></a>
 			
 							</td>
 						@endcan
-						@can('publicacion.destroy')
+						@can('documentoPublicacion.destroy')
 							<td>
 								{!! Form::open(['route'=>['deleteDocumentoPublicacion'],'method'=>'POST','class' => 'deleteButton']) !!}
 									{{ Form::hidden('publicacion', $publicacion->id_pub) }}
@@ -185,7 +183,7 @@
 								{!! Form:: close() !!}
 							</td>
 						@endcan
-						@can('publicacion.show')
+						
 							<td>
 								{!! Form::open(['route'=>['downloadDocumentoPublicacion'],'method'=>'POST']) !!}
 							 		<div class="btn-group">
@@ -194,7 +192,7 @@
 									</div>
 								{!! Form:: close() !!}
 							</td>
-						@endcan	
+					
 					</tr>				
 				@endforeach 
 				</tbody>
