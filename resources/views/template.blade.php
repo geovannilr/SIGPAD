@@ -32,7 +32,13 @@
     {!!Html::script('js/main.js')!!}
     {!!Html::script('js/TrabajoGraduacion/trabajoGraduacion.js')!!}
     {!!Html::script('js/jquery.multi-select.js')!!}
- 
+ <style type="text/css">
+@font-face {
+    font-family: 'American_Captain';
+    src: url('fonts/American_Captain.woff') format('woff');
+}
+
+  </style>
    
     
     
@@ -40,15 +46,15 @@
 <body class="fixed-nav sticky-footer " id="page-top" style="background-color: #29282b; ">
   <!-- Navigation-->
   <nav class="navbar navbar-expand-lg fixed-top" id="mainNav" style="background-color: #29282b; color: #ffffff;">
-    <a class="navbar-brand" href="{{  url('/') }}"><img src="http://localhost/SIGPAD/public/img/sigpad-logo.png" class="img-responsive" alt="GESTION EISI"/ style="z-index: 1; position:absolute;margin-left: 50px; width: 100px; height: 100px; margin-top: -20px" ></a>
+    <a class="navbar-brand" href="{{  url('/') }}" style="font-family: American_Captain; font-size: 2em; text-align:left; color: #ffffff; text-decoration: underline; text-indent: 1em; text-decoration-style: solid;"> S I G P A D   </a>
     <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
+      <span class="navbar-toggler-icon " style="color: #ffffff"></span>
     </button>
-    <div class="collapse navbar-collapse " id="navbarResponsive" style="background-color: #29282b; color: #ffffff;"  >
+    <div class="collapse navbar-collapse " id="navbarResponsive" style=" color: #ffffff;"  >
       <ul class="navbar-nav navbar-sidenav " id="exampleAccordion" style="background-color: #29282b;color: #ffffff; z-index: 0; margin-top: 100px;">
         @can('usuario.index', 'permiso.index', 'rol.index')
         <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Administracion" style="color: #ffffff">
-          <a class="nav-link nav-link-collapse collapsed" data-toggle="collapse" href="#collapseAdministracion" data-parent="#exampleAccordion" style="color: #ffffff; font-weight: bold;">
+          <a class="nav-link nav-link-collapse collapsed" data-toggle="collapse" href="#collapseAdministracion" data-parent="#exampleAccordion" style="color: #ffffff; font-weight: bold; background-color: #DF1D20">
             <i class="fa fa-slack"></i>
             <span class="nav-link-text" style="color: #ffffff">Administración</span>
           </a>
@@ -120,7 +126,7 @@
         @endcan
         @can('grupotdg.create','prePerfil.index')
            <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Trabajo de graduación">
-            <a class="nav-link nav-link-collapse collapsed" data-toggle="collapse" href="#collapseTrabajoGraduacion" data-parent="#exampleAccordion" style="color: #ffffff; font-weight: bold;>
+            <a class="nav-link nav-link-collapse collapsed" data-toggle="collapse" href="#collapseTrabajoGraduacion" data-parent="#exampleAccordion" style="color: #ffffff; font-weight: bold; background-color: #DF1D20">
               <i class="fa fa-fw fa fa-mortar-board"></i>
               <span class="nav-link-text" style="color: #ffffff" >Trabajo de Graduacion</span>
             </a>
@@ -156,9 +162,9 @@
         @endcan
         @can('publicacion.index')
           <li>
-                <a class="nav-link" href="{{route('publicacion.index')}}">
+                <a class="nav-link" href="{{route('publicacion.index')}}" style="color: #ffffff; font-weight: bold; background-color: #DF1D20">
                   <i class="fa fa-history"></i>
-                  <span class="nav-link-text">Histórico de TDG</span>
+                  <span class="nav-link-text">Biblioteca de Tesis</span>
                 </a>
                      
           </li>
