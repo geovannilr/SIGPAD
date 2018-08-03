@@ -84,7 +84,7 @@
 					<th>Estado</th>
 					<th>Cantidad de Estudiantes</th>
 					<th>Detalle</th>
-					@can('usuario.edit')
+					@can('grupo.edit')
 						<th>Modificar</th>
 					@endcan
 					@can('grupo.destroy')
@@ -107,9 +107,9 @@
 						<td>
 							 	<a class="btn btn-info" href="#" onclick="getGrupo({{ $grupo->ID }});"><i class="fa fa-eye"></i></a>
 						</td>
-						@can('usuario.edit')
+						@can('grupo.edit')
 							<td> 
-								<a class="btn btn-primary"  data-toggle="modal" data-target="#exampleModalCenter" href="{{route('usuario.edit',$usuario->id)}}"><i class="fa fa-pencil"></i></a>
+								<a class="btn btn-primary"  data-toggle="modal" data-target="#exampleModalCenter" href="{{route('grupo.edit',$grupo->id)}}"><i class="fa fa-pencil"></i></a>
 							</td>
 						@endcan
 						@can('grupo.destroy')
