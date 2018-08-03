@@ -65,8 +65,8 @@
   <div class="col-sm-3"></div>
    <div class="col-sm-3"></div>
   @can('usuario.create')
-	  <div class="col-sm-3">Nuevo 
-	  	 <a class="btn btn-primary" href="{{route('usuario.create')}}"><i class="fa fa-plus"></i></a>
+	  <div class="col-sm-3"> 
+	  	 <a class="btn btn-primary" href="{{route('usuario.create')}}"><i class="fa fa-plus"></i> Nuevo </a>
 	  </div>
   @endcan
 </div> 

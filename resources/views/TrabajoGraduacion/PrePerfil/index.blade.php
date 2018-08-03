@@ -114,24 +114,36 @@
 		});
 	});
 </script>
-		<ol class="breadcrumb">
-	        <li class="breadcrumb-item">
-	          <h5>Pre-Perfil</h5>
+		<ol class="breadcrumb" style="text-align: center; margin-top: 1em">
+	        <li class="breadcrumb-item"  style="text-align: center;">
+	          <h5  style="text-align: center;"">Pre-Perfil</h5>
 	        </li>
 	        @if(isset($numero))
-				 <li class="breadcrumb-item active">Listado Grupo {{$numero}} </li>
+				 <li class="breadcrumb-item active" >Listado Grupo {{$numero}} </li>
 	        @endif
 		</ol>
 		 <div class="row">
-  <div class="col-sm-3"></div>
-  <div class="col-sm-3"></div>
-   <div class="col-sm-3"></div>
-  @can('prePerfil.create')
-	  <div class="col-sm-3">Nuevo 
-	  	 <a class="btn btn-primary" href="{{route('prePerfil.create')}}"><i class="fa fa-plus"></i></a>
-	  </div>
-  @endcan
-</div> 
+			  <div class="col-sm-3"> 
+			  	 @can('prePerfil.create')
+					  <div class="col-sm-3"> 
+					  	 <a class="btn btn-primary" href="{{route('prePerfil.create')}}"><i class="fa fa-plus"></i> Nuevo </a>
+					  </div>
+				  @endcan
+			  </div>
+			  <div class="col-sm-3"></div>
+			   <div class="col-sm-3"></div>
+			 
+		</div> 
+
+
+		<br>
+		
+		<br>
+		<h5  style="text-align: center; font-weight: bold">	
+			Pre-perfiles 
+			@if(isset($numero)) 
+				Grupo {{$numero}}
+	        @endif</h5>
 
 		<br>
   		<div class="table-responsive">
@@ -173,7 +185,7 @@
 						<td>{{ $prePerfil->tipoTrabajo->nombre_cat_tpo_tra_gra}}</td>
 						@can('prePerfil.edit')
 							<td>
-								<a class="btn btn-primary" href="{{route('prePerfil.edit',$prePerfil->id_pdg_ppe)}}"><i class="fa fa-pencil"></i></a>
+								<a class="btn btn-info" href="{{route('prePerfil.edit',$prePerfil->id_pdg_ppe)}}"><i class="fa fa-pencil"></i></a>
 							</td>
 						@endcan
 						@can('prePerfil.destroy')
