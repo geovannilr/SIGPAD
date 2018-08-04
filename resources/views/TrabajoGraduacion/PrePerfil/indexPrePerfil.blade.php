@@ -58,7 +58,7 @@
 	
 	
 </script>
-		<ol class="breadcrumb">
+		<ol class="breadcrumb" style="text-align: center; margin-top: 1em">
 	        <li class="breadcrumb-item ">
 	          <h5>Pre-Perfiles</h5>
 	        </li>
@@ -69,8 +69,8 @@
   <div class="col-sm-3"></div>
    <div class="col-sm-3"></div>
   @can('grupo.create')
-	  <div class="col-sm-3">Nuevo 
-	  	 <a class="btn btn-primary" href="{{route('grupo.create')}}"><i class="fa fa-plus"></i></a>
+	  <div class="col-sm-3">
+	  	 <a class="btn btn-primary" href="{{route('grupo.create')}}"><i class="fa fa-plus">Nuevo </i></a>
 	  </div>
   @endcan
 </div> 

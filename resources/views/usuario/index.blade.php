@@ -54,7 +54,7 @@
 	
 	
 </script>
-		<ol class="breadcrumb">
+		<ol class="breadcrumb" style="text-align: center; margin-top: 1em">
 	        <li class="breadcrumb-item">
 	          <h5>USUARIOS</h5>
 	        </li>
@@ -65,8 +65,8 @@
   <div class="col-sm-3"></div>
    <div class="col-sm-3"></div>
   @can('usuario.create')
-	  <div class="col-sm-3">Nuevo 
-	  	 <a class="btn btn-primary" href="{{route('usuario.create')}}"><i class="fa fa-plus"></i></a>
+	  <div class="col-sm-3"> 
+	  	 <a class="btn btn-primary" href="{{route('usuario.create')}}"><i class="fa fa-plus"></i> Nuevo </a>
 	  </div>
   @endcan
 </div> 

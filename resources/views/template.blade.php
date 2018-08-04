@@ -35,7 +35,7 @@
  <style type="text/css">
 @font-face {
     font-family: 'American_Captain';
-    src: url('fonts/American_Captain.woff') format('woff');
+    src: url('/SIGPAD/public/fonts/American_Captain.woff') format('woff');
 }
 
   </style>
@@ -48,7 +48,7 @@
   <nav class="navbar navbar-expand-lg fixed-top" id="mainNav" style="background-color: #29282b; color: #ffffff;">
     <a class="navbar-brand" href="{{  url('/') }}" style="font-family: American_Captain; font-size: 2em; text-align:left; color: #ffffff; text-decoration: underline; text-indent: 1em; text-decoration-style: solid;"> S I G P A D   </a>
     <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon " style="color: #ffffff"></span>
+      <span class="navbar-toggler-icon fa fa-bars" style="color: #ffffff"></span>
     </button>
     <div class="collapse navbar-collapse " id="navbarResponsive" style=" color: #ffffff;"  >
       <ul class="navbar-nav navbar-sidenav " id="exampleAccordion" style="background-color: #29282b;color: #ffffff; z-index: 0; margin-top: 100px;">
@@ -70,7 +70,7 @@
             @can('rol.create','rol.edit','rol.destroy','rol.index')
                 <li>
                   <a class="nav-link" href="{{route('rol.index')}}" style="color: #ffffff">
-                    <i class="fa fa-user-times"></i>
+                    <i class="fa fa-address-card"></i>
                     <span class="nav-link-text">Roles</span>
                   </a>  
               </li>
@@ -126,7 +126,7 @@
         @endcan
         @can('grupotdg.create','prePerfil.index')
            <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Trabajo de graduación">
-            <a class="nav-link nav-link-collapse collapsed" data-toggle="collapse" href="#collapseTrabajoGraduacion" data-parent="#exampleAccordion" style="color: #ffffff; font-weight: bold; background-color: #DF1D20">
+            <a class="nav-link nav-link-collapse collapsed" data-toggle="collapse" href="#collapseTrabajoGraduacion" data-parent="#exampleAccordion" style="color: #ffffff; font-weight: bold; background-color: #DF1D20; margin-top: 20px">
               <i class="fa fa-fw fa fa-mortar-board"></i>
               <span class="nav-link-text" style="color: #ffffff" >Trabajo de Graduacion</span>
             </a>
@@ -162,17 +162,17 @@
         @endcan
         @can('publicacion.index')
           <li>
-                <a class="nav-link" href="{{route('publicacion.index')}}" style="color: #ffffff; font-weight: bold; background-color: #DF1D20">
-                  <i class="fa fa-history"></i>
+                <a class="nav-link" href="{{route('publicacion.index')}}" style="color: #ffffff; font-weight: bold; background-color: #DF1D20; margin-top: 20px">
+                  <i class="fa fa-book"></i>
                   <span class="nav-link-text">Biblioteca de Tesis</span>
                 </a>
                      
           </li>
         @endcan
       </ul>
-      <ul class="navbar-nav sidenav-toggler">
+      <ul class="navbar-nav sidenav-toggler" >
         <li class="nav-item">
-          <a class="nav-link text-center" id="sidenavToggler">
+          <a class="nav-link text-center" id="sidenavToggler" style="background-color :#0A122A" >
             <i class="fa fa-fw fa-angle-left"></i>
           </a>
         </li>

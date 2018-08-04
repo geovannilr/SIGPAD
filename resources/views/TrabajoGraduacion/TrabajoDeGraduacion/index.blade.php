@@ -9,7 +9,7 @@
 @endif
 <div class="container-fluid">
       <!-- Breadcrumbs-->
-      <ol class="breadcrumb">
+      <ol class="breadcrumb" style="text-align: center; margin-top: 1em">
           <li class="breadcrumb-item">
             <h6>Trabajo de Graduación</h6>
           </li>
@@ -72,16 +72,16 @@
            @foreach ($etapas as $etapa)
               @if($etapa->nombre_cat_eta_eva == "Analisis y Diseño")
                 <div class="col-xl-3 col-sm-6 mb-3">
-                  <div class="card text-gray bg-danger o-hidden h-100">
+                  <div class="card text-gray  o-hidden h-100" style="background-color: #DF1D20">
                     <div class="card-body">
                       <div class="card-body-icon">
-                        <i class="fa fa-mortar-board btn-danger"></i>
+                        <i class="fa fa-mortar-board"></i>
                       </div>
-                      <div class="mr-5 btn-danger">{{$etapa->nombre_cat_eta_eva}}</div>
+                      <div class="mr-5 text-white" >{{$etapa->nombre_cat_eta_eva}}</div>
                     </div>
                     <a class="card-footer text-gray clearfix small z-1" href="{{route('etapaEvaluativa.show',$etapa->id_cat_eta_eva)}}">
-                      <span class="float-left btn-danger">Ver Detalles</span>
-                      <span class="float-right btn-danger">
+                      <span class="float-left text-white ">Ver Detalles</span>
+                      <span class="float-right text-white">
                         <i class="fa fa-angle-right"></i>
                       </span>
                     </a>

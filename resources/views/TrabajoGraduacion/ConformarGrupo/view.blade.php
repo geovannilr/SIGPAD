@@ -13,7 +13,7 @@
         </script>
     @endif
 
-    <ol class="breadcrumb">
+    <ol class="breadcrumb" style="text-align: center; margin-top: 1em">
         <li class="breadcrumb-item ">
             <h5>Detalle del Grupo</h5>
         </li>
