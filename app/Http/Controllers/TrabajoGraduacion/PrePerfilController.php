@@ -95,7 +95,7 @@ class PrePerfilController extends Controller
                     if ($prePerfilAprobado>0) {
                         //AL MENOS UN PREPERFIL ENVIADO YA FUE APROBADO POR COORDINADOR DE TRABAJO DE GRADUACION
                         Session::flash('message-error', 'No puedes crear nuevos Pre-Perfiles, uno de los Pre-Perfiles enviados por tu grupo de trabajo de graduación ya ha sido aprobado!');
-                        return  view('template');
+                        return  view('TrabajoGraduacion.PrePerfil.index');
                     }else{
                         $tiposTrabajos =  cat_tpo_tra_gra_tipo_trabajo_graduacionModel::pluck('nombre_cat_tpo_tra_gra', 'id_Cat_tpo_tra_gra')->toArray();
                         return view('TrabajoGraduacion.PrePerfil.create',compact('tiposTrabajos'));

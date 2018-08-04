@@ -1,6 +1,6 @@
 @extends('template')
 @section('content')
-<ol class="breadcrumb">
+<ol class="breadcrumb" style="text-align: center; margin-top: 1em">
         <li class="breadcrumb-item">
           <h5>Nuevo Documento </h5>
         </li>

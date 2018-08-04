@@ -9,7 +9,7 @@
 @endif
 <div class="container-fluid">
       <!-- Breadcrumbs-->
-      <ol class="breadcrumb">
+      <ol class="breadcrumb" style="text-align: center; margin-top: 1em">
           <li class="breadcrumb-item">
             <h6>Trabajo de Graduación</h6>
           </li>

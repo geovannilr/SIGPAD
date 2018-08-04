@@ -35,7 +35,7 @@
  <style type="text/css">
 @font-face {
     font-family: 'American_Captain';
-    src: url('fonts/American_Captain.woff') format('woff');
+    src: url('/SIGPAD/public/fonts/American_Captain.woff') format('woff');
 }
 
   </style>

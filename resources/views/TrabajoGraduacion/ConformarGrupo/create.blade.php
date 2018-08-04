@@ -16,7 +16,7 @@
 @endif
 console.log(cantidadMinima);
 </script>
-<ol class="breadcrumb">
+<ol class="breadcrumb" style="text-align: center; margin-top: 1em">
         <li class="breadcrumb-item">
           <h5>Trabajo de Graduación</h5>
         </li>
