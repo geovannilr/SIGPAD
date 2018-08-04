@@ -189,7 +189,7 @@
 							<td>
 								{!! Form::open(['route'=>['downloadPrePerfil'],'method'=>'POST']) !!}
 							 		<div class="btn-group">
-							 			{!!Form::hidden('archivo',$prePerfil->nombre_archivo_pdg_ppe,['class'=>'form-control'])!!}
+							 			{!!Form::hidden('archivo',$prePerfil->id_pdg_ppe,['class'=>'form-control'])!!}
 										<button type="submit" class="btn btn-dark"><i class="fa fa-download"></i></button>
 									</div>
 								{!! Form:: close() !!}

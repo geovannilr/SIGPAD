@@ -35,10 +35,9 @@ class PrePerfilController extends Controller
                  $gruposPrePerfil=$prePerfil->getGruposPrePerfil();
                 return view('TrabajoGraduacion.PrePerfil.indexPrePerfil',compact('gruposPrePerfil'));
             }elseif (Auth::user()->isRole('estudiante')) {
-                $grupo=self::verificarGrupo($userLogin->user)->getData();
-                $estudiantes=json_decode($grupo->msg->estudiantes);
-                if ($grupo->errorCode == '0'){
-                    $idGrupo = $estudiantes[0]->idGrupo;
+                $estudiante = new gen_EstudianteModel();
+                $idGrupo = $estudiante->getIdGrupo($userLogin->user);
+                if ($idGrupo != 'NA'){
                     $miGrupo = pdg_gru_grupoModel::find($idGrupo);
                     if ($miGrupo->id_cat_sta == 3 ) {//APROBADO
                         $prePerfiles =pdg_ppe_pre_perfilModel::where('id_pdg_gru', '=',$idGrupo)->get();
@@ -92,14 +91,14 @@ class PrePerfilController extends Controller
                             $prePerfilAprobado+=1;
                         }
                     }
-                    if ($prePerfilAprobado>0) {
+                   /* if ($prePerfilAprobado>0) {
                         //AL MENOS UN PREPERFIL ENVIADO YA FUE APROBADO POR COORDINADOR DE TRABAJO DE GRADUACION
                         Session::flash('message-error', 'No puedes crear nuevos Pre-Perfiles, uno de los Pre-Perfiles enviados por tu grupo de trabajo de graduación ya ha sido aprobado!');
                         return  view('template');
-                    }else{
+                    }*/ //else{
                         $tiposTrabajos =  cat_tpo_tra_gra_tipo_trabajo_graduacionModel::pluck('nombre_cat_tpo_tra_gra', 'id_Cat_tpo_tra_gra')->toArray();
                         return view('TrabajoGraduacion.PrePerfil.create',compact('tiposTrabajos'));
-                    }
+                    //}
 	        	}else{
 	        		//EL GRUPO AUN NO HA SIDO APROBADO
 	        	Session::flash('message-error', 'Tu grupo de trabajo de graduación aún no ha sido aprobado');
@@ -130,28 +129,33 @@ class PrePerfilController extends Controller
                 'documento' => 'required'
          ]);
   	   $userLogin=Auth::user();
-  	   $grupo=self::verificarGrupo($userLogin->user)->getData();
-	        $estudiantes=json_decode($grupo->msg->estudiantes);
-	        if ($grupo->errorCode == '0'){
-	        	$idGrupo = $estudiantes[0]->idGrupo;
-	        }
+       $estudiante = new gen_EstudianteModel();
+       $idGrupo = $estudiante->getIdGrupo($userLogin->user);
+       $grupo = pdg_gru_grupoModel::find($idGrupo);
+       $anioGrupo = $grupo->anio_pdg_gru;
+       $numeroGrupo = $grupo->correlativo_pdg_gru_gru;
        //obtenemos el campo file definido en el formulario
       	$file = $request->file('documento');
        //obtenemos el nombre del archivo
-      	$nombre = "Grupo1"."_2018_".date('hms').$file->getClientOriginalName();
+      	$nombre = 'Grupo'.$numeroGrupo."_".$anioGrupo."_".date('hms').$file->getClientOriginalName();
         Storage::disk('Uploads')->put($nombre, File::get($file));
          //movemos el archivo a la ubicación correspondiente segun grupo y años
-        $nuevaUbicacion=$anioGrupo.'/Grupo'.$correlativo.'PrePerfil/'.$nombre;
+        if ($_ENV['SERVER'] =="win") {
+                $nuevaUbicacion=$anioGrupo.'/Grupo'.$numeroGrupo.'/PrePerfil/'.$nombre;
+             }else{
+                $nuevaUbicacion=$anioGrupo.'\Grupo'.$numeroGrupo.'\PrePerfil\ '.$nombre;
+             }
+            
         Storage::disk('Uploads')->move($nombre, $nuevaUbicacion);
-        $fecha=date('Y-m-d H:m:s');
+        $fecha=date('Y-m-d H:m:s'); 
         //$path= public_path()."\Uploads\PrePerfil\ ";
          $path= public_path().$_ENV['PATH_UPLOADS'];
            
            $lastId = pdg_ppe_pre_perfilModel::create
             ([
                 'tema_pdg_ppe'   				 => $request['tema_pdg_ppe'],
-                'nombre_archivo_pdg_ppe'       	 =>  $nombre,
-                'ubicacion_pdg_ppe'  		 	 => trim($path).$nuevaUbicacion,
+                'nombre_archivo_pdg_ppe'       	 =>  $file->getClientOriginalName(),
+                'ubicacion_pdg_ppe'  		 	 => $nombre,
                 'fecha_creacion_pdg_ppe'       	 => $fecha,
                 'id_pdg_gru'					 => $idGrupo,
                 'id_cat_sta'					 => 7,
@@ -218,19 +222,33 @@ class PrePerfilController extends Controller
         $prePerfil=pdg_ppe_pre_perfilModel::find($id);
         $prePerfil->tema_pdg_ppe = $request['tema_pdg_ppe'];
         $prePerfil->id_cat_tpo_tra_gra = $request['id_cat_tpo_tra_gra'];
-
-       if (!is_null($file)) {
-       		//obtenemos el nombre del archivo
-      		$nombre = "Grupo1"."_2018_".date('hms').$file->getClientOriginalName();
-       		Storage::disk('prePerfiles')->delete($prePerfil->nombre_archivo_pdg_ppe);
-       		//indicamos que queremos guardar un nuevo archivo en el disco local
-        	Storage::disk('prePerfiles')->put($nombre, File::get($file));
-        	$fecha=date('Y-m-d H:m:s');
-            $path= public_path()."/Uploads/PrePerfil/ ";
-            $prePerfil->nombre_archivo_pdg_ppe = $nombre;
-            $prePerfil->ubicacion_pdg_ppe = trim($path).$nombre;
+        $estudiante = new gen_EstudianteModel();
+        $idGrupo = $estudiante->getIdGrupo($userLogin->user);
+        $grupo = pdg_gru_grupoModel::find($idGrupo);
+        $anioGrupo = $grupo->anio_pdg_gru;
+        $numeroGrupo = $grupo->correlativo_pdg_gru_gru;
+        $nombreViejo = $prePerfil->ubicacion_pdg_ppe;
+       if (!empty($file)) {
+            //obtenemos el nombre del archivo
+            $nombre = 'Grupo'.$numeroGrupo."_".$anioGrupo."_".date('hms').$file->getClientOriginalName();
+            Storage::disk('Uploads')->put($nombre, File::get($file));
+             //movemos el archivo a la ubicación correspondiente segun grupo y años
+            $nuevaUbicacion=$anioGrupo.'/Grupo'.$numeroGrupo.'/PrePerfil/'.$nombre;
+            Storage::disk('Uploads')->move($nombre, $nuevaUbicacion);
+            $fecha=date('Y-m-d H:m:s');
+             if ($_ENV['SERVER'] =="win") {
+                $path= public_path().$_ENV['PATH_UPLOADS'].$anioGrupo.'\Grupo'.$numeroGrupo.'\PrePerfil\ ';
+             }else{
+                $path= public_path().$_ENV['PATH_UPLOADS'].$anioGrupo.'/Grupo'.$numeroGrupo.'/PrePerfil/';
+             }
+            
+            $prePerfil->nombre_archivo_pdg_ppe = $file->getClientOriginalName();
+            $prePerfil->ubicacion_pdg_ppe = $nombre; //SOLO SE GUARDA NOMBRE AHORA
             $prePerfil->fecha_creacion_pdg_ppe = $fecha;
             $prePerfil->id_gen_usuario = $userLogin->id;
+            if (File::exists(trim($path).$prePerfil->ubicacion_pdg_ppe)){
+                    File::delete(trim($path).$nombreViejo);    
+            }
             $prePerfil->save();
             Session::flash('message','Pre-Perfil Modificado correctamente!');
        		return Redirect::to('/prePerfil');
@@ -252,10 +270,20 @@ class PrePerfilController extends Controller
         $userLogin=Auth::user();
         $prePerfil=pdg_ppe_pre_perfilModel::find($id);
         $name=$prePerfil->nombre_archivo_pdg_ppe;
-        $path= public_path().$_ENV['PATH_PREPERFIL'];
+        $estudiante = new gen_EstudianteModel();
+        $idGrupo = $estudiante->getIdGrupo($userLogin->user);
+        $grupo = pdg_gru_grupoModel::find($idGrupo);
+        $anioGrupo = $grupo->anio_pdg_gru;
+        $numeroGrupo = $grupo->correlativo_pdg_gru_gru;
+        $nombreViejo = $prePerfil->ubicacion_pdg_ppe;
+        if ($_ENV['SERVER'] =="win") {
+                $path= public_path().$_ENV['PATH_UPLOADS'].$anioGrupo.'\Grupo'.$numeroGrupo.'\PrePerfil\ ';
+        }else{
+                $path= public_path().$_ENV['PATH_UPLOADS'].$anioGrupo.'/Grupo'.$numeroGrupo.'/PrePerfil/';
+        }
         if ($userLogin->can(['prePerfil.destroy'])) {
-            if (Storage::disk('prePerfiles')->exists($name)){
-                Storage::disk('prePerfiles')->delete($name);
+            if (File::exists(trim($path).$prePerfil->ubicacion_pdg_ppe)){
+                    File::delete(trim($path).$nombreViejo);    
             }
             pdg_ppe_pre_perfilModel::destroy($id);
             Session::flash('message','Pre-Perfil Eliminado Correctamente!');
@@ -287,11 +315,24 @@ class PrePerfilController extends Controller
             return Redirect::to('/indexPrePerfil/'.$prePerfil->id_pdg_gru);   
     }
     function downloadPrePerfil(Request $request){
-    	$name = $request['archivo'];
-    	$path= public_path().$_ENV['PATH_PREPERFIL'];
+        $userLogin=Auth::user();
+        $id = $request['archivo'];
+        $prePerfil=pdg_ppe_pre_perfilModel::find($id);
+        $name=$prePerfil->nombre_archivo_pdg_ppe;
+        $estudiante = new gen_EstudianteModel();
+        $idGrupo = $estudiante->getIdGrupo($userLogin->user);
+        $grupo = pdg_gru_grupoModel::find($idGrupo);
+        $anioGrupo = $grupo->anio_pdg_gru;
+        $numeroGrupo = $grupo->correlativo_pdg_gru_gru;
+        if ($_ENV['SERVER'] =="win") {
+                $path= public_path().$_ENV['PATH_UPLOADS'].$anioGrupo.'\Grupo'.$numeroGrupo.'\PrePerfil\ ';
+        }else{
+                $path= public_path().$_ENV['PATH_UPLOADS'].$anioGrupo.'/Grupo'.$numeroGrupo.'/PrePerfil/';
+        }
+    	//$path= public_path().$_ENV['PATH_PREPERFIL'];
     	//verificamos si el archivo existe y lo retornamos
-     	if (Storage::disk('prePerfiles')->exists($name)){
-      	  return response()->download(trim($path).$name);
+     	if (File::exists(trim($path).$prePerfil->ubicacion_pdg_ppe)){
+      	  return response()->download(trim($path).$prePerfil->ubicacion_pdg_ppe);
      	}else{
      		Session::flash('error','El archivo no se encuentra disponible , es posible que fue borrado');
              return redirect()->route('prePerfil.index');

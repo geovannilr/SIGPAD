@@ -149,8 +149,8 @@ class publicacionController extends Controller{
 	      	$nombre = "Codigo".$publicacion->codigo_pub.date('hms').$file->getClientOriginalName();
 	       //indicamos que queremos guardar un nuevo archivo en el disco local
 	        Storage::disk('publicaciones')->put($nombre, File::get($file));
-	        	if (File::exists($archivo->ubicacion_pub_arc)){
-      	 			File::delete($archivo->ubicacion_pub_arc);	
+	        	if (File::exists($path.$archivo->ubicacion_pub_arc)){
+      	 			File::delete($path.$archivo->ubicacion_pub_arc);	
      			}
 	        	
 	        	$archivo->nombre_pub_arc = $file->getClientOriginalName();
