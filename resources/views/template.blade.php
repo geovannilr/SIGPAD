@@ -46,12 +46,12 @@
 <body class="fixed-nav sticky-footer " id="page-top" style="background-color: #29282b; ">
   <!-- Navigation-->
   <nav class="navbar navbar-expand-lg fixed-top" id="mainNav" style="background-color: #29282b; color: #ffffff;">
-    <a class="navbar-brand" href="{{  url('/') }}" style="font-family: American_Captain; font-size: 2em; text-align:left; color: #ffffff; text-decoration: underline; text-indent: 1em; text-decoration-style: solid;"> S I G P A D   </a>
+    <a class="navbar-brand" href="{{  url('/') }}" style="font-family: American_Captain; font-size: 2em; margin-left: -50px; color: #ffffff; text-decoration: underline; text-indent: 1em; text-decoration-style: solid;"><i class="fa fa-eercast fa-lg" aria-hidden="true">  </i>    S I G P A D   </a>
     <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon fa fa-bars" style="color: #ffffff"></span>
     </button>
     <div class="collapse navbar-collapse " id="navbarResponsive" style=" color: #ffffff;"  >
-      <ul class="navbar-nav navbar-sidenav " id="exampleAccordion" style="background-color: #29282b;color: #ffffff; z-index: 0; margin-top: 100px;">
+      <ul class="navbar-nav navbar-sidenav " id="exampleAccordion" style="background-color: #29282b;color: #ffffff; z-index: 0; margin-top: 73px;">
         @can('usuario.index', 'permiso.index', 'rol.index')
         <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Administracion" style="color: #ffffff">
           <a class="nav-link nav-link-collapse collapsed" data-toggle="collapse" href="#collapseAdministracion" data-parent="#exampleAccordion" style="color: #ffffff; font-weight: bold; background-color: #DF1D20">
@@ -161,11 +161,23 @@
           </li>
         @endcan
         @can('publicacion.index')
-          <li>
-                <a class="nav-link" href="{{route('publicacion.index')}}" style="color: #ffffff; font-weight: bold; background-color: #DF1D20; margin-top: 20px">
+          <li class="nav-item" data-toggle="tooltip" data-placement="right" title="publicaciones">
+                <a class="nav-link nav-link-collapse collapsed"  data-toggle="collapse" href="#collapsePublicaciones" data-parent="#exampleAccordion" style="color: #ffffff; font-weight: bold; background-color: #DF1D20; margin-top: 20px"  >
                   <i class="fa fa-book"></i>
                   <span class="nav-link-text">Biblioteca de Tesis</span>
                 </a>
+
+                 <ul class="sidenav-second-level collapse" id="collapsePublicaciones">
+                      @can('publicacion.create','publicacion.index')
+                        <li>
+                          <a class="nav-link" href="{{route('publicacion.index')}}" style="color: #ffffff">
+                            <i class="fa fa-file-text"></i>
+                            <span class="nav-link-text">Historico de Tesis</span>
+                          </a>  
+                        </li>
+
+                       @endcan
+            </ul>
                      
           </li>
         @endcan

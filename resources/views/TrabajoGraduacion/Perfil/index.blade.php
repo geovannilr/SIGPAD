@@ -114,10 +114,10 @@
 </script>
 		<ol class="breadcrumb">
 	        <li class="breadcrumb-item">
-	          <h5>Perfil</h5>
+	          <h5> <a href="{{ redirect()->getUrlGenerator()->previous() }}" style="margin-left: 0em"><i class="fa fa-arrow-left fa-lg" style="z-index: 1;margin-top: 0em;margin-right: 0.5em; color: black"></i></a>     Perfil</h5>
 	        </li>
 	        @if(isset($numero))
-				 <li class="breadcrumb-item active">Listado Grupo {{$numero}} </li>
+				 <li class="breadcrumb-item active"> Grupo {{$numero}} </li>
 	        @endif
 		</ol>
 		 <div class="row">
@@ -125,8 +125,8 @@
   <div class="col-sm-3"></div>
    <div class="col-sm-3"></div>
   @can('prePerfil.create')
-	  <div class="col-sm-3">Nuevo 
-	  	 <a class="btn btn-primary" href="{{route('perfil.create')}}"><i class="fa fa-plus"></i></a>
+	  <div class="col-sm-3"> 
+	  	 <a class="btn " href="{{route('perfil.create')}}" style="background-color: #DF1D20; color: white"><i class="fa fa-plus"></i>Nuevo Perfil</a>
 	  </div>
   @endcan
 </div> 

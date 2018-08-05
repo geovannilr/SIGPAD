@@ -51,7 +51,7 @@
 </script>
 		<ol class="breadcrumb" style="text-align: center; margin-top: 1em">
 	        <li class="breadcrumb-item">
-	          <h5>Roles</h5>
+	          <h5> <a href="{{ redirect()->getUrlGenerator()->previous() }}" style="margin-left: 0em"><i class="fa fa-arrow-left fa-lg" style="z-index: 1;margin-top: 0em;margin-right: 0.5em; color: black"></i></a>     Roles</h5>
 	        </li>
 	        <li class="breadcrumb-item active">Listado</li>
 		</ol>
@@ -61,7 +61,7 @@
    <div class="col-sm-3"></div>
    @can('rol.create')
     <div class="col-sm-3">
-      Nuevo  <a class="btn btn-primary" href="{{route('rol.create')}}"><i class="fa fa-plus"></i></a>
+        <a class="btn " href="{{route('rol.create')}}" style="background-color: #DF1D20; color: white"><i class="fa fa-plus"></i> Nuevo Rol</a>
     </div>
   @endcan
 </div> 

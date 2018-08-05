@@ -17,35 +17,35 @@
 @endif
 <script type="text/javascript">
 	$( document ).ready(function() {
-    	// $("#listTable").DataTable({
-     //    dom: '<"top"l>frt<"bottom"Bip><"clear">',
-     //    buttons: [
-     //       {
-     //            extend: 'excelHtml5',
-     //            title: 'Listado de Pre-Perfiles'
-     //        },
-     //        {
-     //            extend: 'pdfHtml5',
-     //            title: 'Listado de Pre-Perfiles'
-     //        },
-     //         {
-     //            extend: 'csvHtml5',
-     //            title: 'Listado de Pre-Perfiles'
-     //        },
-     //        {
-     //            extend: 'print',
-     //            title: 'Listado de Pre-Perfiles'
-     //        }
+    	$("#listTable").DataTable({
+        dom: '<"top"l>frt<"bottom"Bip><"clear">',
+        buttons: [
+           {
+                extend: 'excelHtml5',
+                title: 'Listado de Pre-Perfiles'
+            },
+            {
+                extend: 'pdfHtml5',
+                title: 'Listado de Pre-Perfiles'
+            },
+             {
+                extend: 'csvHtml5',
+                title: 'Listado de Pre-Perfiles'
+            },
+            {
+                extend: 'print',
+                title: 'Listado de Pre-Perfiles'
+            }
 
 
-     //    ],
-     //     responsive: {
-     //        details: {
-     //            type: 'column'
-     //        }
-     //    },
-     //    order: [ 1, 'asc' ],
-    	// });
+        ],
+         responsive: {
+            details: {
+                type: 'column'
+            }
+        },
+        order: [ 1, 'asc' ],
+    	});
     	$(".aprobar").submit(function( event ) {
     		event.preventDefault();
     		var titulo;
@@ -116,34 +116,35 @@
 </script>
 		<ol class="breadcrumb" style="text-align: center; margin-top: 1em">
 	        <li class="breadcrumb-item"  style="text-align: center;">
-	          <h5  style="text-align: center;"">Pre-Perfil</h5>
+	          <h5  style="text-align: center;"">  <a href="{{ redirect()->getUrlGenerator()->previous() }}" style="margin-left: 0em"><i class="fa fa-arrow-left fa-lg" style="z-index: 1;margin-top: 0em;margin-right: 0.5em; color: black"></i></a>     Pre-Perfil</h5>
 	        </li>
 	        @if(isset($numero))
-				 <li class="breadcrumb-item active" >Listado Grupo {{$numero}} </li>
+				 <li class="breadcrumb-item active" >Grupo {{$numero}} </li>
 	        @endif
 		</ol>
 		 <div class="row">
-			  <div class="col-sm-3"> 
-			  	 @can('prePerfil.create')
+			  <div class="col-sm-3"> </div>
+			  <div class="col-sm-3"></div>
+			  <div class="col-sm-3"></div>
+			   <div class="col-sm-3">
+			   	 	 @can('prePerfil.create')
 					  <div class="col-sm-3"> 
-					  	 <a class="btn btn-primary" href="{{route('prePerfil.create')}}"><i class="fa fa-plus"></i> Nuevo </a>
+					  	 <a class="btn " href="{{route('prePerfil.create')}}" style="background-color: #DF1D20; color: white"><i class="fa fa-plus"></i> Nuevo Pre-perfil </a>
 					  </div>
 				  @endcan
-			  </div>
-			  <div class="col-sm-3"></div>
-			   <div class="col-sm-3"></div>
+			   </div>
 			 
 		</div> 
 
 
 		<br>
 		
-		<br>
+	<!-- 	<br>
 		<h5  style="text-align: center; font-weight: bold">	
 			Pre-perfiles 
 			@if(isset($numero)) 
 				Grupo {{$numero}}
-	        @endif</h5>
+	        @endif</h5> -->
 
 		<br>
   		<div class="table-responsive">
@@ -154,7 +155,7 @@
   						<th>Grupo</th>
   					@endif
 					<th>Tema</th>
-					<th>Fecha de Creación</th>
+					<th>Fecha Creación</th>
 					<th>Estado</th>
 					<th>Tipo</th>
 					@can('prePerfil.edit')
