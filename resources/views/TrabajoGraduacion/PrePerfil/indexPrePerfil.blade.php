@@ -81,9 +81,9 @@
 
   				<thead>
 					<th>Grupo</th>
-					<th>Cantidad de Pre-Perfiles Enviados</th>
-					<th>Datalle de Grupo</th>
-					<th>Datalle de Pre-Perfiles</th>
+					<th>Cant. de Pre-Perfiles Enviados</th>
+					<th>Detalle de Grupo</th>
+					<th>Detalle de Pre-Perfiles</th>
 
   				</thead>
   				<tbody>
@@ -92,11 +92,11 @@
   						<tr>
 						<td>{{ $grupo->grupo->numero_pdg_gru }}</td>
 						<td>{{ $grupo->cantidadPrePerfiles }}</td>
-						<td>
-							 	<a class="btn btn-info" href="#" onclick="getGrupo({{ $grupo->id_pdg_gru }});"><i class="fa fa-eye"></i></a>
+						<td style="text-align: center;">
+							 	<a class="btn btn-dark" href="#" onclick="getGrupo({{ $grupo->id_pdg_gru }});"><i class="fa fa-eye"></i></a>
 						</td>
-						<td>
-								<a class="btn btn-info" href="{{route('indexPrePerfil', [$grupo->id_pdg_gru])}}"><i class="fa fa-list-alt"></i></a>
+						<td style="text-align: center;">
+								<a class="btn " style="background-color:  #102359;color: white" href="{{route('indexPrePerfil', [$grupo->id_pdg_gru])}}"><i class="fa fa-list-alt"></i></a>
 							</td>
 					</tr>
 				@endforeach 

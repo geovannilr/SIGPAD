@@ -74,7 +74,7 @@
 					<th>Nombre</th>
           <th>Slug</th>
 					<th>Descipción</th>
-					<th>Fecha de Registro</th>
+					<th>Fecha Registro</th>
 					@can('permiso.edit')
             <th>Modificar</th>
           @endcan 
@@ -90,12 +90,12 @@
 						<td>{{ $permiso->description }}</td>
 						<td>{{$permiso->created_at->format('d/m/Y H:i:s')}}</td>
 						@can('permiso.edit')
-              <td>
-  							<a class="btn btn-primary" href="{{route('permiso.edit',$permiso->id)}}"><i class="fa fa-pencil"></i></a>
+              <td style="text-align: center;">
+  							<a class="btn " style="background-color:  #102359;color: white" href="{{route('permiso.edit',$permiso->id)}}"><i class="fa fa-pencil"></i></a>
   						</td>
             @endcan
             @can('permiso.destroy')
-  						<td>
+  						<td style="text-align: center;">
   							{!! Form::open(['route'=>['permiso.destroy',$permiso->id],'method'=>'DELETE','class' => 'deleteButton']) !!}
   						 		<div class="btn-group">
   									<button type="submit" class="btn btn-danger"><i class="fa fa-trash"></i></button>

@@ -170,12 +170,12 @@
 						<td><span class="badge badge-info">{{ $prePerfil->categoriaEstado->nombre_cat_sta }}</span>&nbsp;</td>
 						<td>{{ $prePerfil->tipoTrabajo->nombre_cat_tpo_tra_gra}}</td>
 						@can('prePerfil.edit')
-							<td>
-								<a class="btn btn-primary" href="{{route('prePerfil.edit',$prePerfil->id_pdg_ppe)}}"><i class="fa fa-pencil"></i></a>
+							<t style="text-align: center;">
+								<a class="btn " style="background-color:  #102359;color: white" href="{{route('prePerfil.edit',$prePerfil->id_pdg_ppe)}}"><i class="fa fa-pencil"></i></a>
 							</td>
 						@endcan
 						@can('prePerfil.destroy')
-							<td>
+							<td style="text-align: center;">
 								{!! Form::open(['route'=>['prePerfil.destroy',$prePerfil->id_pdg_ppe],'method'=>'DELETE','class' => 'deleteButton']) !!}
 							 		<div class="btn-group">
 										<button type="submit" class="btn btn-danger"><i class="fa fa-trash"></i></button>
@@ -184,7 +184,7 @@
 							</td>
 						@endcan
 
-							<td>
+							<td style="text-align: center;">
 								{!! Form::open(['route'=>['downloadPrePerfil'],'method'=>'POST']) !!}
 							 		<div class="btn-group">
 							 			{!!Form::hidden('archivo',$prePerfil->nombre_archivo_pdg_ppe,['class'=>'form-control'])!!}
@@ -193,7 +193,7 @@
 								{!! Form:: close() !!}
 							</td>
 							@can('prePerfil.aprobar')
-								<td>
+								<td style="text-align: center;">
 									{!! Form::open(['route'=>['aprobarPreperfil'],'method'=>'POST','class'=>'aprobar']) !!}
 								 		<div class="btn-group">
 								 			{!!Form::hidden('idPrePerfil',$prePerfil->id_pdg_ppe,['class'=>'form-control'])!!}
@@ -203,7 +203,7 @@
 								</td>
 							@endcan
 							@can('prePerfil.rechazar')
-								<td>
+								<td style="text-align: center;">
 									{!! Form::open(['route'=>['rechazarPrePerfil'],'method'=>'POST','class'=>'rechazar']) !!}
 								 		<div class="btn-group">
 								 			{!!Form::hidden('idPrePerfil',$prePerfil->id_pdg_ppe,['class'=>'form-control'])!!}

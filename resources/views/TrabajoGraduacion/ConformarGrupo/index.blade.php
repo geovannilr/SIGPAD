@@ -104,16 +104,16 @@
 							@endif
 						</td>
 						<td>{{$grupo->Cant}}</td>
-						<td>
-							 	<a class="btn btn-info" href="#" onclick="getGrupo({{ $grupo->ID }});"><i class="fa fa-eye"></i></a>
+						<td style="text-align: center;">
+							 	<a class="btn btn-dark" href="#" onclick="getGrupo({{ $grupo->ID }});"><i class="fa fa-eye"></i></a>
 						</td>
 						@can('grupo.edit')
-							<td> 
-								<a class="btn btn-primary"  data-toggle="modal" data-target="#exampleModalCenter" href="{{route('grupo.edit',$grupo->id)}}"><i class="fa fa-pencil"></i></a>
+							<td style="text-align: center;"> 
+								<a class="btn " style="background-color:  #102359;color: white"  data-toggle="modal" data-target="#exampleModalCenter" href="{{route('grupo.edit',$grupo->id)}}"><i class="fa fa-pencil"></i></a>
 							</td>
 						@endcan
 						@can('grupo.destroy')
-							<td>
+							<td style="text-align: center;">
 								{!! Form::open(['route'=>['grupo.destroy',$$grupo->ID],'method'=>'DELETE','class' => 'deleteButton']) !!}
 							 		<div class="btn-group">
 										<button type="submit" class="btn btn-danger"><i class="fa fa-trash"></i></button>
