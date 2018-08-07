@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\TrabajoGraduacion;
 
+use App\pdg_dcn_docenteModel;
+use App\pdg_tri_gru_tribunal_grupoModel;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Session;
@@ -297,5 +299,73 @@ class PrePerfilController extends Controller
              return redirect()->route('prePerfil.index');
      	}
     	//return $path;
+    }
+    public function getTribunalData($id){
+        $new = null;
+        $tribunal = pdg_tri_gru_tribunal_grupoModel::getTribunalData($id);
+        if(!$tribunal->isEmpty()){
+            $new = false;
+        }else{
+            $new = true;
+        }
+        return response()->json(['state'=>$new,'info'=>$tribunal]);
+    }
+    private function validarPermisos($idGrupo){
+        $permiso = Auth::user()->can(['grupo.index']);
+        $grupoExists = pdg_gru_grupoModel::where('id_pdg_gru',$idGrupo)->exists();
+        return $grupoExists&&$permiso;
+    }
+    public function verTribunal($id){
+        $valid = $this->validarPermisos($id);
+        if($valid){
+            $tribunal = pdg_tri_gru_tribunal_grupoModel::getTribunalData($id);
+            return view('TrabajoGraduacion.PrePerfil.view',compact('tribunal','id'));
+        }else{
+            Session::flash('message-error', 'No tiene permisos para acceder a esta opción');
+            return  view('template');
+        }
+    }
+    public function docentesDisponibles($id){
+        $docentes = pdg_dcn_docenteModel::getDocentesDisponibles($id);
+        return $docentes;
+    }
+    public function rolesDisponibles($id){
+        $roles = pdg_tri_gru_tribunal_grupoModel::getRolesDisponibles($id);
+        return $roles;
+    }
+    public function asignarDocenteTribunal(Request $request){
+        $errorCode = -1;
+        $errorMessage = "No se procesaron los datos";
+        try{
+            $idDcn = $request['dcn'];
+            $idGru = $request['gru'];
+            $idRol = $request['rol'];
+            $relacionTribunal = new pdg_tri_gru_tribunal_grupoModel();
+            $relacionTribunal ->id_pdg_tri_rol = $idRol;
+            $relacionTribunal ->id_pdg_gru = $idGru;
+            $relacionTribunal ->id_pdg_dcn = $idDcn;
+            $relacionTribunal ->save();
+            $errorCode = 0;
+            $errorMessage = "¡Docente asignado satisfactoriamente!";
+        }catch (Exception $exception){
+            $errorCode = 1;
+            $errorMessage = "Su solicitud no pudo ser procesada";
+        }
+        return response()->json(['errorCode'=>$errorCode,'errorMessage'=>$errorMessage]);
+    }
+    public function deleteDocenteTribunal(Request $request){
+        $errorCode = -1;
+        $errorMessage = "No se procesaron los datos";
+        try{
+            $idRelTrib = $request['id_pdg_tri_gru'];
+            $relacion = pdg_tri_gru_tribunal_grupoModel::find($idRelTrib);
+            $relacion->delete();
+            $errorCode = 0;
+            $errorMessage = "¡Docente eliminado satisfactoriamente!";
+        }catch (Exception $exception){
+            $errorCode = 1;
+            $errorMessage = "Su solicitud no pudo ser procesada";
+        }
+        return response()->json(['errorCode'=>$errorCode,'errorMessage'=>$errorMessage]);
     }
 }

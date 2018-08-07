@@ -49,6 +49,14 @@ Route::post('aprobarPreperfil','TrabajoGraduacion\PrePerfilController@aprobarPre
 Route::post('rechazarPrePerfil','TrabajoGraduacion\PrePerfilController@rechazarPrePerfil')->name('rechazarPrePerfil');
 Route::get('indexPrePerfil/{id}','TrabajoGraduacion\PrePerfilController@indexPrePerfil')->name('indexPrePerfil');
 
+    //Tribunal Evaluador
+Route::get('getTribunalData/{id}','TrabajoGraduacion\PrePerfilController@getTribunalData')->name('getTribunalData');
+Route::get('verTribunal/{id}','TrabajoGraduacion\PrePerfilController@verTribunal')->name('verTribunal');
+Route::get('dcnDisp/{id}','TrabajoGraduacion\PrePerfilController@docentesDisponibles')->name('dcnDisp');
+Route::get('rolesDisp/{id}','TrabajoGraduacion\PrePerfilController@rolesDisponibles')->name('rolesDisp');
+Route::post('asignDcnTrib','TrabajoGraduacion\PrePerfilController@asignarDocenteTribunal')->name('asignDcnTrib');
+Route::post('delRelTrib','TrabajoGraduacion\PrePerfilController@deleteDocenteTribunal')->name('delRelTrib');
+
 	//Perfil
 Route::resource('perfil','TrabajoGraduacion\PerfilController');
 Route::post('downloadPerfil','TrabajoGraduacion\PerfilController@downloadPerfil')->name('downloadPerfil');
