@@ -26,10 +26,11 @@ class TrabajoDeGraduacionController extends Controller{
                  $gruposPrePerfil=$prePerfil->getGruposPrePerfil();
                 return view('TrabajoGraduacion.PrePerfil.indexPrePerfil',compact('gruposPrePerfil'));
             }elseif (Auth::user()->isRole('estudiante')) {
-                $grupo=self::verificarGrupo($userLogin->user)->getData();
-                $estudiantes=json_decode($grupo->msg->estudiantes);
-                if ($grupo->errorCode == '0'){
-                    $idGrupo = $estudiantes[0]->idGrupo;
+                $estudiante = new gen_EstudianteModel();
+                $idGrupo = $estudiante->getIdGrupo($userLogin->user);
+                if ($idGrupo != 'NA'){
+                    $grupo=self::verificarGrupo($userLogin->user)->getData();
+                    $estudiantes=json_decode($grupo->msg->estudiantes);
                     $miGrupo = pdg_gru_grupoModel::find($idGrupo);
                     if ($miGrupo->id_cat_sta == 3 ) {//APROBADO
                         $prePerfiles =pdg_ppe_pre_perfilModel::where('id_pdg_gru', '=',$idGrupo)->get();

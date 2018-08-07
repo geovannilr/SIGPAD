@@ -1,8 +1,8 @@
 @extends('template')
 @section('content')
-    		<ol class="breadcrumb">
+    		<ol class="breadcrumb" style="text-align: center; margin-top: 1em">
           <li class="breadcrumb-item">
-            <h5>USUARIO</h5>
+            <h5>  <a href="{{ redirect()->getUrlGenerator()->previous() }}" style="margin-left: 0em"><i class="fa fa-arrow-left fa-lg" style="z-index: 1;margin-top: 0em;margin-right: 0.5em; color: black"></i></a>     USUARIO</h5>
           </li>
           <li class="breadcrumb-item active">Actualizar registro</li>
         </ol>

@@ -54,9 +54,9 @@
 	
 	
 </script>
-		<ol class="breadcrumb">
+		<ol class="breadcrumb" style="text-align: center; margin-top: 1em">
 	        <li class="breadcrumb-item">
-	          <h5>USUARIOS</h5>
+	          <h5> <a href="{{ redirect()->getUrlGenerator()->previous() }}" style="margin-left: 0em"><i class="fa fa-arrow-left fa-lg" style="z-index: 1;margin-top: 0em;margin-right: 0.5em; color: black"></i></a>     USUARIOS</h5>
 	        </li>
 	        <li class="breadcrumb-item active">Listado</li>
 		</ol>
@@ -65,8 +65,8 @@
   <div class="col-sm-3"></div>
    <div class="col-sm-3"></div>
   @can('usuario.create')
-	  <div class="col-sm-3">Nuevo 
-	  	 <a class="btn btn-primary" href="{{route('usuario.create')}}"><i class="fa fa-plus"></i></a>
+	  <div class="col-sm-3"> 
+	  	 <a class="btn " href="{{route('usuario.create')}}" style="background-color: #DF1D20; color: white"><i class="fa fa-plus" ></i> Nuevo Usuario </a>
 	  </div>
   @endcan
 </div> 
@@ -94,23 +94,23 @@
   						<tr>
 						<td>{{ $usuario->user }}</td>
 						<td>{{ $usuario->name }}</td>
-						<td><?php
+						<td style="width: 50px"><?php
 							$split=explode("#",$rolesView[$usuario->user]);
 							foreach ($split as $key) {
 								if ($key != "") {
-									echo '<span class="badge badge-info">'.strtoupper($key).'</span>&nbsp;';
+									echo '<span class="badge badge-secondary">'.strtoupper($key).'</span>&nbsp;';
 								}
 							}
 						?>
 						</td>
 						<td>{{$usuario->created_at->format('d/m/Y H:i:s')}}</td>
 						@can('usuario.edit')
-							<td>
-								<a class="btn btn-primary" href="{{route('usuario.edit',$usuario->id)}}"><i class="fa fa-pencil"></i></a>
+							<td style="text-align: center;">
+								<a class="btn " style="background-color:  #102359;color: white" href="{{route('usuario.edit',$usuario->id)}}"><i class="fa fa-pencil"></i></a>
 							</td>
 						@endcan
 						@can('usuario.destroy')
-							<td>
+							<td style="text-align: center;">
 								{!! Form::open(['route'=>['usuario.destroy',$usuario->id],'method'=>'DELETE','class' => 'deleteButton']) !!}
 							 		<div class="btn-group">
 										<button type="submit" class="btn btn-danger"><i class="fa fa-trash"></i></button>

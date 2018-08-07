@@ -71,9 +71,9 @@
 		});
 	});
 </script>
-		<ol class="breadcrumb">
+		<ol class="breadcrumb" style="text-align: center; margin-top: 1em">
 	        <li class="breadcrumb-item">
-	          <h5>Publicaciones de Trabajo de Graduación</h5>
+	          <h5> <a href="{{ redirect()->getUrlGenerator()->previous() }}" style="margin-left: 0em"><i class="fa fa-arrow-left fa-lg" style="z-index: 1;margin-top: 0em;margin-right: 0.5em; color: black"></i></a>     Publicaciones de Trabajo de Graduación</h5>
 	        </li>
 				 <li class="breadcrumb-item active">Listado Histórico </li>
 		</ol>
@@ -82,8 +82,8 @@
   <div class="col-sm-3"></div>
    <div class="col-sm-3"></div>
   @can('prePerfil.create')
-	  <div class="col-sm-3">Nueva Pubicación
-	  	 <a class="btn btn-primary" href="{{route('publicacion.create')}}"><i class="fa fa-plus"></i></a>
+	  <div class="col-sm-3">
+	  	 <a class="btn " href="{{route('publicacion.create')}}" style="background-color: #DF1D20; color: white"><i class="fa fa-plus"></i> Nueva Pubicación</a>
 	  </div>
   @endcan
 </div> 
@@ -113,20 +113,20 @@
 						<td>{{ $publicacion->anio_pub }}</td>
 						<td>{{ $publicacion->titulo_pub}}</td>
 						@can('publicacion.show')
-							<td>
-								<a class="btn btn-primary" href="{{route('publicacion.show',$publicacion->id_pub)}}"><i class="fa fa-eye"></i></a>
-							</td>
+							<td style="text-align: center;">
+								<a class="btn btn-dark" href="{{route('publicacion.show',$publicacion->id_pub)}}"><i class="fa fa-eye"></i></a>
+							</td style="text-align: center;">
 						@endcan	
 						@can('publicacion.edit')
-							<td>
-								<a class="btn btn-primary" href="{{route('publicacion.edit',$publicacion->id_pub)}}"><i class="fa fa-pencil"></i></a>
+							<td style="text-align: center;">
+								<a class="btn " style="background-color:  #102359;color: white" href="{{route('publicacion.edit',$publicacion->id_pub)}}"><i class="fa fa-pencil"></i></a>
 							</td>
 						@endcan
 						@can('publicacion.destroy')
 							<td>
 								{!! Form::open(['route'=>['publicacion.destroy',$publicacion->id_pub],'method'=>'DELETE','class' => 'deleteButton']) !!}
 							 		<div class="btn-group">
-										<button type="submit" class="btn btn-danger"><i class="fa fa-trash"></i></button>
+										<button type="submit" class="btn btn-danger" ><i class="fa fa-trash"></i></button>
 									</div>
 								{!! Form:: close() !!}
 							</td>

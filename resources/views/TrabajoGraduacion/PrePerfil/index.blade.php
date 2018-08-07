@@ -17,35 +17,35 @@
 @endif
 <script type="text/javascript">
 	$( document ).ready(function() {
-    	// $("#listTable").DataTable({
-     //    dom: '<"top"l>frt<"bottom"Bip><"clear">',
-     //    buttons: [
-     //       {
-     //            extend: 'excelHtml5',
-     //            title: 'Listado de Pre-Perfiles'
-     //        },
-     //        {
-     //            extend: 'pdfHtml5',
-     //            title: 'Listado de Pre-Perfiles'
-     //        },
-     //         {
-     //            extend: 'csvHtml5',
-     //            title: 'Listado de Pre-Perfiles'
-     //        },
-     //        {
-     //            extend: 'print',
-     //            title: 'Listado de Pre-Perfiles'
-     //        }
+    	$("#listTable").DataTable({
+        dom: '<"top"l>frt<"bottom"Bip><"clear">',
+        buttons: [
+           {
+                extend: 'excelHtml5',
+                title: 'Listado de Pre-Perfiles'
+            },
+            {
+                extend: 'pdfHtml5',
+                title: 'Listado de Pre-Perfiles'
+            },
+             {
+                extend: 'csvHtml5',
+                title: 'Listado de Pre-Perfiles'
+            },
+            {
+                extend: 'print',
+                title: 'Listado de Pre-Perfiles'
+            }
 
 
-     //    ],
-     //     responsive: {
-     //        details: {
-     //            type: 'column'
-     //        }
-     //    },
-     //    order: [ 1, 'asc' ],
-    	// });
+        ],
+         responsive: {
+            details: {
+                type: 'column'
+            }
+        },
+        order: [ 1, 'asc' ],
+    	});
     	$(".aprobar").submit(function( event ) {
     		event.preventDefault();
     		var titulo;
@@ -114,24 +114,37 @@
 		});
 	});
 </script>
-		<ol class="breadcrumb">
-	        <li class="breadcrumb-item">
-	          <h5>Pre-Perfil</h5>
+		<ol class="breadcrumb" style="text-align: center; margin-top: 1em">
+	        <li class="breadcrumb-item"  style="text-align: center;">
+	          <h5  style="text-align: center;"">  <a href="{{ redirect()->getUrlGenerator()->previous() }}" style="margin-left: 0em"><i class="fa fa-arrow-left fa-lg" style="z-index: 1;margin-top: 0em;margin-right: 0.5em; color: black"></i></a>     Pre-Perfil</h5>
 	        </li>
 	        @if(isset($numero))
-				 <li class="breadcrumb-item active">Listado Grupo {{$numero}} </li>
+				 <li class="breadcrumb-item active" >Grupo {{$numero}} </li>
 	        @endif
 		</ol>
 		 <div class="row">
-  <div class="col-sm-3"></div>
-  <div class="col-sm-3"></div>
-   <div class="col-sm-3"></div>
-  @can('prePerfil.create')
-	  <div class="col-sm-3">Nuevo 
-	  	 <a class="btn btn-primary" href="{{route('prePerfil.create')}}"><i class="fa fa-plus"></i></a>
-	  </div>
-  @endcan
-</div> 
+			  <div class="col-sm-3"> </div>
+			  <div class="col-sm-3"></div>
+			  <div class="col-sm-3"></div>
+			   <div class="col-sm-3">
+			   	 	 @can('prePerfil.create')
+					  <div class="col-sm-3"> 
+					  	 <a class="btn " href="{{route('prePerfil.create')}}" style="background-color: #DF1D20; color: white"><i class="fa fa-plus"></i> Nuevo Pre-perfil </a>
+					  </div>
+				  @endcan
+			   </div>
+			 
+		</div> 
+
+
+		<br>
+		
+	<!-- 	<br>
+		<h5  style="text-align: center; font-weight: bold">	
+			Pre-perfiles 
+			@if(isset($numero)) 
+				Grupo {{$numero}}
+	        @endif</h5> -->
 
 		<br>
   		<div class="table-responsive">
@@ -142,7 +155,7 @@
   						<th>Grupo</th>
   					@endif
 					<th>Tema</th>
-					<th>Fecha de Creación</th>
+					<th>Fecha Creación</th>
 					<th>Estado</th>
 					<th>Tipo</th>
 					@can('prePerfil.edit')
@@ -172,12 +185,12 @@
 						<td><span class="badge badge-info">{{ $prePerfil->categoriaEstado->nombre_cat_sta }}</span>&nbsp;</td>
 						<td>{{ $prePerfil->tipoTrabajo->nombre_cat_tpo_tra_gra}}</td>
 						@can('prePerfil.edit')
-							<td>
-								<a class="btn btn-primary" href="{{route('prePerfil.edit',$prePerfil->id_pdg_ppe)}}"><i class="fa fa-pencil"></i></a>
+							<td style="text-align: center;">
+								<a class="btn" style="background-color:  #102359;color: white" href="{{route('prePerfil.edit',$prePerfil->id_pdg_ppe)}}"><i class="fa fa-pencil"></i></a>
 							</td>
 						@endcan
 						@can('prePerfil.destroy')
-							<td>
+							<td style="text-align: center;">
 								{!! Form::open(['route'=>['prePerfil.destroy',$prePerfil->id_pdg_ppe],'method'=>'DELETE','class' => 'deleteButton']) !!}
 							 		<div class="btn-group">
 										<button type="submit" class="btn btn-danger"><i class="fa fa-trash"></i></button>
@@ -186,16 +199,16 @@
 							</td>
 						@endcan
 
-							<td>
+							<td style="text-align: center;">
 								{!! Form::open(['route'=>['downloadPrePerfil'],'method'=>'POST']) !!}
 							 		<div class="btn-group">
-							 			{!!Form::hidden('archivo',$prePerfil->nombre_archivo_pdg_ppe,['class'=>'form-control'])!!}
+							 			{!!Form::hidden('archivo',$prePerfil->id_pdg_ppe,['class'=>'form-control'])!!}
 										<button type="submit" class="btn btn-dark"><i class="fa fa-download"></i></button>
 									</div>
-								{!! Form:: close() !!}
-							</td>
+								 {!! Form:: close() !!}
+							</td >
 							@can('prePerfil.aprobar')
-								<td>
+								<td style="text-align: center;">
 									{!! Form::open(['route'=>['aprobarPreperfil'],'method'=>'POST','class'=>'aprobar']) !!}
 								 		<div class="btn-group">
 								 			{!!Form::hidden('idPrePerfil',$prePerfil->id_pdg_ppe,['class'=>'form-control'])!!}
@@ -205,7 +218,7 @@
 								</td>
 							@endcan
 							@can('prePerfil.rechazar')
-								<td>
+								<td style="text-align: center;">
 									{!! Form::open(['route'=>['rechazarPrePerfil'],'method'=>'POST','class'=>'rechazar']) !!}
 								 		<div class="btn-group">
 								 			{!!Form::hidden('idPrePerfil',$prePerfil->id_pdg_ppe,['class'=>'form-control'])!!}

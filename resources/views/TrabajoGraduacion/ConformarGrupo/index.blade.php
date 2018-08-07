@@ -58,9 +58,9 @@
 	
 	
 </script>
-		<ol class="breadcrumb">
+		<ol class="breadcrumb" style="text-align: center; margin-top: 1em">
 	        <li class="breadcrumb-item ">
-	          <h5>Grupos de trabajo de graduación</h5>
+	          <h5> <a href="{{ redirect()->getUrlGenerator()->previous() }}" style="margin-left: 0em"><i class="fa fa-arrow-left fa-lg" style="z-index: 1;margin-top: 0em;margin-right: 0.5em; color: black"></i></a>     Grupos de trabajo de graduación</h5>
 	        </li>
 	        <li class="breadcrumb-item active">Listado</li>
 		</ol>
@@ -84,7 +84,7 @@
 					<th>Estado</th>
 					<th>Cantidad de Estudiantes</th>
 					<th>Detalle</th>
-					@can('usuario.edit')
+					@can('grupo.edit')
 						<th>Modificar</th>
 					@endcan
 					@can('grupo.destroy')
@@ -104,16 +104,16 @@
 							@endif
 						</td>
 						<td>{{$grupo->Cant}}</td>
-						<td>
-							 	<a class="btn btn-info" href="#" onclick="getGrupo({{ $grupo->ID }});"><i class="fa fa-eye"></i></a>
+						<td style="text-align: center;">
+							 	<a class="btn btn-dark" href="#" onclick="getGrupo({{ $grupo->ID }});"><i class="fa fa-eye"></i></a>
 						</td>
-						@can('usuario.edit')
-							<td> 
-								<a class="btn btn-primary"  data-toggle="modal" data-target="#exampleModalCenter" href="{{route('usuario.edit',$usuario->id)}}"><i class="fa fa-pencil"></i></a>
+						@can('grupo.edit')
+							<td style="text-align: center;"> 
+								<a class="btn " style="background-color:  #102359;color: white"  data-toggle="modal" data-target="#exampleModalCenter" href="{{route('grupo.edit',$grupo->id)}}"><i class="fa fa-pencil"></i></a>
 							</td>
 						@endcan
 						@can('grupo.destroy')
-							<td>
+							<td style="text-align: center;">
 								{!! Form::open(['route'=>['grupo.destroy',$$grupo->ID],'method'=>'DELETE','class' => 'deleteButton']) !!}
 							 		<div class="btn-group">
 										<button type="submit" class="btn btn-danger"><i class="fa fa-trash"></i></button>

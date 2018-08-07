@@ -49,9 +49,9 @@
 	});
 	
 </script>
-		<ol class="breadcrumb">
+		<ol class="breadcrumb"  style="text-align: center; margin-top: 1em">
 	        <li class="breadcrumb-item">
-	          <h5>Permisos</h5>
+	          <h5><a href="{{ redirect()->getUrlGenerator()->previous() }}" style="margin-left: 0em"><i class="fa fa-arrow-left fa-lg" style="z-index: 1;margin-top: 0em;margin-right: 0.5em; color: black"></i></a>     Permisos</h5>
 	        </li>
 	        <li class="breadcrumb-item active">Listado</li>
 		</ol>
@@ -61,7 +61,7 @@
    <div class="col-sm-3"></div>
   @can('permiso.create')
     <div class="col-sm-3">
-      Nuevo  <a class="btn btn-primary" href="{{route('permiso.create')}}"><i class="fa fa-plus"></i></a>
+      <a class="btn " href="{{route('permiso.create')}}" style="background-color: #DF1D20; color: white"><i class="fa fa-plus"></i> Nuevo Permiso</a>
     </div>
   @endcan
   </div> 
@@ -74,7 +74,7 @@
 					<th>Nombre</th>
           <th>Slug</th>
 					<th>Descipción</th>
-					<th>Fecha de Registro</th>
+					<th>Fecha Registro</th>
 					@can('permiso.edit')
             <th>Modificar</th>
           @endcan 
@@ -90,12 +90,12 @@
 						<td>{{ $permiso->description }}</td>
 						<td>{{$permiso->created_at->format('d/m/Y H:i:s')}}</td>
 						@can('permiso.edit')
-              <td>
-  							<a class="btn btn-primary" href="{{route('permiso.edit',$permiso->id)}}"><i class="fa fa-pencil"></i></a>
+              <td style="text-align: center;">
+  							<a class="btn " style="background-color:  #102359;color: white" href="{{route('permiso.edit',$permiso->id)}}"><i class="fa fa-pencil"></i></a>
   						</td>
             @endcan
             @can('permiso.destroy')
-  						<td>
+  						<td style="text-align: center;">
   							{!! Form::open(['route'=>['permiso.destroy',$permiso->id],'method'=>'DELETE','class' => 'deleteButton']) !!}
   						 		<div class="btn-group">
   									<button type="submit" class="btn btn-danger"><i class="fa fa-trash"></i></button>

@@ -58,9 +58,9 @@
 	
 	
 </script>
-		<ol class="breadcrumb">
+		<ol class="breadcrumb" style="text-align: center; margin-top: 1em">
 	        <li class="breadcrumb-item ">
-	          <h5>Pre-Perfiles</h5>
+	          <h5> <a href="{{ redirect()->getUrlGenerator()->previous() }}" style="margin-left: 0em"><i class="fa fa-arrow-left fa-lg" style="z-index: 1;margin-top: 0em;margin-right: 0.5em; color: black"></i></a>     Pre-Perfiles</h5>
 	        </li>
 	        <li class="breadcrumb-item active">Listado de Grupos de Trabajos de Graduación</li>
 		</ol>
@@ -69,8 +69,8 @@
   <div class="col-sm-3"></div>
    <div class="col-sm-3"></div>
   @can('grupo.create')
-	  <div class="col-sm-3">Nuevo 
-	  	 <a class="btn btn-primary" href="{{route('grupo.create')}}"><i class="fa fa-plus"></i></a>
+	  <div class="col-sm-3">
+	  	 <a class="btn " href="{{route('grupo.create')}}" style="background-color: #DF1D20; color: white"><i class="fa fa-plus">Nuevo Pre-perfil </i></a>
 	  </div>
   @endcan
 </div> 
@@ -81,7 +81,7 @@
 
   				<thead>
 					<th>Grupo</th>
-					<th>Cantidad de Pre-Perfiles Enviados</th>
+					<th>Cant. de Pre-Perfiles Enviados</th>
 					<th>Detalle de Grupo</th>
 					<th>Detalle de Pre-Perfiles</th>
 
@@ -92,14 +92,14 @@
   						<tr>
 						<td>{{ $grupo->grupo->numero_pdg_gru }}</td>
 						<td>{{ $grupo->cantidadPrePerfiles }}</td>
-						<td>
-							 	<a class="btn btn-info" href="#" onclick="getGrupo({{ $grupo->id_pdg_gru }});"><i class="fa fa-eye"></i></a>
+						<td style="text-align: center;">
+							 	<a class="btn btn-dark" href="#" onclick="getGrupo({{ $grupo->id_pdg_gru }});"><i class="fa fa-eye"></i></a>
 								<button id="btnAsignAsesor" type="button" onclick="getTribunalData({{ $grupo->id_pdg_gru }});" class="btn btn-secondary" title="Asignar evaluadores">
 									<i class="fa fa-balance-scale" ></i>
 								</button>
 						</td>
-						<td>
-								<a class="btn btn-info" href="{{route('indexPrePerfil', [$grupo->id_pdg_gru])}}"><i class="fa fa-list-alt"></i></a>
+						<td style="text-align: center;">
+								<a class="btn " style="background-color:  #102359;color: white" href="{{route('indexPrePerfil', [$grupo->id_pdg_gru])}}"><i class="fa fa-list-alt"></i></a>
 							</td>
 					</tr>
 				@endforeach 

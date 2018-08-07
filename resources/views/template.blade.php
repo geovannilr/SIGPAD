@@ -33,7 +33,13 @@
     {!!Html::script('js/main.js')!!}
     {!!Html::script('js/TrabajoGraduacion/trabajoGraduacion.js')!!}
     {!!Html::script('js/jquery.multi-select.js')!!}
- 
+ <style type="text/css">
+@font-face {
+    font-family: 'American_Captain';
+    src: url('/SIGPAD/public/fonts/American_Captain.woff') format('woff');
+}
+
+  </style>
    
     
     
@@ -41,87 +47,15 @@
 <body class="fixed-nav sticky-footer " id="page-top" style="background-color: #29282b; ">
   <!-- Navigation-->
   <nav class="navbar navbar-expand-lg fixed-top" id="mainNav" style="background-color: #29282b; color: #ffffff;">
-    <a class="navbar-brand" href="{{  url('/') }}"><img src="http://localhost/SIGPAD/public/img/sigpad-logo.png" class="img-responsive" alt="GESTION EISI"/ style="z-index: 1; position:absolute;margin-left: 50px; width: 100px; height: 100px; margin-top: -20px" ></a>
+    <a class="navbar-brand" href="{{  url('/') }}" style="font-family: American_Captain; font-size: 2em; margin-left: -50px; color: #ffffff; text-decoration: underline; text-indent: 1em; text-decoration-style: solid;"><i class="fa fa-eercast fa-lg" aria-hidden="true">  </i>    S I G P A D   </a>
     <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
+      <span class="navbar-toggler-icon fa fa-bars" style="color: #ffffff"></span>
     </button>
-    <div class="collapse navbar-collapse " id="navbarResponsive" style="background-color: #29282b; color: #ffffff;"  >
-      <ul class="navbar-nav navbar-sidenav " id="exampleAccordion" style="background-color: #29282b;color: #ffffff; z-index: 0; margin-top: 100px;">
-        @can('usuario.index', 'permiso.index', 'rol.index')
-        <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Administracion" style="color: #ffffff">
-          <a class="nav-link nav-link-collapse collapsed" data-toggle="collapse" href="#collapseAdministracion" data-parent="#exampleAccordion" style="color: #ffffff; font-weight: bold;">
-            <i class="fa fa-slack"></i>
-            <span class="nav-link-text" style="color: #ffffff">Administración</span>
-          </a>
-           <ul class="sidenav-second-level collapse" id="collapseAdministracion" >
-            @can('usuario.create','usuario.edit','usuario.destroy','usuario.index')
-                 <li>
-                  <a class="nav-link" href="{{route('usuario.index')}}" style="color: #ffffff">
-                    <i class="fa fa-users"></i>
-                    <span class="nav-link-text">Usuarios</span>
-                  </a>  
-              </li>
-            @endcan
-            @can('rol.create','rol.edit','rol.destroy','rol.index')
-                <li>
-                  <a class="nav-link" href="{{route('rol.index')}}" style="color: #ffffff">
-                    <i class="fa fa-user-times"></i>
-                    <span class="nav-link-text">Roles</span>
-                  </a>  
-              </li>
-            @endcan
-            @can('permiso.create','permiso.edit','permiso.destroy','permiso.index')
-            <li>
-                  <a class="nav-link" href="{{route('permiso.index')}}" style="color: #ffffff" >
-                    <i class="fa fa-lock"></i>
-                    <span class="nav-link-text">Permisos</span>
-                  </a>  
-              </li>
-            @endcan
-            <!--  <li>
-              {!! link_to_route('usuario.create', $title ='Nuevo',null,$attributes = ['class'=>'nav-link']); !!}
-            </li>
-            <li>
-              {!! link_to_route('usuario.index', $title ='Ver',null,$attributes = ['class'=>'nav-link']); !!}
-            </li>
-          </ul>
-        </li>
-        @endcan
-        @can('rol.create','rol.edit','rol.destroy','rol.index')
-           <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Roles">
-            <a class="nav-link nav-link-collapse collapsed" data-toggle="collapse" href="#collapseRoles" data-parent="#exampleAccordion">
-              <i class="fa fa-fw fa-group"></i>
-              <span class="nav-link-text">Roles</span>
-            </a>
-            <ul class="sidenav-second-level collapse" id="collapseRoles">
-              <li>
-                {!! link_to_route('rol.create', $title ='Nuevo',null,$attributes = ['class'=>'nav-link']); !!}
-              </li>
-              <li>
-                {!! link_to_route('rol.index', $title ='Ver',null,$attributes = ['class'=>'nav-link']); !!}
-              </li>
-            </ul>
-          </li>
-        @endcan
-        @can('permiso.create','permiso.edit','permiso.destroy','permiso.index')
-         <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Permisos">
-          <a class="nav-link nav-link-collapse collapsed" data-toggle="collapse" href="#collapsePermisos" data-parent="#exampleAccordion">
-            <i class="fa fa-fw fa-lock"></i>
-            <span class="nav-link-text">Permisos</span>
-          </a>
-          <ul class="sidenav-second-level collapse" id="collapsePermisos">
-            <li>
-              {!! link_to_route('permiso.create', $title ='Nuevo',null,$attributes = ['class'=>'nav-link']); !!}
-            </li>
-            <li>
-              {!! link_to_route('permiso.index', $title ='Ver',null,$attributes = ['class'=>'nav-link']); !!}
-            </li> -->
-          </ul>
-        </li>
-        @endcan
+    <div class="collapse navbar-collapse " id="navbarResponsive" style=" color: #ffffff; "  >
+      <ul class="navbar-nav navbar-sidenav " id="exampleAccordion" style="overflow: auto;background-color: #29282b;color: #ffffff; z-index: 0; margin-top: 73px;">
         @can('grupotdg.create','prePerfil.index')
            <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Trabajo de graduación">
-            <a class="nav-link nav-link-collapse collapsed" data-toggle="collapse" href="#collapseTrabajoGraduacion" data-parent="#exampleAccordion" style="color: #ffffff; font-weight: bold;>
+            <a class="nav-link nav-link-collapse collapsed" data-toggle="collapse" href="#collapseTrabajoGraduacion" data-parent="#exampleAccordion" style="color: #ffffff; font-weight: bold; background-color: #DF1D20; ">
               <i class="fa fa-fw fa fa-mortar-board"></i>
               <span class="nav-link-text" style="color: #ffffff" >Trabajo de Graduacion</span>
             </a>
@@ -143,6 +77,15 @@
                      
               </li>
               @endcan
+               @can('prePerfil.index')
+              <li>
+                <a class="nav-link" href="{{route('perfil.index')}}" style="color: #ffffff">
+                  <i class="fa fa-file-o"></i>
+                  <span class="nav-link-text">Perfil</span>
+                </a>
+                     
+              </li>
+              @endcan
               @can('prePerfil.index')
                 <li>
                   <a class="nav-link" href="{{route('dashboard')}}" style="color: #ffffff">
@@ -156,18 +99,67 @@
           </li>
         @endcan
         @can('publicacion.index')
-          <li>
-                <a class="nav-link" href="{{route('publicacion.index')}}">
-                  <i class="fa fa-history"></i>
-                  <span class="nav-link-text">Histórico de TDG</span>
+          <li class="nav-item" data-toggle="tooltip" data-placement="right" title="publicaciones">
+                <a class="nav-link nav-link-collapse collapsed"  data-toggle="collapse" href="#collapsePublicaciones" data-parent="#exampleAccordion" style="color: #ffffff; font-weight: bold; background-color: #DF1D20; margin-top: 20px"  >
+                  <i class="fa fa-book"></i>
+                  <span class="nav-link-text">Biblioteca de Tesis</span>
                 </a>
+
+                 <ul class="sidenav-second-level collapse" id="collapsePublicaciones">
+                      @can('publicacion.create','publicacion.index')
+                        <li>
+                          <a class="nav-link" href="{{route('publicacion.index')}}" style="color: #ffffff">
+                            <i class="fa fa-file-text"></i>
+                            <span class="nav-link-text">Historico de Tesis</span>
+                          </a>  
+                        </li>
+
+                       @endcan
+            </ul>
                      
           </li>
         @endcan
+        @can('usuario.index', 'permiso.index', 'rol.index')
+        <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Administracion" style="color: #ffffff">
+          <a class="nav-link nav-link-collapse collapsed" data-toggle="collapse" href="#collapseAdministracion" data-parent="#exampleAccordion" style="color: #ffffff; font-weight: bold; background-color: #DF1D20; margin-top: 20px">
+            <i class="fa fa-slack"></i>
+            <span class="nav-link-text" style="color: #ffffff">Administración</span>
+          </a>
+           <ul class="sidenav-second-level collapse" id="collapseAdministracion" >
+            @can('usuario.create','usuario.edit','usuario.destroy','usuario.index')
+                 <li>
+                  <a class="nav-link" href="{{route('usuario.index')}}" style="color: #ffffff">
+                    <i class="fa fa-users"></i>
+                    <span class="nav-link-text">Usuarios</span>
+                  </a>  
+              </li>
+            @endcan
+            @can('rol.create','rol.edit','rol.destroy','rol.index')
+                <li>
+                  <a class="nav-link" href="{{route('rol.index')}}" style="color: #ffffff">
+                    <i class="fa fa-address-card"></i>
+                    <span class="nav-link-text">Roles</span>
+                  </a>  
+              </li>
+            @endcan
+            @can('permiso.create','permiso.edit','permiso.destroy','permiso.index')
+            <li>
+                  <a class="nav-link" href="{{route('permiso.index')}}" style="color: #ffffff" >
+                    <i class="fa fa-lock"></i>
+                    <span class="nav-link-text">Permisos</span>
+                  </a>  
+              </li>
+            @endcan
+            
+          </ul>
+        </li>
+        @endcan
+        
+
       </ul>
-      <ul class="navbar-nav sidenav-toggler">
+      <ul class="navbar-nav sidenav-toggler" >
         <li class="nav-item">
-          <a class="nav-link text-center" id="sidenavToggler">
+          <a class="nav-link text-center" id="sidenavToggler" style="background-color :#0A122A" >
             <i class="fa fa-fw fa-angle-left"></i>
           </a>
         </li>

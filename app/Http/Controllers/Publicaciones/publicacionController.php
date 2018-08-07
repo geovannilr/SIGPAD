@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Auth;
 use \App\pub_publicacionModel;
 use \App\pub_arc_publicacion_archivoModel;
+use \App\pub_aut_publicacion_autorModel;
 class publicacionController extends Controller{
 	public function __construct(){
         $this->middleware('auth');
@@ -37,8 +38,17 @@ class publicacionController extends Controller{
     		$mensaje = "La publicación de trabajo de graduación de la cúal quiere ver el detalle  no existe.";
     		return view('error',compact('titulo','mensaje'));
     	}else{
+    		$publicacionModel = new pub_publicacionModel();
+    		$colaboradores = $publicacionModel->getColaboradores($id);
+    		if (empty($colaboradores)) {
+    			$colaboradores ="NA";
+    		}
+    		$autores =pub_aut_publicacion_autorModel::where('id_pub',$id)->get();
+    		if (empty($autores)) {
+    			$autores = "NA";
+    		}
     		$publicacionesArchivos=pub_arc_publicacion_archivoModel::where('id_pub',$id)->get();
-    		return view('publicacion.show',compact('publicacionesArchivos','publicacion'));
+    		return view('publicacion.show',compact('publicacionesArchivos','publicacion','autores','colaboradores'));
     	}
     	
     }
@@ -139,8 +149,8 @@ class publicacionController extends Controller{
 	      	$nombre = "Codigo".$publicacion->codigo_pub.date('hms').$file->getClientOriginalName();
 	       //indicamos que queremos guardar un nuevo archivo en el disco local
 	        Storage::disk('publicaciones')->put($nombre, File::get($file));
-	        	if (File::exists($archivo->ubicacion_pub_arc)){
-      	 			File::delete($archivo->ubicacion_pub_arc);	
+	        	if (File::exists($path.$archivo->ubicacion_pub_arc)){
+      	 			File::delete($path.$archivo->ubicacion_pub_arc);	
      			}
 	        	
 	        	$archivo->nombre_pub_arc = $file->getClientOriginalName();
