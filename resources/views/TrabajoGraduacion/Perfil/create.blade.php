@@ -23,8 +23,8 @@
               </ul>
           </div>
         @endif
-    		{!! Form:: open(['route'=>'prePerfil.store','method'=>'POST', 'id'=>'formPrePerfil','files'=>'true','enctype'=>'multipart/form-data']) !!}
-    			@include('TrabajoGraduacion.PrePerfil.forms.formCreate')
+    		{!! Form:: open(['route'=>'perfil.store','method'=>'POST', 'id'=>'formPerfil','files'=>'true','enctype'=>'multipart/form-data']) !!}
+    			@include('TrabajoGraduacion.Perfil.forms.formCreate')
         <div class="row">
           <div class="form-group col-sm-6">
             {!! Form::submit('Enviar',['class'=>'btn btn-primary']) !!}

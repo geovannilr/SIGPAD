@@ -148,6 +148,15 @@
                      
               </li>
               @endcan
+               @can('prePerfil.index')
+              <li>
+                <a class="nav-link" href="{{route('perfil.index')}}" style="color: #ffffff">
+                  <i class="fa fa-file-o"></i>
+                  <span class="nav-link-text">Perfil</span>
+                </a>
+                     
+              </li>
+              @endcan
               @can('prePerfil.index')
                 <li>
                   <a class="nav-link" href="{{route('dashboard')}}" style="color: #ffffff">

@@ -60,17 +60,17 @@
 </script>
 		<ol class="breadcrumb" style="text-align: center; margin-top: 1em">
 	        <li class="breadcrumb-item ">
-	          <h5> <a href="{{ redirect()->getUrlGenerator()->previous() }}" style="margin-left: 0em"><i class="fa fa-arrow-left fa-lg" style="z-index: 1;margin-top: 0em;margin-right: 0.5em; color: black"></i></a>     Pre-Perfiles</h5>
+	          <h5> <a href="{{ redirect()->getUrlGenerator()->previous() }}" style="margin-left: 0em"><i class="fa fa-arrow-left fa-lg" style="z-index: 1;margin-top: 0em;margin-right: 0.5em; color: black"></i></a> Perfiles</h5>
 	        </li>
-	        <li class="breadcrumb-item active">Listado de Grupos de Trabajos de Graduación</li>
+	        <li class="breadcrumb-item active">Listado de Grupos que han enviado Perfil</li>
 		</ol>
 		 <div class="row">
   <div class="col-sm-3"></div>
   <div class="col-sm-3"></div>
    <div class="col-sm-3"></div>
   @can('grupo.create')
-	  <div class="col-sm-3"> 
-	  	 <a class="btn " href="{{route('grupo.create')}}" style="background-color: #DF1D20; color: white"><i class="fa fa-plus"></i> Nuevo Pre-Perfil</a>
+	  <div class="col-sm-3">
+	  	 <a class="btn " href="{{route('grupo.create')}}" style="background-color: #DF1D20; color: white"><i class="fa fa-plus">Nuevo Pre-perfil </i></a>
 	  </div>
   @endcan
 </div> 
@@ -81,22 +81,20 @@
 
   				<thead>
 					<th>Grupo</th>
-					<th>Cantidad de Pre-Perfiles Enviados</th>
 					<th>Datalle de Grupo</th>
-					<th>Datalle de Pre-Perfiles</th>
+					<th>Datalle de Perfiles</th>
 
   				</thead>
   				<tbody>
 
-  				@foreach($gruposPrePerfil as $grupo)
+  				@foreach($gruposPerfil as $grupo)
   						<tr>
 						<td>{{ $grupo->grupo->numero_pdg_gru }}</td>
-						<td>{{ $grupo->cantidadPrePerfiles }}</td>
 						<td>
 							 	<a class="btn btn-info" href="#" onclick="getGrupo({{ $grupo->id_pdg_gru }});"><i class="fa fa-eye"></i></a>
 						</td>
 						<td>
-								<a class="btn btn-info" href="{{route('indexPrePerfil', [$grupo->id_pdg_gru])}}"><i class="fa fa-list-alt"></i></a>
+								<a class="btn btn-info" href="{{route('indexPerfil', [$grupo->id_pdg_gru])}}"><i class="fa fa-list-alt"></i></a>
 							</td>
 					</tr>
 				@endforeach 
