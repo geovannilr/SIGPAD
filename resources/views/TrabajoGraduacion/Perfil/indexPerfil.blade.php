@@ -95,7 +95,6 @@
 						</td>
 						<td>
 								<a class="btn btn-info" href="{{route('indexPerfil', [$grupo->id_pdg_gru])}}"><i class="fa fa-list-alt"></i></a>
-							</td>
 					</tr>
 				@endforeach 
 				</tbody>

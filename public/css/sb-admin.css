@@ -486,3 +486,10 @@ footer.sticky-footer {
     width: calc(100% - 55px);
   }
 }
+
+a.page-item.active a.page-link {
+    z-index: 1;
+    color: #fff;
+    background-color: #dee2e6 !important;
+    border-color: #dee2e6 !important;
+}

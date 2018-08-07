@@ -274,7 +274,7 @@ class PerfilController extends Controller
            		Session::flash('message-error','No puedes modificar un Pre-Perfil una vez ha sido aprobado!');
         		return Redirect::to('perfil');
            }elseif ($perfil->id_cat_sta == 8) { //RECHAZADO
-           		ession::flash('message-error','No puedes modificar un Pre-Perfil una vez ha sido rechazado!');
+           		Session::flash('message-error','No puedes modificar un Pre-Perfil una vez ha sido rechazado!');
         		return Redirect::to('perfil');
            }else{
            	 $tiposTrabajos =  cat_tpo_tra_gra_tipo_trabajo_graduacionModel::pluck('nombre_cat_tpo_tra_gra', 'id_Cat_tpo_tra_gra')->toArray();

@@ -193,7 +193,7 @@
 								</td>
 						@endcan
 						@can('prePerfil.destroy')
-							<td>
+							<td style="text-align: center;">
 								{!! Form::open(['route'=>['perfil.destroy',$perfil->id_pdg_per],'method'=>'DELETE','class' => 'deleteButton']) !!}
 							 		<div class="btn-group">
 										<button type="submit" class="btn btn-danger"><i class="fa fa-trash"></i></button>
@@ -201,7 +201,8 @@
 								{!! Form:: close() !!}
 							</td>
 						@endcan
-							<td>
+
+							<td style="text-align: center;">
 								{!! Form::open(['route'=>['downloadPerfil'],'method'=>'POST']) !!}
 							 		<div class="btn-group">
 							 			{!!Form::hidden('archivo',$perfil->id_pdg_per,['class'=>'form-control'])!!}
@@ -218,8 +219,9 @@
 								{!! Form:: close() !!}
 							</td>
 							@can('prePerfil.aprobar')
-								<td>
+								<td style="text-align: center;">
 									{!! Form::open(['route'=>['aprobarPerfil'],'method'=>'POST','class'=>'aprobar']) !!}
+
 								 		<div class="btn-group">
 								 			{!!Form::hidden('idPerfil',$perfil->id_pdg_per,['class'=>'form-control'])!!}
 											<button type="submit" class="btn btn-success"><i class="fa fa-check"></i></button>
@@ -228,8 +230,9 @@
 								</td>
 							@endcan
 							@can('prePerfil.rechazar')
-								<td>
-									{!! Form::open(['route'=>['rechazarPerfil'],'method'=>'POST','class'=>'rechazar']) !!}
+
+								<td style="text-align: center;">
+									{!! Form::open(['route'=>['rechazarPrePerfil'],'method'=>'POST','class'=>'rechazar']) !!}
 								 		<div class="btn-group">
 								 			{!!Form::hidden('idPerfil',$perfil->id_pdg_per,['class'=>'form-control'])!!}
 											<button type="submit" class="btn btn-danger"><i class="fa fa-remove"></i></button>

@@ -98,7 +98,7 @@
 							$split=explode("#",$rolesView[$usuario->user]);
 							foreach ($split as $key) {
 								if ($key != "") {
-									echo '<span class="badge badge-info">'.strtoupper($key).'</span>&nbsp;';
+									echo '<span class="badge badge-secondary">'.strtoupper($key).'</span>&nbsp;';
 								}
 							}
 						?>

@@ -88,12 +88,12 @@
 						<td>{{ $rol->description }}</td>
 						<td>{{$rol->created_at->format('d/m/Y H:i:s')}}</td>
 						@can('rol.edit')
-                <td>
-    							<a class="btn btn-primary" href="{{route('rol.edit',$rol->id)}}"><i class="fa fa-pencil"></i></a>
+                <td style="text-align: center;">
+    							<a class="btn " style="background-color:  #102359;color: white" href="{{route('rol.edit',$rol->id)}}"><i class="fa fa-pencil"></i></a>
     						</td>
             @endcan
             @can('rol.destroy')
-						<td>
+						<td style="text-align: center;">
 							{!! Form::open(['route'=>['rol.destroy',$rol->id],'method'=>'DELETE','class' => 'deleteButton']) !!}
 						 		<div class="btn-group">
 									<button type="submit" class="btn btn-danger"><i class="fa fa-trash"></i></button>

@@ -50,83 +50,11 @@
     <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon fa fa-bars" style="color: #ffffff"></span>
     </button>
-    <div class="collapse navbar-collapse " id="navbarResponsive" style=" color: #ffffff;"  >
-      <ul class="navbar-nav navbar-sidenav " id="exampleAccordion" style="background-color: #29282b;color: #ffffff; z-index: 0; margin-top: 73px;">
-        @can('usuario.index', 'permiso.index', 'rol.index')
-        <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Administracion" style="color: #ffffff">
-          <a class="nav-link nav-link-collapse collapsed" data-toggle="collapse" href="#collapseAdministracion" data-parent="#exampleAccordion" style="color: #ffffff; font-weight: bold; background-color: #DF1D20">
-            <i class="fa fa-slack"></i>
-            <span class="nav-link-text" style="color: #ffffff">Administración</span>
-          </a>
-           <ul class="sidenav-second-level collapse" id="collapseAdministracion" >
-            @can('usuario.create','usuario.edit','usuario.destroy','usuario.index')
-                 <li>
-                  <a class="nav-link" href="{{route('usuario.index')}}" style="color: #ffffff">
-                    <i class="fa fa-users"></i>
-                    <span class="nav-link-text">Usuarios</span>
-                  </a>  
-              </li>
-            @endcan
-            @can('rol.create','rol.edit','rol.destroy','rol.index')
-                <li>
-                  <a class="nav-link" href="{{route('rol.index')}}" style="color: #ffffff">
-                    <i class="fa fa-address-card"></i>
-                    <span class="nav-link-text">Roles</span>
-                  </a>  
-              </li>
-            @endcan
-            @can('permiso.create','permiso.edit','permiso.destroy','permiso.index')
-            <li>
-                  <a class="nav-link" href="{{route('permiso.index')}}" style="color: #ffffff" >
-                    <i class="fa fa-lock"></i>
-                    <span class="nav-link-text">Permisos</span>
-                  </a>  
-              </li>
-            @endcan
-            <!--  <li>
-              {!! link_to_route('usuario.create', $title ='Nuevo',null,$attributes = ['class'=>'nav-link']); !!}
-            </li>
-            <li>
-              {!! link_to_route('usuario.index', $title ='Ver',null,$attributes = ['class'=>'nav-link']); !!}
-            </li>
-          </ul>
-        </li>
-        @endcan
-        @can('rol.create','rol.edit','rol.destroy','rol.index')
-           <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Roles">
-            <a class="nav-link nav-link-collapse collapsed" data-toggle="collapse" href="#collapseRoles" data-parent="#exampleAccordion">
-              <i class="fa fa-fw fa-group"></i>
-              <span class="nav-link-text">Roles</span>
-            </a>
-            <ul class="sidenav-second-level collapse" id="collapseRoles">
-              <li>
-                {!! link_to_route('rol.create', $title ='Nuevo',null,$attributes = ['class'=>'nav-link']); !!}
-              </li>
-              <li>
-                {!! link_to_route('rol.index', $title ='Ver',null,$attributes = ['class'=>'nav-link']); !!}
-              </li>
-            </ul>
-          </li>
-        @endcan
-        @can('permiso.create','permiso.edit','permiso.destroy','permiso.index')
-         <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Permisos">
-          <a class="nav-link nav-link-collapse collapsed" data-toggle="collapse" href="#collapsePermisos" data-parent="#exampleAccordion">
-            <i class="fa fa-fw fa-lock"></i>
-            <span class="nav-link-text">Permisos</span>
-          </a>
-          <ul class="sidenav-second-level collapse" id="collapsePermisos">
-            <li>
-              {!! link_to_route('permiso.create', $title ='Nuevo',null,$attributes = ['class'=>'nav-link']); !!}
-            </li>
-            <li>
-              {!! link_to_route('permiso.index', $title ='Ver',null,$attributes = ['class'=>'nav-link']); !!}
-            </li> -->
-          </ul>
-        </li>
-        @endcan
+    <div class="collapse navbar-collapse " id="navbarResponsive" style=" color: #ffffff; "  >
+      <ul class="navbar-nav navbar-sidenav " id="exampleAccordion" style="overflow: auto;background-color: #29282b;color: #ffffff; z-index: 0; margin-top: 73px;">
         @can('grupotdg.create','prePerfil.index')
            <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Trabajo de graduación">
-            <a class="nav-link nav-link-collapse collapsed" data-toggle="collapse" href="#collapseTrabajoGraduacion" data-parent="#exampleAccordion" style="color: #ffffff; font-weight: bold; background-color: #DF1D20; margin-top: 20px">
+            <a class="nav-link nav-link-collapse collapsed" data-toggle="collapse" href="#collapseTrabajoGraduacion" data-parent="#exampleAccordion" style="color: #ffffff; font-weight: bold; background-color: #DF1D20; ">
               <i class="fa fa-fw fa fa-mortar-board"></i>
               <span class="nav-link-text" style="color: #ffffff" >Trabajo de Graduacion</span>
             </a>
@@ -190,6 +118,43 @@
                      
           </li>
         @endcan
+        @can('usuario.index', 'permiso.index', 'rol.index')
+        <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Administracion" style="color: #ffffff">
+          <a class="nav-link nav-link-collapse collapsed" data-toggle="collapse" href="#collapseAdministracion" data-parent="#exampleAccordion" style="color: #ffffff; font-weight: bold; background-color: #DF1D20; margin-top: 20px">
+            <i class="fa fa-slack"></i>
+            <span class="nav-link-text" style="color: #ffffff">Administración</span>
+          </a>
+           <ul class="sidenav-second-level collapse" id="collapseAdministracion" >
+            @can('usuario.create','usuario.edit','usuario.destroy','usuario.index')
+                 <li>
+                  <a class="nav-link" href="{{route('usuario.index')}}" style="color: #ffffff">
+                    <i class="fa fa-users"></i>
+                    <span class="nav-link-text">Usuarios</span>
+                  </a>  
+              </li>
+            @endcan
+            @can('rol.create','rol.edit','rol.destroy','rol.index')
+                <li>
+                  <a class="nav-link" href="{{route('rol.index')}}" style="color: #ffffff">
+                    <i class="fa fa-address-card"></i>
+                    <span class="nav-link-text">Roles</span>
+                  </a>  
+              </li>
+            @endcan
+            @can('permiso.create','permiso.edit','permiso.destroy','permiso.index')
+            <li>
+                  <a class="nav-link" href="{{route('permiso.index')}}" style="color: #ffffff" >
+                    <i class="fa fa-lock"></i>
+                    <span class="nav-link-text">Permisos</span>
+                  </a>  
+              </li>
+            @endcan
+            
+          </ul>
+        </li>
+        @endcan
+        
+
       </ul>
       <ul class="navbar-nav sidenav-toggler" >
         <li class="nav-item">
