@@ -40,6 +40,10 @@ class PerfilController extends Controller
                  $perfil = new  pdg_per_perfilModel();
                  $gruposPerfil=$perfil->getGruposPerfil();
                 return view('TrabajoGraduacion.Perfil.indexPerfil',compact('gruposPerfil'));
+            }elseif (Auth::user()->isRole('docente')) { 
+                $perfil = new  pdg_per_perfilModel();
+                $gruposPerfil=$perfil->getGruposPerfil();
+                return view('TrabajoGraduacion.Perfil.indexPerfil',compact('gruposPerfil'));
             }elseif (Auth::user()->isRole('estudiante')) {
                 $estudiante = new gen_EstudianteModel();
                 $idGrupo = $estudiante->getIdGrupo($userLogin->user);
