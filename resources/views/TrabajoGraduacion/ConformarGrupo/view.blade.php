@@ -24,13 +24,14 @@
         <div class="col-sm-3"></div>
         <div class="col-sm-3"></div>
         @can('grupo.index')
-            <div class="col-sm-3" id="divNuevo_viewConformarGrupo">Nuevo
-                <button class="btn btn-primary" onclick="getDisponibles(vg_url,vg_anio);" id="btnNuevo_viewConformarGrupo"><i class="fa fa-plus"></i></button>
+            <div class="col-sm-3" id="divNuevo_viewConformarGrupo">
+                <button class="btn btn-primary" onclick="getDisponibles(vg_url,vg_anio);" id="btnNuevo_viewConformarGrupo"><i class="fa fa-user-plus"></i></button>
             </div>
         @endcan
         <br>
         <br>
     </div>
+    <br/>
     <div class="table-responsive">
     <table class="table table-hover table-striped  display" id="listTable">
         <thead>
@@ -64,12 +65,19 @@
         <script type="text/javascript">
             var vg_anio = null;
             var vg_id_pdg_gru = null;
-            var vg_url = '{{\Illuminate\Support\Facades\URL::to('/')}}';
+            var vg_url = getCurrentUrl();
             $('.btn-eliminar').click(function(e){
                 e.preventDefault() // No postear hasta confirmación
-                if (confirm('¿Está seguro?')) {
-                    $(e.target).closest('form').submit() // Postear el form
-                }
+                swal({
+                    title:"Atención",
+                    text:"¿Confirma que desea eliminar al alumno del grupo?",
+                    icon: "warning",
+                    buttons: ["Cancelar","Confirmar"],
+                }).then((respuesta)=>{
+                    if(respuesta){
+                        $(e.target).closest('form').submit() // Postear el form
+                    }
+                });
             });
             @foreach ($relaciones as $relacion)
                 vg_anio = {{$relacion->grupo->anio_pdg_gru}};
@@ -80,7 +88,7 @@
     </table>
 </div><!-- Modal Detalle de Alumnos Sin Grupo -->
 <div class="modal fade" id="modalAgregarAlumno" tabindex="-1" role="dialog" aria-labelledby="Detalle grupo de trabajo de graduación" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-dialog modal-dialog-centered" role="document" style="max-width: 50%">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="ModalLongTitle">Agregar Estudiante</h5>
@@ -90,7 +98,7 @@
             </div>
             <div class="modal-body">
                 Seleccione un estudiante de los disponibles a continuación:
-                <div id="modalDetalleBody" class="modal-body" style="height:50%; overflow-y: scroll;">
+                <div id="modalDetalleBody" class="modal-body" style="overflow-y: scroll;">
                 ... <!--EJRG: es necesario arreglar el MODAL para que no se extienda demasiado en pantalla-->
                 </div>
                 <!---O busque alguno en específico:-->

@@ -264,7 +264,7 @@ function getGrupo(idGrupo){ // Traer el detalle del grupo
     });
         $.ajax({
            type:'get',
-           url:'http://'+getUrl()+'/SIGPAD/public/grupo/'+idGrupo,
+           url:getUrl()+'/SIGPAD/public/grupo/'+idGrupo,
            success:function(data){
             
               $("#modalDetalleBody").html(data.htmlCode);

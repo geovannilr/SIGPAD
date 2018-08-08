@@ -4,6 +4,7 @@ namespace App\Exceptions;
 
 use Exception;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 
 class Handler extends ExceptionHandler
 {
@@ -48,6 +49,12 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $exception)
     {
+        /**
+         * Condición para ocultar las llamadas a métodos POST sin parámetros
+        */
+        if ($exception instanceof MethodNotAllowedHttpException){
+            return redirect()->route('inicio');
+        }
         return parent::render($request, $exception);
     }
     

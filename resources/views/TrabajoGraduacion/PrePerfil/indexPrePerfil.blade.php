@@ -1,5 +1,5 @@
 @extends('template')
-
+{!!Html::script('js/TrabajoGraduacion/prePerfil.js')!!}
 @section('content')
 @if(Session::has('message'))
   		<script type="text/javascript">
@@ -94,6 +94,9 @@
 						<td>{{ $grupo->cantidadPrePerfiles }}</td>
 						<td style="text-align: center;">
 							 	<a class="btn btn-dark" href="#" onclick="getGrupo({{ $grupo->id_pdg_gru }});"><i class="fa fa-eye"></i></a>
+								<button id="btnAsignAsesor" type="button" onclick="getTribunalData({{ $grupo->id_pdg_gru }});" class="btn btn-secondary" title="Asignar evaluadores">
+									<i class="fa fa-balance-scale" ></i>
+								</button>
 						</td>
 						<td style="text-align: center;">
 								<a class="btn " style="background-color:  #102359;color: white" href="{{route('indexPrePerfil', [$grupo->id_pdg_gru])}}"><i class="fa fa-list-alt"></i></a>
@@ -118,13 +121,34 @@
         ...
       </div>
       <div class="modal-footer" id="footerModal">
-      	{!! Form::open(['route'=>['aprobarGrupo'],'method'=>'POST']) !!}
+      	<!--Form::open(['route'=>['aprobarGrupo'],'method'=>'POST'])
 			<div class="btn-group" id="divBoton">
 				
 			</div>
-		{!! Form:: close() !!}
+	  		Form:: close()-->
       </div>
     </div>
   </div>
+</div>
+<!-- Modal Tribunal Evaluador -->
+<div class="modal fade" id="modalTribunalData" tabindex="-1" role="dialog" aria-labelledby="Tribunal Evaluador" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="exampleModalLongTitle">Tribunal Evaluador</h5>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div id="modalTribunalBody" class="modal-body">
+				...
+			</div>
+			<div class="modal-footer" id="modalTribunalFooter">
+				<div class="btn-group" id="divBtnViewTrib">
+					...
+				</div>
+			</div>
+		</div>
+	</div>
 </div>
 @stop
