@@ -46,5 +46,13 @@ class pdg_per_perfilModel extends Model
         return $grupos;
 
 	 }
+	 public function getGruposPerfilDocente($idDocente){
+        $grupos = DB::table('pdg_dcn_docente')
+            ->join('pdg_tri_gru_tribunal_grupo', 'pdg_dcn_docente.id_pdg_dcn', '=', 'pdg_tri_gru_tribunal_grupo.id_pdg_dcn')
+            ->select('pdg_tri_gru_tribunal_grupo.id_pdg_gru')
+            ->where('pdg_dcn_docente.id_gen_usuario', $idDocente)
+            ->get();
+        return $grupos;
+	 }
 	 
 }

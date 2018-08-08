@@ -36,7 +36,12 @@ class PrePerfilController extends Controller
                  $prePerfil = new  pdg_ppe_pre_perfilModel();
                  $gruposPrePerfil=$prePerfil->getGruposPrePerfil();
                 return view('TrabajoGraduacion.PrePerfil.indexPrePerfil',compact('gruposPrePerfil'));
-            }elseif (Auth::user()->isRole('estudiante')) {
+            }elseif (Auth::user()->isRole('docente')) {
+                $prePerfil = new  pdg_ppe_pre_perfilModel();
+                 $gruposPrePerfil=$prePerfil->getGruposPrePerfil();
+                return view('TrabajoGraduacion.PrePerfil.indexPrePerfil',compact('gruposPrePerfil'));
+            }
+                elseif (Auth::user()->isRole('estudiante')) {
                 $estudiante = new gen_EstudianteModel();
                 $idGrupo = $estudiante->getIdGrupo($userLogin->user);
                 if ($idGrupo != 'NA'){
@@ -321,12 +326,13 @@ class PrePerfilController extends Controller
             return Redirect::to('/indexPrePerfil/'.$prePerfil->id_pdg_gru);   
     }
     function downloadPrePerfil(Request $request){
-        $userLogin=Auth::user();
+        //$userLogin=Auth::user();
         $id = $request['archivo'];
         $prePerfil=pdg_ppe_pre_perfilModel::find($id);
         $name=$prePerfil->nombre_archivo_pdg_ppe;
-        $estudiante = new gen_EstudianteModel();
-        $idGrupo = $estudiante->getIdGrupo($userLogin->user);
+        //$estudiante = new gen_EstudianteModel();
+        //$idGrupo = $estudiante->getIdGrupo($userLogin->user);
+        $idGrupo=$request['grupo'];
         $grupo = pdg_gru_grupoModel::find($idGrupo);
         $anioGrupo = $grupo->anio_pdg_gru;
         $numeroGrupo = $grupo->correlativo_pdg_gru_gru;

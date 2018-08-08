@@ -19,6 +19,8 @@ use App\cat_tpo_doc_tipo_documentoModel;
 use \App\pdg_doc_documentoModel;
 use \App\pdg_arc_doc_archivo_documentoModel;
 use \App\cat_ctg_tra_categoria_trabajo_graduacionModel;
+use \App\pdg_dcn_docenteModel;
+
 
 class PerfilController extends Controller
 {
@@ -41,9 +43,15 @@ class PerfilController extends Controller
                  $gruposPerfil=$perfil->getGruposPerfil();
                 return view('TrabajoGraduacion.Perfil.indexPerfil',compact('gruposPerfil'));
             }elseif (Auth::user()->isRole('docente')) { 
+
                 $perfil = new  pdg_per_perfilModel();
-                $gruposPerfil=$perfil->getGruposPerfil();
-                return view('TrabajoGraduacion.Perfil.indexPerfil',compact('gruposPerfil'));
+                $grupos = $perfil->getGruposPerfilDocente($userLogin->id);
+                $array="";
+                foreach ($grupos as $grupo) {
+                    $array [] = $grupo->id_pdg_gru;
+                }
+                $perfiles =pdg_per_perfilModel::whereIn('id_pdg_gru',$array)->get();
+                return view('TrabajoGraduacion.Perfil.index',compact('perfiles'));
             }elseif (Auth::user()->isRole('estudiante')) {
                 $estudiante = new gen_EstudianteModel();
                 $idGrupo = $estudiante->getIdGrupo($userLogin->user);
@@ -464,10 +472,11 @@ class PerfilController extends Controller
             return Redirect::to('/indexPerfil/'.$perfil->id_pdg_gru); 
     }
     function downloadPerfil(Request $request){
-        $userLogin=Auth::user();
+        //$userLogin=Auth::user();
         $id = $request['archivo'];
-        $estudiante = new gen_EstudianteModel();
-        $idGrupo = $estudiante->getIdGrupo($userLogin->user);
+        $idGrupo=$request['grupo'];
+        //$estudiante = new gen_EstudianteModel();
+        //$idGrupo = $estudiante->getIdGrupo($userLogin->user);
         $grupo = pdg_gru_grupoModel::find($idGrupo);
         $anioGrupo = $grupo->anio_pdg_gru;
         $numeroGrupo = $grupo->correlativo_pdg_gru_gru;
@@ -494,10 +503,11 @@ class PerfilController extends Controller
     }
 
     function downloadPerfilResumen(Request $request){
-        $userLogin=Auth::user();
+        //$userLogin=Auth::user();
         $id = $request['archivo'];
-        $estudiante = new gen_EstudianteModel();
-        $idGrupo = $estudiante->getIdGrupo($userLogin->user);
+        //$estudiante = new gen_EstudianteModel();
+        //$idGrupo = $estudiante->getIdGrupo($userLogin->user);
+        $idGrupo=$request['grupo'];
         $grupo = pdg_gru_grupoModel::find($idGrupo);
         $anioGrupo = $grupo->anio_pdg_gru;
         $numeroGrupo = $grupo->correlativo_pdg_gru_gru;

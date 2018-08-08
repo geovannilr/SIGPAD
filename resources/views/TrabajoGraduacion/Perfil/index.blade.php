@@ -120,6 +120,8 @@
 	        </li>
 	        @if(isset($numero))
 				 <li class="breadcrumb-item active" >Grupo {{$numero}} </li>
+			 @else
+			 	<li class="breadcrumb-item active" >Listado </li>		 
 	        @endif
 		</ol>
 		 <div class="row">
@@ -206,6 +208,7 @@
 								{!! Form::open(['route'=>['downloadPerfil'],'method'=>'POST']) !!}
 							 		<div class="btn-group">
 							 			{!!Form::hidden('archivo',$perfil->id_pdg_per,['class'=>'form-control'])!!}
+							 			{!!Form::hidden('grupo',$perfil->grupo->id_pdg_gru,['class'=>'form-control'])!!}
 										<button type="submit" class="btn btn-dark"><i class="fa fa-download"></i></button>
 									</div>
 								{!! Form:: close() !!}
@@ -214,6 +217,7 @@
 								{!! Form::open(['route'=>['downloadPerfilResumen'],'method'=>'POST']) !!}
 							 		<div class="btn-group">
 							 			{!!Form::hidden('archivo',$perfil->id_pdg_per,['class'=>'form-control'])!!}
+							 			{!!Form::hidden('grupo',$perfil->grupo->id_pdg_gru,['class'=>'form-control'])!!}
 										<button type="submit" class="btn btn-dark"><i class="fa fa-download"></i></button>
 									</div>
 								{!! Form:: close() !!}
