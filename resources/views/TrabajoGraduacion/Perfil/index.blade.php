@@ -130,7 +130,7 @@
 			  <div class="col-sm-3"></div>
 			  @if(sizeof($perfiles) == 0)
 				 <div class="col-sm-3">
-			   	 	 @can('prePerfil.create')
+			   	 	 @can('perfil.create')
 					  <div class="col-sm-3"> 
 					  	 <a class="btn " href="{{route('perfil.create')}}" style="background-color: #DF1D20; color: white"><i class="fa fa-plus"></i> Nuevo Perfil </a>
 					  </div>
@@ -161,18 +161,18 @@
 					<th>Fecha Creación</th>
 					<th>Estado</th>
 					<th>Tipo</th>
-					@can('prePerfil.edit')
+					@can('perfil.edit')
 						<th>Modificar</th>
 					@endcan
-					@can('prePerfil.destroy')
+					@can('perfil.destroy')
 						<th>Eliminar</th>
 					@endcan
 						<th>Documento</th>
 						<th>Resumen</th>
-					@can('prePerfil.aprobar')
+					@can('perfil.aprobar')
 						<th>Aprobar</th>
 					@endcan
-					@can('prePerfil.rechazar')
+					@can('perfil.rechazar')
 						<th>Rechazar</th>
 					@endcan	
 						
@@ -222,7 +222,7 @@
 									</div>
 								{!! Form:: close() !!}
 							</td>
-							@can('prePerfil.aprobar')
+							@can('perfil.aprobar')
 								<td style="text-align: center;">
 									{!! Form::open(['route'=>['aprobarPerfil'],'method'=>'POST','class'=>'aprobar']) !!}
 
@@ -233,7 +233,7 @@
 									{!! Form:: close() !!}
 								</td>
 							@endcan
-							@can('prePerfil.rechazar')
+							@can('perfil.rechazar')
 
 								<td style="text-align: center;">
 									{!! Form::open(['route'=>['rechazarPrePerfil'],'method'=>'POST','class'=>'rechazar']) !!}

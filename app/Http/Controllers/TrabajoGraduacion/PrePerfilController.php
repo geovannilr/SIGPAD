@@ -36,8 +36,7 @@ class PrePerfilController extends Controller
                  $prePerfil = new  pdg_ppe_pre_perfilModel();
                  $gruposPrePerfil=$prePerfil->getGruposPrePerfil();
                 return view('TrabajoGraduacion.PrePerfil.indexPrePerfil',compact('gruposPrePerfil'));
-            }elseif (Auth::user()->isRole('docente')) {
-
+            }elseif (Auth::user()->isRole('docente_asesor')) {
                  $prePerfil = new  pdg_ppe_pre_perfilModel();
                  $gruposPrePerfil=$prePerfil->getGruposPrePerfilDocente($userLogin->id);
                  if ($gruposPrePerfil == "NA") {

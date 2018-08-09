@@ -143,11 +143,13 @@
 			<div id="modalTribunalBody" class="modal-body">
 				...
 			</div>
+      @can('tribunal.edit')
 			<div class="modal-footer" id="modalTribunalFooter">
 				<div class="btn-group" id="divBtnViewTrib">
 					...
 				</div>
 			</div>
+      @endcan
 		</div>
 	</div>
 </div>

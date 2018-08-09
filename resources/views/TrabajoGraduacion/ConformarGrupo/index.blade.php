@@ -48,7 +48,7 @@
                 type: 'column'
             }
         },
-        order: [ 1, 'asc' ],
+        order: [ 2, 'asc' ],
     	});
 	});
 	function borrar(id) {
