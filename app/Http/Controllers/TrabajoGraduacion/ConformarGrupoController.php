@@ -49,7 +49,10 @@ class ConformarGrupoController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function create(){
-       $cards="";
+     if (Auth::user()->isRole('administrador_tdg')){
+        return redirect('grupo');
+     }else{
+        $cards="";
        $enviado =0;
        $cantidadMinima = 4;
        $estudiante = new gen_EstudianteModel();
@@ -119,8 +122,10 @@ class ConformarGrupoController extends Controller
        }else{
             return view('TrabajoGraduacion.ConformarGrupo.create',compact(['cantidadMinima']));
        }
-    	//return view('TrabajoGraduacion\ConformarGrupo.create',compact(['respuesta']));
+        //return view('TrabajoGraduacion\ConformarGrupo.create',compact(['respuesta']));
        return $cards;
+     }
+       
     }
 
     /**

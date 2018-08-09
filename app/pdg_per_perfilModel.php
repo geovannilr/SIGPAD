@@ -51,6 +51,7 @@ class pdg_per_perfilModel extends Model
             ->join('pdg_tri_gru_tribunal_grupo', 'pdg_dcn_docente.id_pdg_dcn', '=', 'pdg_tri_gru_tribunal_grupo.id_pdg_dcn')
             ->select('pdg_tri_gru_tribunal_grupo.id_pdg_gru')
             ->where('pdg_dcn_docente.id_gen_usuario', $idDocente)
+            ->where('pdg_tri_gru_tribunal_grupo.id_pdg_tri_rol', 1) //QUEMAZON ROL ASESOR
             ->get();
         return $grupos;
 	 }

@@ -37,9 +37,16 @@ class PrePerfilController extends Controller
                  $gruposPrePerfil=$prePerfil->getGruposPrePerfil();
                 return view('TrabajoGraduacion.PrePerfil.indexPrePerfil',compact('gruposPrePerfil'));
             }elseif (Auth::user()->isRole('docente')) {
-                $prePerfil = new  pdg_ppe_pre_perfilModel();
-                 $gruposPrePerfil=$prePerfil->getGruposPrePerfil();
-                return view('TrabajoGraduacion.PrePerfil.indexPrePerfil',compact('gruposPrePerfil'));
+
+                 $prePerfil = new  pdg_ppe_pre_perfilModel();
+                 $gruposPrePerfil=$prePerfil->getGruposPrePerfilDocente($userLogin->id);
+                 if ($gruposPrePerfil == "NA") {
+                    Session::flash('message-error', 'Usted no ha sido asignado como asesor de un grupo de trabajo de graduación');
+                    return  view('template'); 
+                 }else{
+                    return view('TrabajoGraduacion.PrePerfil.indexPrePerfil',compact('gruposPrePerfil'));
+                 }
+                 
             }
                 elseif (Auth::user()->isRole('estudiante')) {
                 $estudiante = new gen_EstudianteModel();

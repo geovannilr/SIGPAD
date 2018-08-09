@@ -43,15 +43,20 @@ class PerfilController extends Controller
                  $gruposPerfil=$perfil->getGruposPerfil();
                 return view('TrabajoGraduacion.Perfil.indexPerfil',compact('gruposPerfil'));
             }elseif (Auth::user()->isRole('docente')) { 
-
                 $perfil = new  pdg_per_perfilModel();
                 $grupos = $perfil->getGruposPerfilDocente($userLogin->id);
                 $array="";
-                foreach ($grupos as $grupo) {
+                if (sizeof($grupos) != 0) {
+                    foreach ($grupos as $grupo) {
                     $array [] = $grupo->id_pdg_gru;
+                    }
+                    $perfiles =pdg_per_perfilModel::whereIn('id_pdg_gru',$array)->get();
+                    return view('TrabajoGraduacion.Perfil.index',compact('perfiles'));
+                }else{
+                    Session::flash('message-error', 'Usted no ha sido asignado como asesor de un grupo de trabajo de graduación');
+                            return  view('template'); 
                 }
-                $perfiles =pdg_per_perfilModel::whereIn('id_pdg_gru',$array)->get();
-                return view('TrabajoGraduacion.Perfil.index',compact('perfiles'));
+                
             }elseif (Auth::user()->isRole('estudiante')) {
                 $estudiante = new gen_EstudianteModel();
                 $idGrupo = $estudiante->getIdGrupo($userLogin->user);

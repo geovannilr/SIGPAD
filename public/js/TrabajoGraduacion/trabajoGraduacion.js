@@ -115,6 +115,7 @@ function addAlumno(carnetAlumno,tipo){
               
            },
     		error : function(xhr, status) {
+          cos
         		swal("", "Hubo un problema al momento de agregar el estudiante", "error");
         		$("#buscarAlumno").removeAttr('disabled');
     		}
@@ -264,7 +265,7 @@ function getGrupo(idGrupo){ // Traer el detalle del grupo
     });
         $.ajax({
            type:'get',
-           url:getUrl()+'/SIGPAD/public/grupo/'+idGrupo,
+           url:getCurrentUrl()+'/grupo/'+idGrupo,
            success:function(data){
             
               $("#modalDetalleBody").html(data.htmlCode);

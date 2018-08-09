@@ -50,5 +50,27 @@ class pdg_ppe_pre_perfilModel extends Model
         return $grupos;
 
 	 }
+
+	 public function getGruposPrePerfilDocente($idUsuario){
+	 	$perfil = new  pdg_per_perfilModel();
+        $grupos = $perfil->getGruposPerfilDocente($idUsuario);
+        $array="";
+        if (sizeof($grupos) != 0) {
+                foreach ($grupos as $grupo) {
+                $array [] = $grupo->id_pdg_gru;
+            }
+            $grupos = pdg_ppe_pre_perfilModel::with('grupo')
+	        ->select('id_pdg_gru', DB::raw('count(*) as cantidadPrePerfiles'))
+	        ->whereIn('id_pdg_gru',$array)
+	        ->orderBy('id_pdg_ppe','desc')
+	        ->groupBy('id_pdg_gru','id_pdg_ppe')
+	        ->get();  
+
+        }else{
+        	$grupos = "NA";
+        }
+ 		
+ 		return $grupos;
+	 }
 	 
 }
