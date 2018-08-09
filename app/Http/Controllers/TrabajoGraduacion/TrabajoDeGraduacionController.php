@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\TrabajoGraduacion;
 
+use App\pdg_tra_gra_trabajo_graduacionModel;
+use App\pdg_tri_gru_tribunal_grupoModel;
 use  Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Session;
@@ -35,12 +37,16 @@ class TrabajoDeGraduacionController extends Controller{
                     if ($miGrupo->id_cat_sta == 3 ) {//APROBADO
                         $prePerfiles =pdg_ppe_pre_perfilModel::where('id_pdg_gru', '=',$idGrupo)->get();
                         $numero=$miGrupo->numero_pdg_gru;
-                        $tribunal ="NA";
+                        $tribunal = pdg_tri_gru_tribunal_grupoModel::getTribunalData($idGrupo);
+                        if(empty($tribunal)){
+                            $tribunal="NA";
+                        }
                         $etapas=self::getEtapasEvaluativas($idGrupo);
                         if (sizeof($etapas) == 0){
                         	$etapas="NA";
                         }
-                        return view('TrabajoGraduacion.TrabajoDeGraduacion.index',compact('numero','estudiantes','tribunal','etapas'));
+                        $tema = pdg_tra_gra_trabajo_graduacionModel::where('id_pdg_gru', '=',$idGrupo)->select('tema_pdg_tra_gra')->first();
+                        return view('TrabajoGraduacion.TrabajoDeGraduacion.index',compact('numero','estudiantes','tribunal','etapas','tema'));
                     }else{
                         //EL GRUPO AUN NO HA SIDO APROBADO
                     Session::flash('message-error', 'Tu grupo de trabajo de graduación aún no ha sido aprobado');

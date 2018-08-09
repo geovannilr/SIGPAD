@@ -76,7 +76,7 @@ function addAlumno(carnetAlumno,tipo){
 	var carnet = carnetAlumno;
         $.ajax({
            type:'POST',
-           url:'http://'+getUrl()+'/SIGPAD/public/getAlumno',
+           url:getCurrentUrl()+'/getAlumno',
            data:{'carnet':carnet},
            success:function(data){
               //console.log(data);
@@ -164,7 +164,7 @@ function verificarGrupo(carnetAlumno,tipo){ // FUNCIONPARA VERIFICAR SI TIENE  G
 	var carnet = carnetAlumno;
         $.ajax({
            type:'POST',
-           url:'http://'+getUrl()+'/SIGPAD/public/verificarGrupo',
+           url:getCurrentUrl()+'/verificarGrupo',
            data:{'carnet':carnet},
            success:function(data){
               //console.log(data);
@@ -199,7 +199,7 @@ function confirmarGrupo(idAlumno,flag){ // FUNCION PARA QUE EL ALUMNO ACEPTE PER
     });
         $.ajax({
            type:'POST',
-           url:'http://'+getUrl()+'/SIGPAD/public/confirmarGrupo',
+           url:getCurrentUrl()+'/confirmarGrupo',
            data:{'id':idAlumno,'aceptar':aceptar},
            success:function(data){
               console.log(data);

@@ -51,26 +51,23 @@
         order: [ 1, 'asc' ],
     	});
 	});
-	function borrar(id) {
-		var idUsuario=id;
-		$("#modalBorrar").modal()
-	}
-	
-	
+
 </script>
 		<ol class="breadcrumb" style="text-align: center; margin-top: 1em">
 	        <li class="breadcrumb-item ">
-	          <h5> <a href="{{ redirect()->getUrlGenerator()->previous() }}" style="margin-left: 0em"><i class="fa fa-arrow-left fa-lg" style="z-index: 1;margin-top: 0em;margin-right: 0.5em; color: black"></i></a> Perfiles</h5>
+	          <h5> <a href="{{ redirect()->getUrlGenerator()->previous() }}" style="margin-left: 0em">
+					  <i class="fa fa-arrow-left fa-lg" style="z-index: 1;margin-top: 0em;margin-right: 0.5em; color: black"></i>
+				  </a>Grupos de trabajo de graduación</h5>
 	        </li>
-	        <li class="breadcrumb-item active">Listado de Grupos que han enviado Perfil</li>
+	        <li class="breadcrumb-item active">Listado de Grupos</li>
 		</ol>
 		 <div class="row">
   <div class="col-sm-3"></div>
   <div class="col-sm-3"></div>
    <div class="col-sm-3"></div>
   @can('grupo.create')
-	  <div class="col-sm-3">
-	  	 <a class="btn " href="{{route('grupo.create')}}" style="background-color: #DF1D20; color: white"><i class="fa fa-plus">Nuevo Pre-perfil </i></a>
+	  <div class="col-sm-3">Nuevo 
+	  	 <a class="btn btn-primary" href="{{route('grupo.create')}}"><i class="fa fa-plus"></i></a>
 	  </div>
   @endcan
 </div> 
@@ -80,21 +77,47 @@
   			<table class="table table-hover table-striped  display" id="listTable">
 
   				<thead>
-					<th>Grupo</th>
-					<th>Detalle de Grupo</th>
-					<th>Detalle de Perfiles</th>
-
+					<th>Líder</th>
+					<th>Estado</th>
+					<th>Cantidad de Estudiantes</th>
+					<th>Detalle</th>
+					@can('grupo.edit')
+						<th>Modificar</th>
+					@endcan
+					@can('grupo.destroy')
+						<th>Eliminar</th>
+					@endcan
   				</thead>
   				<tbody>
 
-  				@foreach($gruposPerfil as $grupo)
+  				@foreach($grupos as $grupo)
   						<tr>
-						<td>{{ $grupo->grupo->numero_pdg_gru }}</td>
+						<td>{{ $grupo->Lider }}</td>
 						<td>
-							 	<a class="btn btn-info" href="#" onclick="getGrupo({{ $grupo->id_pdg_gru }});"><i class="fa fa-eye"></i></a>
+							@if($grupo->idEstado == 7)
+							 <p class="badge badge-info card-text">{{ $grupo->Estado }}</p>
+							 @else
+							 	{{ $grupo->Estado }}
+							@endif
 						</td>
-						<td>
-								<a class="btn btn-info" href="{{route('indexPerfil', [$grupo->id_pdg_gru])}}"><i class="fa fa-list-alt"></i></a>
+						<td>{{$grupo->Cant}}</td>
+						<td style="text-align: center;">
+							 	<a class="btn btn-dark" href="#" onclick="getGrupo({{ $grupo->ID }});"><i class="fa fa-eye"></i></a>
+						</td>
+						@can('grupo.edit')
+							<td style="text-align: center;"> 
+								<a class="btn " style="background-color:  #102359;color: white"  data-toggle="modal" data-target="#exampleModalCenter" href="{{route('grupo.edit',$grupo->id)}}"><i class="fa fa-pencil"></i></a>
+							</td>
+						@endcan
+						@can('grupo.destroy')
+							<td style="text-align: center;">
+								{!! Form::open(['route'=>['grupo.destroy',$$grupo->ID],'method'=>'DELETE','class' => 'deleteButton']) !!}
+							 		<div class="btn-group">
+										<button type="submit" class="btn btn-danger"><i class="fa fa-trash"></i></button>
+									</div>
+								{!! Form:: close() !!}
+							</td>
+						@endcan
 					</tr>
 				@endforeach 
 				</tbody>
@@ -120,6 +143,13 @@
 				
 			</div>
 		{!! Form:: close() !!}
+	  <!-- EJRG begin -->
+		{!! Form::open(['route'=>['verGrupo'],'method'=>'POST']) !!}
+		  <div class="btn-group" id="divBtnEditarGrupo">
+
+		  </div>
+	  	{!! Form:: close() !!}
+	  <!-- EJRG end-->
       </div>
     </div>
   </div>

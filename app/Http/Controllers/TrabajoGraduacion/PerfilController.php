@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\TrabajoGraduacion;
 
+use App\pdg_tra_gra_trabajo_graduacionModel;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Session;
@@ -45,7 +46,7 @@ class PerfilController extends Controller
             }elseif (Auth::user()->isRole('docente_asesor')) { 
                 $perfil = new  pdg_per_perfilModel();
                 $grupos = $perfil->getGruposPerfilDocente($userLogin->id);
-                $array="";
+                $array=array();
                 if (sizeof($grupos) != 0) {
                     foreach ($grupos as $grupo) {
                     $array [] = $grupo->id_pdg_gru;
@@ -288,7 +289,7 @@ class PerfilController extends Controller
            if ($userLogin->can(['prePerfil.edit'])) {
            $perfil=pdg_per_perfilModel::find($id);
            if ($perfil->id_cat_sta == 3){//aprobado
-           		Session::flash('message-error','No puedes modificar un Pre-Perfil una vez ha sido aprobado!');
+           		Session::flash('message-error','No puedes modificar un Perfil una vez ha sido aprobado!');
         		return Redirect::to('perfil');
            }elseif ($perfil->id_cat_sta == 8) { //RECHAZADO
            		Session::flash('message-error','No puedes modificar un Pre-Perfil una vez ha sido rechazado!');
@@ -411,6 +412,10 @@ class PerfilController extends Controller
     public function destroy($id){
         $userLogin=Auth::user();
         $perfil=pdg_per_perfilModel::find($id);
+        if ($perfil->id_cat_sta == 3){//aprobado
+            Session::flash('message-error','No puedes eliminar un Perfil una vez ha sido aprobado!');
+            return Redirect::to('perfil');
+        }
         $estudiante = new gen_EstudianteModel();
         $idGrupo = $estudiante->getIdGrupo($userLogin->user);
         $grupo = pdg_gru_grupoModel::find($idGrupo);
@@ -466,8 +471,21 @@ class PerfilController extends Controller
 	    $perfil =pdg_per_perfilModel::find($request['idPerfil']);
 	    $perfil->id_cat_sta = 3 ;//APROBADO
 	    $perfil->save();
+	    self::saveTDG($perfil);
 	    Session::flash('message','Perfil Aprobado Correctamente!');
         return Redirect::to('/indexPerfil/'.$perfil->id_pdg_gru);   
+    }
+    private function saveTDG($perfil){
+        $tragra = pdg_tra_gra_trabajo_graduacionModel::where('id_pdg_gru',$perfil->id_pdg_gru)->first();
+        if(empty($tragra)){
+            $tragra = new pdg_tra_gra_trabajo_graduacionModel();
+            $tragra->id_pdg_gru = $perfil->id_pdg_gru;
+        }
+        $tragra->id_cat_tpo_tra_gra = $perfil->id_cat_tpo_tra_gra;
+        $tragra->tema_pdg_tra_gra = $perfil->tema_pdg_per;
+        $tragra->id_cat_ctg_tra = $perfil->id_cat_ctg_tra;
+        $tragra->id_cat_sta = $perfil->id_cat_sta;
+        $tragra->save();
     }
     public function rechazarPerfil(Request $request) {
 	    $perfil =pdg_per_perfilModel::find($request['idPerfil']);

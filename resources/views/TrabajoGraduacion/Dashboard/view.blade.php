@@ -25,7 +25,7 @@
         <div class="col-sm-3"></div>
         @can('grupo.index')
             <div class="col-sm-3" id="divNuevo_viewConformarGrupo">
-                <button class="btn" onclick="getDisponibles(vg_url,vg_anio);" id="btnNuevo_viewConformarGrupo" style="background-color: #DF1D20; color: white"><i class="fa fa-plus"></i> Nuevo Estudiante</button>
+                <button class="btn btn-primary" onclick="getDisponibles(vg_url,vg_anio);" id="btnNuevo_viewConformarGrupo"><i class="fa fa-user-plus"></i></button>
             </div>
         @endcan
         <br>

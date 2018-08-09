@@ -286,6 +286,10 @@ class PrePerfilController extends Controller
     {
         $userLogin=Auth::user();
         $prePerfil=pdg_ppe_pre_perfilModel::find($id);
+        if ($prePerfil->id_cat_sta == 3){//aprobado
+            Session::flash('message-error','No puedes eliminar un Pre-Perfil una vez ha sido aprobado!');
+            return Redirect::to('prePerfil');
+        }
         $name=$prePerfil->nombre_archivo_pdg_ppe;
         $estudiante = new gen_EstudianteModel();
         $idGrupo = $estudiante->getIdGrupo($userLogin->user);

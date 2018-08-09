@@ -15,7 +15,7 @@
           </li>
           <li class="breadcrumb-item active">Grupo {{$numero}}</li>
     </ol>
-     <p class="text-center"> SISTEMA INFORMÁTICO PARA LA GESTIÓN DE PROCESOS ACADÉMICOS Y ADMINISTRATIVOS DE LA ESCUELA DE INGENIERÍA DE SISTEMAS INFORMÁTICOS DE LA UNIVERSIDAD DE EL SALVADOR</p>
+    <h3 class="text-center">{{strtoupper($tema->tema_pdg_tra_gra)}}</h3>
       <br>
       <br>
       Progreso
@@ -51,7 +51,11 @@
                   @else
                     @foreach($tribunal as $tri)
                       <tr>
-                        <td>{{$tri->nombre}}</td> 
+                        <td>{{$tri->name}}
+                            @if($tri->id_pdg_tri_rol == 1)
+                                <span class="badge badge-danger">{{$tri->nombre_tri_rol}}</span>
+                            @endif
+                        </td>
                       </tr>
                     @endforeach
                   @endif

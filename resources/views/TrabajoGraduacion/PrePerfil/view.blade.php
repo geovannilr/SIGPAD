@@ -13,9 +13,11 @@
         </script>
     @endif
 
-    <ol class="breadcrumb">
+    <ol class="breadcrumb" style="text-align: center; margin-top: 1em">
         <li class="breadcrumb-item ">
-            <h5>Detalle del Tribunal Evaluador</h5>
+            <h5>
+                <a href="{{ redirect()->getUrlGenerator()->previous() }}" style="margin-left: 0em"><i class="fa fa-arrow-left fa-lg" style="z-index: 1;margin-top: 0em;margin-right: 0.5em; color: black"></i></a>      Detalle del Tribunal Evaluador
+            </h5>
         </li>
         <li class="breadcrumb-item active">Edición</li>
     </ol>
@@ -25,7 +27,7 @@
         <div class="col-sm-3"></div>
         @can('grupo.index')
             <div class="col-sm-3" id="divBtnAddTrib">
-                <button class="btn btn-primary" onclick="prepareModal(vg_id_pdg_gru)" id="btnAddTrib"><i class="fa fa-user-plus"></i></button>
+                <button class="btn" onclick="prepareModal(vg_id_pdg_gru)" id="btnAddTrib" style="background-color: #DF1D20; color: white"><i class="fa fa-plus"></i> Nuevo Miembro</button>
             </div>
         @endcan
         <br>

@@ -66,7 +66,7 @@ console.log(cantidadMinima);
         </div>   
         @endif
          @if(isset($estadoGrupo))
-          @if ($estadoGrupo == 2) 
+          @if ($estadoGrupo == 2)
          {!! Form:: open(['route'=>'enviarGrupo','method'=>'POST']) !!}
              <div class="row">
               <div class="form-group col-sm-12">

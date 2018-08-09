@@ -146,7 +146,7 @@ class ConformarGrupoController extends Controller
         $estudiante = new gen_EstudianteModel();
         $respuesta = $estudiante->conformarGrupoSp($xmlRequest);
         if ($respuesta[0]->resultado == '0' ) {
-            Session::flash('message','Ocurrió un problema al momento de enviar el grupo de trabajo de graduación!');
+            Session::flash('message','Grupo conformado correctamente!');
              return redirect()->route('grupo.create');
         }
     

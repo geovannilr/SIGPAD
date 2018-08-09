@@ -54,7 +54,7 @@ class pdg_ppe_pre_perfilModel extends Model
 	 public function getGruposPrePerfilDocente($idUsuario){
 	 	$perfil = new  pdg_per_perfilModel();
         $grupos = $perfil->getGruposPerfilDocente($idUsuario);
-        $array="";
+        $array=array();
         if (sizeof($grupos) != 0) {
                 foreach ($grupos as $grupo) {
                 $array [] = $grupo->id_pdg_gru;

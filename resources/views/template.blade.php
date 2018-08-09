@@ -86,7 +86,7 @@
                      
               </li>
               @endcan
-              @can('prePerfil.index')
+              @can('dashboard.index')
                 <li>
                   <a class="nav-link" href="{{route('dashboard')}}" style="color: #ffffff">
                     <i class="fa fa-area-chart"></i>

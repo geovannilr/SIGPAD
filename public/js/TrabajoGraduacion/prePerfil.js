@@ -1,8 +1,8 @@
 function getTribunalData(idGrupo){
     var tblModal = $('#tblTribunal');
-    if(tblModal.length>0){
-        $("#modalTribunalData").modal();
-    }else{
+    // if(tblModal.length>0){
+    //     $("#modalTribunalData").modal();
+    // }else{
         $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -19,7 +19,7 @@ function getTribunalData(idGrupo){
                 swal("", "Ocurrió un error al procesar la solicitud!", "Error");
             }
         });
-    }
+    // }
 }
 function modalTribunal(data,idGrupo){
     var table, btn, txt, btnprop;
@@ -57,9 +57,9 @@ function prepareModal(id){
 }
 function getRolesDisp(id){
     var tblModal = $('#tblDcnDisp')
-    if(tblModal.length>0){
-        $("#modalAgregarTribunal").modal();//VALIDAR!!
-    }else{
+    // if(tblModal.length>0){
+    //     $("#modalAgregarTribunal").modal();//VALIDAR!!
+    // }else{
         $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -77,13 +77,13 @@ function getRolesDisp(id){
                 console.log(xhr);
             }
         });
-    }
+    //}
 }
 function getDcnDisp(id,dataCbo){
     var tblModal = $('#tblDcnDisp');
-    if(tblModal.length>0){
-        $("#modalAgregarTribunal").modal();
-    }else{
+    // if(tblModal.length>0){
+    //     $("#modalAgregarTribunal").modal();
+    // }else{
         $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -100,7 +100,7 @@ function getDcnDisp(id,dataCbo){
                 swal("", "Hubo problemas!", "error");
             }
         });
-    }
+    //}
     return true;
 }
 function strOpciones(dataCbo) {
@@ -120,7 +120,7 @@ function modalAgregarTribunal(data,dataCbo){
              table += "<tr>"
                  +"<td>"+data[obj].name+"</td>"
                  +"<td>"+data[obj].email+"</td>"
-                 +"<td><select id='select_"+data[obj].id_pdg_dcn+"'>"+cboOpcs+"</select></td>"
+                 +"<td><select id='select_"+data[obj].id_pdg_dcn+"' class='form-control'>"+cboOpcs+"</select></td>"
                  +"<td><button class='btn btn-dark' onclick=asignarTribunal('"+data[obj].id_pdg_dcn+"',vg_id_pdg_gru)>"+btnTxt+"</button></td>"
                  +"</tr>";
          }
