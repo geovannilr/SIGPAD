@@ -283,12 +283,22 @@ class ConformarGrupoController extends Controller
        } 
     }
     public function enviarGrupo(Request $request){
-        try {
-            $grupo=pdg_gru_grupoModel::find($request['idGrupo']);
-            $grupo->id_cat_sta='7'; //ESTADO ENVIADO PARA APROBACION
-            $filasAfetadas=$grupo->save();
-            Session::flash('message','Se envió el grupo de trabajo de graduación para su Aprobación!');
-            return redirect()->route('grupo.create');
+        
+      try {
+            $grupo =new pdg_gru_grupoModel();
+            $resultado = $grupo->enviarParaAprobacionSp($request['idGrupo']);
+            //$grupo =new pdg_gru_grupoModel();
+            //$resultado = $grupo->enviarParaAprobacionSp($request['idGrupo']);
+            //$grupo=pdg_gru_grupoModel::find($request['idGrupo']);
+            //$grupo->id_cat_sta='7'; //ESTADO ENVIADO PARA APROBACION
+            //$filasAfetadas=$grupo->save();
+            if ($resultado == 0) {
+                Session::flash('message','Se envió el grupo de trabajo de graduación');
+                return redirect()->route('grupo.create');
+            }else{
+                Session::flash('message','Ocurrió un problema al momento de enviar el grupo de trabajo de graduación!');
+                return redirect()->route('grupo.create');
+            }
         } catch (Exception $e) {
            Session::flash('message','Ocurrió un problema al momento de enviar el grupo de trabajo de graduación!');
             return redirect()->route('grupo.create');

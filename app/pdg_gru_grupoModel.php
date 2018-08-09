@@ -57,4 +57,13 @@ class pdg_gru_grupoModel extends Model{
 		);
 		return $etapas;
 	}
+	function enviarParaAprobacionSp($idGrupo){
+		DB::select('call sp_pdg_enviarParaAprobacion(:idGrupo,@result);',
+	    	array(
+	        	$idGrupo,
+	    	)
+		);
+		$errorCode = DB::select('select @result as resultado');
+		return  $errorCode;
+	}
 }
