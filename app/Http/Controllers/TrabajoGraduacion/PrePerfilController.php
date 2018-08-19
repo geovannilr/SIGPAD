@@ -100,7 +100,7 @@ class PrePerfilController extends Controller
                     $prePerfiles =pdg_ppe_pre_perfilModel::where('id_pdg_gru', '=',$idGrupo)->get();
                     $prePerfilAprobado=0;
                     foreach ($prePerfiles as $prePerfil) {
-                        if ($prePerfil->id_cat_sta == 3) {
+                        if ($prePerfil->id_cat_sta == 10) {
                             $prePerfilAprobado+=1;
                         }
                     }
@@ -205,10 +205,10 @@ class PrePerfilController extends Controller
            $userLogin=Auth::user();
            if ($userLogin->can(['prePerfil.edit'])) {
            $prePerfil=pdg_ppe_pre_perfilModel::find($id);
-           if ($prePerfil->id_cat_sta == 3){//aprobado
+           if ($prePerfil->id_cat_sta == 10){//aprobado
            		Session::flash('message-error','No puedes modificar un Pre-Perfil una vez ha sido aprobado!');
         		return Redirect::to('prePerfil');
-           }elseif ($prePerfil->id_cat_sta == 8) { //RECHAZADO
+           }elseif ($prePerfil->id_cat_sta == 12) { //RECHAZADO
            		ession::flash('message-error','No puedes modificar un Pre-Perfil una vez ha sido rechazado!');
         		return Redirect::to('prePerfil');
            }else{
@@ -286,7 +286,7 @@ class PrePerfilController extends Controller
     {
         $userLogin=Auth::user();
         $prePerfil=pdg_ppe_pre_perfilModel::find($id);
-        if ($prePerfil->id_cat_sta == 3){//aprobado
+        if ($prePerfil->id_cat_sta == 10){//aprobado
             Session::flash('message-error','No puedes eliminar un Pre-Perfil una vez ha sido aprobado!');
             return Redirect::to('prePerfil');
         }
@@ -323,14 +323,14 @@ class PrePerfilController extends Controller
     }
      public function aprobarPrePerfil(Request $request) {
 	    $prePerfil =pdg_ppe_pre_perfilModel::find($request['idPrePerfil']);
-	    $prePerfil->id_cat_sta = 3 ;//APROBADO
+	    $prePerfil->id_cat_sta = 10 ;//APROBADO
 	    $prePerfil->save();
 	    Session::flash('message','Pre-Perfil Aprobado Correctamente!');
         return Redirect::to('/indexPrePerfil/'.$prePerfil->id_pdg_gru);     
     }
     public function rechazarPrePerfil(Request $request) {
 	    $prePerfil =pdg_ppe_pre_perfilModel::find($request['idPrePerfil']);
-	    $prePerfil->id_cat_sta = 8 ;//RECHAZADO
+	    $prePerfil->id_cat_sta = 12 ;//RECHAZADO
 	    $prePerfil->save();
 	    Session::flash('message','Pre-Perfil Rechazado Correctamente!');
             return Redirect::to('/indexPrePerfil/'.$prePerfil->id_pdg_gru);   

@@ -80,7 +80,7 @@ class ConformarGrupoController extends Controller
                  if ($miCarnet == $estudiante->carnet && $estudiante->estado == "5" ) { //si soy el líder automaticamente ya acepte, estado 5 no aceptado , estado 6 aceptado
                     $card.='    <td>
                                     <h5 class="card-title">Estado</h5>
-                                    <p class="card-text">Pendiente de confirmación</p><br>
+                                    <p class="card-text">Agregado al grupo</p><br>
                                 </td>
                                 <td>
                                  <button id="btnConfirmar" type="button" data-id="'.$estudiante->id.'" class="btn btn-success">
@@ -101,7 +101,7 @@ class ConformarGrupoController extends Controller
                 }else{
                     $card.='<td>
                                     <h5 class="card-title">Estado</h5>
-                                    <p class="badge badge-secondary card-text">Pendiente de confirmación</p><br>
+                                    <p class="badge badge-secondary card-text">Pendiente de Confirmar</p><br>
                                 </td>
                                 <td>';
                 }

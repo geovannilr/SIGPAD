@@ -63,7 +63,7 @@ class PerfilController extends Controller
                 $idGrupo = $estudiante->getIdGrupo($userLogin->user);
                 if ($idGrupo != 'NA'){
                     $miGrupo = pdg_gru_grupoModel::find($idGrupo);
-                    if ($miGrupo->id_cat_sta == 3 ) {//APROBADO
+                    if ($miGrupo->id_cat_sta == 9 ) {//APROBADO
                         $prePerfiles =pdg_ppe_pre_perfilModel::where('id_pdg_gru', '=',$idGrupo)->get();
                         if (sizeof($prePerfiles)==0) {
                            Session::flash('message-error', 'Para poder ingresar a Perfiles de trabajo de graduación, primero debes enviar tus Pre-Perfiles y que al menos uno de estos sea aprobado por Coordinación.');
@@ -118,7 +118,7 @@ class PerfilController extends Controller
                     $perfiles =pdg_per_perfilModel::where('id_pdg_gru', '=',$idGrupo)->get();
                     $perfilAprobado=0;
                     foreach ($perfiles as $perfil) {
-                        if ($perfil->id_cat_sta == 3) {
+                        if ($perfil->id_cat_sta == 9) {
                             $perfilAprobado+=1;
                         }
                     }
@@ -288,10 +288,10 @@ class PerfilController extends Controller
           $userLogin=Auth::user();
            if ($userLogin->can(['prePerfil.edit'])) {
            $perfil=pdg_per_perfilModel::find($id);
-           if ($perfil->id_cat_sta == 3){//aprobado
+           if ($perfil->id_cat_sta == 9){//aprobado
            		Session::flash('message-error','No puedes modificar un Perfil una vez ha sido aprobado!');
         		return Redirect::to('perfil');
-           }elseif ($perfil->id_cat_sta == 8) { //RECHAZADO
+           }elseif ($perfil->id_cat_sta == 11) { //RECHAZADO
            		Session::flash('message-error','No puedes modificar un Pre-Perfil una vez ha sido rechazado!');
         		return Redirect::to('perfil');
            }else{
@@ -412,7 +412,7 @@ class PerfilController extends Controller
     public function destroy($id){
         $userLogin=Auth::user();
         $perfil=pdg_per_perfilModel::find($id);
-        if ($perfil->id_cat_sta == 3){//aprobado
+        if ($perfil->id_cat_sta == 9){//aprobado
             Session::flash('message-error','No puedes eliminar un Perfil una vez ha sido aprobado!');
             return Redirect::to('perfil');
         }
@@ -469,7 +469,7 @@ class PerfilController extends Controller
     }
      public function aprobarPerfil(Request $request) {
 	    $perfil =pdg_per_perfilModel::find($request['idPerfil']);
-	    $perfil->id_cat_sta = 3 ;//APROBADO
+	    $perfil->id_cat_sta = 9 ;//APROBADO
 	    $perfil->save();
 	    self::saveTDG($perfil);
 	    Session::flash('message','Perfil Aprobado Correctamente!');
@@ -489,7 +489,7 @@ class PerfilController extends Controller
     }
     public function rechazarPerfil(Request $request) {
 	    $perfil =pdg_per_perfilModel::find($request['idPerfil']);
-	    $perfil->id_cat_sta = 8 ;//RECHAZADO
+	    $perfil->id_cat_sta = 11 ;//RECHAZADO
 	    $perfil->save();
 	    Session::flash('message','Perfil Rechazado Correctamente!');
             return Redirect::to('/indexPerfil/'.$perfil->id_pdg_gru); 

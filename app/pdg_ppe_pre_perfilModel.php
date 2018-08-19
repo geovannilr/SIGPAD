@@ -45,7 +45,7 @@ class pdg_ppe_pre_perfilModel extends Model
         $grupos = pdg_ppe_pre_perfilModel::with('grupo')
         ->select('id_pdg_gru', DB::raw('count(*) as cantidadPrePerfiles'))
         ->orderBy('id_pdg_ppe','desc')
-        ->groupBy('id_pdg_gru','id_pdg_ppe')
+        ->groupBy('id_pdg_gru')
         ->get();
         return $grupos;
 
@@ -63,7 +63,7 @@ class pdg_ppe_pre_perfilModel extends Model
 	        ->select('id_pdg_gru', DB::raw('count(*) as cantidadPrePerfiles'))
 	        ->whereIn('id_pdg_gru',$array)
 	        ->orderBy('id_pdg_ppe','desc')
-	        ->groupBy('id_pdg_gru','id_pdg_ppe')
+	        ->groupBy('id_pdg_gru')
 	        ->get();  
 
         }else{
