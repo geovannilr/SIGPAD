@@ -65,7 +65,7 @@
                 <table class="table table-hover table-striped">
                   <th style="text-align: center;">Autores</th>
                   @if ($autores=="NA")
-                    <tr><td>NO SE HAN REGISTRADO AUTORES PARA ESTA PUBLCIACIÓN DE TRABAJO DE GRADUACIÓN</td></tr>
+                    <tr><td>NO SE HAN REGISTRADO AUTORES PARA ESTA PUBLICACIÓN DE TRABAJO DE GRADUACIÓN</td></tr>
                   @else
 	                   @foreach($autores as $autor)
 	                   		<tr>
