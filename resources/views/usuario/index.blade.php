@@ -22,18 +22,30 @@
         buttons: [
            {
                 extend: 'excelHtml5',
+                exportOptions: {
+                    columns: [ 0, 1, 2, 3 ]
+                },
                 title: 'Listado de Usuarios'
             },
             {
                 extend: 'pdfHtml5',
+                exportOptions: {
+                    columns: [ 0, 1, 2, 3 ]
+                },
                 title: 'Listado de Usuarios'
             },
              {
                 extend: 'csvHtml5',
+                exportOptions: {
+                    columns: [ 0, 1, 2, 3 ]
+                },
                 title: 'Listado de Usuarios'
             },
             {
                 extend: 'print',
+                exportOptions: {
+                    columns: [ 0, 1, 2, 3 ]
+                },
                 title: 'Listado de Usuarios'
             }
 

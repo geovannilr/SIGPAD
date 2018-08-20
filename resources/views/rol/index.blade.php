@@ -22,18 +22,30 @@
         buttons: [
            {
                 extend: 'excelHtml5',
+                exportOptions: {
+                    columns: [ 0, 1, 2 ]
+                },
                 title: 'Listado de Roles'
             },
             {
                 extend: 'pdfHtml5',
+                exportOptions: {
+                    columns: [ 0, 1, 2 ]
+                },
                 title: 'Listado de Roles'
             },
              {
                 extend: 'csvHtml5',
+                exportOptions: {
+                    columns: [ 0, 1, 2 ]
+                },
                 title: 'Listado de Roles'
             },
             {
                 extend: 'print',
+                exportOptions: {
+                    columns: [ 0, 1, 2 ]
+                },
                 title: 'Listado de Roles'
             }
 
