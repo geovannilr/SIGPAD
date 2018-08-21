@@ -69,6 +69,11 @@ Route::get('indexPerfil/{id}','TrabajoGraduacion\PerfilController@indexPerfil')-
 Route::get('dashboard/','TrabajoGraduacion\TrabajoDeGraduacionController@index')->name('dashboard');
 Route::resource('etapaEvaluativa','TrabajoGraduacion\EtapaEvaluativaController');
 
+//Reportes
+Route::get('reportesTDG','TrabajoGraduacion\ReportesController@index')->name('reportesTDG');
+Route::get('reportesTDG/R1','TrabajoGraduacion\ReportesController@r1')->name('R1');
+Route::get('reportesTDG/R2','TrabajoGraduacion\ReportesController@r2')->name('R2');
+
 //Documentos de trabajo de graduación
 Route::get('nuevoDocumento/{idEtapa}/{idTipoDoc?}','TrabajoGraduacion\DocumentoController@createDocumento')->name('nuevoDocumento');
 Route::get('editDocumento/{idEtapa}/{idDocumento}/{idTipoDoc?}','TrabajoGraduacion\DocumentoController@editDocumento')->name('editDocumento');
