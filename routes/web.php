@@ -68,6 +68,7 @@ Route::get('indexPerfil/{id}','TrabajoGraduacion\PerfilController@indexPerfil')-
 //Trabajo de graduacion
 Route::get('dashboard/','TrabajoGraduacion\TrabajoDeGraduacionController@index')->name('dashboard');
 Route::resource('etapaEvaluativa','TrabajoGraduacion\EtapaEvaluativaController');
+Route::post('enviarConfigEtapa','TrabajoGraduacion\EtapaEvaluativaController@configurarEtapa')->name('enviarConfigEtapa');
 
 //Documentos de trabajo de graduación
 Route::get('nuevoDocumento/{idEtapa}/{idTipoDoc?}','TrabajoGraduacion\DocumentoController@createDocumento')->name('nuevoDocumento');

@@ -166,6 +166,7 @@ return [
         Collective\Html\HtmlServiceProvider::class,
         Caffeinated\Shinobi\ShinobiServiceProvider::class,
         Laraveles\Spanish\SpanishServiceProvider::class,
+        Maatwebsite\Excel\ExcelServiceProvider::class,
 
         /*
          * Package Service Providers...
@@ -231,6 +232,7 @@ return [
         'Form' => Collective\Html\FormFacade::class,
         'Html' => Collective\Html\HtmlFacade::class,
         'Shinobi' => Caffeinated\Shinobi\Facades\Shinobi::class,
+        'Excel' => Maatwebsite\Excel\Facades\Excel::class,
 
     ],
 
