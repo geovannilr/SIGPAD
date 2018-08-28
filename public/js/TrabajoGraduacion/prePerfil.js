@@ -12,7 +12,7 @@ function getTribunalData(idGrupo){
             type:'get',
             url:getCurrentUrl()+'/getTribunalData/'+idGrupo,
             success:function(data){
-                console.log(data);
+                //console.log(data);
                 modalTribunal(data,idGrupo);
             },
             error : function(xhr, status) {
@@ -69,38 +69,43 @@ function getRolesDisp(id){
             type:'get',
             url:getCurrentUrl()+'/rolesDisp/'+id,
             success:function(data){
-                console.log(data);
+                //console.log(data);
                 getDcnDisp(id, data);
             },
             error : function(xhr, status) {
                 swal("", "Hubo problemas!", "error");
-                console.log(xhr);
+                //console.log(xhr);
             }
         });
     //}
 }
 function getDcnDisp(id,dataCbo){
-    var tblModal = $('#tblDcnDisp');
-    // if(tblModal.length>0){
-    //     $("#modalAgregarTribunal").modal();
-    // }else{
-        $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            }
-        });
-        $.ajax({
-            type:'get',
-            url:getCurrentUrl()+'/dcnDisp/'+id,
-            success:function(data){
-                console.log(data);
-                modalAgregarTribunal(data,dataCbo);
-            },
-            error : function(xhr, status) {
-                swal("", "Hubo problemas!", "error");
-            }
-        });
-    //}
+    if(!Array.isArray(dataCbo)||dataCbo.length>0){
+        var tblModal = $('#tblDcnDisp');
+        // if(tblModal.length>0){
+        //     $("#modalAgregarTribunal").modal();
+        // }else{
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+            $.ajax({
+                type:'get',
+                url:getCurrentUrl()+'/dcnDisp/'+id,
+                success:function(data){
+                    //console.log(data);
+                    modalAgregarTribunal(data,dataCbo);
+                },
+                error : function(xhr, status) {
+                    swal("", "Hubo problemas!", "error");
+                    //console.log(xhr);
+                }
+            });
+        //}
+    }else{
+        swal("","El Grupo ya cuenta con un Tribunal Evaluador establecido.","warning");
+    }
     return true;
 }
 function strOpciones(dataCbo) {
@@ -112,14 +117,19 @@ function strOpciones(dataCbo) {
 }
 function modalAgregarTribunal(data,dataCbo){
     var cboOpcs = strOpciones(dataCbo);
+    var A,J;
     if(data.length>0){
          btnTxt = "Asignar";
          var table = "<table class='table table-hover table-striped  display' id='tblDcnDisp'>";
-         table += '<thead><th>Nombre</th><th>Contacto</th><th colspan="2">Rol a asignar</th></thead><tbody>';
+         table += '<thead><th>Nombre</th><th>Asignaciones</th><th colspan="2">Rol a asignar</th></thead><tbody>';
          for (var obj in data) {
+             A = data[obj].asigned_as_A;
+             J = data[obj].asigned_as_J;
              table += "<tr>"
                  +"<td>"+data[obj].name+"</td>"
-                 +"<td>"+data[obj].email+"</td>"
+                 +"<td style='text-align: left;'>"
+                 + ((A <= 0 && J <= 0) ? "-" : ((A > 0) ? ("Asesor: " + A + (J > 0 ? ("<br>Jurado: " + J) : "")) : ("Jurado: " + J)))
+                 +"</td>"
                  +"<td><select id='select_"+data[obj].id_pdg_dcn+"' class='form-control'>"+cboOpcs+"</select></td>"
                  +"<td><button class='btn btn-dark' onclick=asignarTribunal('"+data[obj].id_pdg_dcn+"',vg_id_pdg_gru)>"+btnTxt+"</button></td>"
                  +"</tr>";

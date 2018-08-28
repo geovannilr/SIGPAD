@@ -54,12 +54,54 @@ class pdg_tri_gru_tribunal_grupoModel extends Model
                     ->where('pdg_tri_gru_tribunal_grupo.id_pdg_gru','=',$id);
             })
             ->whereNotIn('pdg_tri_rol_tribunal_rol.id_pdg_tri_rol',[2])//Excluir Rol Coordinador EJRG->PENDIENTE DE CONSULTA
-            ->where(function ($query){
-                $query->whereNull('pdg_tri_gru_tribunal_grupo.id_pdg_tri_gru')
-                    ->orWhere('pdg_tri_rol_tribunal_rol.id_pdg_tri_rol','=',3);//Incluir Rol Jurado siempre EJRG->CORREGIR CON PARAMETROS TRIBUNAL
-            })
-            ->select('pdg_tri_rol_tribunal_rol.*')
+            ->select('pdg_tri_rol_tribunal_rol.id_pdg_tri_rol','pdg_tri_rol_tribunal_rol.nombre_tri_rol',
+                DB::raw('count(if(pdg_tri_gru_tribunal_grupo.id_pdg_gru>0,1,null)) as cantidad')
+            )
+            ->groupBy('pdg_tri_rol_tribunal_rol.id_pdg_tri_rol','pdg_tri_rol_tribunal_rol.nombre_tri_rol')
             ->get();
-        return $roles;
+        $array = array();
+        $params=self::getParamsTribunal($id);
+        foreach($roles as $rol){
+            $rolId = $rol->id_pdg_tri_rol;
+            $rolCant = $rol->cantidad;
+            switch ($rolId){
+                case 1:
+                    if ($rolCant >= $params->first()->max_a)
+                        $array[] = $rolId;
+                    break;
+                case 3:
+                    if ($rolCant >= $params->first()->max_j)
+                        $array[] = $rolId;
+                    break;
+                default:
+                    break;
+            }
+        }
+        $roles = $roles->filter(function ($value,$key) use($array){
+            return !in_array($value->id_pdg_tri_rol,$array);
+        });
+        return $roles->toArray();
+    }
+    public static function getParamsTribunal($idGrupo){
+        $anio = pdg_gru_grupoModel::find($idGrupo)->anio_pdg_gru;
+//
+        // validar
+        //  el uso del
+        //   $anio EN EL SIGUIENTE QUERY DE LOS PARAMETROS
+//
+        $paramsTribunal = DB::table('gen_par_parametros')
+            ->where('nombre_gen_par','like','CANTMAXASESOR')
+            ->orWhere('nombre_gen_par','like','CANTMINASESOR')
+            ->orWhere('nombre_gen_par','like','CANTMAXJURADO')
+            ->orWhere('nombre_gen_par','like','CANTMINJURADO')
+            ->select(DB::raw("1 as 'rownum',
+                                sum(CASE when nombre_gen_par = 'CANTMAXASESOR' THEN valor_gen_par else 0 END) AS 'max_a',
+                                sum(CASE when nombre_gen_par = 'CANTMINASESOR' THEN valor_gen_par else 0 END) AS 'min_a',
+                                sum(CASE when nombre_gen_par = 'CANTMAXJURADO' THEN valor_gen_par else 0 END) AS 'max_j',
+                                sum(CASE when nombre_gen_par = 'CANTMINJURADO' THEN valor_gen_par else 0 END) AS 'min_j' ")
+            )
+            ->groupBy('rownum')
+            ->get();
+        return $paramsTribunal;
     }
 }
