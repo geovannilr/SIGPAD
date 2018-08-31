@@ -13,6 +13,7 @@ use \App\gen_EstudianteModel;
 use \App\pdg_gru_grupoModel;
 use \App\cat_tpo_tra_gra_tipo_trabajo_graduacionModel;
 use \App\cat_eta_eva_etapa_evalutativaModel;
+use Maatwebsite\Excel\Facades\Excel;
 
 class EtapaEvaluativaController extends Controller{
 	public function __construct(){
@@ -154,6 +155,25 @@ class EtapaEvaluativaController extends Controller{
     }
 
     public function configurarEtapa(Request $request){
+    	return $request;
+    }
+    public function createNotas($idEtapa){
+    	//VERIFICAMOS SI EXISTEN EN LA BASE DE DATOS ESOS ID
+    	$etapa = cat_eta_eva_etapa_evalutativaModel::find($idEtapa);
+    	if(empty($etapa) ){
+    		return "LOS PARAMETROS RECIBIDOS NO SON CORRECTOS";
+    	}else{ //LOS PARAMETROS VIENEN CORRECTAMENTE
+    		return view('TrabajoGraduacion.NotaEtapaEvaluativa.create',compact('etapa'));
+    	}
+    }
+     public function storeNotas(Request $request){
+     	Excel::load($request->file('result-file'), function ($reader) {
+
+            foreach ($reader->toArray() as $row) {
+                dd($row);
+                //User::firstOrCreate($row);
+            }
+        });
     	return $request;
     }
     public function verificarGrupo($carnet) {
