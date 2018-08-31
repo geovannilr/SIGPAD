@@ -56,4 +56,99 @@ class pdg_dcn_docenteModel extends Model
         ->get();
         return $docentes;
     }
+
+    public static function getLideres($anio){
+        $lideres=DB::select("select distinct x.NumGrupo, x.Carnet, x.Lider 
+            from (select gru.numero_pdg_gru as NumGrupo, 
+            UPPER(est.carnet_gen_est) as Carnet,
+            est.nombre_gen_est as Lider, 
+            triR.nombre_tri_rol as TribunalRol,
+            usr.name  as Docente
+            from pdg_tri_gru_tribunal_grupo triG
+             join pdg_gru_est_grupo_estudiante gruE on triG.id_pdg_gru=gruE.id_pdg_gru and gruE.eslider_pdg_gru_est=1
+                 join pdg_tri_rol_tribunal_rol triR on triR.id_pdg_tri_rol=triG.id_pdg_tri_rol
+                 join gen_est_estudiante est on est.id_gen_est=gruE.id_gen_est
+                 left join pdg_dcn_docente dcn on dcn.id_pdg_dcn=triG.id_pdg_dcn
+                 left join gen_usuario usr on usr.id=dcn.id_gen_usuario
+                left join pdg_gru_grupo gru on gru.id_pdg_gru=gruE.id_pdg_gru
+                where gru.anio_pdg_gru=:anio
+                order by gru.numero_pdg_gru asc) x",
+            array(
+                $anio,
+            )
+        );
+        return $lideres;
+    }
+    public static function getTribunales($anio){
+        $trib = DB::select("select distinct x.NumGrupo,x.TribunalRol,x.Docente
+            from (select gru.numero_pdg_gru as NumGrupo,
+            est.carnet_gen_est as Carnet,
+            est.nombre_gen_est as Lider,
+            triR.nombre_tri_rol as TribunalRol,
+            usr.name  as Docente
+            from pdg_tri_gru_tribunal_grupo triG
+             join pdg_gru_est_grupo_estudiante gruE on triG.id_pdg_gru=gruE.id_pdg_gru and gruE.eslider_pdg_gru_est=1
+                 join pdg_tri_rol_tribunal_rol triR on triR.id_pdg_tri_rol=triG.id_pdg_tri_rol
+                 join gen_est_estudiante est on est.id_gen_est=gruE.id_gen_est
+                 left join pdg_dcn_docente dcn on dcn.id_pdg_dcn=triG.id_pdg_dcn
+                 left join gen_usuario usr on usr.id=dcn.id_gen_usuario
+                left join pdg_gru_grupo gru on gru.id_pdg_gru=gruE.id_pdg_gru
+                where gru.anio_pdg_gru=:anio) x
+                order by x.TribunalRol asc",
+            array(
+                $anio
+            )
+        );
+        return $trib;
+    }
+    public static function getDocentes($anio){
+        $docentes = DB::select("select distinct x.CarnetDoc,x.Docente
+            from (select gru.numero_pdg_gru as NumGrupo,
+            est.carnet_gen_est as Carnet,
+            est.nombre_gen_est as Lider,
+            triR.nombre_tri_rol as TribunalRol,
+            usr.name  as Docente,
+            usr.user as CarnetDoc
+            from pdg_tri_gru_tribunal_grupo triG
+             join pdg_gru_est_grupo_estudiante gruE on triG.id_pdg_gru=gruE.id_pdg_gru and gruE.eslider_pdg_gru_est=1
+                 join pdg_tri_rol_tribunal_rol triR on triR.id_pdg_tri_rol=triG.id_pdg_tri_rol
+                 join gen_est_estudiante est on est.id_gen_est=gruE.id_gen_est
+                 left join pdg_dcn_docente dcn on dcn.id_pdg_dcn=triG.id_pdg_dcn
+                 left join gen_usuario usr on usr.id=dcn.id_gen_usuario
+                left join pdg_gru_grupo gru on gru.id_pdg_gru=gruE.id_pdg_gru
+                where gru.anio_pdg_gru=:anio) x
+                order by x.CarnetDoc asc",
+            array(
+                $anio
+            )
+        );
+        return $docentes;
+    }
+    public static function getGrupos($anio){
+        $docentes = DB::select("select distinct x.CarnetDoc,x.NumGrupo, x.TribunalRol
+            from (select gru.numero_pdg_gru as NumGrupo,
+            est.carnet_gen_est as Carnet,
+            est.nombre_gen_est as Lider,
+            triR.nombre_tri_rol as TribunalRol,
+            usr.name  as Docente,
+            usr.user as CarnetDoc
+            from pdg_tri_gru_tribunal_grupo triG
+             join pdg_gru_est_grupo_estudiante gruE on triG.id_pdg_gru=gruE.id_pdg_gru and gruE.eslider_pdg_gru_est=1
+                 join pdg_tri_rol_tribunal_rol triR on triR.id_pdg_tri_rol=triG.id_pdg_tri_rol
+                 join gen_est_estudiante est on est.id_gen_est=gruE.id_gen_est
+                 left join pdg_dcn_docente dcn on dcn.id_pdg_dcn=triG.id_pdg_dcn
+                 left join gen_usuario usr on usr.id=dcn.id_gen_usuario
+                left join pdg_gru_grupo gru on gru.id_pdg_gru=gruE.id_pdg_gru
+                where gru.anio_pdg_gru=:anio) x
+                order by x.NumGrupo, x.TribunalRol asc",
+            array(
+                $anio
+            )
+        );
+        return $docentes;
+    }
+    public static function reportDocentesAsignaciones($anio){
+        $data =  DB::select("call sp_pdg_get_tribunalPorGrupos_byAnio(:anio)", array($anio));
+        return $data;
+    }
 }

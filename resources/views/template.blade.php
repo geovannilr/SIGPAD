@@ -94,6 +94,14 @@
                   </a>   
               </li>
               @endcan
+              @can('tribunal.edit')
+                  <li>
+                    <a class="nav-link" href="{{route('reportesTDG')}}" style="color: #ffffff">
+                      <i class="fa fa-file-pdf-o"></i>
+                      <span class="nav-link-text">Reportes</span>
+                    </a>
+                  </li>
+              @endcan
             </ul>
           
           </li>
