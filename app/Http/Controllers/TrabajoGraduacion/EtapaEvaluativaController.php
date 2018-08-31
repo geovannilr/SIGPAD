@@ -153,7 +153,9 @@ class EtapaEvaluativaController extends Controller{
 	    //return $bodyHtml;
     }
 
-
+    public function configurarEtapa(Request $request){
+    	return $request;
+    }
     public function verificarGrupo($carnet) {
 	    $estudiante = new gen_EstudianteModel();
 	    $respuesta = $estudiante->getGrupoCarnet($carnet);
