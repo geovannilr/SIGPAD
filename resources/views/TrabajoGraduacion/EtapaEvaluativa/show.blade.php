@@ -125,8 +125,7 @@
               <h3>{{$nombreEtapa}} - </h3>
             @endif
             <li> <h3>&nbsp;{{$ponderacion}}</h3></li>
-            &nbsp;&nbsp;&nbsp;
-            <p><a class="btn btn-secondary" href="#" data-toggle="modal" data-target="#modalConfig"><i class="fa fa-cog"></i></a></p> 
+            &nbsp;&nbsp;&nbsp; 
           </li>
     </ol>
   <!--<div class="row">
@@ -150,7 +149,7 @@
                   </div>
                   <div class="mr-5">Configuracion</div>
                 </div>
-                <a class="card-footer text-black clearfix small z-1" href="#">
+                <a class="card-footer text-black clearfix small z-1" data-toggle="modal" data-target="#modalConfig"  href="#">
                   <span class="float-left">Cambiar</span>
                   <span class="float-right">
                    <i class="fa fa-angle-right"></i>
@@ -166,7 +165,7 @@
                   </div>
                   <div class="mr-5">Notas</div>
                 </div>
-                <a class="card-footer text-black clearfix small z-1" href="#">
+                <a class="card-footer text-black clearfix small z-1" href="{{route('createNotas',$id)}}">
                   <span class="float-left">Ingresar</span>
                   <span class="float-right">
                    <i class="fa fa-angle-right"></i>
@@ -193,7 +192,7 @@
         {!! Form:: open(['route'=>'enviarConfigEtapa','method'=>'POST', 'id'=>'formConfig']) !!}
           <p class="text-danger">Tenga en cuenta que una vez definido la cantidad de entregables no puede cambiarlos durante todo el proceso de trabajo de graduación</p>
           <label>Cantidad de Entregables de esta etapa</label>
-          <select class="form-control">
+          <select class="form-control" name="cantidadEntregables">
             <option value="1">1</option>
             <option value="2">2</option>
             <option value="3">3</option>

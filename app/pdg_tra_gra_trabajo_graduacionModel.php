@@ -25,4 +25,18 @@ class pdg_tra_gra_trabajo_graduacionModel extends Model
             'id_cat_ctg_tra',
             'id_cat_sta',
         ];
+
+
+    public function updateEntregablesEtapaGrupo($cantidad,$idTraGra,$idEtapa){
+     
+            DB::statement('CALL sp_pdg_eta_eva_alter_EntregablesxEtapas_byGrypo(:cantidad, :idTrabajoGraduacion, :idEtapa, @result);',
+                array(
+                    $cantidad,
+                    $idTraGra,
+                    $idEtapa
+                )
+            );
+        $errorCode = DB::select('select @result as resultado');
+        return $errorCode[0]->resultado;
+    }      
 }

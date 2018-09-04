@@ -11,8 +11,12 @@ use Illuminate\Support\Facades\Auth;
 use \App\pdg_ppe_pre_perfilModel;
 use \App\gen_EstudianteModel;
 use \App\pdg_gru_grupoModel;
+use \App\pdg_gru_est_grupo_estudianteModel;
 use \App\cat_tpo_tra_gra_tipo_trabajo_graduacionModel;
 use \App\cat_eta_eva_etapa_evalutativaModel;
+use \App\pdg_tra_gra_trabajo_graduacionModel;
+use \App\pdg_not_cri_tra_nota_criterio_trabajoModel;
+
 use Maatwebsite\Excel\Facades\Excel;
 
 class EtapaEvaluativaController extends Controller{
@@ -65,7 +69,7 @@ class EtapaEvaluativaController extends Controller{
      */
     public function show($id){
         $etapa = new cat_eta_eva_etapa_evalutativaModel();
-	    $documentos = $etapa->getDocumentos($id); //ID ETAPA
+	    $documentos = $etapa->getDocumentos($id,1); //ID ETAPA, ID TRABAJO DE GRADUACIÓN QUEMADO, CAMBIAR!!
 	    $bodyHtml = "" ;
 	    $userLogin=Auth::user();
 	    $estudiante = new gen_EstudianteModel();
@@ -155,7 +159,10 @@ class EtapaEvaluativaController extends Controller{
     }
 
     public function configurarEtapa(Request $request){
-    	return $request;
+    	$trabajoGraduacion = new pdg_tra_gra_trabajo_graduacionModel();
+    	$resultado = $trabajoGraduacion->updateEntregablesEtapaGrupo($request["cantidadEntregables"],1,$request["idEtapa"]);
+    	Session::flash('message','Entregables por Etapa Modificado con éxito!');
+        return Redirect::to('etapaEvaluativa/'.$request['idEtapa']);
     }
     public function createNotas($idEtapa){
     	//VERIFICAMOS SI EXISTEN EN LA BASE DE DATOS ESOS ID
@@ -167,14 +174,56 @@ class EtapaEvaluativaController extends Controller{
     	}
     }
      public function storeNotas(Request $request){
-     	Excel::load($request->file('result-file'), function ($reader) {
-
+     	$idEtapa = $request["etapa"];    
+     	Excel::load($request->file('documento'), function ($reader) {
+     		$reader->setSelectedSheetIndices(array(1));
+     		$arreglo = $reader->toArray();
+     		$alumno = $arreglo[0];
+     		$estudianteModel = new gen_EstudianteModel();
+     		$idGrupo = $estudianteModel->getIdGrupo(strtolower($alumno["carnet"]));
+     		$trabajosGraduacion = pdg_tra_gra_trabajo_graduacionModel::where("id_pdg_gru","=",$idGrupo)->get();
+     		$idTraGra="NA";
+     		foreach ($trabajosGraduacion as $trabajo) {
+     			$idTraGra = $trabajo->id_pdg_tra_gra;
+     		}
+     		$idGenEstudiante = "NA";
             foreach ($reader->toArray() as $row) {
-                dd($row);
+            	$idGenEstudiante = "NA";
+            	$carnet =strtolower ($row["carnet"]); 
+            	$estudiantes = gen_EstudianteModel::where("carnet_gen_est","=",$carnet)->get();
+            	foreach ($estudiantes as $estudiante) {
+            		$idGenEstudiante=$estudiante->id_gen_est;
+            	}
+            	$estudiantesGrupo =  pdg_gru_est_grupo_estudianteModel::where("id_gen_est","=",$idGenEstudiante)->get();
+            	$idEstGrupo = "NA";
+            	foreach ($estudiantesGrupo as $est) {
+            		$idEstGrupo = "NA";
+            		$idEstGrupo = $est->id_pdg_gru_est;
+            	}
+            	if ($idEstGrupo!="NA") {
+            		$lastId = pdg_not_cri_tra_nota_criterio_trabajoModel::create
+            		([
+		                'nota_pdg_not_cri_tra'   => $row["nota"],
+		                'id_cat_cri_eva'    	 => 1,
+		                'id_pdg_tra_gra'  		 => $idTraGra,
+		                'id_pdg_gru_est'  		 => $idEstGrupo,
+            		]);
+            	}
+            	echo "Consolidado";
+            	echo "<br>";
+            	echo "Carnet: ".$row["carnet"];
+            	echo "<br>";
+            	echo "Nota: ".$row["nota"];
+            	echo "<br>";
+            	echo "TrabajoGraduacion: ".$idTraGra;
+            	echo "<br>";
+            	echo "Estudiante: ".$idEstGrupo;
+            	echo "<br>";
+            	echo "<br>";
+
                 //User::firstOrCreate($row);
             }
         });
-    	return $request;
     }
     public function verificarGrupo($carnet) {
 	    $estudiante = new gen_EstudianteModel();
