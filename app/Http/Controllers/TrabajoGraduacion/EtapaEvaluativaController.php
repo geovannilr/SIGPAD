@@ -68,56 +68,74 @@ class EtapaEvaluativaController extends Controller{
      * @return \Illuminate\Http\Response
      */
     public function show($id){
-        $etapa = new cat_eta_eva_etapa_evalutativaModel();
-	    $documentos = $etapa->getDocumentos($id,1); //ID ETAPA, ID TRABAJO DE GRADUACIÓN QUEMADO, CAMBIAR!!
-	    $bodyHtml = "" ;
-	    $userLogin=Auth::user();
-	    $estudiante = new gen_EstudianteModel();
-	    $idGrupo = $estudiante->getIdGrupo($userLogin->user);
-	    if (sizeof($documentos)==0) { // NO CONFIGURADOS LOS DOCUMENTOS QUE SE VAN A REQUERIR EN UNA ETAPA EN ESPECIFICO
-	    	$documentos = "NA";
-	    	$bodyHtml ='<p class="text-center">NO SE HAN REGISTRADO DOCUMENTOS ASOCIADOS A ESTA ETAPA EVALUATIVA, CONSULTE AL ADMINISTRADOR<p>';
-	    	$nombreEtapa="";
-	    	$ponderacion = "";
-	    }else{
-	    	$nombreEtapa =$documentos[0]->nombre_cat_eta_eva;
-	    	$ponderacion =$documentos[0]->ponderacion_cat_eta_eva.'%';
-	    	foreach ($documentos as  $doc) {
-	    		$tipoDocumento=$doc->id_cat_tpo_doc;
-	    		$bodyHtml.=' 
-	    					<div class="col-sm-3">
-	    						<p>Nuevo <a class="btn btn-primary" href="'.url("/").'/nuevoDocumento/'.$id.'/'.$doc->id_cat_tpo_doc.'"><i class="fa fa-plus"></i></a></p> 
-    						</div>';
-		    	$bodyHtml.='<h2 class="text-center">Entregables de '.$doc->nombre_pdg_tpo_doc.'</h2>';
-		    	$bodyHtml.= '<div class="table-responsive">';
-	        	$bodyHtml.='<table class="table table-hover table-striped  display" id="listTable">';
-	        	$bodyHtml.='<thead>
-	        				<th>Nombre Archivo</th>
-	        				<th>Fecha Subida</th>
-	        				<th>Modificar</th>
-	        				<th>Eliminar</th>
-	        				<th>Descargar</th>
-	        				</thead>
-	        				<tbody>';
-	        	$archivos=$etapa->getArchivos($id,$idGrupo);
-	        	if (sizeof($archivos)!=0) {
-	        		foreach ($archivos as  $archivo) {
-	        			if ($tipoDocumento == $archivo->id_cat_tpo_doc) {
-		        				$bodyHtml.='<tr>
-											<td>'.$archivo->nombreArchivo.'</td>
-											<td>'.$archivo->fechaSubidaArchivo.'</td>';
-											if ($archivo->esArchivoActico == 1) {
-												$bodyHtml.='			
-															<td><a class="btn btn-primary" href="'.url("/").'/editDocumento/'.$id.'/'.$archivo->id_pdg_doc.'/'.$doc->id_cat_tpo_doc.'"><i class="fa fa-pencil"></i></a></td>
-															<td>
-																<form method="POST" action="'.url("/").'/documento/'.$archivo->id_pdg_doc.'" class="deleteButton formPost">
-																	<input name="_method" value="DELETE" type="hidden">
-																	<input class="form-control" name="etapa" value="'.$id.'" type="hidden">
-													 				<div class="btn-group">
-																		<button type="submit" class="btn btn-danger"><i class="fa fa-trash"></i></button>
-																	</div>
-																</form>
-															</td>
+    	$parametros = explode("G",$id);
+    	if (sizeof($parametros) == 2) {
+    		$id = $parametros[0];
+    		$idGrupo = $parametros[1];
+	    	$etapa = new cat_eta_eva_etapa_evalutativaModel();
+		    $documentos = $etapa->getDocumentos($id,1); //ID ETAPA, ID TRABAJO DE GRADUACIÓN QUEMADO, CAMBIAR!!
+		    $bodyHtml = "" ;
+		    $userLogin=Auth::user();
+		    $estudiante = new gen_EstudianteModel();
+		    $idGrupo = $estudiante->getIdGrupo($userLogin->user);
+		    if (sizeof($documentos)==0) { // NO CONFIGURADOS LOS DOCUMENTOS QUE SE VAN A REQUERIR EN UNA ETAPA EN ESPECIFICO
+		    	$documentos = "NA";
+		    	$bodyHtml ='<p class="text-center">NO SE HAN REGISTRADO DOCUMENTOS ASOCIADOS A ESTA ETAPA EVALUATIVA, CONSULTE AL ADMINISTRADOR<p>';
+		    	$nombreEtapa="";
+		    	$ponderacion = "";
+		    }else{
+		    	$nombreEtapa =$documentos[0]->nombre_cat_eta_eva;
+		    	$ponderacion =$documentos[0]->ponderacion_cat_eta_eva.'%';
+		    	foreach ($documentos as  $doc) {
+		    		$tipoDocumento=$doc->id_cat_tpo_doc;
+		    		$bodyHtml.=' 
+		    					<div class="col-sm-3">
+		    						<p>Nuevo <a class="btn btn-primary" href="'.url("/").'/nuevoDocumento/'.$id.'/'.$doc->id_cat_tpo_doc.'"><i class="fa fa-plus"></i></a></p> 
+	    						</div>';
+			    	$bodyHtml.='<h2 class="text-center">Entregables de '.$doc->nombre_pdg_tpo_doc.'</h2>';
+			    	$bodyHtml.= '<div class="table-responsive">';
+		        	$bodyHtml.='<table class="table table-hover table-striped  display" id="listTable">';
+		        	$bodyHtml.='<thead>
+		        				<th>Nombre Archivo</th>
+		        				<th>Fecha Subida</th>
+		        				<th>Modificar</th>
+		        				<th>Eliminar</th>
+		        				<th>Descargar</th>
+		        				</thead>
+		        				<tbody>';
+		        	$archivos=$etapa->getArchivos($id,$idGrupo);
+		        	if (sizeof($archivos)!=0) {
+		        		foreach ($archivos as  $archivo) {
+		        			if ($tipoDocumento == $archivo->id_cat_tpo_doc) {
+			        				$bodyHtml.='<tr>
+												<td>'.$archivo->nombreArchivo.'</td>
+												<td>'.$archivo->fechaSubidaArchivo.'</td>';
+												if ($archivo->esArchivoActico == 1) {
+													$bodyHtml.='			
+																<td><a class="btn btn-primary" href="'.url("/").'/editDocumento/'.$id.'/'.$archivo->id_pdg_doc.'/'.$doc->id_cat_tpo_doc.'"><i class="fa fa-pencil"></i></a></td>
+																<td>
+																	<form method="POST" action="'.url("/").'/documento/'.$archivo->id_pdg_doc.'" class="deleteButton formPost">
+																		<input name="_method" value="DELETE" type="hidden">
+																		<input class="form-control" name="etapa" value="'.$id.'" type="hidden">
+														 				<div class="btn-group">
+																			<button type="submit" class="btn btn-danger"><i class="fa fa-trash"></i></button>
+																		</div>
+																	</form>
+																</td>
+																<td>
+																	<form method="POST" action="'.url("/").'/downloadDocumento" accept-charset="UTF-8" class ="formPost">
+														 				<div class="btn-group">
+														 					<input class="form-control" name="documento" value="'.$archivo->id_pdg_arc_doc.'" type="hidden">
+														 					<input class="form-control" name="etapa" value="'.$id.'" type="hidden">
+																			<button type="submit" class="btn btn-dark"><i class="fa fa-download"></i></button>
+																		</div>
+																	</form>
+																</td>
+							        						</tr>';
+												}else{
+													$bodyHtml.='			
+															<td></td>
+															<td></td>
 															<td>
 																<form method="POST" action="'.url("/").'/downloadDocumento" accept-charset="UTF-8" class ="formPost">
 													 				<div class="btn-group">
@@ -128,34 +146,24 @@ class EtapaEvaluativaController extends Controller{
 																</form>
 															</td>
 						        						</tr>';
-											}else{
-												$bodyHtml.='			
-														<td></td>
-														<td></td>
-														<td>
-															<form method="POST" action="'.url("/").'/downloadDocumento" accept-charset="UTF-8" class ="formPost">
-												 				<div class="btn-group">
-												 					<input class="form-control" name="documento" value="'.$archivo->id_pdg_arc_doc.'" type="hidden">
-												 					<input class="form-control" name="etapa" value="'.$id.'" type="hidden">
-																	<button type="submit" class="btn btn-dark"><i class="fa fa-download"></i></button>
-																</div>
-															</form>
-														</td>
-					        						</tr>';
-											}
-	        			}
-	        		}
-	        	}
-	        	$bodyHtml.='</tbody>
-							</table>
-	        				</div>
-	        				<hr>
-	        				';	
+												}
+		        			}
+		        		}
+		        	}
+		        	$bodyHtml.='</tbody>
+								</table>
+		        				</div>
+		        				<hr>
+		        				';	
 
-	    	}
-	    }
-	    return view('TrabajoGraduacion.EtapaEvaluativa.show',compact('bodyHtml','nombreEtapa','ponderacion','id'));
-	    //return $bodyHtml;
+		    	}
+		    }
+		    return view('TrabajoGraduacion.EtapaEvaluativa.show',compact('bodyHtml','nombreEtapa','ponderacion','id'));
+		    //return $bodyHtml;
+    	}else{
+    		return "PARAMETROS INCORRECTOS";
+    	}
+        
     }
 
     public function configurarEtapa(Request $request){

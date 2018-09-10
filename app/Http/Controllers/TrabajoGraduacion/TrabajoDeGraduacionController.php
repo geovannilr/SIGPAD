@@ -14,6 +14,7 @@ use \App\pdg_ppe_pre_perfilModel;
 use \App\gen_EstudianteModel;
 use \App\pdg_gru_grupoModel;
 use \App\cat_tpo_tra_gra_tipo_trabajo_graduacionModel;
+use \App\pdg_gru_est_grupo_estudianteModel;
 
 class TrabajoDeGraduacionController extends Controller{
     public function __construct(){
@@ -46,7 +47,7 @@ class TrabajoDeGraduacionController extends Controller{
                         	$etapas="NA";
                         }
                         $tema = pdg_tra_gra_trabajo_graduacionModel::where('id_pdg_gru', '=',$idGrupo)->select('tema_pdg_tra_gra')->first();
-                        return view('TrabajoGraduacion.TrabajoDeGraduacion.index',compact('numero','estudiantes','tribunal','etapas','tema'));
+                        return view('TrabajoGraduacion.TrabajoDeGraduacion.index',compact('numero','estudiantes','tribunal','etapas','tema','idGrupo'));
                     }else{
                         //EL GRUPO AUN NO HA SIDO APROBADO
                     Session::flash('message-error', 'Tu grupo de trabajo de graduación aún no ha sido aprobado');
@@ -57,11 +58,30 @@ class TrabajoDeGraduacionController extends Controller{
                     Session::flash('message-error', 'Para poder acceder a esta opción, primero debes conformar un grupo de trabajo de graduación');
                     return  view('template');
                 }
+            }elseif (Auth::user()->isRole('docente_asesor')) {
+                return "DOCENTE ASESOR";
             }
         }
        
     }
+    public function dashboardGrupo($idGrupo){
+        $grupo= new pdg_gru_grupoModel();
+        $estudiantesGrupo = $grupo->getDetalleGrupo($idGrupo);
+        $prePerfiles =pdg_ppe_pre_perfilModel::where('id_pdg_gru', '=',$idGrupo)->get();
+        $grupo = pdg_gru_grupoModel::find($idGrupo);
+        $numero=$grupo->numero_pdg_gru;
+        $tribunal = pdg_tri_gru_tribunal_grupoModel::getTribunalData($idGrupo);
+        if(empty($tribunal)){
+            $tribunal="NA";
+        }
+        $etapas=self::getEtapasEvaluativas($idGrupo);
+        if (sizeof($etapas) == 0){
+            $etapas="NA";
+        }
+        $tema = pdg_tra_gra_trabajo_graduacionModel::where('id_pdg_gru', '=',$idGrupo)->select('tema_pdg_tra_gra')->first();
+        return view('TrabajoGraduacion.TrabajoDeGraduacion.index',compact('numero','estudiantesGrupo','tribunal','etapas','tema','idGrupo'));
 
+    }
     public function verificarGrupo($carnet) {
 	    $estudiante = new gen_EstudianteModel();
 	    $respuesta = $estudiante->getGrupoCarnet($carnet);

@@ -66,7 +66,8 @@ Route::post('rechazarPerfil','TrabajoGraduacion\PerfilController@rechazarPerfil'
 Route::get('indexPerfil/{id}','TrabajoGraduacion\PerfilController@indexPerfil')->name('indexPerfil');
 
 //Trabajo de graduacion
-Route::get('dashboard/','TrabajoGraduacion\TrabajoDeGraduacionController@index')->name('dashboard');
+Route::get('dashboard/','TrabajoGraduacion\TrabajoDeGraduacionController@index')->name('dashboard'); //ALUMNO
+Route::get('dashboardGrupo/{idGrupo}','TrabajoGraduacion\TrabajoDeGraduacionController@dashboardGrupo')->name('dashboardGrupo'); //DOCENTE ASESOR
 Route::resource('etapaEvaluativa','TrabajoGraduacion\EtapaEvaluativaController');
 Route::post('enviarConfigEtapa','TrabajoGraduacion\EtapaEvaluativaController@configurarEtapa')->name('enviarConfigEtapa');
 Route::get('createNotas/{idEtapa}','TrabajoGraduacion\EtapaEvaluativaController@createNotas')->name('createNotas');
