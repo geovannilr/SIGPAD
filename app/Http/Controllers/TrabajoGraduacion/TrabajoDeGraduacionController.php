@@ -15,6 +15,8 @@ use \App\gen_EstudianteModel;
 use \App\pdg_gru_grupoModel;
 use \App\cat_tpo_tra_gra_tipo_trabajo_graduacionModel;
 use \App\pdg_gru_est_grupo_estudianteModel;
+use \App\pdg_dcn_docenteModel;
+
 
 class TrabajoDeGraduacionController extends Controller{
     public function __construct(){
@@ -62,6 +64,13 @@ class TrabajoDeGraduacionController extends Controller{
                 return "DOCENTE ASESOR";
             }
         }
+       
+    }
+    /*Listado de grupos filstrados por docente asesor*/
+    public function dashboardIndex(){
+        $userLogin=Auth::user();
+        $docente = pdg_dcn_docenteModel::where("id_gen_usuario","=",$userLogin->id)->first();
+        //CONSUMIMOS EL SP DE LISTADO DE GRUPOS POR DOCENTE
        
     }
     public function dashboardGrupo($idGrupo){
