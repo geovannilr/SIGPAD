@@ -118,6 +118,7 @@
   });
 </script>
     <ol class="breadcrumb">
+      <h5><a href="{{ redirect()->getUrlGenerator()->previous() }}" style="margin-left: 0em"><i class="fa fa-arrow-left fa-lg" style="z-index: 1;margin-top: 0em;margin-right: 0.5em; color: black"></i></a> </h5>
           <li class="breadcrumb-item">
             @if($nombreEtapa == "" )
               SIN DOCUMENTOS

@@ -16,7 +16,7 @@ use \App\pdg_gru_grupoModel;
 use \App\cat_tpo_tra_gra_tipo_trabajo_graduacionModel;
 use \App\pdg_gru_est_grupo_estudianteModel;
 use \App\pdg_dcn_docenteModel;
-
+use Zend\Ldap\Ldap;
 
 class TrabajoDeGraduacionController extends Controller{
     public function __construct(){
@@ -70,8 +70,11 @@ class TrabajoDeGraduacionController extends Controller{
     public function dashboardIndex(){
         $userLogin=Auth::user();
         $docente = pdg_dcn_docenteModel::where("id_gen_usuario","=",$userLogin->id)->first();
+        //return $docente->id_pdg_dcn;
+        $grupo = new pdg_gru_grupoModel();
+        $grupos = $grupo->getGruposDocente($docente->id_pdg_dcn);
+        return view('TrabajoGraduacion.Dashboard.Grupos.index',compact('grupos'));
         //CONSUMIMOS EL SP DE LISTADO DE GRUPOS POR DOCENTE
-       
     }
     public function dashboardGrupo($idGrupo){
         $grupo= new pdg_gru_grupoModel();
