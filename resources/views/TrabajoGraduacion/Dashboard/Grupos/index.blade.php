@@ -64,7 +64,7 @@
 	        <li class="breadcrumb-item ">
 	          <h5> <a href="{{ redirect()->getUrlGenerator()->previous() }}" style="margin-left: 0em"><i class="fa fa-arrow-left fa-lg" style="z-index: 1;margin-top: 0em;margin-right: 0.5em; color: black"></i></a>     Grupos de trabajo de graduación</h5>
 	        </li>
-	        <li class="breadcrumb-item active">Listado de grupos con proceso iniciado</li>
+	        <li class="breadcrumb-item active">Mis Grupos</li>
 		</ol>
 	
 		<br>
@@ -75,6 +75,7 @@
 					<th>Número</th>
 					<th>Líder</th>
 					<th>Cantidad de Estudiantes</th>
+          <th>Estado</th>
 					<th>Dashboard</th>
   				</thead>
   				<tbody>
@@ -86,8 +87,15 @@
 							 	{{ $grupo->Lider }}
 						</td>
 						<td>{{$grupo->Cant}}</td>
+            @if( $grupo->estado == 1)
+               <td><span class="badge badge-success">Proceso TDG Iniciado</span></td>
+               @else
+                 <td><span class="badge badge-info">Proceso TDG Sin Iniciar</span></td>
+            @endif
 						<td style="text-align: center;">
-							 	<a class="btn btn-dark" href="{{route('dashboardGrupo',$grupo->ID)}}" ><i class="fa fa-eye"></i></a>
+              @if( $grupo->estado == 1)
+                <a class="btn btn-dark" href="{{route('dashboardGrupo',$grupo->ID)}}" ><i class="fa fa-eye"></i></a>  
+            @endif
 						</td>
 					</tr>
 				@endforeach 
