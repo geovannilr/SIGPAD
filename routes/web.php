@@ -99,3 +99,13 @@ Route::post('downloadDocumentoPublicacion','Publicaciones\publicacionController@
 
 //------------------------------------------------------------------------------------------------------------------------
 
+//------------------GESTION DOCENTE----------------------------------------------------------------
+Route::get('pruebaGestionDocente','GestionDocenteController@index')->name('pruebaGestionDocente');
+Route::post('getInfoDocente','GestionDocenteController@getInfoDocente')->name('getInfoDocente');
+Route::post('getHistorial','GestionDocenteController@getHistorial')->name('getHistorial');
+Route::post('getExperiencia','GestionDocenteController@getExperiencia')->name('getExperiencia');
+Route::post('getCertificaciones','GestionDocenteController@getCertificaciones')->name('getCertificaciones');
+Route::post('getSkills','GestionDocenteController@getSkills')->name('getSkills');
+
+
+//------------------------------------------------------------------------------------------------------------------------

@@ -151,4 +151,66 @@ class pdg_dcn_docenteModel extends Model
         $data =  DB::select("call sp_pdg_get_tribunalPorGrupos_byAnio(:anio)", array($anio));
         return $data;
     }
+    public function getDataGestionDocente($idDocente){
+
+        $data = DB::select("SELECT * FROM sigpad_dev.view_dcn_perfildocente where id_pdg_dcn =:idDocente",
+            array(
+                $idDocente
+            )
+        );
+        return $data;
+    }
+    public static function getHistorialAcademico($idDocente){
+        $data =  DB::select("call sp_dcn_get_historial_academicoByDocente(:idDocente)", array($idDocente));
+        return $data;
+    }
+
+    public function getDataExperienciaDocente($idDocente){
+
+        $data = DB::select("select distinct
+                            lugar_trabajo_dcn_exp,
+                            anio_inicio_dcn_exp,
+                            anio_fin_dcn_exp,
+                            idiomaExper,
+                            descripcionExperiencia
+                            from view_dcn_perfildocente
+                            where id_pdg_dcn =:idDocente",
+            array(
+                $idDocente
+            )
+        );
+        return $data;
+    }
+
+    public function getDataCertificacionesDocente($idDocente){
+
+        $data = DB::select("select distinct
+                            nombre_dcn_cer,
+                            anio_expedicion_dcn_cer,
+                            institucion_dcn_cer,
+                            idiomaCert
+                            from view_dcn_perfildocente
+                            where id_pdg_dcn = :idDocente",
+            array(
+                $idDocente
+            )
+        );
+        return $data;
+    }
+
+    public function getDataSkillsDocente($idDocente){
+
+        $data = DB::select("select distinct
+                            Nivel,
+                            nombre_cat_ski
+                            from view_dcn_perfildocente
+                            where id_pdg_dcn =  :idDocente",
+            array(
+                $idDocente
+            )
+        );
+        return $data;
+    }
+  
+
 }

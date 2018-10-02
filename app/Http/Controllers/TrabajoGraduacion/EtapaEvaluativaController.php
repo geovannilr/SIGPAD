@@ -161,7 +161,7 @@ class EtapaEvaluativaController extends Controller{
 		    return view('TrabajoGraduacion.EtapaEvaluativa.show',compact('bodyHtml','nombreEtapa','ponderacion','id'));
 		    //return $bodyHtml;
     	}else{
-    		return "PARAMETROS INCORRECTOS";
+    		return view("error");
     	}
         
     }
@@ -176,12 +176,15 @@ class EtapaEvaluativaController extends Controller{
     	//VERIFICAMOS SI EXISTEN EN LA BASE DE DATOS ESOS ID
     	$etapa = cat_eta_eva_etapa_evalutativaModel::find($idEtapa);
     	if(empty($etapa) ){
-    		return "LOS PARAMETROS RECIBIDOS NO SON CORRECTOS";
+    		return view("error");
     	}else{ //LOS PARAMETROS VIENEN CORRECTAMENTE
     		return view('TrabajoGraduacion.NotaEtapaEvaluativa.create',compact('etapa'));
     	}
     }
      public function storeNotas(Request $request){
+        $validatedData = $request->validate([
+                'documentoNotas' => 'required'
+         ]);
      	$idEtapa = $request["etapa"];    
      	Excel::load($request->file('documento'), function ($reader) {
      		$reader->setSelectedSheetIndices(array(1));

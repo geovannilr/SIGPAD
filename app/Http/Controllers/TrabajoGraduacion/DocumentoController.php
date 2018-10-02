@@ -29,7 +29,8 @@ class DocumentoController extends Controller{
     	$etapa = cat_eta_eva_etapa_evalutativaModel::find($idEtapa);
     	$tipoDocumento = cat_tpo_doc_tipo_documentoModel::find($idTipoDoc);
     	if(empty($tipoDocumento) || empty($etapa) ){
-    		return "LOS PARAMETROS RECIBIDOS NO SON CORRECTOS";
+    		//return "LOS PARAMETROS RECIBIDOS NO SON CORRECTOS";
+        return view("error");
     	}else{ //LOS PARAMETROS VIENEN CORRECTAMENTE
     		return view('TrabajoGraduacion.DocumentoEtapaEvaluativa.create',compact('etapa','tipoDocumento','idEtapa','idTipoDoc'));
     	}
@@ -39,7 +40,7 @@ class DocumentoController extends Controller{
           $tipoDocumento = cat_tpo_doc_tipo_documentoModel::find($idTipoDoc);
           $documento = pdg_doc_documentoModel::find($idDocumento);
           if(empty($tipoDocumento) || empty($etapa)){
-    		return "LOS PARAMETROS RECIBIDOS NO SON CORRECTOS";
+    		return view("error");
     	}else{ //LOS PARAMETROS VIENEN CORRECTAMENTE
     		return view('TrabajoGraduacion.DocumentoEtapaEvaluativa.edit',compact('etapa','tipoDocumento','idEtapa','idTipoDoc','documento'));
     	}

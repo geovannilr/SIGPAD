@@ -68,6 +68,14 @@
                   </a>  
               </li>
               @endcan
+              @can('grupos.index')
+                <li>
+                  <a class="nav-link" href="{{route('listadoGrupos')}}" style="color: #ffffff">
+                    <i class="fa fa-users"></i>
+                    <span class="nav-link-text">Mis Grupos de TG</span>
+                  </a>  
+              </li>
+              @endcan
               @can('prePerfil.index')
               <li>
                 <a class="nav-link" href="{{route('prePerfil.index')}}" style="color: #ffffff">
