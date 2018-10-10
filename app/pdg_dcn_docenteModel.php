@@ -211,6 +211,27 @@ class pdg_dcn_docenteModel extends Model
         );
         return $data;
     }
+     public function getGeneralInfo($idDocente){
+         $data = DB::select("select 
+                            usuario.primer_nombre,
+                            usuario.segundo_nombre,
+                            usuario.primer_apellido,
+                            usuario.segundo_apellido,
+                            usuario.email,
+                            docente.tipoJornada,
+                            docente.descripcionDocente,
+                            cargo.nombre_cargo
+                            from  pdg_dcn_docente docente
+                            inner join gen_usuario usuario on usuario.id = docente.id_gen_usuario 
+                            left join cat_car_cargo_eisi cargo on cargo.id_cat_car=docente.id_cargo_actual
+                            where docente.id_pdg_dcn=:idDocente",
+            array(
+                $idDocente
+            )
+        );
+        return $data;
+      
+    }
   
 
 }

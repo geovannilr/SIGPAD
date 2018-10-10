@@ -106,6 +106,8 @@ Route::post('getHistorial','GestionDocenteController@getHistorial')->name('getHi
 Route::post('getExperiencia','GestionDocenteController@getExperiencia')->name('getExperiencia');
 Route::post('getCertificaciones','GestionDocenteController@getCertificaciones')->name('getCertificaciones');
 Route::post('getSkills','GestionDocenteController@getSkills')->name('getSkills');
+Route::post('getGeneralInfo','GestionDocenteController@getGeneralInfoDocente')->name('getGeneralInfo');
 
+Route::get('perfilDocente/{idDocente}','PerfilDocentePublicoController@index')->name('perfilDocente');
 
 //------------------------------------------------------------------------------------------------------------------------

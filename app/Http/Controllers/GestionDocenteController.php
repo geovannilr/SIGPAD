@@ -41,6 +41,14 @@ class GestionDocenteController extends Controller
     	return $info;
     	
     }
+    function getGeneralInfoDocente(Request $request){
+        $docente = new pdg_dcn_docenteModel();
+        $info = $docente->getGeneralInfo($request['docente']);
+        return $info;
+        
+    }
+
+    
     
     
 }
