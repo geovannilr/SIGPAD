@@ -167,7 +167,6 @@ return [
         Caffeinated\Shinobi\ShinobiServiceProvider::class,
         Laraveles\Spanish\SpanishServiceProvider::class,
         Maatwebsite\Excel\ExcelServiceProvider::class,
-        Adldap\Laravel\AdldapServiceProvider::class,
 
         /*
          * Package Service Providers...
@@ -234,7 +233,6 @@ return [
         'Html' => Collective\Html\HtmlFacade::class,
         'Shinobi' => Caffeinated\Shinobi\Facades\Shinobi::class,
         'Excel' => Maatwebsite\Excel\Facades\Excel::class,
-        'Adldap' => Adldap\Laravel\Facades\Adldap::class,
 
     ],
 

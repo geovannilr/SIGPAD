@@ -68,48 +68,13 @@ class TrabajoDeGraduacionController extends Controller{
     }
     /*Listado de grupos filtrados por docente asesor*/
     public function dashboardIndex(){
-       /* $userLogin=Auth::user();
+        $userLogin=Auth::user();
         $docente = pdg_dcn_docenteModel::where("id_gen_usuario","=",$userLogin->id)->first();
         //return $docente->id_pdg_dcn;
         $grupo = new pdg_gru_grupoModel();
         $grupos = $grupo->getGruposDocente($docente->id_pdg_dcn);
         return view('TrabajoGraduacion.Dashboard.Grupos.index',compact('grupos'));
-        //CONSUMIMOS EL SP DE LISTADO DE GRUPOS POR DOCENTE*/
-
-$ldapConn = ldap_connect('ldap.ues.edu.sv');
-           
-// Set some ldap options for talking to AD
-ldap_set_option($ldapConn, LDAP_OPT_PROTOCOL_VERSION, 3);
-ldap_set_option($ldapConn, LDAP_OPT_REFERRALS, 0);
-    
-//this is the LDAP admin account with access
-$adminUsername = 'cm11005';
-$adminPassword = '35ba92dba7d4ffcb70b1815f9c0008fd';
-
-
-// Bind as a domain admin if they've set it up
-$ldap_bind = ldap_bind($ldapConn, $adminUsername, $adminPassword);
-
-/*//example path for searching
-$search = ldap_search($ldapConn, "cn=Example Staff,ou=Groups,ou=Staff,ou=Domain Objects,dc=example,dc=ca", "(cn=*)");
-
-//example get command
-$info = ldap_get_entries($ldapConn, $search);
-
-echo 'ldap conn';
-var_dump($ldapConn);
-
-echo 'ldap bind';
-var_dump($ldap_bind);
-
-echo 'seach var';
-var_dump($search);
-
-echo 'search info';
-var_dump($info);
-
-ldap_unbind($ldapConn);*/
-
+        //CONSUMIMOS EL SP DE LISTADO DE GRUPOS POR DOCENTE
     }
     public function dashboardGrupo($idGrupo){
         $userLogin=Auth::user();
