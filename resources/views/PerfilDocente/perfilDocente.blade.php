@@ -123,9 +123,7 @@
       
 
     </div>
-    <!-- Custom scripts for this template -->
-    <script src="js/resume.min.js"></script>
-  <script src="js/main.js"></script>
+
   {!!Html::script('PerfilDocente/vendor/jquery/jquery.min.js')!!}
   {!!Html::script('PerfilDocente/vendor/bootstrap/js/bootstrap.bundle.min.js')!!}
    {!!Html::script('PerfilDocente/vendor/jquery-easing/jquery.easing.min.js')!!}
