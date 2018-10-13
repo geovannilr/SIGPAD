@@ -1,4 +1,4 @@
-var ip ="http://localhost/SIGPAD/public";
+var ip ="http://eisi.fia.ues.edu.sv/SIGPAD/public";
 function getHistorialAcademico(idDcn){
 	$.ajax({
            type:'POST',
