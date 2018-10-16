@@ -172,7 +172,7 @@ function getListadoDocente(idJornada){
              }
 
 
-             html+='</ul>  <iframe name="someFrame" id="someFrame" width="560" height="315"></iframe>';
+             html+='</ul><div class="embed-responsive embed-responsive-16by9"> <iframe class="embed-responsive-item"  name="someFrame" id="someFrame"></iframe></div>';
             $("#seccionListado").append(html)
 
            }, 
