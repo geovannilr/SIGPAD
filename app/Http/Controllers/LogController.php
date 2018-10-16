@@ -66,7 +66,7 @@ class LogController extends Controller
             $cortarNombres = explode(" ",$nombres);
             $cortarApellidos = explode(" ",$apellidos);
             $mail = $userInfoFull["mail"][0];
-            $carrera = $userInfoFull["svuescarrera"][0];
+//            $carrera = $userInfoFull["svuescarrera"][0]; //ESTE ATRIBUTO NO VIENE EN EL ADMINISTRADOR.EISI, CUIDADO! Primero debe verificarse el tipo de usuario
             $dn = $userInfoFull["dn"];
             $splitDn=explode(",",$dn);
             $arregloGruposUsuarios=[];
@@ -83,7 +83,7 @@ class LogController extends Controller
              if (Auth::attempt(['user'=>$request->usuario,'password'=>$request->password])) {
                     return Redirect::to('/');
             }
-                Session::flash('message-error', 'Usuario o Contraseña Incorrecta');
+                Session::flash('message-error', 'Usuario o Contraseña Incorrecta:'.$e->getMessage());
                 return Redirect::to('login');
              Session::flash('message-error', 'Usuario o Contraseña Incorrecta');
             return Redirect::to('login');
