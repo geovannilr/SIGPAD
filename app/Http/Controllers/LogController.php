@@ -76,6 +76,8 @@ class LogController extends Controller
                     $arregloGruposUsuarios[]=$cut[1];
                 }
             }
+            var_dump($userInfoFull);
+            return;
         }catch (\Exception $e) {
             //VERIFICAR SI ES USUARIO DEL SISTEMA INTERNO (NO ESTUDIANTE, NO DOCENTE)
              if (Auth::attempt(['user'=>$request->usuario,'password'=>$request->password])) {
