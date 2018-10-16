@@ -220,7 +220,13 @@ class pdg_dcn_docenteModel extends Model
                             usuario.email,
                             docente.tipoJornada,
                             docente.descripcionDocente,
-                            cargo.nombre_cargo
+                            cargo.nombre_cargo,
+                            docente.dcn_profileFoto,
+                            docente.link_git
+                            ,docente.link_linke
+                            ,docente.link_tw
+                            ,docente.link_fb
+
                             from  pdg_dcn_docente docente
                             inner join gen_usuario usuario on usuario.id = docente.id_gen_usuario 
                             left join cat_car_cargo_eisi cargo on cargo.id_cat_car=docente.id_cargo_actual
@@ -231,6 +237,27 @@ class pdg_dcn_docenteModel extends Model
         );
         return $data;
       
+    }
+
+    public static function getListadoDocenteByJornada($jornada){
+        $docentes = DB::select("select 
+            dcn.id_pdg_dcn,
+            usr.primer_nombre,
+            COALESCE(usr.segundo_nombre, '') as segundo_nombre ,
+            usr.primer_apellido,
+            COALESCE(usr.segundo_apellido, '') as segundo_apellido ,            
+            car.nombre_cargo,
+            COALESCE(dcn.dcn_profileFoto ,'https://profile.actionsprout.com/default.jpeg') as dcn_profileFoto
+
+            from pdg_dcn_docente dcn 
+            inner join gen_usuario usr on usr.id=dcn.id_gen_usuario 
+            left join cat_car_cargo_eisi car on car.id_cat_car=dcn.id_cargo_actual
+            where dcn.activo=1 and dcn.tipoJornada=:jornada",
+            array(
+                $jornada
+            )
+        );
+        return $docentes;
     }
   
 

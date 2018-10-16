@@ -18,6 +18,7 @@ class VerifyCsrfToken extends Middleware
         '/getCertificaciones',
         '/getSkills',
         '/getGeneralInfo',
+        '/getListadoDocentes'
 
 
     ];

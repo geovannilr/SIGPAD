@@ -10,4 +10,9 @@ class PerfilDocentePublicoController extends Controller
    
        return view('PerfilDocente.perfilDocente',compact('idDocente'));
     }
+public function index2($jornada){
+   
+       return view('PerfilDocente.docenteListado',compact('jornada'));
+    }
+
 }

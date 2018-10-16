@@ -48,7 +48,12 @@ class GestionDocenteController extends Controller
         
     }
 
-    
+ function getListadoDocentes(Request $request){
+        $docente = new pdg_dcn_docenteModel();
+        $info = $docente->getListadoDocenteByJornada($request['jornada']);
+        return $info;
+        
+    }    
     
     
 }

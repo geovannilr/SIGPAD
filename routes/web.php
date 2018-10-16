@@ -109,5 +109,8 @@ Route::post('getSkills','GestionDocenteController@getSkills')->name('getSkills')
 Route::post('getGeneralInfo','GestionDocenteController@getGeneralInfoDocente')->name('getGeneralInfo');
 
 Route::get('perfilDocente/{idDocente}','PerfilDocentePublicoController@index')->name('perfilDocente');
+Route::get('TiempoCompleto/{jornada}','PerfilDocentePublicoController@index2')->name('listadoDocentes');
+Route::get('TiempoParcial/{jornada}','PerfilDocentePublicoController@index2')->name('listadoDocentes');
+Route::post('getListadoDocentes','GestionDocenteController@getListadoDocentes')->name('getListadoDocentes');
 
 //------------------------------------------------------------------------------------------------------------------------

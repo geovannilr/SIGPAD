@@ -114,4 +114,27 @@ function getSkillsDocente(idDcn){
         });      
 }
 	
+function getListadoDocente(idJornada){
+  $.ajax({
+           type:'POST',
+           url:ip+'/getListadoDocentes',
+           data:{'jornada':idJornada},
+           success:function(data){
+            console.log(data);
+             var html = '<ul class="fa-ul mb-0">';
+             for (var i = 0;i<data.length;i++) {
+              body="";
+             body+='<li><i class="fa-li fa fa-check"></i>'+data[i]['primer_nombre']+'</li>' + '<img class="img-circle" style="width: 100px;height:100px;" src= "'+data[i]['dcn_profileFoto']+' "></img>';
+              html+=body;
+             }
 
+             html+='</ul>';
+            $("#seccionListado").append(html)
+
+           },
+        error : function(xhr, status) {
+            alert("Hubo un problema al momento de obetener los datos de Docente");
+            
+        }
+        });      
+}
