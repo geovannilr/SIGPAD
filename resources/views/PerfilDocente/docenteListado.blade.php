@@ -14,6 +14,9 @@
     <!-- Custom fonts for this template -->
     <link href="https://fonts.googleapis.com/css?family=Saira+Extra+Condensed:500,700" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Muli:400,400i,800,800i" rel="stylesheet">
+      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet">
     <!-- Bootstrap core CSS -->
     {!!Html::style('PerfilDocente/vendor/bootstrap/css/bootstrap.min.css')!!}
@@ -22,11 +25,23 @@
 
   <body id="page-top">
 
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top" id="sideNav">
+
+
+<section class="resume-section p-3 p-lg-5 d-flex flex-column" style="background-color: #7C1111" id="listado">
+        <div class="my-auto" id="seccionListado">
+          <span class="elementor-divider-separator"></span>
+          <h2 class="mb-5" style="color: #DFC15E ; align: center">Docentes Tiempo Completo</h2>
+          <span class="elementor-divider-separator"></span>
+          
+          
+        </div>
+  
+</section>
+   <!--  <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top" id="sideNav">
       <a class="navbar-brand js-scroll-trigger" href="#page-top">
         <span class="d-block d-lg-none">Clarence Taylor</span>
         <span class="d-none d-lg-block">
-          <img class="img-fluid img-profile rounded-circle mx-auto mb-2" src="img/profile.jpg" alt="img/profile.jpg">
+          <img class="img-fluid img-profile rounded-circle mx-auto mb-2" src="img/profile.jpg" alt="">
         </span>
       </a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -64,7 +79,7 @@
           </div>
           <p class="lead mb-5" id="descripcionDocente"></p>
           <div class="social-icons">
-            <a href="" id="linkLinkedind">
+            <a href="#" id="linkLinkedind">
               <i class="fab fa-linkedin-in"></i>
             </a>
             <a href="#" id="linkGit">
@@ -121,7 +136,7 @@
 
       
 
-    </div>
+    </div> -->
     <!-- Custom scripts for this template -->
     <script src="js/resume.min.js"></script>
   <script src="js/main.js"></script>
@@ -137,13 +152,21 @@
 	<script>
 	$( document ).ready(function() {
     console.log( "ready!" );
-		getHistorialAcademico({{$idDocente}});
-		getExperienciaDocente({{$idDocente}});
-		getCertificacionesDocente({{$idDocente}});
-		getSkillsDocente({{$idDocente}});
-    getInformacionDocente({{$idDocente}});
+
+    getListadoDocente({{$jornada}});
 	});
 	</script>
+
+
+  <script>
+    $(document).ready(function(){
+        $("a").click(function(e) {
+            e.preventDefault();
+            
+            $("#someFrame").attr("src", $(this).attr("href"));
+        })
+    });
+  </script>
   </body>
 
 </html>

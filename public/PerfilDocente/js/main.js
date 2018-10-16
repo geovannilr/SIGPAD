@@ -131,6 +131,9 @@ function getInformacionDocente(idDcn){
             $("#descripcionDocente").append(docente["descripcionDocente"]);
             $("#correoDocente").append(docente["email"]);
             $("#cargoDocente").append(docente["nombre_cargo"]);
+            $("#profilFoto").append(docente["dcn_profileFoto"]);
+            $("#linkLinkedind").append(docente["link_linke"]);
+
 
             
            },
@@ -140,5 +143,44 @@ function getInformacionDocente(idDcn){
         }
         });      
 }
-	
 
+function getListadoDocente(idJornada){
+  $.ajax({
+           type:'POST',
+           url:ip+'/getListadoDocentes',
+           data:{'jornada':idJornada},
+           success:function(data){
+            console.log(data);
+             var html = '<ul class="fa-ul mb-0">';
+             for (var i = 0;i<data.length;i++) {
+              body="";
+              //body+='<li><i class="fa-li fa fa-check"></i>'+data[i]['primer_nombre']+'</li>' + '<img class="img-circle" style="width: 100px;height:100px;" src= "'+data[i]['dcn_profileFoto']+' "></img>';
+             body+='<blockquote> <div class="row">'+
+                        '<div class="col-sm-3 text-center">'+
+                             '<a href="http://localhost/SIGPAD/public/perfilDocente/'+data[i]['id_pdg_dcn']+'" target="someFrame">'+
+                                  '<img class="img-circle" src="'+data[i]['dcn_profileFoto']+' " style="width: 60px;height:60px;" > </a>'+
+                                  
+                          '</div>'+
+                          '<div class="col-sm-9">'+
+                            '<p style="color:#DFC15E; ">'+data[i]['primer_nombre']+' '+data[i]['segundo_nombre'] +' '+data[i]['primer_apellido']+' '+data[i]['segundo_apellido']+'</p>'+
+                            '<small>'+data[i]['nombre_cargo']+'</small>'+
+                          '</div>'+
+                          '</div>'+
+                      '</blockquote>'+
+                    '</div>'
+              html+=body;
+             }
+
+
+             html+='</ul>  <iframe name="someFrame" id="someFrame" width="560" height="315"></iframe>';
+            $("#seccionListado").append(html)
+
+           }, 
+        error : function(xhr, status) {
+            alert("Hubo un problema al momento de obetener los datos de Docente");
+            
+        }
+        });      
+}
+
+	
