@@ -18,7 +18,12 @@ class gen_UsuarioModel extends Model
 			'name',
 			'email', 
 			'password',
-			'user'
+			'user',
+			'primer_nombre',
+			'segundo_nombre',
+			'primer_apellido',
+			'segundo_apellido',
+			'codigo_carnet'
 		];
 		protected $hidden = ['password', 'remember_token'];
 

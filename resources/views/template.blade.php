@@ -41,15 +41,7 @@
 
   </style>
    
-   <link href="https://fonts.googleapis.com/css?family=Saira+Extra+Condensed:500,700" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css?family=Muli:400,400i,800,800i" rel="stylesheet">
-    <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet">
-     {!!Html::style('PerfilDocente/css/resume.css')!!}
-      {!!Html::script('PerfilDocente/js/main.js')!!}
-        <!-- Custom scripts for this template -->
-    {!!Html::script('PerfilDocente/js/resume.js')!!}
-        <!-- Plugin JavaScript -->
-    {!!Html::script('PerfilDocente/vendor/jquery-easing/jquery.easing.min.js')!!}
+  
     
 </head>
 <body class="fixed-nav sticky-footer " id="page-top" style="background-color: #29282b; ">
