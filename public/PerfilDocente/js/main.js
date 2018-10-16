@@ -172,8 +172,8 @@ function getListadoDocente(idJornada){
              }
 
 
-             html+='</ul><div class="embed-responsive embed-responsive-16by9"> <iframe class="embed-responsive-item"  name="someFrame" id="someFrame"></iframe></div>';
-            $("#seccionListado").append(html)
+             html+='</ul>';
+            $("#seccionListado").append(html);
 
            }, 
         error : function(xhr, status) {

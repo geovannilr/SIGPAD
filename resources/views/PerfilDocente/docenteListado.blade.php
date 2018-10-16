@@ -17,8 +17,9 @@
       <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet">
+
     <!-- Bootstrap core CSS -->
+   {!!Html::style('PerfilDocente/vendor/fontawesome-free/css/all.min.css')!!}
     {!!Html::style('PerfilDocente/vendor/bootstrap/css/bootstrap.min.css')!!}
      {!!Html::style('PerfilDocente/css/resume.css')!!}
   </head>
@@ -138,14 +139,12 @@
 
     </div> -->
     <!-- Custom scripts for this template -->
-    <script src="js/resume.min.js"></script>
-  <script src="js/main.js"></script>
   {!!Html::script('PerfilDocente/vendor/jquery/jquery.min.js')!!}
   {!!Html::script('PerfilDocente/vendor/bootstrap/js/bootstrap.bundle.min.js')!!}
-   {!!Html::script('PerfilDocente/vendor/jquery-easing/jquery.easing.min.js')!!}
-	 {!!Html::script('PerfilDocente/js/main.js')!!}
+  {!!Html::script('PerfilDocente/vendor/jquery-easing/jquery.easing.min.js')!!}
+  {!!Html::script('PerfilDocente/js/main.js')!!}
         <!-- Custom scripts for this template -->
-    {!!Html::script('PerfilDocente/js/resume.js')!!}
+  {!!Html::script('PerfilDocente/js/resume.js')!!}
         <!-- Plugin JavaScript -->
    
 
