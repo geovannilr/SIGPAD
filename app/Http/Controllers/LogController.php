@@ -83,8 +83,6 @@ class LogController extends Controller
              if (Auth::attempt(['user'=>$request->usuario,'password'=>$request->password])) {
                     return Redirect::to('/');
             }
-                Session::flash('message-error', 'Usuario o Contraseña Incorrecta');
-                return Redirect::to('login');
              Session::flash('message-error', 'Usuario o Contraseña Incorrecta');
             return Redirect::to('login');
         }
