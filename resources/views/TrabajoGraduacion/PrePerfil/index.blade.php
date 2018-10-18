@@ -22,18 +22,30 @@
         buttons: [
            {
                 extend: 'excelHtml5',
+                exportOptions: {
+                    columns: [ 0, 1, 2, 3]
+                },
                 title: 'Listado de Pre-Perfiles'
             },
             {
                 extend: 'pdfHtml5',
+                 exportOptions: {
+                    columns: [ 0, 1, 2, 3]
+                },
                 title: 'Listado de Pre-Perfiles'
             },
              {
                 extend: 'csvHtml5',
+                 exportOptions: {
+                    columns: [ 0, 1, 2, 3]
+                },
                 title: 'Listado de Pre-Perfiles'
             },
             {
                 extend: 'print',
+                 exportOptions: {
+                    columns: [ 0, 1, 2, 3]
+                },
                 title: 'Listado de Pre-Perfiles'
             }
 
@@ -182,7 +194,17 @@
   							@endif
 						<td>{{ $prePerfil->tema_pdg_ppe }}</td>
 						<td>{{ date_format(date_create($prePerfil->fecha_creacion_pdg_ppe), 'd/m/Y H:i:s')}}</td>
-						<td><span class="badge badge-info">{{ $prePerfil->categoriaEstado->nombre_cat_sta }}</span>&nbsp;</td>
+						<td>
+							@if($prePerfil->id_cat_sta == "10" )
+								<span class="badge badge-success">{{ $prePerfil->categoriaEstado->nombre_cat_sta }}</span>&nbsp;
+							@else
+								@if($prePerfil->id_cat_sta == "12" )
+									<span class="badge badge-danger">{{ $prePerfil->categoriaEstado->nombre_cat_sta }}</span>&nbsp;
+								@endif
+									
+							@endif
+							
+						</td>
 						<td>{{ $prePerfil->tipoTrabajo->nombre_cat_tpo_tra_gra}}</td>
 						@can('prePerfil.edit')
 							<td style="text-align: center;">
@@ -210,22 +232,26 @@
 							</td >
 							@can('prePerfil.aprobar')
 								<td style="text-align: center;">
-									{!! Form::open(['route'=>['aprobarPreperfil'],'method'=>'POST','class'=>'aprobar']) !!}
-								 		<div class="btn-group">
-								 			{!!Form::hidden('idPrePerfil',$prePerfil->id_pdg_ppe,['class'=>'form-control'])!!}
-											<button type="submit" class="btn btn-success"><i class="fa fa-check"></i></button>
-										</div>
-									{!! Form:: close() !!}
+									@if($prePerfil->id_cat_sta != "10"  &&  $prePerfil->id_cat_sta != "12" )
+										{!! Form::open(['route'=>['aprobarPreperfil'],'method'=>'POST','class'=>'aprobar']) !!}
+									 		<div class="btn-group">
+									 			{!!Form::hidden('idPrePerfil',$prePerfil->id_pdg_ppe,['class'=>'form-control'])!!}
+												<button type="submit" class="btn btn-success"><i class="fa fa-check"></i></button>
+											</div>
+										{!! Form:: close() !!}
+									@endif
 								</td>
 							@endcan
 							@can('prePerfil.rechazar')
 								<td style="text-align: center;">
-									{!! Form::open(['route'=>['rechazarPrePerfil'],'method'=>'POST','class'=>'rechazar']) !!}
-								 		<div class="btn-group">
-								 			{!!Form::hidden('idPrePerfil',$prePerfil->id_pdg_ppe,['class'=>'form-control'])!!}
-											<button type="submit" class="btn btn-danger"><i class="fa fa-remove"></i></button>
-										</div>
-									{!! Form:: close() !!}
+									@if($prePerfil->id_cat_sta != "10"  &&  $prePerfil->id_cat_sta != "12" )
+										{!! Form::open(['route'=>['rechazarPrePerfil'],'method'=>'POST','class'=>'rechazar']) !!}
+									 		<div class="btn-group">
+									 			{!!Form::hidden('idPrePerfil',$prePerfil->id_pdg_ppe,['class'=>'form-control'])!!}
+												<button type="submit" class="btn btn-danger"><i class="fa fa-remove"></i></button>
+											</div>
+										{!! Form:: close() !!}
+									@endif
 								</td>
 							@endcan
 						

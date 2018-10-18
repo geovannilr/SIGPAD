@@ -20,7 +20,7 @@
       <br>
       Progreso
       <div class="progress">
-        <div class="progress-bar progress-bar-striped" role="progressbar" style="width: 25%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">25%</div>
+        <div class="progress-bar progress-bar-striped" role="progressbar" style="width: 20%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">11%</div>
       </div>
       <hr>
       <div class="row">
@@ -28,7 +28,8 @@
               <div class="table-responsive">
                 <table class="table table-hover table-striped">
                   <th colspan="2">Integrantes</th>
-                  @foreach($estudiantes as $estudiante)
+                  @if(isset($estudiantes))
+                    @foreach($estudiantes as $estudiante)
                   <tr>
                     <td>{{strtoupper($estudiante->carnet)}}</td>
                     <td>
@@ -39,6 +40,22 @@
                     </td> 
                   </tr>
                   @endforeach
+                  @else
+                    @if(isset($estudiantesGrupo))
+                      @foreach($estudiantesGrupo as $estudiante)
+                        <tr>
+                          <td>{{strtoupper($estudiante->carnet)}}</td>
+                          <td>
+                            {{$estudiante->Nombre}}
+                            @if($estudiante->Cargo == "Lider" )
+                              <span class="badge badge-info">LIDER</span>
+                            @endif
+                          </td> 
+                        </tr>
+                  @endforeach
+                    @endif
+                  @endif
+                  
                 </table>
               </div>
         </div>
@@ -83,7 +100,7 @@
                       </div>
                       <div class="mr-5 text-white" >{{$etapa->nombre_cat_eta_eva}}</div>
                     </div>
-                    <a class="card-footer text-gray clearfix small z-1" href="{{route('etapaEvaluativa.show',$etapa->id_cat_eta_eva)}}">
+                    <a class="card-footer text-gray clearfix small z-1" href="{{route('etapaEvaluativa.show',$etapa->id_cat_eta_eva."G".$idGrupo)}}">
                       <span class="float-left text-white ">Ver Detalles</span>
                       <span class="float-right text-white">
                         <i class="fa fa-angle-right"></i>
@@ -100,7 +117,7 @@
                       </div>
                       <div class="mr-5">{{$etapa->nombre_cat_eta_eva}}</div>
                     </div>
-                    <a class="card-footer text-gray clearfix small z-1" href="{{route('etapaEvaluativa.show',$etapa->id_cat_eta_eva)}}">
+                    <a class="card-footer text-gray clearfix small z-1" href="{{route('etapaEvaluativa.show',$etapa->id_cat_eta_eva."G".$idGrupo)}}">
                       <span class="float-left">Ver detalles</span>
                       <span class="float-right">
                         <i class="fa fa-angle-right"></i>

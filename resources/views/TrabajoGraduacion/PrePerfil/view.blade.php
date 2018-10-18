@@ -16,7 +16,7 @@
     <ol class="breadcrumb" style="text-align: center; margin-top: 1em">
         <li class="breadcrumb-item ">
             <h5>
-                <a href="{{ redirect()->getUrlGenerator()->previous() }}" style="margin-left: 0em"><i class="fa fa-arrow-left fa-lg" style="z-index: 1;margin-top: 0em;margin-right: 0.5em; color: black"></i></a>      Detalle del Tribunal Evaluador
+                <a href="" onclick="this.href=getCurrentUrl()+'/prePerfil';" style="margin-left: 0em"><i class="fa fa-arrow-left fa-lg" style="z-index: 1;margin-top: 0em;margin-right: 0.5em; color: black"></i></a>      Detalle del Tribunal Evaluador
             </h5>
         </li>
         <li class="breadcrumb-item active">Edición</li>
@@ -70,7 +70,7 @@
     </table>
 </div><!-- Modal Detalle de Docente Disponibles -->
 <div class="modal fade" id="modalAgregarTribunal" tabindex="-1" role="dialog" aria-labelledby="Detalle docentes disponibles" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document" style="max-width: 50%">
+    <div class="modal-dialog modal-dialog-centered" role="document" style="max-width: 60%">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="ModalLongTitle">Agregar Docente</h5>

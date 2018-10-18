@@ -17,10 +17,11 @@ class cat_eta_eva_etapa_evalutativaModel extends Model{
 			'anio_cat_eta_eva',
 			'puede_observar_cat_eta_eva'
 		];
-	function getDocumentos($idEtapa){
-		$documentos=DB::select('call sp_pdg_getDocumentosByEtapa(:idEtapa);',
+	function getDocumentos($idEtapa,$idTragra){
+		$documentos=DB::select('call sp_pdg_getDocumentosByEtapa(:idEtapa,:idTraGra);',
 	    	array(
 	        	$idEtapa,
+	        	$idTragra
 	    	)
 		);
 		return $documentos;

@@ -32,6 +32,10 @@ class pdg_gru_grupoModel extends Model{
 		$resultado = DB::select('CALL sp_pdg_gru_select_gruposPendientesDeAprobacion();');
 		return  $resultado;
 	}
+	function getGruposDocente ($idDocente){
+		$resultado = DB::select('CALL sp_pdg_gru_select_gruposByDocente('.$idDocente.');');
+		return  $resultado;
+	}
 	function getDetalleGrupo ($idGrupo){
 		$resultado =DB::select('call sp_pdg_gru_grupoDetalleByID(:idGrupo);',
 	    	array(

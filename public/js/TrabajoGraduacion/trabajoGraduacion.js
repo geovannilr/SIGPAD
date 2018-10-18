@@ -16,6 +16,23 @@ $( document ).ready(function() {
 
      }
    });
+  $('.documentoNotas').change(function (){ //VALIDAR A LA HORA DE SUBIR UN DOCUMENTO EL TAMAÑO
+     var sizeByte = this.files[0].size;
+     var siezekiloByte = parseInt(sizeByte / 1024);
+     var nombre = $(this).val();
+     var extension = nombre.substring(nombre.lastIndexOf('.') + 1).toLowerCase();
+     console.log("Extension "+nombre.substring(nombre.lastIndexOf('.') + 1).toLowerCase());
+     if(siezekiloByte > 3094){
+           swal("", "El tamaño documento no debe ser mayor a 3 MB", "error");
+           $(this).val('');
+     }else {
+          if(!(extension =='xlsx' || extension =='xls')){
+            swal("", "Solo se permiten documentos de formato de archivo de Microsfot Excel", "error");
+            $(this).val('');
+          }
+
+     }
+   });
   $('.documentoPublicacion').change(function (){ //VALIDAR A LA HORA DE SUBIR UN DOCUMENTO EL TAMAÑO
      var sizeByte = this.files[0].size;
      var siezekiloByte = parseInt(sizeByte / 1024);

@@ -41,7 +41,7 @@
 
   </style>
    
-    
+  
     
 </head>
 <body class="fixed-nav sticky-footer " id="page-top" style="background-color: #29282b; ">
@@ -65,6 +65,14 @@
                   <a class="nav-link" href="{{route('grupo.create')}}" style="color: #ffffff">
                     <i class="fa fa-users"></i>
                     <span class="nav-link-text">Grupos de TG</span>
+                  </a>  
+              </li>
+              @endcan
+              @can('grupos.index')
+                <li>
+                  <a class="nav-link" href="{{route('listadoGrupos')}}" style="color: #ffffff">
+                    <i class="fa fa-users"></i>
+                    <span class="nav-link-text">Mis Grupos de TG</span>
                   </a>  
               </li>
               @endcan
@@ -93,6 +101,14 @@
                     <span class="nav-link-text">Dashboard</span>
                   </a>   
               </li>
+              @endcan
+              @can('tribunal.edit')
+                  <li>
+                    <a class="nav-link" href="{{route('reportesTDG')}}" style="color: #ffffff">
+                      <i class="fa fa-file-pdf-o"></i>
+                      <span class="nav-link-text">Reportes</span>
+                    </a>
+                  </li>
               @endcan
             </ul>
           

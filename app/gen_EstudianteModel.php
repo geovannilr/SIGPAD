@@ -9,12 +9,12 @@ class gen_EstudianteModel extends Model
 {
     	protected $table='gen_est_estudiante';
 		protected $primaryKey='id_gen_est';
-		public $timestamps=true;
+		public $timestamps=false;
 		protected $fillable=
 		[
-			'id',
-			'carnet', 
-			'carnet_estudiante'
+			'id_gen_usr', 
+			'carnet_gen_est',
+			'nombre_gen_est'
 		];
 
 //EJRG begin

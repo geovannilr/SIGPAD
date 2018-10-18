@@ -66,8 +66,18 @@ Route::post('rechazarPerfil','TrabajoGraduacion\PerfilController@rechazarPerfil'
 Route::get('indexPerfil/{id}','TrabajoGraduacion\PerfilController@indexPerfil')->name('indexPerfil');
 
 //Trabajo de graduacion
-Route::get('dashboard/','TrabajoGraduacion\TrabajoDeGraduacionController@index')->name('dashboard');
+Route::get('dashboard/','TrabajoGraduacion\TrabajoDeGraduacionController@index')->name('dashboard'); //ALUMNO
+Route::get('dashboardGrupo/{idGrupo}','TrabajoGraduacion\TrabajoDeGraduacionController@dashboardGrupo')->name('dashboardGrupo'); //DOCENTE ASESOR
+Route::get('listadoGrupos/','TrabajoGraduacion\TrabajoDeGraduacionController@dashboardIndex')->name('listadoGrupos'); //DOCENTE ASESOR
 Route::resource('etapaEvaluativa','TrabajoGraduacion\EtapaEvaluativaController');
+Route::post('enviarConfigEtapa','TrabajoGraduacion\EtapaEvaluativaController@configurarEtapa')->name('enviarConfigEtapa');
+Route::get('createNotas/{idEtapa}','TrabajoGraduacion\EtapaEvaluativaController@createNotas')->name('createNotas');
+Route::post('enviarNotas','TrabajoGraduacion\EtapaEvaluativaController@storeNotas')->name('enviarNotas');
+
+//Reportes
+Route::get('reportesTDG','TrabajoGraduacion\ReportesController@index')->name('reportesTDG');
+Route::get('reportesTDG/R1','TrabajoGraduacion\ReportesController@r1')->name('R1');
+Route::get('reportesTDG/R2','TrabajoGraduacion\ReportesController@r2')->name('R2');
 
 //Documentos de trabajo de graduación
 Route::get('nuevoDocumento/{idEtapa}/{idTipoDoc?}','TrabajoGraduacion\DocumentoController@createDocumento')->name('nuevoDocumento');
@@ -89,3 +99,18 @@ Route::post('downloadDocumentoPublicacion','Publicaciones\publicacionController@
 
 //------------------------------------------------------------------------------------------------------------------------
 
+//------------------GESTION DOCENTE----------------------------------------------------------------
+Route::get('pruebaGestionDocente','GestionDocenteController@index')->name('pruebaGestionDocente');
+Route::post('getInfoDocente','GestionDocenteController@getInfoDocente')->name('getInfoDocente');
+Route::post('getHistorial','GestionDocenteController@getHistorial')->name('getHistorial');
+Route::post('getExperiencia','GestionDocenteController@getExperiencia')->name('getExperiencia');
+Route::post('getCertificaciones','GestionDocenteController@getCertificaciones')->name('getCertificaciones');
+Route::post('getSkills','GestionDocenteController@getSkills')->name('getSkills');
+Route::post('getGeneralInfo','GestionDocenteController@getGeneralInfoDocente')->name('getGeneralInfo');
+
+Route::get('perfilDocente/{idDocente}','PerfilDocentePublicoController@index')->name('perfilDocente');
+Route::get('TiempoCompleto/{jornada}','PerfilDocentePublicoController@index2')->name('listadoDocentes');
+Route::get('TiempoParcial/{jornada}','PerfilDocentePublicoController@index2')->name('listadoDocentes');
+Route::post('getListadoDocentes','GestionDocenteController@getListadoDocentes')->name('getListadoDocentes');
+
+//------------------------------------------------------------------------------------------------------------------------
