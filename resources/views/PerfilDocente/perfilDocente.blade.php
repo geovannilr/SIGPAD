@@ -27,7 +27,7 @@
       <a class="navbar-brand js-scroll-trigger" href="#page-top">
         <span class="d-block d-lg-none">Clarence Taylor</span>
         <span class="d-none d-lg-block">
-          <img class="img-fluid img-profile rounded-circle mx-auto mb-2" src="img/profile.jpg" alt="img/profile.jpg">
+          <img class="img-fluid img-profile rounded-circle mx-auto mb-2" id="profilFoto" src="">
         </span>
       </a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -65,16 +65,16 @@
           </div>
           <p class="lead mb-5" id="descripcionDocente"></p>
           <div class="social-icons">
-            <a href="" id="linkLinkedind">
+            <a href="#" id="linkLinkedind_">
               <i class="fab fa-linkedin-in"></i>
             </a>
-            <a href="#" id="linkGit">
+            <a href="#" id="linkGit_">
               <i class="fab fa-github"></i>
             </a>
-            <a href="#" id="linkTw">
+            <a href="#" id="linkTw:">
               <i class="fab fa-twitter"></i>
             </a>
-            <a href="#" id="linkFb">
+            <a href="" id="linkFb_">
               <i class="fab fa-facebook-f"></i>
             </a>
           </div>

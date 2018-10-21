@@ -1,4 +1,4 @@
-var ip ="http://eisi.fia.ues.edu.sv/SIGPAD/public";
+var ip ="http://localhost/SIGPAD/public"; //quitar el localhost y poner la URL correcta antes del commit
 function getHistorialAcademico(idDcn){
 	$.ajax({
            type:'POST',
@@ -6,7 +6,7 @@ function getHistorialAcademico(idDcn){
            data:{'docente':idDcn},
            success:function(data){
             console.log(data.length);
-             var html = '<table class="table table-striped"><thead><tr><th scope="col">#</th><th scope="col">Cargo</th><th scope="col">´Código</th><th scope="col">Materia</th><th scope="col">Ciclo</th><th scope="col">Año</th> </tr></thead><tbody>';
+             var html = '<table class="table table-striped"><thead><tr><th scope="col">#</th><th scope="col">Cargo</th><th scope="col">Código</th><th scope="col">Materia</th><th scope="col">Ciclo</th><th scope="col">Año</th> </tr></thead><tbody>';
  
              for (var i = 0;i<data.length;i++) {
            		body="";
@@ -133,6 +133,9 @@ function getInformacionDocente(idDcn){
             $("#cargoDocente").append(docente["nombre_cargo"]);
             $("#profilFoto").append(docente["dcn_profileFoto"]);
             $("#linkLinkedind").append(docente["link_linke"]);
+            $("#linkGit").append(docente["link_git"]);
+            $("#linkTw").append(docente["link_tw"]);
+            $("#linkFb").append(docente["link_fb"]);
 
 
             
@@ -144,43 +147,213 @@ function getInformacionDocente(idDcn){
         });      
 }
 
+
 function getListadoDocente(idJornada){
   $.ajax({
            type:'POST',
            url:ip+'/getListadoDocentes',
            data:{'jornada':idJornada},
-           success:function(data){
-            console.log(data);
-             var html = '<ul class="fa-ul mb-0">';
-             for (var i = 0;i<data.length;i++) {
-              body="";
-              //body+='<li><i class="fa-li fa fa-check"></i>'+data[i]['primer_nombre']+'</li>' + '<img class="img-circle" style="width: 100px;height:100px;" src= "'+data[i]['dcn_profileFoto']+' "></img>';
-             body+='<blockquote> <div class="row">'+
-                        '<div class="col-sm-3 text-center">'+
-                             '<a  data-toggle="modal" data-target=".bd-example-modal-lg" href="http://localhost/SIGPAD/public/perfilDocente/'+data[i]['id_pdg_dcn']+'" target="someFrame">'+
-                                  '<img class="img-circle" src="'+data[i]['dcn_profileFoto']+' " style="width: 60px;height:60px;" > </a>'+
-                                  
-                          '</div>'+
-                          '<div class="col-sm-9">'+
-                            '<p style="color:#DFC15E; ">'+data[i]['primer_nombre']+' '+data[i]['segundo_nombre'] +' '+data[i]['primer_apellido']+' '+data[i]['segundo_apellido']+'</p>'+
-                            '<small>'+data[i]['nombre_cargo']+'</small>'+
-                          '</div>'+
-                          '</div>'+
-                      '</blockquote>'+
-                    '</div>'
-              html+=body;
-             }
+           success:function(data)
+           {
+                console.log(data);
+                 var html = '<table class="table"><tbody><tr>';
+                 var html2 = '<table class="table"><tbody><tr>';
+                 var contador1=1;
+                 var contador2=1;
+                 for (var i = 0;i<data.length;i++) {
+                
+                 if(data[i]['tipoJornada']==1) 
+                 {
+                      body="";
+                     
+                  //body+='<li><i class="fa-li fa fa-check"></i>'+data[i]['primer_nombre']+'</li>' + '<img class="img-circle" style="width: 100px;height:100px;" src= "'+data[i]['dcn_profileFoto']+' "></img>';
+                        body+='<td style="border: hidden">'+
+                                '<blockquote>'+
+                                '<a  href="http://localhost/SIGPAD/public/perfilDocente/'+data[i]['id_pdg_dcn']+'"  data-target="#myModal" target="myModal">'+ // data-toggle="modal" data-target=".bd-example-modal-lg" 
+                               ' <div class="row">'+
+                                          '<div class="col-sm-3 text-center">'+
+                                              
+                                                    '<img class="img-circle" src="'+data[i]['dcn_profileFoto']+' " style="width: 80px;height:80px;" > '+
+                                                    
+                                            '</div>'+
+                                            '<div class="col-sm-9">'+
+                                              '<p style="color:#DFC15E; ">'+data[i]['primer_nombre']+' '+data[i]['segundo_nombre'] +' '+data[i]['primer_apellido']+' '+data[i]['segundo_apellido']+'</p>'+
+                                              '<small>'+data[i]['nombre_cargo']+'</small>'+
+                                            '</div>'+
+                                            '</div>'+
+                                            '</a>'+
+                                        '</blockquote>'+
+                                      '</div>'+
+
+                                    '</td>  '
+
+                                    if((contador1%3)==0){
+
+                                      if(contador1==0){
+                                        contador1=contador1+1;
+                                      } else{
+                                        body+='</tr><tr>';
+                                        contador1=contador1+1;
+                                      }
+                                      
+                                    }
+                                    else{
+                                      contador1++;
+                                    }
+                                html+=body;
+
+                  }
+                  else
+                  {
+
+                        body2="";
+                  //body+='<li><i class="fa-li fa fa-check"></i>'+data[i]['primer_nombre']+'</li>' + '<img class="img-circle" style="width: 100px;height:100px;" src= "'+data[i]['dcn_profileFoto']+' "></img>';
+                        body2+='<td style="border: hidden">'+
+                                
+                                '<blockquote>'+
+                                '<a  href="http://localhost/SIGPAD/public/perfilDocente/'+data[i]['id_pdg_dcn']+'"  data-target="#myModal" target="myModal">'+ // data-toggle="modal" data-target=".bd-example-modal-lg" 
+                               ' <div class="row">'+
+                                          '<div class="col-sm-3 text-center">'+
+                                              
+                                                    '<img class="img-circle" src="'+data[i]['dcn_profileFoto']+' " style="width: 80px;height:80px;" > '+
+                                                    
+                                            '</div>'+
+                                            '<div class="col-sm-9">'+
+                                              '<p style="color:#DFC15E; ">'+data[i]['primer_nombre']+' '+data[i]['segundo_nombre'] +' '+data[i]['primer_apellido']+' '+data[i]['segundo_apellido']+'</p>'+
+                                              '<small>'+data[i]['nombre_cargo']+'</small>'+
+                                            '</div>'+
+                                            '</div>'+
+                                            '</a>'+
+                                        '</blockquote>'+
+                                      '</div>'+
+
+                                    '</td>  '
+
+                                    if((contador2%3)==0){
+
+                                      if(contador2==0){
+                                          contador2++;
+                                      } else{
+                                        contador2++;
+                                        body2+='</tr><tr>';
+                                      }
+                                      
+                                    }
+                                    else{
+                                      contador2++;
+                                    }
+                                html2+=body2;
+                  }
+                 }
 
 
-             html+='</ul>';
-            $("#seccionListado").append(html);
-
+                //  html+=html2;
+                $("#seccionListado").append(html);
+                $("#seccionListado2").append(html2);
            }, 
         error : function(xhr, status) {
-            alert("Hubo un problema al momento de obetener los datos de Docente");
+            console("Hubo un problema al momento de obetener los datos de Docente");
             
         }
         });      
+
+   // $.ajax({
+   //         type:'POST',
+   //         url:ip+'/getListadoDocentes',
+   //         data:{'jornada':2},
+   //         success:function(data)
+   //         {
+   //              console.log(data);
+   //               var html = '<table class="table"><tbody><tr>';
+   //               for (var i = 1;i<data.length+1;i++) {
+   //                body="";
+   //                //body+='<li><i class="fa-li fa fa-check"></i>'+data[i]['primer_nombre']+'</li>' + '<img class="img-circle" style="width: 100px;height:100px;" src= "'+data[i]['dcn_profileFoto']+' "></img>';
+   //               body+='<td style="border: hidden">'+
+
+   //               '<blockquote>'+
+   //                '<a  href="http://localhost/SIGPAD/public/perfilDocente/'+data[i-1]['id_pdg_dcn']+'"  data-target="#myModal" target="myModal">'+ // data-toggle="modal" data-target=".bd-example-modal-lg" 
+   //               ' <div class="row">'+
+   //                          '<div class="col-sm-3 text-center">'+
+                                
+   //                                    '<img class="img-circle" src="'+data[i-1]['dcn_profileFoto']+' " style="width: 80px;height:80px;" > '+
+                                      
+   //                            '</div>'+
+   //                            '<div class="col-sm-9">'+
+   //                              '<p style="color:#DFC15E; ">'+data[i-1]['primer_nombre']+' '+data[i-1]['segundo_nombre'] +' '+data[i-1]['primer_apellido']+' '+data[i-1]['segundo_apellido']+'</p>'+
+   //                              '<small>'+data[i-1]['nombre_cargo']+'</small>'+
+   //                            '</div>'+
+   //                            '</div>'+
+   //                            '</a>'+
+   //                        '</blockquote>'+
+   //                      '</div>'+
+
+   //                    '</td>  '
+
+   //                    if((i%3)==0){
+
+   //                      if(i==0){
+
+   //                      } else{
+   //                        body+='</tr><tr>';
+   //                      }
+                        
+   //                    }
+   //                html+=body;
+   //               }
+
+
+   //               html+='</ul>';
+   //              $("#seccionListado2").append(html);
+
+   //         }, 
+   //      error : function(xhr, status) {
+   //          console("Hubo un problema al momento de obetener los datos de Docente");
+            
+   //      }
+   //      });      
 }
+
+// function getListadoDocente(idJornada){
+//   $.ajax({
+//            type:'POST',
+//            url:ip+'/getListadoDocentes',
+//            data:{'jornada':idJornada},
+//            success:function(data)
+//            {
+//                 console.log(data);
+//                  var html = '<ul class="fa-ul mb-0">';
+//                  for (var i = 0;i<data.length;i++) {
+//                   body="";
+//                   //body+='<li><i class="fa-li fa fa-check"></i>'+data[i]['primer_nombre']+'</li>' + '<img class="img-circle" style="width: 100px;height:100px;" src= "'+data[i]['dcn_profileFoto']+' "></img>';
+//                  body+='<blockquote>'+
+//                   '<a  href="http://localhost/SIGPAD/public/perfilDocente/'+data[i]['id_pdg_dcn']+'"  data-target="#myModal" target="myModal">'+ // data-toggle="modal" data-target=".bd-example-modal-lg" 
+//                  ' <div class="row">'+
+//                             '<div class="col-sm-1 text-center">'+
+                                
+//                                       '<img class="img-circle" src="'+data[i]['dcn_profileFoto']+' " style="width: 80px;height:80px;" > '+
+                                      
+//                               '</div>'+
+//                               '<div class="col-sm-9">'+
+//                                 '<p style="color:#DFC15E; ">'+data[i]['primer_nombre']+' '+data[i]['segundo_nombre'] +' '+data[i]['primer_apellido']+' '+data[i]['segundo_apellido']+'</p>'+
+//                                 '<small>'+data[i]['nombre_cargo']+'</small>'+
+//                               '</div>'+
+//                               '</div>'+
+//                               '</a>'+
+//                           '</blockquote>'+
+//                         '</div>'
+//                   html+=body;
+//                  }
+
+
+//                  html+='</ul>';
+//                 $("#seccionListado").append(html);
+
+//            }, 
+//         error : function(xhr, status) {
+//             console("Hubo un problema al momento de obetener los datos de Docente");
+            
+//         }
+//         });      
+//}
 
 	
