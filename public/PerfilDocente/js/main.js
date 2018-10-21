@@ -157,7 +157,7 @@ function getListadoDocente(idJornada){
               //body+='<li><i class="fa-li fa fa-check"></i>'+data[i]['primer_nombre']+'</li>' + '<img class="img-circle" style="width: 100px;height:100px;" src= "'+data[i]['dcn_profileFoto']+' "></img>';
              body+='<blockquote> <div class="row">'+
                         '<div class="col-sm-3 text-center">'+
-                             '<a href="http://localhost/SIGPAD/public/perfilDocente/'+data[i]['id_pdg_dcn']+'" target="someFrame">'+
+                             '<a  data-toggle="modal" data-target=".bd-example-modal-lg" href="http://localhost/SIGPAD/public/perfilDocente/'+data[i]['id_pdg_dcn']+'" target="someFrame">'+
                                   '<img class="img-circle" src="'+data[i]['dcn_profileFoto']+' " style="width: 60px;height:60px;" > </a>'+
                                   
                           '</div>'+

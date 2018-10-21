@@ -28,7 +28,7 @@
 
 
 
-<section class="resume-section p-3 p-lg-5 d-flex flex-column" style="background-color: #7C1111" id="listado">
+<section style="background-color: #7C1111" id="listado">
         <div class="my-auto" id="seccionListado">
           <span class="elementor-divider-separator"></span>
           <h2 class="mb-5" style="color: #DFC15E ; align: center">Docentes Tiempo Completo</h2>
@@ -38,6 +38,15 @@
         </div>
   
 </section>
+
+
+<div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      ...
+    </div>
+  </div>
+</div>
    <!--  <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top" id="sideNav">
       <a class="navbar-brand js-scroll-trigger" href="#page-top">
         <span class="d-block d-lg-none">Clarence Taylor</span>
