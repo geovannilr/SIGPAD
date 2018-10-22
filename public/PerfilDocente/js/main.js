@@ -1,4 +1,4 @@
-var ip ="http://http://eisi.fia.ues.edu.sv/SIGPAD/public"; //quitar el localhost y poner la URL correcta antes del commit
+var ip ="http://eisi.fia.ues.edu.sv/SIGPAD/public"; //quitar el localhost y poner la URL correcta antes del commit
 function getHistorialAcademico(idDcn){
 	$.ajax({
            type:'POST',
@@ -169,7 +169,7 @@ function getListadoDocente(idJornada){
                   //body+='<li><i class="fa-li fa fa-check"></i>'+data[i]['primer_nombre']+'</li>' + '<img class="img-circle" style="width: 100px;height:100px;" src= "'+data[i]['dcn_profileFoto']+' "></img>';
                         body+='<td style="border: hidden">'+
                                 '<blockquote>'+
-                                '<a  href="http://localhost/SIGPAD/public/perfilDocente/'+data[i]['id_pdg_dcn']+'"  data-target="#myModal" target="myModal">'+ // data-toggle="modal" data-target=".bd-example-modal-lg" 
+                                '<a  href="'+ip+'/perfilDocente/'+data[i]['id_pdg_dcn']+'"  data-target="#myModal" target="myModal">'+ // data-toggle="modal" data-target=".bd-example-modal-lg" 
                                ' <div class="row">'+
                                           '<div class="col-sm-3 text-center">'+
                                               
@@ -211,7 +211,7 @@ function getListadoDocente(idJornada){
                         body2+='<td style="border: hidden">'+
                                 
                                 '<blockquote>'+
-                                '<a  href="http://localhost/SIGPAD/public/perfilDocente/'+data[i]['id_pdg_dcn']+'"  data-target="#myModal" target="myModal">'+ // data-toggle="modal" data-target=".bd-example-modal-lg" 
+                                '<a  href='+ip+'"/perfilDocente/'+data[i]['id_pdg_dcn']+'"  data-target="#myModal" target="myModal">'+ // data-toggle="modal" data-target=".bd-example-modal-lg" 
                                ' <div class="row">'+
                                           '<div class="col-sm-3 text-center">'+
                                               
