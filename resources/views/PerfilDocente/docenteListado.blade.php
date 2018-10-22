@@ -32,7 +32,7 @@
 <section  style="background-color: #7C1111; height: 100%; width: 100%;" id="listado">
         <div class="my-auto" id="seccionListado">
           <span class="elementor-divider-separator"></span>
-          <h2 class="mb-5" style="margin-top: 1em;margin-bottom: 1em;color: #DFC15E ; text-align: center;  font-family: ; font-size: 46px; text-transform: uppercase;
+          <h2 class="mb-5" style="margin-top: 1em;margin-bottom: 1em;color: #DFC15E ; text-align: center;  font-family:Arial ; font-size: 46px; text-transform: uppercase;
     letter-spacing: -2px;">Docentes Tiempo Completo</h2>
           <span class="elementor-divider-separator"></span>
           
