@@ -29,10 +29,11 @@
 
 
 
-<section  style="background-color: #7C1111; height: 100%; width: 100%" id="listado">
+<section  style="background-color: #7C1111; height: 100%; width: 100%;" id="listado">
         <div class="my-auto" id="seccionListado">
           <span class="elementor-divider-separator"></span>
-          <h2 class="mb-5" style="color: #DFC15E ; align: center">Docentes Tiempo Completo</h2>
+          <h2 class="mb-5" style="margin-top: 1em;margin-bottom: 1em;color: #DFC15E ; text-align: center;  font-family: ; font-size: 46px; text-transform: uppercase;
+    letter-spacing: -2px;">Docentes Tiempo Completo</h2>
           <span class="elementor-divider-separator"></span>
           
           
@@ -40,10 +41,11 @@
   
 </section>
 
-<section  style="background-color: #7C1111; height: 100%; width: 100%" id="listado">
-        <div class="my-auto" id="seccionListado2">
+<section  style="background-color: #7C1111; height: 100%; width: 100%; " id="listado">
+        <div class="my-auto" id="seccionListado2" style="">
           <span class="elementor-divider-separator"></span>
-          <h2 class="mb-5" style="color: #DFC15E ; align: center">Docentes Tiempo Parcial</h2>
+          <h2 class="mb-5" style="margin-top: 2em;margin-bottom: 1em;color: #DFC15E ; text-align: center;  font-family: Arial; font-size: 46px; text-transform: uppercase;
+    letter-spacing: -2px;">Docentes Tiempo Parcial</h2>
           <span class="elementor-divider-separator"></span>
           
           

@@ -1,4 +1,4 @@
-var ip ="http://localhost/SIGPAD/public"; //quitar el localhost y poner la URL correcta antes del commit
+var ip ="http://http://eisi.fia.ues.edu.sv/SIGPAD/public"; //quitar el localhost y poner la URL correcta antes del commit
 function getHistorialAcademico(idDcn){
 	$.ajax({
            type:'POST',
