@@ -35,4 +35,11 @@ return [
         'secret' => env('STRIPE_SECRET'),
     ],
 
+    'ldapues' => [
+        'host' => 'ldap.ues.edu.sv',
+        'bindRequiresDn' => true,
+        'accountDomainName' => 'ues.edu.sv',
+        'baseDn' => 'OU=usuarios,DC=ues,DC=edu,DC=sv',
+    ],
+
 ];

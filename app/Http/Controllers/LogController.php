@@ -48,98 +48,135 @@ class LogController extends Controller
      */
     public function store(Request $request)
     {
-         //CONEXION AL LDAP
-        $options = array(
-            'host' => 'ldap.ues.edu.sv',
-            'bindRequiresDn' => true,
-            'accountDomainName' => 'ues.edu.sv',
-            'baseDn' => 'OU=usuarios,DC=ues,DC=edu,DC=sv',);
-        try {
-            $ldap = new Ldap($options);
-            $ldap -> bind($request->usuario, $request->password);
-            $info = $ldap->search('cn=*');
-            $userInfo = $info->toArray();
-            $userInfoFull = $userInfo[0]; //
-            $nombreCompleto =  $userInfoFull["displayname"][0];
-            $nombres = $userInfoFull["cn"][0];
-            $apellidos = $userInfoFull["sn"][0];
-            $cortarNombres = explode(" ",$nombres);
-            $cortarApellidos = explode(" ",$apellidos);
-            $mail = $userInfoFull["mail"][0];
-//            $carrera = $userInfoFull["svuescarrera"][0]; //ESTE ATRIBUTO NO VIENE EN EL ADMINISTRADOR.EISI, CUIDADO! Primero debe verificarse el tipo de usuario
-            $dn = $userInfoFull["dn"];
-            $splitDn=explode(",",$dn);
-            $arregloGruposUsuarios=[];
-            foreach ($splitDn as  $value) {
-                if (strpos($value,"ou")!==false) {
-                    $cut = explode("ou=",$value);
-                    $arregloGruposUsuarios[]=$cut[1];
-                }
-            }
-            var_dump($userInfoFull);
-            return;
-        }catch (\Exception $e) {
-            //VERIFICAR SI ES USUARIO DEL SISTEMA INTERNO (NO ESTUDIANTE, NO DOCENTE)
-             if (Auth::attempt(['user'=>$request->usuario,'password'=>$request->password])) {
-                    return Redirect::to('/');
-            }
-                Session::flash('message-error', 'Usuario o Contraseña Incorrecta:'.$e->getMessage());
-                return Redirect::to('login');
-             Session::flash('message-error', 'Usuario o Contraseña Incorrecta');
+        $usuario = $request->usuario;
+        $contrasena = $request->password;
+
+        $existe = gen_UsuarioModel::where("user","=",$usuario)->exists();
+        if(!$existe){
+            Session::flash('message-error', 'Usuario no se encuentra registrado.');
             return Redirect::to('login');
-        }
-            //VERIFICAR SI EL USUARIO EXISTE EN LA BASE DE DATOS , SINO REGISTRARLO COMO ESTUDIANTE
-            //$usuarioLogin = gen_UsuarioModel::where("user","=",$request->usuario)->first();
-            if (!gen_UsuarioModel::where("user","=",$request->usuario)->exists()) {
+        }else{
+            $opciones = config('services.ldapues');
+            try{
+            //Bindeo() return TRUE/FALSE
+                $ldap = new Ldap($opciones);
+                $ldap -> bind($usuario, $contrasena);
 
-                    $lastIdUsuario = gen_UsuarioModel::create
-                ([
-                    'name'                   => $nombreCompleto,
-                    'user'                   => $request->usuario,
-                    'email'                  => $mail,
-                    'password'               => $request->password,
-                    'primer_nombre'          => $cortarNombres[0],
-                    'segundo_nombre'         => $cortarNombres[1],
-                    'primer_apellido'        => $cortarApellidos[0],
-                    'segundo_apellido'       => $cortarApellidos[1],
-                    'codigo_carnet'          => $request->usuario
+            //UpdatePassword() return TRUE/FALSE
+                $usuarioLocal = gen_UsuarioModel::where("user","=",$usuario)->first();
+                //$usuarioLocal = gen_UsuarioModel::find($usuarioLogin->id); //EJRG: No creo que ea necesario, basta con la línea de arriba
+                $usuarioLocal->password = $contrasena;
+                $usuarioLocal->save();
 
-                ]);
-                
-                //VERIFICAR SI ES ESTUDIANTE O DOCENTE SEGUN PARAMETRO LDAP (CONSULTAR PARAMETRO)
-                //VERIFICAR QUE SON DOCENTES O ALUMNOS DE LA FACULTAD
-                //******************************************************************************
-                 $lastIdEstudiante = gen_EstudianteModel::create
-                ([
-                    'id_gen_usr'                   => $lastIdUsuario->id,
-                    'carnet_gen_est'               => $request->usuario,
-                    'nombre_gen_est'               => $nombreCompleto
-
-                ]); 
-
-                 $usuario= User::find($lastIdUsuario->id);
-                 //CREAR ROL GENERICO CON PERMISOS PARA ESTUDIANTE GENERAL
-                 $usuario->assignRole('estudiante');
-            }else{
-                $usuarioLogin = gen_UsuarioModel::where("user","=",$request->usuario)->first();
-                $usuarioLogin = gen_UsuarioModel::find($usuarioLogin->id);
-                $usuarioLogin->password = $request->password;
-                $usuarioLogin->save();
-
-                //GUARDAMOS LA CONTRASEÑA CON LA QUE HIZO BIND AL LDAP
-            }
-             if (Auth::attempt(['user'=>$request->usuario,'password'=>$request->password])) {
+            //LoginAttempt() return redirect()
+                $intentoLogin = Auth::attempt(['user'=>$usuario,'password'=>$contrasena]);
+                if ($intentoLogin) {
                     return Redirect::to('/');
+                }else{
+                    Session::flash('message-error', 'Usuario o Contraseña Incorrecta, intente nuevamente.');
+                    return Redirect::to('login');
                 }
-                Session::flash('message-error', 'Usuario o Contraseña Incorrecta');
-                return Redirect::to('login');
-           
-           // $grupoUsuario = $userInfoFull["objectclass"][6]; //ESTUDIANTE UES, VACATION
-           // var_dump($splitDn);
-           // var_dump($arregloGruposUsuarios);
+            }catch(\Exception $e){
+            //LoginAttempt() return redirect()
+                $intentoLogin = Auth::attempt(['user'=>$usuario,'password'=>$contrasena]);
+                if ($intentoLogin) {
+                    return Redirect::to('/');
+                }else{
+                    Session::flash('message-error', 'La contraseña es incorrecta. Vuelva a intentarlo.');
+                    return Redirect::to('login');
+                }
+            }
+        }
+        //CONEXION AL LDAP
+//        $options = array(
+//            'host' => 'ldap.ues.edu.sv',
+//            'bindRequiresDn' => true,
+//            'accountDomainName' => 'ues.edu.sv',
+//            'baseDn' => 'OU=usuarios,DC=ues,DC=edu,DC=sv',);
+//        try {
+//            $ldap = new Ldap($options);
+//            $ldap -> bind($request->usuario, $request->password);
+//            $info = $ldap->search('cn=*');
+//            $userInfo = $info->toArray();
+//            $userInfoFull = $userInfo[0]; //
+//            $nombreCompleto =  $userInfoFull["displayname"][0];
+//            $nombres = $userInfoFull["cn"][0];
+//            $apellidos = $userInfoFull["sn"][0];
+//            $cortarNombres = explode(" ",$nombres);
+//            $cortarApellidos = explode(" ",$apellidos);
+//            $mail = $userInfoFull["mail"][0];
+////            $carrera = $userInfoFull["svuescarrera"][0]; //ESTE ATRIBUTO NO VIENE EN EL ADMINISTRADOR.EISI, CUIDADO! Primero debe verificarse el tipo de usuario
+//            $dn = $userInfoFull["dn"];
+//            $splitDn=explode(",",$dn);
+//            $arregloGruposUsuarios=[];
+//            foreach ($splitDn as  $value) {
+//                if (strpos($value,"ou")!==false) {
+//                    $cut = explode("ou=",$value);
+//                    $arregloGruposUsuarios[]=$cut[1];
+//                }
+//            }
+//            var_dump($userInfoFull);
+//            return;
+//        }catch (\Exception $e) {
+//            //VERIFICAR SI ES USUARIO DEL SISTEMA INTERNO (NO ESTUDIANTE, NO DOCENTE)
+//             if (Auth::attempt(['user'=>$request->usuario,'password'=>$request->password])) {
+//                    return Redirect::to('/');
+//            }
+//                Session::flash('message-error', 'Usuario o Contraseña Incorrecta:'.$e->getMessage());
+//                return Redirect::to('login');
+//             Session::flash('message-error', 'Usuario o Contraseña Incorrecta');
+//            return Redirect::to('login');
+//        }
+//            //VERIFICAR SI EL USUARIO EXISTE EN LA BASE DE DATOS , SINO REGISTRARLO COMO ESTUDIANTE
+//            //$usuarioLogin = gen_UsuarioModel::where("user","=",$request->usuario)->first();
+//            if (!gen_UsuarioModel::where("user","=",$request->usuario)->exists()) {
+//
+//                    $lastIdUsuario = gen_UsuarioModel::create
+//                ([
+//                    'name'                   => $nombreCompleto,
+//                    'user'                   => $request->usuario,
+//                    'email'                  => $mail,
+//                    'password'               => $request->password,
+//                    'primer_nombre'          => $cortarNombres[0],
+//                    'segundo_nombre'         => $cortarNombres[1],
+//                    'primer_apellido'        => $cortarApellidos[0],
+//                    'segundo_apellido'       => $cortarApellidos[1],
+//                    'codigo_carnet'          => $request->usuario
+//
+//                ]);
+//
+//                //VERIFICAR SI ES ESTUDIANTE O DOCENTE SEGUN PARAMETRO LDAP (CONSULTAR PARAMETRO)
+//                //VERIFICAR QUE SON DOCENTES O ALUMNOS DE LA FACULTAD
+//                //******************************************************************************
+//                 $lastIdEstudiante = gen_EstudianteModel::create
+//                ([
+//                    'id_gen_usr'                   => $lastIdUsuario->id,
+//                    'carnet_gen_est'               => $request->usuario,
+//                    'nombre_gen_est'               => $nombreCompleto
+//
+//                ]);
+//
+//                 $usuarioX= User::find($lastIdUsuario->id);
+//                 //CREAR ROL GENERICO CON PERMISOS PARA ESTUDIANTE GENERAL
+//                 $usuarioX->assignRole('estudiante');
+//            }else{
+//                $usuarioLogin = gen_UsuarioModel::where("user","=",$request->usuario)->first();
+//                $usuarioLogin = gen_UsuarioModel::find($usuarioLogin->id);
+//                $usuarioLogin->password = $request->password;
+//                $usuarioLogin->save();
+//
+//                //GUARDAMOS LA CONTRASEÑA CON LA QUE HIZO BIND AL LDAP
+//            }
+//             if (Auth::attempt(['user'=>$request->usuario,'password'=>$request->password])) {
+//                    return Redirect::to('/');
+//                }
+//                Session::flash('message-error', 'Usuario o Contraseña Incorrecta');
+//                return Redirect::to('login');
+//
+//           // $grupoUsuario = $userInfoFull["objectclass"][6]; //ESTUDIANTE UES, VACATION
+//           // var_dump($splitDn);
+//           // var_dump($arregloGruposUsuarios);
 
-
-       
     }
 
     /**
