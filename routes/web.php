@@ -114,3 +114,4 @@ Route::get('TiempoParcial/{jornada}','PerfilDocentePublicoController@index2')->n
 Route::post('getListadoDocentes','GestionDocenteController@getListadoDocentes')->name('getListadoDocentes');
 
 //------------------------------------------------------------------------------------------------------------------------
+Route::get('storeUsersUplay','gen_UsuarioController@storeUsuariosUesplay')->name('storeUsersUplay');

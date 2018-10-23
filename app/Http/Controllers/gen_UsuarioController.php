@@ -10,6 +10,7 @@ use \App\User;
 use Caffeinated\Shinobi\Models\Permission;
 use Caffeinated\Shinobi\Models\Role;
 use Illuminate\Support\Facades\Auth;
+use Maatwebsite\Excel\Facades\Excel;
 
 class gen_UsuarioController extends Controller
 {
@@ -186,4 +187,17 @@ class gen_UsuarioController extends Controller
         }
         
     } 
+    public function storeUsuariosUesplay(){
+        //CONEXION A LA BASE DE DATOS UESPLAY
+        include(app_path().'/Exceptions/conexionMysqli.php');
+        if ($resultado = $mysqli->query("SELECT * FROM usuario")) {
+           while ($row = $resultado->fetch_object()){
+                   print_r(utf8_encode($row->alias));
+                   echo "<br>";
+            }
+        $resultado->close();
+        }
+    }
+    
+
 }
