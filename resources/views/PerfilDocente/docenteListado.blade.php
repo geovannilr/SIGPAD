@@ -11,6 +11,7 @@
 
     <title>.::Perfl Docente - EISI</title>
 
+
     <!-- Custom fonts for this template -->
     <link href="https://fonts.googleapis.com/css?family=Saira+Extra+Condensed:500,700" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Muli:400,400i,800,800i" rel="stylesheet">
@@ -24,20 +25,52 @@
      {!!Html::style('PerfilDocente/css/resume.css')!!}
   </head>
 
-  <body id="page-top">
+  <body id="page-top" style="background-color: #7C1111">
 
 
 
-<section class="resume-section p-3 p-lg-5 d-flex flex-column" style="background-color: #7C1111" id="listado">
+<section  style="background-color: #7C1111; height: 100%; width: 100%;" id="listado">
         <div class="my-auto" id="seccionListado">
           <span class="elementor-divider-separator"></span>
-          <h2 class="mb-5" style="color: #DFC15E ; align: center">Docentes Tiempo Completo</h2>
+          <h2 class="mb-5" style="margin-top: 1em;margin-bottom: 1em;color: #DFC15E ; text-align: center;  font-family:Arial ; font-size: 46px; text-transform: uppercase;
+    letter-spacing: -2px;">Docentes Tiempo Completo</h2>
           <span class="elementor-divider-separator"></span>
           
           
         </div>
   
 </section>
+
+<section  style="background-color: #7C1111; height: 100%; width: 100%; " id="listado">
+        <div class="my-auto" id="seccionListado2" style="">
+          <span class="elementor-divider-separator"></span>
+          <h2 class="mb-5" style="margin-top: 2em;margin-bottom: 1em;color: #DFC15E ; text-align: center;  font-family: Arial; font-size: 46px; text-transform: uppercase;
+    letter-spacing: -2px;">Docentes Tiempo Parcial</h2>
+          <span class="elementor-divider-separator"></span>
+          
+          
+        </div>
+  
+</section>
+
+
+  <div class="modal fade" id="myModal">
+    <div class="modal-dialog">
+      <div class="modal-content bmd-modalContent">
+
+        <div class="modal-body">
+          
+          <div class="close-button">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          </div>
+          <div class="embed-responsive embed-responsive-16by9">
+                      <iframe class="embed-responsive-item" frameborder="0"></iframe>
+          </div>
+        </div>
+
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div><!-- /.modal -->
    <!--  <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top" id="sideNav">
       <a class="navbar-brand js-scroll-trigger" href="#page-top">
         <span class="d-block d-lg-none">Clarence Taylor</span>
@@ -154,6 +187,8 @@
 
     getListadoDocente({{$jornada}});
 	});
+
+
 	</script>
 
 
@@ -162,7 +197,7 @@
         $("a").click(function(e) {
             e.preventDefault();
             
-            $("#someFrame").attr("src", $(this).attr("href"));
+            $("#myModal").attr("src", $(this).attr("href"));
         })
     });
   </script>

@@ -247,12 +247,12 @@ class pdg_dcn_docenteModel extends Model
             usr.primer_apellido,
             COALESCE(usr.segundo_apellido, '') as segundo_apellido ,            
             car.nombre_cargo,
-            COALESCE(dcn.dcn_profileFoto ,'https://profile.actionsprout.com/default.jpeg') as dcn_profileFoto
-
+            COALESCE(dcn.dcn_profileFoto ,'https://profile.actionsprout.com/default.jpeg') as dcn_profileFoto,
+            dcn.tipoJornada
             from pdg_dcn_docente dcn 
             inner join gen_usuario usr on usr.id=dcn.id_gen_usuario 
             left join cat_car_cargo_eisi car on car.id_cat_car=dcn.id_cargo_actual
-            where dcn.activo=1 and dcn.tipoJornada=:jornada",
+            where dcn.activo=1", // and dcn.tipoJornada=:jornada",
             array(
                 $jornada
             )
