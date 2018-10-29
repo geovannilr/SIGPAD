@@ -187,55 +187,71 @@ class EtapaEvaluativaController extends Controller {
 		]);
 		$idEtapa = $request["etapa"];
 
-		$data = Excel::load($request->file('documento'), function ($reader) {
+		$data = Excel::load($request->file('documentoNotas'), function ($reader) {
 			$reader->setSelectedSheetIndices(array(1));
 		})->get();
 		$notas = $data->toArray();
-		$alumno = $notas[0];
-		$estudianteModel = new gen_EstudianteModel();
-		$idGrupo = $estudianteModel->getIdGrupo(strtolower($alumno["carnet"]));
-		$trabajosGraduacion = pdg_tra_gra_trabajo_graduacionModel::where("id_pdg_gru", "=", $idGrupo)->get();
-		$idTraGra = "NA";
-		foreach ($trabajosGraduacion as $trabajo) {
-			$idTraGra = $trabajo->id_pdg_tra_gra;
+		$primerAlumno = $notas[0];
+		$cortarNombreGrupo = explode("-",$primerAlumno["grupo"]);
+		$nombreCambiado ="NA";
+		if (sizeof($cortarNombreGrupo)!=2) {
+			return "El formato escrito del grupo es incorrecto Ej:2018-01, 2018-14";
+		}else{
+					$nombreCambiado = $cortarNombreGrupo[1]."-".$cortarNombreGrupo[0];
 		}
-		return $idTraGra;
-		$idGenEstudiante = "NA";
-		foreach ($reader->toArray() as $row) {
-			$idGenEstudiante = "NA";
-			$carnet = strtolower($row["carnet"]);
-			$estudiantes = gen_EstudianteModel::where("carnet_gen_est", "=", $carnet)->get();
-			foreach ($estudiantes as $estudiante) {
-				$idGenEstudiante = $estudiante->id_gen_est;
-			}
-			$estudiantesGrupo = pdg_gru_est_grupo_estudianteModel::where("id_gen_est", "=", $idGenEstudiante)->get();
-			$idEstGrupo = "NA";
-			foreach ($estudiantesGrupo as $est) {
+		foreach ($notas as $row) {
+			//VERIFICAMOS QUE VENGAN TODOS LOS CAMPOS EN LA FILA
+			if ($row["carnet"]!="" && $row["nota"]!="" && $row["grupo"]!="" ) {
+				$alumno = $row; 
+				$estudianteModel = new gen_EstudianteModel();
+				$idGrupo = $estudianteModel->getIdGrupo(strtolower($alumno["carnet"]));
+				$trabajosGraduacion = pdg_tra_gra_trabajo_graduacionModel::where("id_pdg_gru", "=", $idGrupo)->get();
+				$grupo = pdg_gru_grupoModel::find($idGrupo);//obtenemos el grupo
+				/*if (sizeof($grupo)!=0) {
+					
+				}
+				if ($grupo->numero_pdg_gru !=$nombreCambiado) {
+					return "El grupo del alumno no coincide con el grupo definido";
+				}*/
+				$idTraGra = "NA";
+				foreach ($trabajosGraduacion as $trabajo) {
+					$idTraGra = $trabajo->id_pdg_tra_gra;
+				}
+				$idGenEstudiante = "NA";
+				$carnet = strtolower($row["carnet"]);
+				$estudiantes = gen_EstudianteModel::where("carnet_gen_est", "=", $carnet)->get();
+				foreach ($estudiantes as $estudiante) {
+					$idGenEstudiante = $estudiante->id_gen_est;
+				}
+				$estudiantesGrupo = pdg_gru_est_grupo_estudianteModel::where("id_gen_est", "=", $idGenEstudiante)->get();
 				$idEstGrupo = "NA";
-				$idEstGrupo = $est->id_pdg_gru_est;
-			}
-			if ($idEstGrupo != "NA") {
-				$lastId = pdg_not_cri_tra_nota_criterio_trabajoModel::create
-					([
-					'nota_pdg_not_cri_tra' => $row["nota"],
-					'id_cat_cri_eva' => 1,
-					'id_pdg_tra_gra' => $idTraGra,
-					'id_pdg_gru_est' => $idEstGrupo,
-				]);
-			}
-			echo "Consolidado";
-			echo "<br>";
-			echo "Carnet: " . $row["carnet"];
-			echo "<br>";
-			echo "Nota: " . $row["nota"];
-			echo "<br>";
-			echo "TrabajoGraduacion: " . $idTraGra;
-			echo "<br>";
-			echo "Estudiante: " . $idEstGrupo;
-			echo "<br>";
-			echo "<br>";
+				foreach ($estudiantesGrupo as $est) {
+					$idEstGrupo = $est->id_pdg_gru_est;
+				}
+				/*if ($idEstGrupo != "NA") {
+					$lastId = pdg_not_cri_tra_nota_criterio_trabajoModel::create
+						([
+						'nota_pdg_not_cri_tra' => $row["nota"],
+						'id_cat_cri_eva' => 1,
+						'id_pdg_tra_gra' => $idTraGra,
+						'id_pdg_gru_est' => $idEstGrupo,
+					]);
+				}*/
+				echo "Consolidado";
+				echo "<br>";
+				echo "Carnet: " . $row["carnet"];
+				echo "<br>";
+				echo "Nota: " . $row["nota"];
+				echo "<br>";
+				echo "TrabajoGraduacion: " . $idTraGra;
+				echo "<br>";
+				echo "Estudiante: " . $idEstGrupo;
+				echo "<br>";
+				echo "<br>";
 
-			//User::firstOrCreate($row);
+				//User::firstOrCreate($row);
+			}
+			
 		}
 
 	}
