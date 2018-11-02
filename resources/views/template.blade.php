@@ -122,7 +122,7 @@
                 </a>
 
                  <ul class="sidenav-second-level collapse" id="collapsePublicaciones">
-                      @can('publicacion.create','publicacion.index')
+                      @can('publicacion.index')
                         <li>
                           <a class="nav-link" href="{{route('publicacion.index')}}" style="color: #ffffff">
                             <i class="fa fa-file-text"></i>
