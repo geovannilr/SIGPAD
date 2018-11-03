@@ -16,6 +16,7 @@ use \App\pdg_not_cri_tra_nota_criterio_trabajoModel;
 use \App\pdg_ppe_pre_perfilModel;
 use \App\pdg_tra_gra_trabajo_graduacionModel;
 
+
 class EtapaEvaluativaController extends Controller {
 	public function __construct() {
 		$this->middleware('auth');
@@ -186,7 +187,7 @@ class EtapaEvaluativaController extends Controller {
 			'documentoNotas' => 'required',
 		]);
 		$idEtapa = $request["etapa"];
-
+		$etapa=cat_eta_eva_etapa_evalutativaModel::find($idEtapa);
 		$data = Excel::load($request->file('documentoNotas'), function ($reader) {
 			$reader->setSelectedSheetIndices(array(1));
 		})->get();
@@ -200,28 +201,48 @@ class EtapaEvaluativaController extends Controller {
 					$nombreCambiado = $cortarNombreGrupo[1]."-".$cortarNombreGrupo[0];
 
 		}
+		$bodyHtml = '';
 		foreach ($notas as $row) {
 			//VERIFICAMOS QUE VENGAN TODOS LOS CAMPOS EN LA FILA
 			if ($row["carnet"]!="" && $row["nota"]!="" && $row["grupo"]!="" ) {
 				$alumno = $row; 
 				$estudianteModel = new gen_EstudianteModel();
 				$idGrupo = $estudianteModel->getIdGrupo(strtolower($alumno["carnet"]));
+				$idGenEstudiante = "NA";
+				$nombreEstudiante = "N/A";
+				$carnet = strtolower($row["carnet"]);
+				$estudiantes = gen_EstudianteModel::where("carnet_gen_est", "=", $carnet)->get();
+				foreach ($estudiantes as $estudiante) {
+					$idGenEstudiante = $estudiante->id_gen_est;
+					$nombreEstudiante=  $estudiante->nombre_gen_est;
+				}
 				$trabajosGraduacion = pdg_tra_gra_trabajo_graduacionModel::where("id_pdg_gru", "=", $idGrupo)->get();
 				$grupo = pdg_gru_grupoModel::find($idGrupo);//obtenemos el grupo
-				if (sizeof($grupo)!=0) {
+				if (sizeof($estudiantes)==0) {
+					$bodyHtml .= '<tr>';
+					$bodyHtml .= '<td>' . $alumno ["carnet"] . '</td>';
+					$bodyHtml .= '<td>' . $nombreEstudiante . '</td>';
+					$bodyHtml .= '<td>' . $alumno ["nota"] . '</td>';
+					$bodyHtml .= '<td><span class="badge badge-danger">Error</span></td>';
+					$bodyHtml .= '<td>El alumno no se encuentra registrado o no existe.</td>';
+					$bodyHtml .= '</tr>';
+				}
+				else if (sizeof($grupo)!=0) {
+					$nombreGrupo = $grupo->numero_pdg_gru;
 					if ($grupo->numero_pdg_gru !=$nombreCambiado) {
-						//RETORNAMOS EL ALUMNO CON ERROR DE SUBIDA DE NOTAS
+						$bodyHtml .= '<tr>';
+						$bodyHtml .= '<td>' . $alumno ["carnet"] . '</td>';
+						$bodyHtml .= '<td>' . $nombreEstudiante . '</td>';
+						$bodyHtml .= '<td>' . $alumno ["nota"] . '</td>';
+						$bodyHtml .= '<td><span class="badge badge-danger">Error</span></td>';
+						$bodyHtml .= '<td>El alumno no coincide con el grupo de trabajo de graduación ingresado.</td>';
+						$bodyHtml .= '</tr>';
 					}else{
 						$idTraGra = "NA";
 						foreach ($trabajosGraduacion as $trabajo) {
 							$idTraGra = $trabajo->id_pdg_tra_gra;
 						}
-						$idGenEstudiante = "NA";
-						$carnet = strtolower($row["carnet"]);
-						$estudiantes = gen_EstudianteModel::where("carnet_gen_est", "=", $carnet)->get();
-						foreach ($estudiantes as $estudiante) {
-							$idGenEstudiante = $estudiante->id_gen_est;
-						}
+						
 						$estudiantesGrupo = pdg_gru_est_grupo_estudianteModel::where("id_gen_est", "=", $idGenEstudiante)->get();
 						$idEstGrupo = "NA";
 						foreach ($estudiantesGrupo as $est) {
@@ -230,8 +251,13 @@ class EtapaEvaluativaController extends Controller {
 						if ($idEstGrupo != "NA") {
 							$nota = pdg_not_cri_tra_nota_criterio_trabajoModel::where("id_pdg_gru_est","=",$idEstGrupo)->get();
 							if (sizeof($nota)!=0) {
-								//YA HAY NOTA REGISTRADA ACTUALIZAR
-								return "PARA EL ALUMNO ".$alumno["carnet"]." Ya se registro la nota para esta etapa";
+								$bodyHtml .= '<tr>';
+								$bodyHtml .= '<td>' . $alumno ["carnet"] . '</td>';
+								$bodyHtml .= '<td>' . $nombreEstudiante . '</td>';
+								$bodyHtml .= '<td>' . $alumno ["nota"] . '</td>';
+								$bodyHtml .= '<td><span class="badge badge-warning">Actualizado</span></td>';
+								$bodyHtml .= '<td>Se actualizó la nota de esta etapa para el alumno.</td>';
+								$bodyHtml .= '</tr>';
 							}else{
 								$lastId = pdg_not_cri_tra_nota_criterio_trabajoModel::create
 								([
@@ -240,12 +266,26 @@ class EtapaEvaluativaController extends Controller {
 								'id_pdg_tra_gra' => $idTraGra,
 								'id_pdg_gru_est' => $idEstGrupo,
 								]);
+
+								$bodyHtml .= '<tr>';
+								$bodyHtml .= '<td>' . $alumno ["carnet"] . '</td>';
+								$bodyHtml .= '<td>' . $nombreEstudiante . '</td>';
+								$bodyHtml .= '<td>' . $alumno ["nota"] . '</td>';
+								$bodyHtml .= '<td><span class="badge badge-success">OK</span></td>';
+								$bodyHtml .= '<td>La nota se ingreso exitosamente.</td>';
+								$bodyHtml .= '</tr>';
 							}
 							
 						}else{
-							return "el estudiante no se encuentra registrado ";
+							$bodyHtml .= '<tr>';
+							$bodyHtml .= '<td>' . $alumno ["carnet"] . '</td>';
+							$bodyHtml .= '<td>' . $nombreEstudiante . '</td>';
+							$bodyHtml .= '<td>' . $alumno ["nota"] . '</td>';
+							$bodyHtml .= '<td><span class="badge badge-danger">Error</span></td>';
+							$bodyHtml .= '<td>El alumno no coincide con el grupo de trabajo de graduación ingresado.</td>';
+							$bodyHtml .= '</tr>';
 						}
-						echo "Consolidado";
+						/*echo "Consolidado";
 						echo "<br>";
 						echo "Carnet: " . $row["carnet"];
 						echo "<br>";
@@ -255,17 +295,23 @@ class EtapaEvaluativaController extends Controller {
 						echo "<br>";
 						echo "Estudiante: " . $idEstGrupo;
 						echo "<br>";
-						echo "<br>";
-
-						//User::firstOrCreate($row);
-
+						echo "<br>";*/
 					}
+				}else{		$nombreGrupo = "N/A";
+							$bodyHtml .= '<tr>';
+							$bodyHtml .= '<td>' . $alumno ["carnet"] . '</td>';
+							$bodyHtml .= '<td>' . $nombreEstudiante . '</td>';
+							$bodyHtml .= '<td>' . $alumno ["nota"] . '</td>';
+							$bodyHtml .= '<td><span class="badge badge-danger">Error</span></td>';
+							$bodyHtml .= '<td>El alumno no se encuentra registrado en ningún grupo de  trabajo de graduación.</td>';
+							$bodyHtml .= '</tr>';
 				}
 				
 				
 			}
 			
 		}
+		return view('TrabajoGraduacion.NotaEtapaEvaluativa.index', compact('bodyHtml','etapa',"nombreGrupo"));
 
 	}
 	public function verificarGrupo($carnet) {
