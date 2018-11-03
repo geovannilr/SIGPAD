@@ -96,9 +96,9 @@
 					<th>Estado</th>
 					<th>Cantidad de Estudiantes</th>
 					<th>Detalle</th>
-					@can('grupo.edit')
+					<!-- can('grupo.edit')
 						<th>Modificar</th>
-					@endcan
+					endcan -->
 					@can('grupo.destroy')
 						<th>Eliminar</th>
 					@endcan
@@ -119,14 +119,14 @@
 						<td style="text-align: center;">
 							 	<a class="btn btn-dark" href="#" onclick="getGrupo({{ $grupo->ID }});"><i class="fa fa-eye"></i></a>
 						</td>
-						@can('grupo.edit')
+						<!-- can('grupo.edit')
 							<td style="text-align: center;"> 
-								<a class="btn " style="background-color:  #102359;color: white"  data-toggle="modal" data-target="#exampleModalCenter" href="{{route('grupo.edit',$grupo->id)}}"><i class="fa fa-pencil"></i></a>
+								<a class="btn " style="background-color:  #102359;color: white"  data-toggle="modal" data-target="#exampleModalCenter" href="{{route('grupo.edit',$grupo->ID)}}"><i class="fa fa-pencil"></i></a>
 							</td>
-						@endcan
+						endcan -->
 						@can('grupo.destroy')
 							<td style="text-align: center;">
-								{!! Form::open(['route'=>['grupo.destroy',$$grupo->ID],'method'=>'DELETE','class' => 'deleteButton']) !!}
+								{!! Form::open(['route'=>['grupo.destroy',$grupo->ID],'method'=>'DELETE','class' => 'deleteButton']) !!}
 							 		<div class="btn-group">
 										<button type="submit" class="btn btn-danger"><i class="fa fa-trash"></i></button>
 									</div>

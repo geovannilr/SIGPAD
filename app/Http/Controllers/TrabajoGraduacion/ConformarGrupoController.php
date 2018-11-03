@@ -333,7 +333,7 @@ class ConformarGrupoController extends Controller
 
             $relaciones = pdg_gru_grupoModel::find($id)->relaciones_gru_est;
 
-            return view('TrabajoGraduacion\ConformarGrupo.view',compact(['relaciones']));
+            return view('TrabajoGraduacion.ConformarGrupo.view',compact(['relaciones']));
         }else{
             Session::flash('message-error', 'No tiene permisos para acceder a esta opción');
             return  view('template');
@@ -364,7 +364,7 @@ class ConformarGrupoController extends Controller
                     }
                     Session::flash('message-warning','Estudiante eliminado del grupo');
                     //return Redirect::to('TrabajoGraduacion\ConformarGrupo.view',compact(['relaciones']));
-                    return view('TrabajoGraduacion\ConformarGrupo.view',compact(['relaciones']));
+                    return view('TrabajoGraduacion.ConformarGrupo.view',compact(['relaciones']));
                 }
             } catch (Exception $e) {
                 Session::flash('message-error','Ocurrió un problema al momento de borrar el alumno!');
