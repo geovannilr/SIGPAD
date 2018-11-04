@@ -33,6 +33,7 @@
     {!!Html::script('js/main.js')!!}
     {!!Html::script('js/TrabajoGraduacion/trabajoGraduacion.js')!!}
     {!!Html::script('js/jquery.multi-select.js')!!}
+    {!!Html::script('js/publicaciones.js')!!}
  <style type="text/css">
 @font-face {
     font-family: 'American_Captain';

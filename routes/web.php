@@ -94,6 +94,9 @@ Route::post('updateDocumentoPublicacion', 'Publicaciones\publicacionController@u
 Route::post('deleteDocumentoPublicacion', 'Publicaciones\publicacionController@deleteDocumento')->name('deleteDocumentoPublicacion');
 Route::get('editDocumentoPublicacion/{idPublicacion}/{idArchivo?}', 'Publicaciones\publicacionController@editDocumento')->name('editDocumentoPublicacion');
 Route::post('downloadDocumentoPublicacion', 'Publicaciones\publicacionController@downloadDocumento')->name('downloadDocumentoPublicacion');
+Route::post('buscarPublicaciones', 'Publicaciones\publicacionController@buscarPublicaciones')->name('buscarPublicaciones');
+Route::get('BuscarPublicaciones', 'Publicaciones\publicacionController@searchView')->name('BuscarPublicaciones');
+
 
 //------------------------------------------------------------------------------------------------------------------------
 

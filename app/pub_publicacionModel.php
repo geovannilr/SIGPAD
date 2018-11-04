@@ -34,5 +34,19 @@ class pub_publicacionModel extends Model{
 					where id_pub ='.$idPub.';
 					');
         return $resultado;
+	 }
+
+	 public function getPubNombreAutor($nombre){
+	 	$publicaciones = DB::select("select 
+		pub.id_pub,
+		pub.titulo_pub,
+		pub.anio_pub,
+		pub.codigo_pub,
+		CONCAT(autor.nombres_pub_aut, '  ', autor.apellidos_pub_aut) As nombre_autor	
+		from pub_publicacion pub
+		inner join pub_aut_publicacion_autor autor on autor.id_pub=pub.id_pub
+		WHERE autor.nombres_pub_aut like '%".$nombre."%' OR autor.apellidos_pub_aut like '%".$nombre."%'"
+        );
+        return $publicaciones;
 	 }		
 }

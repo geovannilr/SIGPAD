@@ -175,4 +175,80 @@ class publicacionController extends Controller{
      	}
     	//return $path;
     }
+    function  searchView(){
+        return view('publicacion.search');
+    }
+     function  buscarPublicaciones(Request $request){
+        $autor = $request["autor"];
+        $docenteDirector = $request["docenteDirector"];
+        $publicacion = new pub_publicacionModel();
+        $bodyHtml="";
+        if ($autor=="1") {
+            $bodyHtml.='<div class="table-responsive">
+            <p class="text-center"><b>RESULTADOS POR AUTOR</b></p>
+            <table class="table table-hover table-striped  display" id="listTable">
+
+                <thead>
+                    <th>Cod. Pubicación</th>
+                    <th>Año</th>
+                    <th>Título</th>
+                    <th>Autor</th>
+                    <th>Detalle</th> 
+                </thead>
+                <tbody>';
+            $publicacionesAutor = $publicacion->getPubNombreAutor($request["texto"]);
+            if (sizeof($publicacionesAutor)!=0) {
+                foreach ($publicacionesAutor as $publicacion) {
+                    $bodyHtml.='<tr>';
+                    $bodyHtml.='<td>'.$publicacion->codigo_pub.'</td>';
+                    $bodyHtml.='<td>'.$publicacion->anio_pub.'</td>';
+                    $bodyHtml.='<td>'.$publicacion->titulo_pub.'</td>';
+                     $bodyHtml.='<td>'.$publicacion->nombre_autor.'</td>';
+                    $bodyHtml.='<td style="text-align: center;">
+                                <a class="btn btn-dark" href="'.url("/").'/publicacion/'.$publicacion->id_pub.'" target="_blank"><i class="fa fa-eye"></i></a>
+                                </td>';
+                    $bodyHtml.='</tr>';
+                }
+            }else{
+                $bodyHtml.='<tr><td colspan="4">NO SE ENCONTRARON RESULTADOS EN LA BUSQUEDA</td></tr>';
+            }
+            $bodyHtml.='</tbody>
+                        </table>
+                        </div><br><br>';
+        }
+
+       /* if ($docenteDirector=="1") {
+            $bodyHtml.='<div class="table-responsive">
+            <p class="text-center"><b>RESULTADOS POR DOCENTE DIRECTOR</b></p>
+            <table class="table table-hover table-striped  display" id="listTable">
+
+                <thead>
+                    <th>Cod. Pubicación</th>
+                    <th>Año</th>
+                    <th>Título</th>
+                    <th>Detalle</th> 
+                </thead>
+                <tbody>';
+            $publicacionesDocente = $publicacion->getPubNombreAutor($request["texto"]);
+            if (sizeof($publicacionesAutor)!=0) {
+                foreach ($publicacionesDocente as $publicacion) {
+                    $bodyHtml.='<tr>';
+                    $bodyHtml.='<td>'.$publicacion->codigo_pub.'</td>';
+                    $bodyHtml.='<td>'.$publicacion->anio_pub.'</td>';
+                    $bodyHtml.='<td>'.$publicacion->titulo_pub.'</td>';
+                    $bodyHtml.='<td style="text-align: center;">
+                                <a class="btn btn-dark" href="'.url("/").'/publicacion/'.$publicacion->id_pub.'" target="_blank"><i class="fa fa-eye"></i></a>
+                                </td>';
+                    $bodyHtml.='</tr>';
+                }
+            }else{
+                $bodyHtml.='<tr><td colspan="4">NO SE ENCONTRARON RESULTADOS EN LA BUSQUEDA</td></tr>';
+            }
+            $bodyHtml.='</tbody>
+                        </table>
+                        </div><br><br>';
+        }*/
+
+        return $bodyHtml;
+    }
 }
