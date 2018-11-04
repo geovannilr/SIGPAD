@@ -130,6 +130,12 @@
                             <span class="nav-link-text">Historico de Tesis</span>
                           </a>  
                         </li>
+                        <li>
+                          <a class="nav-link" href="{{route('BuscarPublicaciones')}}" style="color: #ffffff">
+                            <i class="fa fa-file-text"></i>
+                            <span class="nav-link-text">Búsqueda de Publicaciones</span>
+                          </a>  
+                        </li>
 
                        @endcan
             </ul>

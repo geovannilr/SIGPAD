@@ -18,6 +18,7 @@
             </div>
         </div>
          <div class="row">
+         	<p><b>&nbsp;&nbsp;&nbsp;Seleccione el rol por el cúal quiere realizar la búsqueda de publicaciones</b></p><br>
             <div class="form-group col-sm-3">
             	<div class="form-check">
 				    <input type="checkbox" class="form-check-input" name="checkAlumno"  id="checkAlumno">
@@ -25,18 +26,22 @@
   				</div>
              	<div class="form-check">
 				    <input type="checkbox" class="form-check-input" name="checkDocente"  id="checkDocente">
-				    <label class="form-check-label" for="checkDocente">Docente Director</label>
+				    <label class="form-check-label" for="checkDocente">Director</label>
+  				</div>
+  				<div class="form-check">
+				    <input type="checkbox" class="form-check-input" name="checkCoordinador"  id="checkCoordinador">
+				    <label class="form-check-label" for="checkCoordinador">Coordinador</label>
   				</div>
   				
             </div>
              <div class="form-group col-sm-3">
   				<div class="form-check">
 				    <input type="checkbox" class="form-check-input" name="checkJurado"  id="checkJurado">
-				    <label class="form-check-label" for="checkJurado">Jurado</label>
+				    <label class="form-check-label" for="checkJurado">Observador</label>
   				</div>
   				<div class="form-check">
-				    <input type="checkbox" class="form-check-input" name="checkColaborador"  id="checkColaborador">
-				    <label class="form-check-label" for="checkColaborador">Colaborador</label>
+				    <input type="checkbox" class="form-check-input" name="checkAsesor"  id="checkAsesor">
+				    <label class="form-check-label" for="checkAsesor">Asesor</label>
   				</div>
             </div>
             
