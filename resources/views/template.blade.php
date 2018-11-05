@@ -69,7 +69,7 @@
                   </a>  
               </li>
               @endcan
-              @can('grupos.index')
+              @can('grupo.index')
                 <li>
                   <a class="nav-link" href="{{route('listadoGrupos')}}" style="color: #ffffff">
                     <i class="fa fa-users"></i>

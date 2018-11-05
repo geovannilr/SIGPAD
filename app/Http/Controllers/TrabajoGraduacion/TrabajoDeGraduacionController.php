@@ -84,7 +84,8 @@ class TrabajoDeGraduacionController extends Controller{
         $estudiantesGrupo = $grupo->getDetalleGrupo($idGrupo);
         //$prePerfiles =pdg_ppe_pre_perfilModel::where('id_pdg_gru', '=',$idGrupo)->get();
         $grupo = pdg_gru_grupoModel::find($idGrupo);
-        if (sizeof($grupo)==0) {
+        //return var_dump($grupo);
+        if (blank($grupo)) {
            return view("error");
         }
         $numero=$grupo->numero_pdg_gru;
@@ -93,11 +94,12 @@ class TrabajoDeGraduacionController extends Controller{
             $tribunal="NA";
         }
         $etapas=self::getEtapasEvaluativas($idGrupo);
-        if (sizeof($etapas) == 0){
+        
+        if (blank($etapas)){
             $etapas="NA";
         }
         $tema = pdg_tra_gra_trabajo_graduacionModel::where('id_pdg_gru', '=',$idGrupo)->select('tema_pdg_tra_gra')->first();
-        if(sizeof($tema)!=0){
+        if(!blank($tema)){
             return view('TrabajoGraduacion.TrabajoDeGraduacion.index',compact('numero','estudiantesGrupo','tribunal','etapas','tema','idGrupo'));
         }else{
             //Session::flash('message-error', 'El grupo seleccionado aún no ha empezado su proceso de trabajo de graduación');
