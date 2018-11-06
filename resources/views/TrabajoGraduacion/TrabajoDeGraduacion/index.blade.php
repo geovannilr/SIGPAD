@@ -71,6 +71,7 @@
                         <td>{{$tri->name}}
                             @if($tri->id_pdg_tri_rol == 1)
                                 <span class="badge badge-danger">{{$tri->nombre_tri_rol}}</span>
+                            @else
                             @endif
                         </td>
                       </tr>
