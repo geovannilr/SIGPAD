@@ -68,6 +68,9 @@ class TrabajoDeGraduacionController extends Controller{
     }
     /*Listado de grupos filtrados por docente asesor*/
     public function dashboardIndex(){
+        // Retrieve a piece of data from the session...
+        //$grupos = session('misGrupos');
+        //return var_dump($grupos);
         $userLogin=Auth::user();
         $docente = pdg_dcn_docenteModel::where("id_gen_usuario","=",$userLogin->id)->first();
         //return $docente->id_pdg_dcn;

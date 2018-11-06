@@ -11,6 +11,8 @@ use App\Http\Requests\LoginRequest;
 use App\Http\Controllers\Controller;
 use \App\gen_UsuarioModel;
 use \App\gen_EstudianteModel;
+use \App\pdg_gru_grupoModel;
+use \App\pdg_dcn_docenteModel;
 use \App\User;
 use Illuminate\Support\Facades\Hash;
 use Caffeinated\Shinobi\Models\Role;
@@ -80,7 +82,34 @@ class LogController extends Controller
             //LoginAttempt() return redirect()
                 $intentoLogin = Auth::attempt(['user'=>$usuario,'password'=>$contrasena]);
                 if ($intentoLogin) {
-                    return Redirect::to('/');
+                     
+                    if (Auth::user()->isRole('docente_asesor')){
+                        //OBTENEMOS LOS GRUPOS QUE ESTA DIRIGIENDO COMO ASESOR
+                        $userLogin=Auth::user();
+                        $docente = pdg_dcn_docenteModel::where("id_gen_usuario","=",$userLogin->id)->first();
+                        $grupo = new pdg_gru_grupoModel();
+                        $grupos = $grupo->getGruposDocente($docente->id_pdg_dcn);
+                        $i=0;
+                        $misGrupos="";
+                        foreach ($grupos as $grupo) {
+                            if ($i==0) {
+                                $misGrupos.=$grupo->ID;
+                            }else{
+                                $misGrupos.=",".$grupo->ID;
+                            }
+                            $i=1;
+                        }
+                        if ($misGrupos=="") {
+                            session(['misGrupos' => "NA"]);
+                        }else{
+                            // GUARDAMOS EN UNA VARIABLE DE SESION LOS ID DE LOS GRUPOS QUE LE CORRESPONDEN COMO DOCENTE
+                            session(['misGrupos' => $misGrupos]);
+                        }
+                        return Redirect::to('/');
+                    }else{
+                        return Redirect::to('/');
+                    }
+                    
                 }else{
                     Session::flash('message-error', 'La contraseña es incorrecta. Vuelva a intentarlo.');
                     return Redirect::to('login');
