@@ -120,5 +120,25 @@ class TrabajoDeGraduacionController extends Controller{
 	    $respuesta = $grupo->getEtapas($idGrupo);
 	    return $respuesta;     
     }
+    public function createCierreGrupo($idGrupo){
+        $grupo = pdg_gru_grupoModel::find($idGrupo);
+        if (blank($grupo)) {
+           return view("error");
+        }else{
+            $numero=$grupo->numero_pdg_gru;
+            $grupo= new pdg_gru_grupoModel();
+            $estudiantesGrupo = $grupo->getDetalleGrupo($idGrupo);
+            $tribunal = pdg_tri_gru_tribunal_grupoModel::getTribunalData($idGrupo);
+            if(empty($tribunal)){
+                $tribunal="NA";
+            }
+             $tema = pdg_tra_gra_trabajo_graduacionModel::where('id_pdg_gru', '=',$idGrupo)->select('tema_pdg_tra_gra')->first();
+            if(blank($tema)){
+                $tema="NA";
+            }
+            return view('TrabajoGraduacion.TrabajoDeGraduacion.Cierre.create',compact('numero','estudiantesGrupo','tribunal','tema'));
+        }
+        
+    }
 
 }
