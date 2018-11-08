@@ -166,6 +166,26 @@ class EtapaEvaluativaController extends Controller {
 
 	}
 	public function showEtapa($idEtapa,$idGrupo) {
+		//VERIFICAMOS SI LA ETAPA Y EL GRUPO SON VALIDOS
+		$etaparecibida = cat_eta_eva_etapa_evalutativaModel::find($idEtapa);
+		$grupoRecibido = pdg_gru_grupoModel::find($idGrupo);
+		if (empty($grupoRecibido->id_pdg_gru) || empty($etaparecibida->id_cat_eta_eva)) {
+			return view('error');
+		}else if (Auth::user()->isRole('docente_asesor')) {
+			//TRAEMOS LOS GRUPOS QUE ESTAN ASOCIADOS AL DOCENTE ASESOR
+        	$grupos = session('misGrupos');
+        	$pertenece = 0;
+        	$misGrupos = explode(",", $grupos);
+        	foreach ($misGrupos as $grupo) {
+        		if ($grupo == $idGrupo) {
+        			$pertenece = 1;
+        		}
+        	}
+        	if ($pertenece == 0) {
+        		return view('error');
+        	}
+		}
+			
 			$id = $idEtapa;
 			$etapa = new cat_eta_eva_etapa_evalutativaModel();
 			$trabajoGraduacion = pdg_tra_gra_trabajo_graduacionModel::where('id_pdg_gru', '=',$idGrupo)->first();
@@ -173,7 +193,7 @@ class EtapaEvaluativaController extends Controller {
 			$bodyHtml = "";
 			$userLogin = Auth::user();
 			$estudiante = new gen_EstudianteModel();
-			$idGrupo = $estudiante->getIdGrupo($userLogin->user);
+			//$idGrupo = $estudiante->getIdGrupo($userLogin->user);
 			if (sizeof($documentos) == 0) {
 				// NO CONFIGURADOS LOS DOCUMENTOS QUE SE VAN A REQUERIR EN UNA ETAPA EN ESPECIFICO
 				$documentos = "NA";
@@ -255,7 +275,7 @@ class EtapaEvaluativaController extends Controller {
 
 				}
 			}
-			return view('TrabajoGraduacion.EtapaEvaluativa.show', compact('bodyHtml', 'nombreEtapa', 'ponderacion', 'id'));
+			return view('TrabajoGraduacion.EtapaEvaluativa.show', compact('bodyHtml', 'nombreEtapa', 'ponderacion', 'id','idGrupo'));
 			//return $bodyHtml;
 		
 
@@ -263,9 +283,10 @@ class EtapaEvaluativaController extends Controller {
 	
 	public function configurarEtapa(Request $request) {
 		$trabajoGraduacion = new pdg_tra_gra_trabajo_graduacionModel();
-		$resultado = $trabajoGraduacion->updateEntregablesEtapaGrupo($request["cantidadEntregables"], 1, $request["idEtapa"]);
+		$trabajoGraduacion = pdg_tra_gra_trabajo_graduacionModel::where('id_pdg_gru', '=',$request['idGrupo'])->first();
+		$resultado = $trabajoGraduacion->updateEntregablesEtapaGrupo($request["cantidadEntregables"],$trabajoGraduacion->id_pdg_tra_gra, $request["idEtapa"]);
 		Session::flash('message', 'Entregables por Etapa Modificado con éxito!');
-		return Redirect::to('etapaEvaluativa/' . $request['idEtapa']);
+		return Redirect::to('etapaEvaluativa/' . $request['idEtapa']."/".$request['idGrupo']);
 	}
 	public function createNotas($idEtapa) {
 		//VERIFICAMOS SI EXISTEN EN LA BASE DE DATOS ESOS ID

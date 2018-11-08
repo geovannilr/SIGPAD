@@ -88,7 +88,7 @@ class TrabajoDeGraduacionController extends Controller{
         //$prePerfiles =pdg_ppe_pre_perfilModel::where('id_pdg_gru', '=',$idGrupo)->get();
         $grupo = pdg_gru_grupoModel::find($idGrupo);
         //return var_dump($grupo);
-        if (blank($grupo)) {
+        if (empty($grupo->id_pdg_gru)) {
            return view("error");
         }
         $numero=$grupo->numero_pdg_gru;
@@ -98,11 +98,11 @@ class TrabajoDeGraduacionController extends Controller{
         }
         $etapas=self::getEtapasEvaluativas($idGrupo);
         
-        if (blank($etapas)){
+        if (empty($etapas)){
             $etapas="NA";
         }
         $tema = pdg_tra_gra_trabajo_graduacionModel::where('id_pdg_gru', '=',$idGrupo)->select('tema_pdg_tra_gra')->first();
-        if(!blank($tema)){
+        if(!empty($tema->tema_pdg_tra_gra)){
             return view('TrabajoGraduacion.TrabajoDeGraduacion.index',compact('numero','estudiantesGrupo','tribunal','etapas','tema','idGrupo'));
         }else{
             //Session::flash('message-error', 'El grupo seleccionado aún no ha empezado su proceso de trabajo de graduación');
@@ -125,7 +125,7 @@ class TrabajoDeGraduacionController extends Controller{
     }
     public function createCierreGrupo($idGrupo){
         $grupo = pdg_gru_grupoModel::find($idGrupo);
-        if (blank($grupo)) {
+        if (empty($grupo->id_pdg_gru)) {
            return view("error");
         }else{
             $numero=$grupo->numero_pdg_gru;
@@ -136,7 +136,7 @@ class TrabajoDeGraduacionController extends Controller{
                 $tribunal="NA";
             }
              $tema = pdg_tra_gra_trabajo_graduacionModel::where('id_pdg_gru', '=',$idGrupo)->select('tema_pdg_tra_gra')->first();
-            if(blank($tema)){
+            if(!empty($tema->tema_pdg_tra_gra)){
                 $tema="NA";
             }
             return view('TrabajoGraduacion.TrabajoDeGraduacion.Cierre.create',compact('numero','estudiantesGrupo','tribunal','tema'));

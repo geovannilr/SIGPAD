@@ -201,6 +201,7 @@
             <option value="5">5</option>
           </select>
           <input type="hidden" name="idEtapa" value="{{$id}}">
+           <input type="hidden" name="idGrupo" value="{{$idGrupo}}">
       </div>
       <div class="modal-footer">
         <button type="submit" class="btn btn-primary">Guardar</button>
