@@ -70,6 +70,7 @@ Route::get('dashboard/', 'TrabajoGraduacion\TrabajoDeGraduacionController@index'
 Route::get('dashboardGrupo/{idGrupo}', 'TrabajoGraduacion\TrabajoDeGraduacionController@dashboardGrupo')->name('dashboardGrupo'); //DOCENTE ASESOR
 Route::get('listadoGrupos/', 'TrabajoGraduacion\TrabajoDeGraduacionController@dashboardIndex')->name('listadoGrupos'); //DOCENTE ASESOR
 Route::resource('etapaEvaluativa', 'TrabajoGraduacion\EtapaEvaluativaController');
+Route::get('detalleEtapa/{idEtapa}/{ifGrupo?}', 'TrabajoGraduacion\EtapaEvaluativaController@showEtapa')->name('detalleEtapa');
 Route::post('enviarConfigEtapa', 'TrabajoGraduacion\EtapaEvaluativaController@configurarEtapa')->name('enviarConfigEtapa');
 Route::get('createNotas/{idEtapa}', 'TrabajoGraduacion\EtapaEvaluativaController@createNotas')->name('createNotas');
 Route::post('enviarNotas', 'TrabajoGraduacion\EtapaEvaluativaController@storeNotas')->name('enviarNotas');

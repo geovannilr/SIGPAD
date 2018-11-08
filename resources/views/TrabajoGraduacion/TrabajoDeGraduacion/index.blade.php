@@ -101,7 +101,7 @@
                       </div>
                       <div class="mr-5 text-white" >{{$etapa->nombre_cat_eta_eva}}</div>
                     </div>
-                    <a class="card-footer text-gray clearfix small z-1" href="{{route('etapaEvaluativa.show',$etapa->id_cat_eta_eva."G".$idGrupo)}}">
+                    <a class="card-footer text-gray clearfix small z-1" href="{{url("/")."/detalleEtapa/".$etapa->id_cat_eta_eva."/".$idGrupo}}">
                       <span class="float-left text-white ">Ver Detalles</span>
                       <span class="float-right text-white">
                         <i class="fa fa-angle-right"></i>
@@ -118,7 +118,7 @@
                       </div>
                       <div class="mr-5">{{$etapa->nombre_cat_eta_eva}}</div>
                     </div>
-                    <a class="card-footer text-gray clearfix small z-1" href="{{route('etapaEvaluativa.show',$etapa->id_cat_eta_eva."G".$idGrupo)}}">
+                    <a class="card-footer text-gray clearfix small z-1" href="{{url("/")."/detalleEtapa/".$etapa->id_cat_eta_eva."/".$idGrupo}}">
                       <span class="float-left">Ver detalles</span>
                       <span class="float-right">
                         <i class="fa fa-angle-right"></i>
