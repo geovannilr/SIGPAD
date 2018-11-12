@@ -63,7 +63,7 @@ class PerfilController extends Controller
                 $idGrupo = $estudiante->getIdGrupo($userLogin->user);
                 if ($idGrupo != 'NA'){
                     $miGrupo = pdg_gru_grupoModel::find($idGrupo);
-                    if ($miGrupo->id_cat_sta == 9 ) {//APROBADO
+                    if ($miGrupo->id_cat_sta == 3 ) {//APROBADO
                         $prePerfiles =pdg_ppe_pre_perfilModel::where('id_pdg_gru', '=',$idGrupo)->get();
                         if (sizeof($prePerfiles)==0) {
                            Session::flash('message-error', 'Para poder ingresar a Perfiles de trabajo de graduación, primero debes enviar tus Pre-Perfiles y que al menos uno de estos sea aprobado por Coordinación.');
@@ -486,6 +486,8 @@ class PerfilController extends Controller
         $tragra->id_cat_ctg_tra = $perfil->id_cat_ctg_tra;
         $tragra->id_cat_sta = $perfil->id_cat_sta;
         $tragra->save();
+
+        pdg_tra_gra_trabajo_graduacionModel::setEntregablesEtapaGrupo($tragra->id_pdg_tra_gra);
     }
     public function rechazarPerfil(Request $request) {
 	    $perfil =pdg_per_perfilModel::find($request['idPerfil']);

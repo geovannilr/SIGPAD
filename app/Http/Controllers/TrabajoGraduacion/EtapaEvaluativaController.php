@@ -443,7 +443,7 @@ class EtapaEvaluativaController extends Controller {
         $notas = pdg_not_cri_tra_nota_criterio_trabajoModel::getNotasEtapa($idGrupo,$idEtaEva);
         $grupo = pdg_gru_grupoModel::find($idGrupo);
         $etapa = cat_eta_eva_etapa_evalutativaModel::find($idEtaEva);
-        $subida = ($grupo->relacion_gru_tdg->id_cat_tpo_tra_gra!=1);
+        $subida = ($grupo->relacion_gru_tdg->id_cat_tpo_tra_gra!=1);  // 1-Tipo de trabajo de graduación 2-Variable
         //$subida = true; PARA PRUEBAS CON GRUPOS QUE NO SEAN DE TIPO VARIABLE!!!!!!!!!!!!
         if (empty($grupo->id_pdg_gru) || empty($etapa->id_cat_eta_eva)){
             return view('error');

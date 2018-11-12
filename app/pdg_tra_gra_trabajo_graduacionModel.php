@@ -39,4 +39,16 @@ class pdg_tra_gra_trabajo_graduacionModel extends Model
         $errorCode = DB::select('select @result as resultado');
         return $errorCode[0]->resultado;
     }      
+
+   public  static  function setEntregablesEtapaGrupo($idTraGra){
+     
+            DB::statement('CALL sp_pdg_eta_eva_set_EntregablesxEtapas_byGrypo( :idTrabajoGraduacion,@result);',
+                array(
+                    $idTraGra,
+                )
+            );
+        $errorCode = DB::select('select @result as resultado');
+        return $errorCode[0]->resultado;
+    }      
+
 }
