@@ -142,7 +142,7 @@
   @endcan
 </div> -->
 <div class="row">
-  <div class="col-md-6">
+  <div class="col-md-4">
     <div class="card text-black bg-secundary o-hidden h-100">
                 <div class="card-body">
                   <div class="card-body-icon">
@@ -158,7 +158,7 @@
                 </a>
               </div>
   </div>
-   <div class="col-md-6">
+   <div class="col-md-4">
     <div class="card text-black bg-secundary o-hidden h-100">
                 <div class="card-body">
                   <div class="card-body-icon">
@@ -168,6 +168,22 @@
                 </div>
                 <a class="card-footer text-black clearfix small z-1" href="javasript:void(0)" onclick="calificarEtapa({{$idGrupo}},{{$id}}); return false;">
                   <span class="float-left">Ingresar</span>
+                  <span class="float-right">
+                   <i class="fa fa-angle-right"></i>
+                  </span>
+                </a>
+              </div>
+  </div>
+   <div class="col-md-4">
+    <div class="card text-black bg-secundary o-hidden h-100">
+                <div class="card-body">
+                  <div class="card-body-icon">
+                    <i class="fa fa-thumbs-up"></i>
+                  </div>
+                  <div class="mr-5">Aprobar Etapa</div>
+                </div>
+                <a class="card-footer text-black clearfix small z-1" data-toggle="modal" data-target="#modalAprobar"  href="#">
+                  <span class="float-left">Realizar</span>
                   <span class="float-right">
                    <i class="fa fa-angle-right"></i>
                   </span>
@@ -211,4 +227,29 @@
   </div>
 </div>
 {!!Html::script('js/TrabajoGraduacion/etapaEvaluativa.js')!!}
+<!-- Modal APROBAR ETAPA -->
+<div class="modal fade" id="modalAprobar" tabindex="-1" role="dialog" aria-labelledby="modalAprobar" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header breadcrumb">
+        <h5>Aprobar Etapa Evaluativa</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        {!! Form:: open(['route'=>'aprobarEtapa','method'=>'POST', 'id'=>'formAprobar']) !!}
+          <p class="text-danger">LEYENDA DE SI PUEDE  NO APROBAR ETAPA</label>
+          
+          <input type="hidden" name="idEtapa" value="{{$id}}" />
+          <input type="hidden" name="idGrupo" value="{{$idGrupo}}" />
+      </div>
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-primary">Aprobar</button>
+      </div>
+      {!! Form:: close() !!}
+    </div>
+  </div>
+</div>
+
 @stop

@@ -469,4 +469,10 @@ class EtapaEvaluativaController extends Controller {
         }
         return response()->json(['errorCode'=>$errorCode,'errorMessage'=>$errorMessage,'info'=>$info]);
     }
+	
+	public function aprobarEtapa(Request $request){
+    	$idGrupo=$request['idGrupo'];
+    	$idEtapa =$request['idEtapa'];
+    	$trabajoGraduacion = pdg_tra_gra_trabajo_graduacionModel::where('id_pdg_gru', '=',$idGrupo)->first();
+    }
 }
