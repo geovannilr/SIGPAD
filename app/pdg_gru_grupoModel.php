@@ -26,6 +26,13 @@ class pdg_gru_grupoModel extends Model{
     {
         return $this->hasMany('App\pdg_gru_est_grupo_estudianteModel','id_pdg_gru','id_pdg_gru');
     }
+    /**
+     * Retornar la relacion-grupo-tdg, relacion One to One
+     */
+    public function relacion_gru_tdg()
+    {
+        return $this->hasOne('App\pdg_tra_gra_trabajo_graduacionModel','id_pdg_gru','id_pdg_gru');
+    }
 //EJRG end
 
 	function getGrupos (){

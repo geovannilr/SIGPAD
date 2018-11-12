@@ -427,7 +427,7 @@ class EtapaEvaluativaController extends Controller {
 			}
 			
 		}
-		return view('TrabajoGraduacion.NotaEtapaEvaluativa.index', compact('bodyHtml','etapa',"nombreGrupo"));
+		return view('TrabajoGraduacion.NotaEtapaEvaluativa.index', compact('bodyHtml','etapa',"nombreGrupo",'idGrupo'));
 
 	}
 	public function verificarGrupo($carnet) {
@@ -435,4 +435,38 @@ class EtapaEvaluativaController extends Controller {
 		$respuesta = $estudiante->getGrupoCarnet($carnet);
 		return $respuesta;
 	}
+    public function calificarEtapa(Request $request){
+        $idGrupo = $request['grupo'];
+        $idEtaEva = $request['etapa'];
+
+        $criterios = pdg_not_cri_tra_nota_criterio_trabajoModel::getCriteriosEtapa($idGrupo,$idEtaEva);
+        $notas = pdg_not_cri_tra_nota_criterio_trabajoModel::getNotasEtapa($idGrupo,$idEtaEva);
+        $grupo = pdg_gru_grupoModel::find($idGrupo);
+        $etapa = cat_eta_eva_etapa_evalutativaModel::find($idEtaEva);
+        $subida = ($grupo->relacion_gru_tdg->id_cat_tpo_tra_gra!=1);
+        //$subida = true; PARA PRUEBAS CON GRUPOS QUE NO SEAN DE TIPO VARIABLE!!!!!!!!!!!!
+        if (empty($grupo->id_pdg_gru) || empty($etapa->id_cat_eta_eva)){
+            return view('error');
+        }
+        return view('TrabajoGraduacion.NotaEtapaEvaluativa.list',
+            compact('criterios', 'notas', 'grupo','etapa', 'subida')
+        );
+    }
+    public function updateNotas(Request $request){
+        $errorCode = -1;
+        $errorMessage = "No se procesaron los datos";
+        try{
+            $idGru = $request['idGru'];
+            $idEtaEva = $request['idEtaEva'];
+            $notas = $request['notas'];
+            $errorCode = pdg_not_cri_tra_nota_criterio_trabajoModel::bulkUpdateNotas($idGru,$idEtaEva,$notas);
+            $errorMessage = "¡Notas del grupo GRUPO-04 guardadas éxitosamente!";
+            $info = $notas;
+        }catch (Exception $exception){
+            $info = $exception->getMessage();
+            $errorCode = 1;
+            $errorMessage = "Su solicitud no pudo ser procesada, intente más tarde.";
+        }
+        return response()->json(['errorCode'=>$errorCode,'errorMessage'=>$errorMessage,'info'=>$info]);
+    }
 }

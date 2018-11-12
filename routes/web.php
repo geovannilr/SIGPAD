@@ -75,6 +75,8 @@ Route::post('enviarConfigEtapa', 'TrabajoGraduacion\EtapaEvaluativaController@co
 Route::get('createNotas/{idEtapa}', 'TrabajoGraduacion\EtapaEvaluativaController@createNotas')->name('createNotas');
 Route::post('enviarNotas', 'TrabajoGraduacion\EtapaEvaluativaController@storeNotas')->name('enviarNotas');
 Route::get('cierreTDG/{idGrupo}', 'TrabajoGraduacion\TrabajoDeGraduacionController@createCierreGrupo')->name('cierreTDG');
+Route::post('calificaEtapa','TrabajoGraduacion\EtapaEvaluativaController@calificarEtapa')->name('calificaEtapa');
+Route::post('updateNotas','TrabajoGraduacion\EtapaEvaluativaController@updateNotas')->name('updateNotas');
 
 
 //Reportes

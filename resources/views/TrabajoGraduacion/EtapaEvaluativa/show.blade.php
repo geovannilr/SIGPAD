@@ -166,7 +166,7 @@
                   </div>
                   <div class="mr-5">Notas</div>
                 </div>
-                <a class="card-footer text-black clearfix small z-1" href="{{route('createNotas',$id)}}">
+                <a class="card-footer text-black clearfix small z-1" href="javasript:void(0)" onclick="calificarEtapa({{$idGrupo}},{{$id}}); return false;">
                   <span class="float-left">Ingresar</span>
                   <span class="float-right">
                    <i class="fa fa-angle-right"></i>
@@ -210,5 +210,5 @@
     </div>
   </div>
 </div>
-
+{!!Html::script('js/TrabajoGraduacion/etapaEvaluativa.js')!!}
 @stop
