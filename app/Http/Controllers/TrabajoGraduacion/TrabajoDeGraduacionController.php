@@ -18,6 +18,9 @@ use \App\pdg_gru_est_grupo_estudianteModel;
 use \App\pdg_dcn_docenteModel;
 use \App\gen_int_integracionModel;
 use \App\pub_publicacionModel;
+use \App\pub_col_colaboradorModel;
+use \App\rel_col_pub_colaborador_publicacionModel;
+
 use Zend\Ldap\Ldap;
 
 class TrabajoDeGraduacionController extends Controller{
@@ -171,11 +174,12 @@ class TrabajoDeGraduacionController extends Controller{
             }else{
                  $correlativo = $ultimaCorrPublicacionAño->correlativo_pub+1;
             }
-            if ($correlativo > = 1 && $correlativo<=9) {
+            if ($correlativo >= 1 && $correlativo <= 9) {
                 $codigo =  date('Y').'0'.$correlativo;  
             }else{
                $codigo =  date('Y').$correlativo;
             }
+
             // TIPO 1 - GRUPO
                $lastIdIntegracion = gen_int_integracionModel::create
                 ([
@@ -197,12 +201,38 @@ class TrabajoDeGraduacionController extends Controller{
 
             //INGRESAMOS LOS COLABORADORES JUNTO CON SU LLAVE DE INTEGRACION
             foreach ($tribunalEvaluador as $tribunal) { // TIPO 2 - DOCENTES
-               $lastIdIntegracion = gen_int_integracionModel::create
-                ([
-                    'id_gen_tpo_int' => $request['name'],
-                    'llave_gen_int' => $tribunal->id_pdg_dcn
-                    
-                ]);
+                //VERIFICAMOS SI EL DOCENTE YA ESTA INGRESADO
+                $llaveIntegracion = gen_int_integracionModel::where("llave_gen_int","=",$tribunal->id_pdg_dcn)->where("id_gen_tpo_int","=",2)->first();
+                if (empty($llaveIntegracion->id_gen_int)) {
+                    $lastIdIntegracion = gen_int_integracionModel::create
+                    ([
+                        'id_gen_tpo_int' => 2,
+                        'llave_gen_int' => $tribunal->id_pdg_dcn
+                        
+                    ]);
+                    $lastIdColaborador = pub_col_colaboradorModel::create
+                    ([
+                        'id_gen_int' => $lastIdIntegracion,
+                        'nombres_pub_col' => $tribunal->name,
+                        'apellidos_pub_col' => ""
+                    ]);
+
+                    if ($tribunal->id_pdg_tri_rol == 1) {
+                        $categoriaColaborador = 2 ;//ASESOR
+                    }else{
+                        $categoriaColaborador = 4; // OBSERVADOR
+                    }
+                    $lastIdRelacion = rel_col_pub_colaborador_publicacionModel::create
+                    ([
+                        'id_pub' => $lastIdPublicacion, 
+                        'id_pub_col' => $lastIdColaborador,
+                        'id_cat_tpo_col_pub' => $categoriaColaborador
+                    ]);
+
+                }else{
+
+                }
+               
             }
             
         }
