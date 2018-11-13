@@ -76,8 +76,9 @@
         </div>
       </div>
      <br>
-    		{!! Form:: open(['route'=>'storeUsersUplay','method'=>'POST', 'id'=>'formUsers','files'=>'true','enctype'=>'multipart/form-data']) !!}
+    		{!! Form:: open(['route'=>'storeCierreTDG','method'=>'POST', 'id'=>'formCierre','files'=>'true','enctype'=>'multipart/form-data']) !!}
     			@include('TrabajoGraduacion.TrabajoDeGraduacion.Cierre.forms.formCreate')
+          <input type="hidden" name="idGrupo" value="{{$idGrupo}}">
         <div class="row">
           <div class="form-group col-sm-6">
             {!! Form::submit('Enviar',['class'=>'btn btn-primary']) !!}

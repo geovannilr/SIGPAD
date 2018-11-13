@@ -78,6 +78,9 @@ Route::get('cierreTDG/{idGrupo}', 'TrabajoGraduacion\TrabajoDeGraduacionControll
 Route::post('aprobarEtapa','TrabajoGraduacion\EtapaEvaluativaController@aprobarEtapa')->name('aprobarEtapa');
 Route::post('calificaEtapa','TrabajoGraduacion\EtapaEvaluativaController@calificarEtapa')->name('calificaEtapa');
 Route::post('updateNotas','TrabajoGraduacion\EtapaEvaluativaController@updateNotas')->name('updateNotas');
+Route::post('storeCierreTDG', 'TrabajoGraduacion\TrabajoDeGraduacionController@storeCierreGrupo')->name('storeCierreTDG');
+
+
 
 
 //Reportes

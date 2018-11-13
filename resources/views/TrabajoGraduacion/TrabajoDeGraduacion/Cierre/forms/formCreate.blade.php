@@ -4,7 +4,7 @@
 	</div>
 	<div class="form-group col-sm-12">
 		{!! Form::label('Tomo Final') !!}
-		{!!Form::file('tomoFinal',['class'=>'form-control documentoNotas','accept'=>"xlsx"])  !!}
+		{!!Form::file('tomoFinal',['class'=>'form-control documento','accept'=>"pdf,doc.docx"])  !!}
 	</div>
 	
 

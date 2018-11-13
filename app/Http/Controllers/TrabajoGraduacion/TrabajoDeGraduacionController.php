@@ -16,6 +16,8 @@ use \App\pdg_gru_grupoModel;
 use \App\cat_tpo_tra_gra_tipo_trabajo_graduacionModel;
 use \App\pdg_gru_est_grupo_estudianteModel;
 use \App\pdg_dcn_docenteModel;
+use \App\gen_int_integracionModel;
+use \App\pub_publicacionModel;
 use Zend\Ldap\Ldap;
 
 class TrabajoDeGraduacionController extends Controller{
@@ -132,14 +134,77 @@ class TrabajoDeGraduacionController extends Controller{
             $grupo= new pdg_gru_grupoModel();
             $estudiantesGrupo = $grupo->getDetalleGrupo($idGrupo);
             $tribunal = pdg_tri_gru_tribunal_grupoModel::getTribunalData($idGrupo);
-            if(empty($tribunal)){
+
+            if(sizeof($tribunal) == 0){
                 $tribunal="NA";
             }
              $tema = pdg_tra_gra_trabajo_graduacionModel::where('id_pdg_gru', '=',$idGrupo)->select('tema_pdg_tra_gra')->first();
-            if(!empty($tema->tema_pdg_tra_gra)){
+            if(empty($tema->tema_pdg_tra_gra)){
                 $tema="NA";
             }
-            return view('TrabajoGraduacion.TrabajoDeGraduacion.Cierre.create',compact('numero','estudiantesGrupo','tribunal','tema'));
+            return view('TrabajoGraduacion.TrabajoDeGraduacion.Cierre.create',compact('numero','estudiantesGrupo','tribunal','tema','idGrupo'));
+        }
+        
+    }
+
+    public function storeCierreGrupo(Request $request){
+        $validatedData = $request->validate([
+            'resumen' => 'required',
+            'tomoFinal' => 'required'
+        ]);
+        $idGrupo = $request['idGrupo'];
+        $grupo = pdg_gru_grupoModel::find($idGrupo);
+        $tema = pdg_tra_gra_trabajo_graduacionModel::where('id_pdg_gru', '=',$idGrupo)->select('tema_pdg_tra_gra')->first();
+        if (empty($grupo->id_pdg_gru)) {
+           return view("error");
+        }else{
+            $numero=$grupo->numero_pdg_gru;
+            $grupo= new pdg_gru_grupoModel();
+            $estudiantesGrupo = $grupo->getDetalleGrupo($idGrupo);
+            $tribunalEvaluador = pdg_tri_gru_tribunal_grupoModel::getTribunalData($idGrupo);
+            //INGRESAMOS LA PUBLICACION JUNTO CON SU LLAVE DE INTEGRACION
+            $ultimaCorrPublicacionAño=pub_publicacionModel::where("anio_pub","=",date('Y'))->orderBy('correlativo_pub', 'desc')->first();
+            $correlativo=0;
+            $codigo = "0";
+            if (empty($ultimaCorrPublicacionAño->correlativo_pub)) {
+                 $correlativo =1;
+            }else{
+                 $correlativo = $ultimaCorrPublicacionAño->correlativo_pub+1;
+            }
+            if ($correlativo > = 1 && $correlativo<=9) {
+                $codigo =  date('Y').'0'.$correlativo;  
+            }else{
+               $codigo =  date('Y').$correlativo;
+            }
+            // TIPO 1 - GRUPO
+               $lastIdIntegracion = gen_int_integracionModel::create
+                ([
+                    'id_gen_tpo_int' => 1,
+                    'llave_gen_int' => $idGrupo
+                    
+                ]);
+
+                $lastIdPublicacion = pub_publicacionModel::create
+                ([
+                    'id_cat_tpo_pub' => 1, //TIPO TDG
+                    'id_gen_int' => $lastIdIntegracion,
+                    'titulo_pub' => $tema->tema_pdg_tra_gra,
+                    'anio_pub' => date('Y'),
+                    'correlativo_pub' => $correlativo,
+                    'codigo_pub' => $codigo,
+                    'resumen_pub' => $request['resumen']
+                ]);
+
+            //INGRESAMOS LOS COLABORADORES JUNTO CON SU LLAVE DE INTEGRACION
+            foreach ($tribunalEvaluador as $tribunal) { // TIPO 2 - DOCENTES
+               $lastIdIntegracion = gen_int_integracionModel::create
+                ([
+                    'id_gen_tpo_int' => $request['name'],
+                    'llave_gen_int' => $tribunal->id_pdg_dcn
+                    
+                ]);
+            }
+            
         }
         
     }
