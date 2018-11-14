@@ -20,6 +20,7 @@ use \App\gen_int_integracionModel;
 use \App\pub_publicacionModel;
 use \App\pub_col_colaboradorModel;
 use \App\rel_col_pub_colaborador_publicacionModel;
+use \App\pub_aut_publicacion_autorModel;
 
 use Zend\Ldap\Ldap;
 
@@ -164,6 +165,7 @@ class TrabajoDeGraduacionController extends Controller{
             $numero=$grupo->numero_pdg_gru;
             $grupo= new pdg_gru_grupoModel();
             $estudiantesGrupo = $grupo->getDetalleGrupo($idGrupo);
+        
             $tribunalEvaluador = pdg_tri_gru_tribunal_grupoModel::getTribunalData($idGrupo);
             //INGRESAMOS LA PUBLICACION JUNTO CON SU LLAVE DE INTEGRACION
             $ultimaCorrPublicacionAño=pub_publicacionModel::where("anio_pub","=",date('Y'))->orderBy('correlativo_pub', 'desc')->first();
@@ -191,7 +193,7 @@ class TrabajoDeGraduacionController extends Controller{
                 $lastIdPublicacion = pub_publicacionModel::create
                 ([
                     'id_cat_tpo_pub' => 1, //TIPO TDG
-                    'id_gen_int' => $lastIdIntegracion,
+                    'id_gen_int' => $lastIdIntegracion->id_gen_int,
                     'titulo_pub' => $tema->tema_pdg_tra_gra,
                     'anio_pub' => date('Y'),
                     'correlativo_pub' => $correlativo,
@@ -212,7 +214,7 @@ class TrabajoDeGraduacionController extends Controller{
                     ]);
                     $lastIdColaborador = pub_col_colaboradorModel::create
                     ([
-                        'id_gen_int' => $lastIdIntegracion,
+                        'id_gen_int' => $lastIdIntegracion->id_gen_int,
                         'nombres_pub_col' => $tribunal->name,
                         'apellidos_pub_col' => ""
                     ]);
@@ -224,19 +226,67 @@ class TrabajoDeGraduacionController extends Controller{
                     }
                     $lastIdRelacion = rel_col_pub_colaborador_publicacionModel::create
                     ([
-                        'id_pub' => $lastIdPublicacion, 
-                        'id_pub_col' => $lastIdColaborador,
+                        'id_pub' => $lastIdPublicacion->id_pub, 
+                        'id_pub_col' => $lastIdColaborador->id_pub_col,
                         'id_cat_tpo_col_pub' => $categoriaColaborador
                     ]);
 
                 }else{
 
+                        if ($tribunal->id_pdg_tri_rol == 1) {
+                            $categoriaColaborador = 2 ;//ASESOR
+                        }else{
+                            $categoriaColaborador = 4; // OBSERVADOR
+                        }
+                        $colaborador=pub_col_colaboradorModel::where("id_gen_int","=",$llaveIntegracion->id_gen_int)->first();
+                        if (!empty($colaborador->id_pub_col)) {
+                            $lastIdRelacion = rel_col_pub_colaborador_publicacionModel::create
+                            ([
+                                'id_pub' => $lastIdPublicacion->id_pub, 
+                                'id_pub_col' => $colaborador->id_pub_col,
+                                'id_cat_tpo_col_pub' => $categoriaColaborador
+                            ]);
+                        }
+                        
                 }
                
             }
-            
-        }
+
+             //INGRESAMOS LOS AUTORES
+            foreach ($estudiantesGrupo as $estudiante) {
+                 //VERIFICAMOS SI EL ESTUDIANTE YA ESTA INGRESADO 3-Estudiante
+                $llaveIntegracion = gen_int_integracionModel::where("llave_gen_int","=",$estudiante->ID_Estudiante)->where("id_gen_tpo_int","=",3)->first();
+                if (empty($llaveIntegracion->id_gen_int)) {
+                    $lastIdIntegracion = gen_int_integracionModel::create
+                    ([
+                        'id_gen_tpo_int' => 3,
+                        'llave_gen_int' => $estudiante->ID_Estudiante
+                        
+                    ]);
+                    $lastIdAutor = pub_aut_publicacion_autorModel::create
+                    ([
+                        'id_pub' => $lastIdPublicacion->id_pub,
+                        'id_gen_int' => $lastIdIntegracion->id_gen_int,
+                        'nombres_pub_aut' => $estudiante->Nombre,
+                        'apellidos_pub_aut' => ""
+                    ]);
+
+                }else{
+                    $autor=pub_aut_publicacion_autorModel::where("id_gen_int","=",$llaveIntegracion->id_gen_int)->first();
+                     $lastIdAutor = pub_aut_publicacion_autorModel::create
+                    ([
+                        'id_pub' => $lastIdPublicacion->id_pub,
+                        'id_gen_int' => $autor->id_gen_int,
+                        'nombres_pub_aut' => $estudiante->Nombre,
+                        'apellidos_pub_aut' => ""
+                    ]);
+                } 
+            }
         
-    }
+
+        }
+        Session::flash('message', 'Se ha realizado el cierre de trabajo de graduación Exitosamente!!');
+       return redirect("/publicacion/".$lastIdPublicacion->id_pub); 
+    }    
 
 }

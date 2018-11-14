@@ -17,7 +17,8 @@ class pub_publicacionModel extends Model{
 			'titulo_pub',
 			'anio_pub',
 			'correlativo_pub',
-			'codigo_pub'
+			'codigo_pub',
+			'resumen_pub'
 		];
 	public function getColaboradores($idPub){ 
 	 	$resultado=DB::select('
