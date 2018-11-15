@@ -9,6 +9,8 @@ use App\Http\Controllers\Controller;
 use Session;
 use Redirect;
 use Exception;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Auth;
 use \App\pdg_ppe_pre_perfilModel;
 use \App\gen_EstudianteModel;
@@ -21,6 +23,7 @@ use \App\pub_publicacionModel;
 use \App\pub_col_colaboradorModel;
 use \App\rel_col_pub_colaborador_publicacionModel;
 use \App\pub_aut_publicacion_autorModel;
+use \App\pub_arc_publicacion_archivoModel;
 
 use Zend\Ldap\Ldap;
 
@@ -282,10 +285,29 @@ class TrabajoDeGraduacionController extends Controller{
                     ]);
                 } 
             }
+            //GUARDAMOS EL DOCUMENTO ASOCIADO A LA PUBLICACION
+            $file = $request->file('tomoFinal');
+            $publicacion = pub_publicacionModel::find($request['publicacion']);
+           //obtenemos el nombre del archivo
+            $nombre = "Codigo".$codigo.date('hms').$file->getClientOriginalName();
+           //indicamos que queremos guardar un nuevo archivo en el disco local
+            Storage::disk('publicaciones')->put($nombre, File::get($file));
+            $fecha=date('Y-m-d H:m:s');
+            $path= public_path().$_ENV['PATH_PUBLICACIONES'];
+             $lastIdDocumento = pub_arc_publicacion_archivoModel::create
+            ([
+                'id_pub'                     => $lastIdPublicacion->id_pub,
+                'ubicacion_pub_arc'          => $nombre,
+                'fecha_subida_pub_arc'       => $fecha,
+                'nombre_pub_arc'             => $file->getClientOriginalName(),
+                'descripcion_pub_arc'        => "Tomo final, cierre de trabajo de graduación",
+                'ubicacion_fisica_pub_arc'   => 'PENDIENTE',
+                'activo_pub_arc'             => 1
+            ]);
         
 
         }
-        Session::flash('message', 'Se ha realizado el cierre de trabajo de graduación Exitosamente!!');
+        Session::flash('message', 'Se ha realizado el cierre de trabajo de graduación Exitosamente!!G');
        return redirect("/publicacion/".$lastIdPublicacion->id_pub); 
     }    
 
