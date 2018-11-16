@@ -24,6 +24,7 @@ use \App\pub_col_colaboradorModel;
 use \App\rel_col_pub_colaborador_publicacionModel;
 use \App\pub_aut_publicacion_autorModel;
 use \App\pub_arc_publicacion_archivoModel;
+use \App\pdg_apr_eta_tra_aprobador_etapa_trabajoModel;
 
 use Zend\Ldap\Ldap;
 
@@ -57,8 +58,15 @@ class TrabajoDeGraduacionController extends Controller{
                         if (sizeof($etapas) == 0){
                         	$etapas="NA";
                         }
-                        $tema = pdg_tra_gra_trabajo_graduacionModel::where('id_pdg_gru', '=',$idGrupo)->select('tema_pdg_tra_gra')->first();
-                        return view('TrabajoGraduacion.TrabajoDeGraduacion.index',compact('numero','estudiantes','tribunal','etapas','tema','idGrupo'));
+                        $traGra = pdg_tra_gra_trabajo_graduacionModel::where('id_pdg_gru', '=',$idGrupo)->first();
+                        $tema = $traGra->tema_pdg_tra_gra;
+
+                        $aprobadas = pdg_apr_eta_tra_aprobador_etapa_trabajoModel::contarEtapas($traGra->id_pdg_tra_gra,pdg_apr_eta_tra_aprobador_etapa_trabajoModel::T_CONTEO_APROBADAS);
+                        $originales = pdg_apr_eta_tra_aprobador_etapa_trabajoModel::contarEtapas($traGra->id_pdg_tra_gra,pdg_apr_eta_tra_aprobador_etapa_trabajoModel::T_CONTEO_ORIGINALES);
+                        $avanceRaw = round($originales==0?0:100*$aprobadas/$originales);
+                        $avance = number_format((float)$avanceRaw, 2, '.', '');
+
+                        return view('TrabajoGraduacion.TrabajoDeGraduacion.index',compact('numero','estudiantes','tribunal','etapas','tema','idGrupo','avance'));
                     }else{
                         //EL GRUPO AUN NO HA SIDO APROBADO
                     Session::flash('message-error', 'Tu grupo de trabajo de graduación aún no ha sido aprobado');
@@ -110,9 +118,16 @@ class TrabajoDeGraduacionController extends Controller{
         if (empty($etapas)){
             $etapas="NA";
         }
-        $tema = pdg_tra_gra_trabajo_graduacionModel::where('id_pdg_gru', '=',$idGrupo)->select('tema_pdg_tra_gra')->first();
-        if(!empty($tema->tema_pdg_tra_gra)){
-            return view('TrabajoGraduacion.TrabajoDeGraduacion.index',compact('numero','estudiantesGrupo','tribunal','etapas','tema','idGrupo'));
+        $traGra = pdg_tra_gra_trabajo_graduacionModel::where('id_pdg_gru', '=',$idGrupo)->first();
+        $tema = $traGra->tema_pdg_tra_gra;
+
+        $aprobadas = pdg_apr_eta_tra_aprobador_etapa_trabajoModel::contarEtapas($traGra->id_pdg_tra_gra,pdg_apr_eta_tra_aprobador_etapa_trabajoModel::T_CONTEO_APROBADAS);
+        $originales = pdg_apr_eta_tra_aprobador_etapa_trabajoModel::contarEtapas($traGra->id_pdg_tra_gra,pdg_apr_eta_tra_aprobador_etapa_trabajoModel::T_CONTEO_ORIGINALES);
+        $avanceRaw = round($originales==0?0:100*$aprobadas/$originales);
+        $avance = number_format((float)$avanceRaw, 2, '.', '');
+
+        if(!empty($tema)){
+            return view('TrabajoGraduacion.TrabajoDeGraduacion.index',compact('numero','estudiantesGrupo','tribunal','etapas','tema','idGrupo','avance'));
         }else{
             //Session::flash('message-error', 'El grupo seleccionado aún no ha empezado su proceso de trabajo de graduación');
             //return redirect()->route('listadoGrupos');

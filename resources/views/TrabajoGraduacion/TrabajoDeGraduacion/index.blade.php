@@ -7,6 +7,19 @@
       });
       </script>   
 @endif
+<script type="text/javascript">
+    $(function () {
+        colorProgress();
+    });
+    function colorProgress() {
+        var val = parseInt({{$avance}});
+        var bgcolor = "";
+        if(val <= 25) bgcolor = "bg-warning";
+        else if (val > 75) bgcolor = "bg-success";
+        else bgcolor = "";
+        $("#progressBarDiv").addClass(bgcolor);
+    }
+</script>
 <div class="container-fluid">
       <!-- Breadcrumbs-->
       <ol class="breadcrumb" style="text-align: center; margin-top: 1em">
@@ -15,12 +28,14 @@
           </li>
           <li class="breadcrumb-item active">Grupo {{$numero}}</li>
     </ol>
-    <h3 class="text-center">{{strtoupper($tema->tema_pdg_tra_gra)}}</h3>
+    <h3 class="text-center">{{strtoupper($tema)}}</h3>
       <br>
       <br>
       Progreso
       <div class="progress">
-        <div class="progress-bar progress-bar-striped" role="progressbar" style="width: 20%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">11%</div>
+        <div id="progressBarDiv" class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: {{$avance}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
+            {{$avance}}%
+        </div>
       </div>
       <hr>
       <div class="row">
