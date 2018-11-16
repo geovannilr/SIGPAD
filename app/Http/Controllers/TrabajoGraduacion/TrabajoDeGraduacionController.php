@@ -147,8 +147,30 @@ class TrabajoDeGraduacionController extends Controller{
 	    $respuesta = $grupo->getEtapas($idGrupo);
 	    return $respuesta;     
     }
-    public function createCierreGrupo($idGrupo){
+    public function createCierreGrupo(){
+        
+        $userLogin=Auth::user();
+        if (Auth::user()->isRole('estudiante')) {
+                $estudiante = new gen_EstudianteModel();
+                $idGrupo = $estudiante->getIdGrupo($userLogin->user);
+        }else{
+            return view("error");
+        }
         $grupo = pdg_gru_grupoModel::find($idGrupo);
+        $trabajoGraduacion = pdg_tra_gra_trabajo_graduacionModel::where('id_pdg_gru', '=',$idGrupo)->first();
+
+        if(empty($trabajoGraduacion->id_pdg_tra_gra)){
+                return view("error");
+        }
+        //VERIFICAMOS QUE PUEDE QUE LAS ETAPAS YA ESTAN CERRADAS Y PUEDE HACER EL CIERRE DE TRABAJO DE GRADUACION
+        $verificar=pdg_apr_eta_tra_aprobador_etapa_trabajoModel::where("id_pdg_tra_gra","=",$trabajoGraduacion->id_pdg_tra_gra)->where("inicio","=","1")->where("aprobo","=","0")->first();
+        if (empty($verificar->id_pdg_apr_eta_tra)) {
+             Session::flash('message-warning', 'No pueces realizar el cierre de trabajo de graduación hasta que hayas aprobado todas las etapas evaluativas, consulta con tu docente asesor.');
+             return redirect("/dashboard"); 
+        }
+         if(empty($trabajoGraduacion->tema_pdg_tra_gra)){
+                $tema="NA";
+        }
         if (empty($grupo->id_pdg_gru)) {
            return view("error");
         }else{
@@ -160,21 +182,33 @@ class TrabajoDeGraduacionController extends Controller{
             if(sizeof($tribunal) == 0){
                 $tribunal="NA";
             }
-             $tema = pdg_tra_gra_trabajo_graduacionModel::where('id_pdg_gru', '=',$idGrupo)->select('tema_pdg_tra_gra')->first();
-            if(empty($tema->tema_pdg_tra_gra)){
-                $tema="NA";
-            }
+            
             return view('TrabajoGraduacion.TrabajoDeGraduacion.Cierre.create',compact('numero','estudiantesGrupo','tribunal','tema','idGrupo'));
         }
         
     }
 
     public function storeCierreGrupo(Request $request){
+        if (!Auth::user()->isRole('estudiante')) {
+               return view('error');
+        }
         $validatedData = $request->validate([
             'resumen' => 'required',
-            'tomoFinal' => 'required'
+            'tomoFinal' => 'required',
+            'idGrupo' =>'required'
         ]);
         $idGrupo = $request['idGrupo'];
+        $trabajoGraduacion = pdg_tra_gra_trabajo_graduacionModel::where('id_pdg_gru', '=',$idGrupo)->first();
+
+        if(empty($trabajoGraduacion->id_pdg_tra_gra)){
+                return view("error");
+        }
+        //VERIFICAMOS QUE PUEDE QUE LAS ETAPAS YA ESTAN CERRADAS Y PUEDE HACER EL CIERRE DE TRABAJO DE GRADUACION
+        $verificar=pdg_apr_eta_tra_aprobador_etapa_trabajoModel::where("id_pdg_tra_gra","=",$trabajoGraduacion->id_pdg_tra_gra)->where("inicio","=","1")->where("aprobo","=","0")->first();
+        if (empty($verificar->id_pdg_apr_eta_tra)) {
+             Session::flash('message-warning', 'No pueces realizar el cierre de trabajo de graduación hasta que hayas aprobado todas las etapas evaluativas, consulta con tu docente asesor.');
+             return redirect("/dashboard"); 
+        }
         $grupo = pdg_gru_grupoModel::find($idGrupo);
         $tema = pdg_tra_gra_trabajo_graduacionModel::where('id_pdg_gru', '=',$idGrupo)->select('tema_pdg_tra_gra')->first();
         if (empty($grupo->id_pdg_gru)) {
@@ -322,7 +356,7 @@ class TrabajoDeGraduacionController extends Controller{
         
 
         }
-        Session::flash('message', 'Se ha realizado el cierre de trabajo de graduación Exitosamente!!G');
+        Session::flash('message', 'Se ha realizado el cierre de trabajo de graduación Exitosamente!!');
        return redirect("/publicacion/".$lastIdPublicacion->id_pub); 
     }    
 

@@ -1,11 +1,8 @@
 <?php
 
 namespace App;
-
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
-
-
 class pdg_apr_eta_tra_aprobador_etapa_trabajoModel extends Model
 {
     const T_CONTEO_NO_INICIADAS = 1;
@@ -16,6 +13,16 @@ class pdg_apr_eta_tra_aprobador_etapa_trabajoModel extends Model
     protected $table='pdg_apr_eta_tra_aprobador_etapa_trabajo';
     protected $primaryKey='id_pdg_apr_eta_tra_';
     public $timestamps=false;
+    protected $fillable=
+		[
+			'id_cat_eta_eva',
+			'id_pdg_tri_gru',
+			'id_pdg_tra_gra',
+			'fecha_inicio',
+			'fecha_aprobacion',
+			'aprobo',
+			'inicio'
+		];
 
     public static function getEtapa($idTragra,$idTipoBusqueda){
         DB::statement(

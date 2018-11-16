@@ -7,6 +7,13 @@
       });
       </script>   
 @endif
+@if(Session::has('message-warning'))
+      <script type="text/javascript">
+        $( document ).ready(function() {
+          swal("", "{{Session::get('message-warning')}}", "warning");
+      });
+      </script>   
+@endif
 <script type="text/javascript">
     $(function () {
         colorProgress();
