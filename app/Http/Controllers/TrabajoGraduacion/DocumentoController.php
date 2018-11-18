@@ -101,7 +101,7 @@ class DocumentoController extends Controller{
             ]);
            
             Session::flash('message','Documento Envíado correctamente!');
-        	return Redirect::to('etapaEvaluativa/'.$request['etapa']);
+        	return Redirect::to('detalleEtapa/'.$request['etapa'].'/'.$idGrupo);
 	    }else{
 	    	return "EL ESTUDIANTE NO HA CONFORMADO UN GRUPO DE  TRABAJO DE GRADUACIÓN";
 	    }
@@ -142,7 +142,7 @@ class DocumentoController extends Controller{
           	$archivoDocumento->fecha_subida_arc_doc = $fecha;
           	$archivoDocumento->save();
             Session::flash('message','Documento Actualizado correctamente!');
-        	return Redirect::to('etapaEvaluativa/'.$request['etapa']);
+        	 return Redirect::to('detalleEtapa/'.$request['etapa'].'/'.$idGrupo);
 	    }else{
 	    	// NO POSEE GRUPO
 	    }
@@ -152,19 +152,23 @@ class DocumentoController extends Controller{
     function downloadDocumento(Request $request){
     	$idArchvio = $request['documento'];
     	$archivoDocumento = pdg_arc_doc_archivo_documentoModel::find($idArchvio);
+      $documento = pdg_doc_documentoModel::where("id_pdg_doc","=",$archivoDocumento->id_pdg_doc)->first();
+      $idGrupo = $documento->id_pdg_gru;
     	//verificamos si el archivo existe y lo retornamos
     	$ruta = $archivoDocumento->ubicacion_arc_doc;
      	if (File::exists($ruta)){
       	  return response()->download($ruta);
      	}else{
      		Session::flash('error','El documento no se encuentra disponible , es posible que haya sido  borrado');
-            return Redirect::to('etapaEvaluativa/'.$request['etapa']);
+            return Redirect::to('detalleEtapa/'.$request['etapa'].'/'.$idGrupo);
      	}
     	//return $path;
     }
 
      public function destroy($id, Request $request){
     	$archivoDocumento = pdg_arc_doc_archivo_documentoModel::where('id_pdg_doc',$id)->first();
+      $documento = pdg_doc_documentoModel::where("id_pdg_doc","=",$archivoDocumento->id_pdg_doc)->first();
+      $idGrupo = $documento->id_pdg_gru;
     	$idArchivo = $archivoDocumento->id_pdg_arc_doc;
     	//verificamos si el archivo existe y lo retornamos
     	$ruta = $archivoDocumento->ubicacion_arc_doc;
@@ -174,7 +178,7 @@ class DocumentoController extends Controller{
      	pdg_arc_doc_archivo_documentoModel::destroy($idArchivo);
      	pdg_doc_documentoModel::find($id);
      	Session::flash('message','El documento se ha eliminado con éxito');
-        return Redirect::to('etapaEvaluativa/'.$request['etapa']);
+        return Redirect::to('detalleEtapa/'.$request['etapa'].'/'.$idGrupo);
 
     } 
 
