@@ -258,8 +258,7 @@
                 <button id="btnCalificar" class="btn btn-primary" title="Calificar manualmente" onclick="habilitarToggleCalificacion();">
                     CALIFICAR&nbsp;<i class="fa fa-pencil"></i>
                 </button>
-                @if(false)
-                    {{--La variable se llama $subida--}}
+                @if($subida)
                     <button id="btnSubir" class="btn btn-success" title="Subir consolidado" onclick="location.href='{{route('createNotas',$etapa->id_cat_eta_eva)}}'">
                         SUBIR&nbsp;<i class="fa fa-file"></i>
                     </button>
