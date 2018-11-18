@@ -7,7 +7,21 @@
       });
       </script>   
 @endif
+@if(Session::has('message-error'))
+      <script type="text/javascript">
+        $( document ).ready(function() {
+          swal("", "{{Session::get('message-error')}}", "error");
+      });
+      </script>   
+@endif
 <script type="text/javascript">
+    $(document).ready(function() {
+      $("#formCreate").keypress(function(e) {//Para deshabilitar el uso de la tecla "Enter"
+        if (e.which == 13) {
+          return false;
+        }
+      });
+    }); 
   var cantidadMinima = {{$cantidadMinima}};
  
 @if (!isset($cards)) 
@@ -16,6 +30,7 @@
 @endif
 console.log(cantidadMinima);
 </script>
+
 <ol class="breadcrumb" style="text-align: center; margin-top: 1em">
         <li class="breadcrumb-item">
           <h5> <a href="{{ redirect()->getUrlGenerator()->previous() }}" style="margin-left: 0em"><i class="fa fa-arrow-left fa-lg" style="z-index: 1;margin-top: 0em;margin-right: 0.5em; color: black"></i></a>     Trabajo de Graduación</h5>
@@ -43,7 +58,7 @@ console.log(cantidadMinima);
           </div>
         @endif
          @if (!isset($cards)) 
-         {!! Form:: open(['route'=>'grupo.store','method'=>'POST']) !!}
+         {!! Form:: open(['route'=>'grupo.store','method'=>'POST','id'=>'formCreate']) !!}
              <div class="row">
             <div class="form-group col-sm-9">
               {!!Form::text('buscarEstudiante',null,['class'=>'form-control ','placeholder'=>'Búsqueda por Carnet','id'=>'inputBuscar'])!!}

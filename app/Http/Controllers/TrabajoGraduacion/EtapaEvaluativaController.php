@@ -286,7 +286,7 @@ class EtapaEvaluativaController extends Controller {
 		$trabajoGraduacion = pdg_tra_gra_trabajo_graduacionModel::where('id_pdg_gru', '=',$request['idGrupo'])->first();
 		$resultado = $trabajoGraduacion->updateEntregablesEtapaGrupo($request["cantidadEntregables"],$trabajoGraduacion->id_pdg_tra_gra, $request["idEtapa"]);
 		Session::flash('message', 'Entregables por Etapa Modificado con éxito!');
-		return Redirect::to('etapaEvaluativa/' . $request['idEtapa']."/".$request['idGrupo']);
+		return Redirect::to('detalleEtapa/' . $request['idEtapa']."/".$request['idGrupo']);
 	}
 	public function createNotas($idEtapa) {
 		//VERIFICAMOS SI EXISTEN EN LA BASE DE DATOS ESOS ID
@@ -365,30 +365,36 @@ class EtapaEvaluativaController extends Controller {
 							$idEstGrupo = $est->id_pdg_gru_est;
 						}
 						if ($idEstGrupo != "NA") {
-							$nota = pdg_not_cri_tra_nota_criterio_trabajoModel::where("id_pdg_gru_est","=",$idEstGrupo)->get();
-							if (sizeof($nota)!=0) {
+							//$nota = pdg_not_cri_tra_nota_criterio_trabajoModel::where("id_pdg_gru_est","=",$idEstGrupo)->get();
+							$evaluado= pdg_not_cri_tra_nota_criterio_trabajoModel::verificarNotaAlumno($idEtapa,$idEstGrupo); // NOS TRAE EL CAMPO SI YA ESTA EVALUADO
+							$nota=pdg_not_cri_tra_nota_criterio_trabajoModel::find($evaluado->idNota);
+							$nota->nota_pdg_not_cri_tra = $alumno ["nota"];
+							$nota->evaluado_pdg_not_cri_tra = 1; //YA SE LLENO
+							$nota->save();
+							if ($evaluado->yaEvaluado==1) {
+
 								$bodyHtml .= '<tr>';
 								$bodyHtml .= '<td>' . $alumno ["carnet"] . '</td>';
 								$bodyHtml .= '<td>' . $nombreEstudiante . '</td>';
 								$bodyHtml .= '<td>' . $alumno ["nota"] . '</td>';
 								$bodyHtml .= '<td><span class="badge badge-warning">Actualizado</span></td>';
-								$bodyHtml .= '<td>Se actualizó la nota de esta etapa para el alumno.</td>';
+								$bodyHtml .= '<td>La nota se actualizó exitosamente.</td>';
 								$bodyHtml .= '</tr>';
 							}else{
-								$lastId = pdg_not_cri_tra_nota_criterio_trabajoModel::create
+								/*$lastId = pdg_not_cri_tra_nota_criterio_trabajoModel::create
 								([
 								'nota_pdg_not_cri_tra' => $row["nota"],
 								'id_cat_cri_eva' => 1,
 								'id_pdg_tra_gra' => $idTraGra,
 								'id_pdg_gru_est' => $idEstGrupo,
-								]);
+								]);*/
 
 								$bodyHtml .= '<tr>';
 								$bodyHtml .= '<td>' . $alumno ["carnet"] . '</td>';
 								$bodyHtml .= '<td>' . $nombreEstudiante . '</td>';
 								$bodyHtml .= '<td>' . $alumno ["nota"] . '</td>';
 								$bodyHtml .= '<td><span class="badge badge-success">OK</span></td>';
-								$bodyHtml .= '<td>La nota se ingreso exitosamente.</td>';
+								$bodyHtml .= '<td>La nota se ingresó exitosamente.</td>';
 								$bodyHtml .= '</tr>';
 							}
 							
