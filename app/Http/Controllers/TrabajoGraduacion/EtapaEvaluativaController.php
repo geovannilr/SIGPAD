@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Facades\Excel;
+use Monolog\Handler\ElasticSearchHandler;
 use Redirect;
 use Session;
 use \App\cat_eta_eva_etapa_evalutativaModel;
@@ -15,6 +16,7 @@ use \App\pdg_gru_grupoModel;
 use \App\pdg_not_cri_tra_nota_criterio_trabajoModel;
 use \App\pdg_ppe_pre_perfilModel;
 use \App\pdg_tra_gra_trabajo_graduacionModel;
+use \App\pdg_apr_eta_tra_aprobador_etapa_trabajoModel;
 
 
 class EtapaEvaluativaController extends Controller {
@@ -275,7 +277,8 @@ class EtapaEvaluativaController extends Controller {
 
 				}
 			}
-			return view('TrabajoGraduacion.EtapaEvaluativa.show', compact('bodyHtml', 'nombreEtapa', 'ponderacion', 'id','idGrupo'));
+			$actual =  self::getIdEtapaActual($trabajoGraduacion->id_pdg_tra_gra);
+			return view('TrabajoGraduacion.EtapaEvaluativa.show', compact('bodyHtml', 'nombreEtapa', 'ponderacion', 'id','idGrupo','actual'));
 			//return $bodyHtml;
 		
 
@@ -443,7 +446,7 @@ class EtapaEvaluativaController extends Controller {
         $notas = pdg_not_cri_tra_nota_criterio_trabajoModel::getNotasEtapa($idGrupo,$idEtaEva);
         $grupo = pdg_gru_grupoModel::find($idGrupo);
         $etapa = cat_eta_eva_etapa_evalutativaModel::find($idEtaEva);
-        $subida = ($grupo->relacion_gru_tdg->id_cat_tpo_tra_gra!=1);  // 1-Tipo de trabajo de graduación 2-Variable
+        $subida = ($grupo->relacion_gru_tdg->id_cat_tpo_tra_gra!=1);  // 1-Tipo clásico de trabajo de graduación 2-Variable
         //$subida = true; PARA PRUEBAS CON GRUPOS QUE NO SEAN DE TIPO VARIABLE!!!!!!!!!!!!
         if (empty($grupo->id_pdg_gru) || empty($etapa->id_cat_eta_eva)){
             return view('error');
@@ -471,8 +474,49 @@ class EtapaEvaluativaController extends Controller {
     }
 	
 	public function aprobarEtapa(Request $request){
-    	$idGrupo=$request['idGrupo'];
-    	$idEtapa =$request['idEtapa'];
+        $idGrupo=$request['idGrupo'];
+        $idEtapa =$request['idEtapa'];
+
+        $msgType = "error";
+
     	$trabajoGraduacion = pdg_tra_gra_trabajo_graduacionModel::where('id_pdg_gru', '=',$idGrupo)->first();
+        $idEtaActual = self::getIdEtapaActual($trabajoGraduacion->id_pdg_tra_gra);
+
+        if (intval($idEtapa)==$idEtaActual){
+            $resultadoAvance = pdg_tra_gra_trabajo_graduacionModel::avanzarProceso($trabajoGraduacion->id_pdg_tra_gra);
+            if($resultadoAvance->resultado == 0){
+                $msgType = "success";
+                $msg = $resultadoAvance->info;
+            }else{
+                $msg = "Error al intentar aprobar la etapa";
+            }
+        }else{
+            $msg = "No puede aprobar esta etapa, no es la etapa actual.";
+        }
+        Session::flash($msgType,$msg);
+        Redirect::to('detalleEtapa/'.$idEtapa.'/'.$idGrupo);
+    }
+
+    public function dataAprbEta($idGrupo,$idEtapa){
+        $traGra = pdg_tra_gra_trabajo_graduacionModel::where('id_pdg_gru', '=',$idGrupo)->first();
+
+        $etapa = pdg_apr_eta_tra_aprobador_etapa_trabajoModel::getEtapa($traGra->id_pdg_tra_gra,pdg_apr_eta_tra_aprobador_etapa_trabajoModel::T_BUSQ_ACTUAL);
+        $etapaSig = pdg_apr_eta_tra_aprobador_etapa_trabajoModel::getEtapa($traGra->id_pdg_tra_gra,pdg_apr_eta_tra_aprobador_etapa_trabajoModel::T_BUSQ_SIGUIENTE);
+
+        if(!empty($etapa->id_cat_eta_eva)){
+            $coinciden = (intval($idEtapa) === $etapa->id_cat_eta_eva);
+            $message = $coinciden ? "Aprobar esta etapa bloqueará la subida de archivos al grupo y, por consiguiente, habilitará la subida de archivos, calficaciones y configuraciones de la siguiente etapa: <b>".$etapaSig->nombre_cat_eta_eva.".</b><br>¿Desea continuar?"
+                : "No puede aprobar esta etapa.<br>El proceso se encuentra en <b>".$etapa->nombre_cat_eta_eva."</b>, verifique el estado de dicha etapa primero.";
+        }else{
+            $coinciden = false;
+            $message = "Esta acción está deshabilitada debido el avance actual del Trabajo de Graduación.";
+        }
+	    return response()->json(['success'=>$coinciden,'msg'=>$message]);
+    }
+
+    public function getIdEtapaActual($idTraGra){
+        $etapaActual = pdg_apr_eta_tra_aprobador_etapa_trabajoModel::getEtapa($idTraGra,pdg_apr_eta_tra_aprobador_etapa_trabajoModel::T_BUSQ_ACTUAL);
+        $actual = empty($etapaActual->id_cat_eta_eva) ? 0 : $etapaActual->id_cat_eta_eva;
+        return $actual;
     }
 }
