@@ -65,4 +65,14 @@ class pdg_not_cri_tra_nota_criterio_trabajoModel extends Model
         }
         return $queries;
     }
+
+
+     public static function verificarNotaAlumno($idEtapa,$idEstGrupo){
+        $evaluado = DB::select(
+            'SELECT yaEvaluado,idNota
+              FROM view_pdg_notas vwn
+              WHERE  vwn.idEtapa = :idEtapa
+              AND vwn.idGruEst = :idEstGrupo',array($idEtapa,$idEstGrupo));
+        return $evaluado[0];
+    }
 }

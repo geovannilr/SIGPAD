@@ -65,7 +65,12 @@
                 <li>
                   <a class="nav-link" href="{{route('grupo.create')}}" style="color: #ffffff">
                     <i class="fa fa-users"></i>
+                    @if(Auth::user()->isRole('estudiante'))
+                    <span class="nav-link-text">Conformar Grupo</span>
+                    @else
                     <span class="nav-link-text">Grupos de TG</span>
+                    @endif
+                    
                   </a>  
               </li>
               @endcan
@@ -242,7 +247,7 @@
   </div>
   {!!Html::script('https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.bundle.min.js')!!}
   {!!Html::script('js/sb-admin.min.js')!!}
-  {!!Html::script('https://unpkg.com/sweetalert/dist/sweetalert.min.js')!!} 
+  {!!Html::script('https://unpkg.com/sweetalert/dist/sweetalert.min.js')!!}
 </body>
 
 </html>

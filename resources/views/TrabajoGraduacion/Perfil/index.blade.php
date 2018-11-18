@@ -203,7 +203,9 @@
 								<span class="badge badge-success">{{ $perfil->categoriaEstado->nombre_cat_sta }}</span>&nbsp;
 							@else
 								@if($perfil->id_cat_sta == "11" )
-									<span class="badge badge-danger">{{ $perfil->categoriaEstado->nombre_cat_sta }}</span>&nbsp;	
+									<span class="badge badge-danger">{{ $perfil->categoriaEstado->nombre_cat_sta }}</span>&nbsp;
+								@else 
+									<span class="badge badge-info">{{ $perfil->categoriaEstado->nombre_cat_sta }}</span>&nbsp;	
 								@endif
 							@endif
 							
