@@ -5,10 +5,25 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Session;
 use Redirect;
+use Maatwebsite\Excel\Facades\Excel;
 use \App\pdg_dcn_docenteModel;
 
 class GestionDocenteController extends Controller
 {
+    function create(){
+        return view('PerfilDocente.create');
+    }
+    function store(Request $request){
+        $validatedData = $request->validate([
+            'documentoPerfil' => 'required',
+        ]);
+        $bodyHtml = '';
+        $data = Excel::load($request->file('documentoPerfil'), function ($reader) {
+            $reader->setSelectedSheetIndices(array(4)); //4-6
+        })->get();
+        $experienciaLaboral = $data->toArray();
+        var_dump($experienciaLaboral);
+    }
 	function index(){
 
 		return "test";

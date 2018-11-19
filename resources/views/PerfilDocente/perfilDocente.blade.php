@@ -27,7 +27,7 @@
       <a class="navbar-brand js-scroll-trigger" href="#page-top">
         <span class="d-block d-lg-none">Clarence Taylor</span>
         <span class="d-none d-lg-block">
-          <img class="img-fluid img-profile rounded-circle mx-auto mb-2" id="profilFoto" src="">
+          <img class="img-fluid img-profile rounded-circle mx-auto mb-2" id="profileFoto" src="">
         </span>
       </a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -61,20 +61,20 @@
           <h1 class="mb-0" id="nombreDocente">
           </h1>
           <div class="subheading mb-5" ><div id="cargoDocente"></div>
-            <a href="mailto:name@email.com" id="correoDocente"></a>
+            <a href="mailto:name@email.com" id="correoDocente" target="_blank"></a>
           </div>
           <p class="lead mb-5" id="descripcionDocente"></p>
           <div class="social-icons">
-            <a href="#" id="linkLinkedind_">
+            <a href="#" id="linkLinkedind_" target="_blank">
               <i class="fab fa-linkedin-in"></i>
             </a>
-            <a href="#" id="linkGit_">
+            <a href="#" id="linkGit_" target="_blank">
               <i class="fab fa-github"></i>
             </a>
-            <a href="#" id="linkTw:">
+            <a href="#" id="linkTw:" target="_blank">
               <i class="fab fa-twitter"></i>
             </a>
-            <a href="" id="linkFb_">
+            <a href="" id="linkFb_" target="_blank">
               <i class="fab fa-facebook-f"></i>
             </a>
           </div>

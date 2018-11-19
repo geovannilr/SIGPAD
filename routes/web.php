@@ -122,6 +122,8 @@ Route::get('perfilDocente/{idDocente}', 'PerfilDocentePublicoController@index')-
 Route::get('TiempoCompleto/{jornada}', 'PerfilDocentePublicoController@index2')->name('listadoDocentes');
 Route::get('TiempoParcial/{jornada}', 'PerfilDocentePublicoController@index2')->name('listadoDocentes');
 Route::post('getListadoDocentes', 'GestionDocenteController@getListadoDocentes')->name('getListadoDocentes');
+Route::get('cargarPerfilDocente', 'GestionDocenteController@create')->name('cargarPerfilDocente');
+Route::post('guardarPerfilDocente', 'GestionDocenteController@store')->name('guardarPerfilDocente');
 
 //------------------------------------------------------------------------------------------------------------------------
 //------------------UESPLAY--------------------------------------------------------------------------------------

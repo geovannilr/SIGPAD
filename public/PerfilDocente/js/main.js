@@ -131,11 +131,11 @@ function getInformacionDocente(idDcn){
             $("#descripcionDocente").append(docente["descripcionDocente"]);
             $("#correoDocente").append(docente["email"]);
             $("#cargoDocente").append(docente["nombre_cargo"]);
-            $("#profilFoto").append(docente["dcn_profileFoto"]);
-            $("#linkLinkedind").append(docente["link_linke"]);
-            $("#linkGit").append(docente["link_git"]);
-            $("#linkTw").append(docente["link_tw"]);
-            $("#linkFb").append(docente["link_fb"]);
+            $("#profileFoto").attr("src",docente["dcn_profileFoto"]);
+            $("#linkLinkedind_").attr("href",docente["link_linke"]);
+            $("#linkGit_").attr("href",docente["link_git"]);
+            $("#linkTw").attr("href",docente["link_tw"]);
+            $("#linkFb_").attr("href",docente["link_fb"]);
 
 
             
