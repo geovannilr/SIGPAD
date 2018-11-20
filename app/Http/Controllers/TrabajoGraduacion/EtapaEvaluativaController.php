@@ -17,7 +17,7 @@ use \App\pdg_not_cri_tra_nota_criterio_trabajoModel;
 use \App\pdg_ppe_pre_perfilModel;
 use \App\pdg_tra_gra_trabajo_graduacionModel;
 use \App\pdg_apr_eta_tra_aprobador_etapa_trabajoModel;
-
+use File;
 
 class EtapaEvaluativaController extends Controller {
 	public function __construct() {
@@ -536,5 +536,15 @@ class EtapaEvaluativaController extends Controller {
         $etapaActual = pdg_apr_eta_tra_aprobador_etapa_trabajoModel::getEtapa($idTraGra,pdg_apr_eta_tra_aprobador_etapa_trabajoModel::T_BUSQ_ACTUAL);
         $actual = empty($etapaActual->id_cat_eta_eva) ? 0 : $etapaActual->id_cat_eta_eva;
         return $actual;
+    }
+
+    public function downloadPlantillaNotasVariable(){
+        $path= public_path().$_ENV['PATH_RECURSOS'].'temp-subida-notas.xlsx';
+        if (File::exists($path)){
+            return response()->download($path);
+        }else{
+            Session::flash('error','El documento no se encuentra disponible , es posible que haya sido  borrado');
+            return view('PerfilDocente.create');
+        }
     }
 }

@@ -26,7 +26,7 @@
         <div class="row">
           <div class="form-group col-sm-1">
               Descargar
-            {!! Form::open(['route'=>['downloadDocumentoPublicacion'],'method'=>'POST']) !!}
+            {!! Form::open(['route'=>['plantillaNotasVariable'],'method'=>'POST','target' => '_blank']) !!}
                   <div class="btn-group">
                     <button type="submit" class="btn btn-dark"><i class="fa fa-download"></i></button>
                   </div>

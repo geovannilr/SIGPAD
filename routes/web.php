@@ -83,7 +83,7 @@ Route::post('calificaEtapa','TrabajoGraduacion\EtapaEvaluativaController@calific
 Route::post('updateNotas','TrabajoGraduacion\EtapaEvaluativaController@updateNotas')->name('updateNotas');
 Route::post('storeCierreTDG', 'TrabajoGraduacion\TrabajoDeGraduacionController@storeCierreGrupo')->name('storeCierreTDG');
 Route::get('dataAprbEta/{ifGrupo?}/{idEtapa}','TrabajoGraduacion\EtapaEvaluativaController@dataAprbEta')->name('dataAprbEta');
-
+Route::post('plantillaNotasVariable','TrabajoGraduacion\EtapaEvaluativaController@downloadPlantillaNotasVariable')->name('plantillaNotasVariable');
 
 
 //Reportes
