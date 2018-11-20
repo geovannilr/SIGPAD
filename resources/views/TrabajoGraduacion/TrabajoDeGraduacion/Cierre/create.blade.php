@@ -24,7 +24,7 @@
         @endif
         <p class="text-center">
           @if($tema!="NA")
-          TEMA: <br><b>{{strtoupper($tema->tema_pdg_tra_gra)}}</b>
+          TEMA: <br><b>{{strtoupper($tema)}}</b>
           @else
             TEMA:<b>NO SE ENCONTRO TEMA PARA ESTE GRUPO DE TRABAJO DE GRADUACION</b>
           @endif

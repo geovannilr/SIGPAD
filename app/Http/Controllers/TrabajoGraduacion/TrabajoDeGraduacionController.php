@@ -180,7 +180,10 @@ class TrabajoDeGraduacionController extends Controller{
         }
          if(empty($trabajoGraduacion->tema_pdg_tra_gra)){
                 $tema="NA";
+        }else{
+            $tema = $trabajoGraduacion->tema_pdg_tra_gra;
         }
+
         if (empty($grupo->id_pdg_gru)) {
            return view("error");
         }else{
