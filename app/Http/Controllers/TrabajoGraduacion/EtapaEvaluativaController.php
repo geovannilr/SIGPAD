@@ -83,8 +83,8 @@ class EtapaEvaluativaController extends Controller {
 				// NO CONFIGURADOS LOS DOCUMENTOS QUE SE VAN A REQUERIR EN UNA ETAPA EN ESPECIFICO
 				$documentos = "NA";
 				$bodyHtml = '<p class="text-center">NO SE HAN REGISTRADO DOCUMENTOS ASOCIADOS A ESTA ETAPA EVALUATIVA, CONSULTE AL ADMINISTRADOR<p>';
-				$nombreEtapa = "";
-				$ponderacion = "";
+//				$nombreEtapa = "";
+//				$ponderacion = "";
 			} else {
 				$nombreEtapa = $documentos[0]->nombre_cat_eta_eva;
 				$ponderacion = $documentos[0]->ponderacion_cat_eta_eva . '%';
