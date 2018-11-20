@@ -142,6 +142,7 @@
   @endcan
 </div> -->
 <div class="row">
+    @if($configura)
   <div class="col-md-4">
     <div class="card text-black bg-secundary o-hidden h-100">
                 <div class="card-body">
@@ -158,6 +159,7 @@
                 </a>
               </div>
   </div>
+    @endif
    <div class="col-md-4">
     <div class="card text-black bg-secundary o-hidden h-100">
                 <div class="card-body">
@@ -174,15 +176,17 @@
                 </a>
               </div>
   </div>
+    @if($actual!=0)
    <div class="col-md-4">
     <div class="card text-black bg-secundary o-hidden h-100">
                 <div class="card-body">
                   <div class="card-body-icon">
                     <i class="fa fa-thumbs-up"></i>
                   </div>
-                  <div class="mr-5">Aprobar Etapa</div>
+                  <div class="mr-5">Aprobar Etapa<i class="btn btn-sm fa fa-info-circle" style="padding: 0; margin-left: 0em; font-size:12px; color: #17a2b8" onclick="showInfoAprb();"></i>
+                  </div>
                 </div>
-                <a class="card-footer text-black clearfix small z-1" data-toggle="modal" data-target="#modalAprobar"  href="#">
+                <a class="card-footer text-black clearfix small z-1" data-toggle="modal"  href="javasript:void(0)" onclick="aprobarEtapaFrm({{$idGrupo}},{{$id}}); return false;"> <!--data-target="#modalAprobar"-->
                   <span class="float-left">Realizar</span>
                   <span class="float-right">
                    <i class="fa fa-angle-right"></i>
@@ -190,6 +194,7 @@
                 </a>
               </div>
   </div>
+    @endif
 </div>
     <br>
     {!!$bodyHtml!!}
@@ -198,7 +203,7 @@
 <div class="modal fade" id="modalConfig" tabindex="-1" role="dialog" aria-labelledby="modalConfig" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
-      <div class="modal-header breadcrumb">
+      <div class="modal-header breadcrumb" style="margin-bottom: 0px !important;">
         <h5>Configuración de Etapa Evaluativa</h5>
          
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -232,24 +237,31 @@
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
       <div class="modal-header breadcrumb">
-        <h5>Aprobar Etapa Evaluativa</h5>
+        <h5>
+            Aprobar Etapa Evaluativa<i class="btn btn-sm fa fa-info-circle" style="padding: 0; margin-left: 0em; font-size:12px; color: #17a2b8" onclick="showInfoAprb();"></i>
+        </h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
+    {!! Form:: open(['route'=>'aprobarEtapa','method'=>'POST', 'id'=>'formAprobar']) !!}
       <div class="modal-body">
-        {!! Form:: open(['route'=>'aprobarEtapa','method'=>'POST', 'id'=>'formAprobar']) !!}
-          <p class="text-danger">LEYENDA DE SI PUEDE  NO APROBAR ETAPA</label>
-          
+          <div id="msgAprb"></div>
           <input type="hidden" name="idEtapa" value="{{$id}}" />
           <input type="hidden" name="idGrupo" value="{{$idGrupo}}" />
       </div>
       <div class="modal-footer">
-        <button type="submit" class="btn btn-primary">Aprobar</button>
+          @if($actual!=0)
+              <button type="button" class="btn btn-primary" onclick="confirmAprobarEtapa();" id="btnAprb">Aprobar</button>
+          @endif
+              <span class="button btn btn-secondary" data-dismiss="modal" aria-label="Close" id="btnCancel">Cancelar</span>
       </div>
-      {!! Form:: close() !!}
+    {!! Form:: close() !!}
     </div>
   </div>
 </div>
-
+<div id="infoAprb" style="display: none;">
+    Tenga en cuenta que para aprobar la etapa no es obligatorio haber añadido notas. Sin embargo, al final del proceso será necesario haber calificado todas las etapas para dar por cerrado el Trabajo de Graduación.
+</div>
+<input type="hidden" id="nomEtapa" value="{{$nombreEtapa}}" />
 @stop

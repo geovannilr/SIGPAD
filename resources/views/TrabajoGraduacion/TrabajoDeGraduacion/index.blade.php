@@ -41,7 +41,7 @@
       Progreso
       <div class="progress">
         <div id="progressBarDiv" class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: {{$avance}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
-            {{$avance}}%
+            {{$avance>100.00?100.00:$avance}}%
         </div>
       </div>
       <hr>
@@ -114,7 +114,7 @@
           No se han registrado etapas evaluativas asociadas a ti tipo de trabajo de graduación, consulte al administrador
         @else
            @foreach ($etapas as $etapa)
-              @if($etapa->nombre_cat_eta_eva == "Analisis y Diseño")
+              @if($etapa->id_cat_eta_eva == $actual)
                 <div class="col-xl-3 col-sm-6 mb-3">
                   <div class="card text-gray  o-hidden h-100" style="background-color: #DF1D20">
                     <div class="card-body">

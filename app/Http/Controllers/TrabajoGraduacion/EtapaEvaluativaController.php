@@ -278,7 +278,8 @@ class EtapaEvaluativaController extends Controller {
 				}
 			}
 			$actual =  self::getIdEtapaActual($trabajoGraduacion->id_pdg_tra_gra);
-			return view('TrabajoGraduacion.EtapaEvaluativa.show', compact('bodyHtml', 'nombreEtapa', 'ponderacion', 'id','idGrupo','actual'));
+			$configura = ($trabajoGraduacion->id_cat_tpo_tra_gra!=1);//validar si ya se configuró, consultando la tabla de EntregablesxEtapa
+			return view('TrabajoGraduacion.EtapaEvaluativa.show', compact('bodyHtml', 'nombreEtapa', 'ponderacion', 'id','idGrupo','actual','configura'));
 			//return $bodyHtml;
 		
 
@@ -490,9 +491,9 @@ class EtapaEvaluativaController extends Controller {
 
         if (intval($idEtapa)==$idEtaActual){
             $resultadoAvance = pdg_tra_gra_trabajo_graduacionModel::avanzarProceso($trabajoGraduacion->id_pdg_tra_gra);
-            if($resultadoAvance->resultado == 0){
+            if($resultadoAvance->p_result == 0){
                 $msgType = "success";
-                $msg = $resultadoAvance->info;
+                $msg = "Etapa aprobada éxitosamente!";
             }else{
                 $msg = "Error al intentar aprobar la etapa";
             }
@@ -500,7 +501,7 @@ class EtapaEvaluativaController extends Controller {
             $msg = "No puede aprobar esta etapa, no es la etapa actual.";
         }
         Session::flash($msgType,$msg);
-        Redirect::to('detalleEtapa/'.$idEtapa.'/'.$idGrupo);
+        return Redirect::to('detalleEtapa/'.$idEtapa.'/'.$idGrupo);
     }
 
     public function dataAprbEta($idGrupo,$idEtapa){
@@ -509,12 +510,23 @@ class EtapaEvaluativaController extends Controller {
         $etapa = pdg_apr_eta_tra_aprobador_etapa_trabajoModel::getEtapa($traGra->id_pdg_tra_gra,pdg_apr_eta_tra_aprobador_etapa_trabajoModel::T_BUSQ_ACTUAL);
         $etapaSig = pdg_apr_eta_tra_aprobador_etapa_trabajoModel::getEtapa($traGra->id_pdg_tra_gra,pdg_apr_eta_tra_aprobador_etapa_trabajoModel::T_BUSQ_SIGUIENTE);
 
+        $coinciden = false;
+
         if(!empty($etapa->id_cat_eta_eva)){
-            $coinciden = (intval($idEtapa) === $etapa->id_cat_eta_eva);
-            $message = $coinciden ? "Aprobar esta etapa bloqueará la subida de archivos al grupo y, por consiguiente, habilitará la subida de archivos, calficaciones y configuraciones de la siguiente etapa: <b>".$etapaSig->nombre_cat_eta_eva.".</b><br>¿Desea continuar?"
-                : "No puede aprobar esta etapa.<br>El proceso se encuentra en <b>".$etapa->nombre_cat_eta_eva."</b>, verifique el estado de dicha etapa primero.";
+            if($etapa->id_cat_eta_eva!=999){//Valor etapa de cierre
+                if($etapaSig!=null){
+                    $coinciden = (intval($idEtapa) === $etapa->id_cat_eta_eva);
+                    $message = $coinciden ? "Aprobar esta etapa bloqueará la subida de archivos al grupo y, por consiguiente, habilitará la subida de archivos, calficaciones y configuraciones de la siguiente etapa: <b>".$etapaSig->nombre_cat_eta_eva.".</b><br>¿Desea continuar?"
+                        : "No puede aprobar esta etapa.<br>El proceso se encuentra en <b>".$etapa->nombre_cat_eta_eva."</b>, verifique el estado de dicha etapa primero.";
+                }else{
+                    $coinciden = true;
+                    $message =  "Aprobar esta etapa habilitará la etapa de <b>Cierre de Trabajo de Graduación</b>, los estudiantes podrán cargar los documentos requeridos para la Biblioteca de Trabajos de Graduación<br>".
+                        "<i>Tenga en cuenta que tiene que calificar todas las etapas para dar por finalizado el Proceso de Trabajo de Graduación.</i>";
+                }
+            }else{
+                $message = "El proceso se encuentra en etapa de <b>Cierre de Trabajo de Graduación</b>, consulte la opción en el Dashboard";
+            }
         }else{
-            $coinciden = false;
             $message = "Esta acción está deshabilitada debido el avance actual del Trabajo de Graduación.";
         }
 	    return response()->json(['success'=>$coinciden,'msg'=>$message]);

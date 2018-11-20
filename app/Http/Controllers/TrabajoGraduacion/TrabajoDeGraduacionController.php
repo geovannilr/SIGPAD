@@ -61,12 +61,10 @@ class TrabajoDeGraduacionController extends Controller{
                         $traGra = pdg_tra_gra_trabajo_graduacionModel::where('id_pdg_gru', '=',$idGrupo)->first();
                         $tema = $traGra->tema_pdg_tra_gra;
 
-                        $aprobadas = pdg_apr_eta_tra_aprobador_etapa_trabajoModel::contarEtapas($traGra->id_pdg_tra_gra,pdg_apr_eta_tra_aprobador_etapa_trabajoModel::T_CONTEO_APROBADAS);
-                        $originales = pdg_apr_eta_tra_aprobador_etapa_trabajoModel::contarEtapas($traGra->id_pdg_tra_gra,pdg_apr_eta_tra_aprobador_etapa_trabajoModel::T_CONTEO_ORIGINALES);
-                        $avanceRaw = round($originales==0?0:100*$aprobadas/$originales);
-                        $avance = number_format((float)$avanceRaw, 2, '.', '');
+                        $avance = self::getAvanceGrupo($traGra->id_pdg_tra_gra);
+                        $actual = self::getIdEtapaActual($traGra->id_pdg_tra_gra);
 
-                        return view('TrabajoGraduacion.TrabajoDeGraduacion.index',compact('numero','estudiantes','tribunal','etapas','tema','idGrupo','avance'));
+                        return view('TrabajoGraduacion.TrabajoDeGraduacion.index',compact('numero','estudiantes','tribunal','etapas','tema','idGrupo','avance','actual'));
                     }else{
                         //EL GRUPO AUN NO HA SIDO APROBADO
                     Session::flash('message-error', 'Tu grupo de trabajo de graduación aún no ha sido aprobado');
@@ -81,7 +79,7 @@ class TrabajoDeGraduacionController extends Controller{
                 return "DOCENTE ASESOR";
             }
         }
-       
+        return view("error");
     }
     /*Listado de grupos filtrados por docente asesor*/
     public function dashboardIndex(){
@@ -114,41 +112,53 @@ class TrabajoDeGraduacionController extends Controller{
             $tribunal="NA";
         }
         $etapas=self::getEtapasEvaluativas($idGrupo);
-        
+
         if (empty($etapas)){
             $etapas="NA";
         }
         $traGra = pdg_tra_gra_trabajo_graduacionModel::where('id_pdg_gru', '=',$idGrupo)->first();
         $tema = $traGra->tema_pdg_tra_gra;
-
-        $aprobadas = pdg_apr_eta_tra_aprobador_etapa_trabajoModel::contarEtapas($traGra->id_pdg_tra_gra,pdg_apr_eta_tra_aprobador_etapa_trabajoModel::T_CONTEO_APROBADAS);
-        $originales = pdg_apr_eta_tra_aprobador_etapa_trabajoModel::contarEtapas($traGra->id_pdg_tra_gra,pdg_apr_eta_tra_aprobador_etapa_trabajoModel::T_CONTEO_ORIGINALES);
-        $avanceRaw = round($originales==0?0:100*$aprobadas/$originales);
-        $avance = number_format((float)$avanceRaw, 2, '.', '');
+        $avance = self::getAvanceGrupo($traGra->id_pdg_tra_gra);
+        $actual = self::getIdEtapaActual($traGra->id_pdg_tra_gra);
 
         if(!empty($tema)){
-            return view('TrabajoGraduacion.TrabajoDeGraduacion.index',compact('numero','estudiantesGrupo','tribunal','etapas','tema','idGrupo','avance'));
+            return view('TrabajoGraduacion.TrabajoDeGraduacion.index',compact('numero','estudiantesGrupo','tribunal','etapas','tema','idGrupo','avance','actual'));
         }else{
             //Session::flash('message-error', 'El grupo seleccionado aún no ha empezado su proceso de trabajo de graduación');
             //return redirect()->route('listadoGrupos');
             return view("error");
         }
-        
+
 
     }
+
+    public function getIdEtapaActual($idTraGra){
+        $etapaActual = pdg_apr_eta_tra_aprobador_etapa_trabajoModel::getEtapa($idTraGra,pdg_apr_eta_tra_aprobador_etapa_trabajoModel::T_BUSQ_ACTUAL);
+        $actual = empty($etapaActual->id_cat_eta_eva) ? 0 : $etapaActual->id_cat_eta_eva;
+        return $actual;
+    }
+
+    public function getAvanceGrupo($idTraGra){
+        $aprobadas = pdg_apr_eta_tra_aprobador_etapa_trabajoModel::contarEtapas($idTraGra,pdg_apr_eta_tra_aprobador_etapa_trabajoModel::T_CONTEO_APROBADAS);
+        $originales = pdg_apr_eta_tra_aprobador_etapa_trabajoModel::contarEtapas($idTraGra,pdg_apr_eta_tra_aprobador_etapa_trabajoModel::T_CONTEO_ORIGINALES);
+        $avanceRaw = round($originales==0?0:100*$aprobadas/$originales);
+        $avance = number_format((float)$avanceRaw, 2, '.', '');
+        return $avance;
+    }
+
     public function verificarGrupo($carnet) {
 	    $estudiante = new gen_EstudianteModel();
 	    $respuesta = $estudiante->getGrupoCarnet($carnet);
-	    return $respuesta;     
+	    return $respuesta;
     }
 
     public function getEtapasEvaluativas($idGrupo) {
 	    $grupo = new pdg_gru_grupoModel();
 	    $respuesta = $grupo->getEtapas($idGrupo);
-	    return $respuesta;     
+	    return $respuesta;
     }
     public function createCierreGrupo(){
-        
+
         $userLogin=Auth::user();
         if (Auth::user()->isRole('estudiante')) {
                 $estudiante = new gen_EstudianteModel();
@@ -166,7 +176,7 @@ class TrabajoDeGraduacionController extends Controller{
         $verificar=pdg_apr_eta_tra_aprobador_etapa_trabajoModel::where("id_pdg_tra_gra","=",$trabajoGraduacion->id_pdg_tra_gra)->where("inicio","=","1")->where("aprobo","=","0")->first();
         if (empty($verificar->id_pdg_apr_eta_tra)) {
              Session::flash('message-warning', 'No pueces realizar el cierre de trabajo de graduación hasta que hayas aprobado todas las etapas evaluativas, consulta con tu docente asesor.');
-             return redirect("/dashboard"); 
+             return redirect("/dashboard");
         }
          if(empty($trabajoGraduacion->tema_pdg_tra_gra)){
                 $tema="NA";
@@ -182,10 +192,10 @@ class TrabajoDeGraduacionController extends Controller{
             if(sizeof($tribunal) == 0){
                 $tribunal="NA";
             }
-            
+
             return view('TrabajoGraduacion.TrabajoDeGraduacion.Cierre.create',compact('numero','estudiantesGrupo','tribunal','tema','idGrupo'));
         }
-        
+
     }
 
     public function storeCierreGrupo(Request $request){
@@ -207,7 +217,7 @@ class TrabajoDeGraduacionController extends Controller{
         $verificar=pdg_apr_eta_tra_aprobador_etapa_trabajoModel::where("id_pdg_tra_gra","=",$trabajoGraduacion->id_pdg_tra_gra)->where("inicio","=","1")->where("aprobo","=","0")->first();
         if (empty($verificar->id_pdg_apr_eta_tra)) {
              Session::flash('message-warning', 'No pueces realizar el cierre de trabajo de graduación hasta que hayas aprobado todas las etapas evaluativas, consulta con tu docente asesor.');
-             return redirect("/dashboard"); 
+             return redirect("/dashboard");
         }
         $grupo = pdg_gru_grupoModel::find($idGrupo);
         $tema = pdg_tra_gra_trabajo_graduacionModel::where('id_pdg_gru', '=',$idGrupo)->select('tema_pdg_tra_gra')->first();
@@ -217,19 +227,19 @@ class TrabajoDeGraduacionController extends Controller{
             $numero=$grupo->numero_pdg_gru;
             $grupo= new pdg_gru_grupoModel();
             $estudiantesGrupo = $grupo->getDetalleGrupo($idGrupo);
-        
+
             $tribunalEvaluador = pdg_tri_gru_tribunal_grupoModel::getTribunalData($idGrupo);
             //INGRESAMOS LA PUBLICACION JUNTO CON SU LLAVE DE INTEGRACION
-            $ultimaCorrPublicacionAño=pub_publicacionModel::where("anio_pub","=",date('Y'))->orderBy('correlativo_pub', 'desc')->first();
+            $ultimaCorrPublicacionAnho=pub_publicacionModel::where("anio_pub","=",date('Y'))->orderBy('correlativo_pub', 'desc')->first();
             $correlativo=0;
             $codigo = "0";
-            if (empty($ultimaCorrPublicacionAño->correlativo_pub)) {
+            if (empty($ultimaCorrPublicacionAnho->correlativo_pub)) {
                  $correlativo =1;
             }else{
-                 $correlativo = $ultimaCorrPublicacionAño->correlativo_pub+1;
+                 $correlativo = $ultimaCorrPublicacionAnho->correlativo_pub+1;
             }
             if ($correlativo >= 1 && $correlativo <= 9) {
-                $codigo =  date('Y').'0'.$correlativo;  
+                $codigo =  date('Y').'0'.$correlativo;
             }else{
                $codigo =  date('Y').$correlativo;
             }
@@ -239,7 +249,7 @@ class TrabajoDeGraduacionController extends Controller{
                 ([
                     'id_gen_tpo_int' => 1,
                     'llave_gen_int' => $idGrupo
-                    
+
                 ]);
 
                 $lastIdPublicacion = pub_publicacionModel::create
@@ -262,7 +272,7 @@ class TrabajoDeGraduacionController extends Controller{
                     ([
                         'id_gen_tpo_int' => 2,
                         'llave_gen_int' => $tribunal->id_pdg_dcn
-                        
+
                     ]);
                     $lastIdColaborador = pub_col_colaboradorModel::create
                     ([
@@ -278,7 +288,7 @@ class TrabajoDeGraduacionController extends Controller{
                     }
                     $lastIdRelacion = rel_col_pub_colaborador_publicacionModel::create
                     ([
-                        'id_pub' => $lastIdPublicacion->id_pub, 
+                        'id_pub' => $lastIdPublicacion->id_pub,
                         'id_pub_col' => $lastIdColaborador->id_pub_col,
                         'id_cat_tpo_col_pub' => $categoriaColaborador
                     ]);
@@ -294,14 +304,14 @@ class TrabajoDeGraduacionController extends Controller{
                         if (!empty($colaborador->id_pub_col)) {
                             $lastIdRelacion = rel_col_pub_colaborador_publicacionModel::create
                             ([
-                                'id_pub' => $lastIdPublicacion->id_pub, 
+                                'id_pub' => $lastIdPublicacion->id_pub,
                                 'id_pub_col' => $colaborador->id_pub_col,
                                 'id_cat_tpo_col_pub' => $categoriaColaborador
                             ]);
                         }
-                        
+
                 }
-               
+
             }
 
              //INGRESAMOS LOS AUTORES
@@ -313,7 +323,7 @@ class TrabajoDeGraduacionController extends Controller{
                     ([
                         'id_gen_tpo_int' => 3,
                         'llave_gen_int' => $estudiante->ID_Estudiante
-                        
+
                     ]);
                     $lastIdAutor = pub_aut_publicacion_autorModel::create
                     ([
@@ -332,7 +342,7 @@ class TrabajoDeGraduacionController extends Controller{
                         'nombres_pub_aut' => $estudiante->Nombre,
                         'apellidos_pub_aut' => ""
                     ]);
-                } 
+                }
             }
             //GUARDAMOS EL DOCUMENTO ASOCIADO A LA PUBLICACION
             $file = $request->file('tomoFinal');
@@ -353,11 +363,11 @@ class TrabajoDeGraduacionController extends Controller{
                 'ubicacion_fisica_pub_arc'   => 'PENDIENTE',
                 'activo_pub_arc'             => 1
             ]);
-        
+
 
         }
         Session::flash('message', 'Se ha realizado el cierre de trabajo de graduación Exitosamente!!');
-       return redirect("/publicacion/".$lastIdPublicacion->id_pub); 
-    }    
+       return redirect("/publicacion/".$lastIdPublicacion->id_pub);
+    }
 
 }
