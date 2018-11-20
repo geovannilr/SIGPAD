@@ -269,7 +269,7 @@ function getListadoDocente(idJornada){
                           body2+='<td style="border: hidden">'+
                                 
                                 '<blockquote>'+
-                                '<a  href='+ip+'"/perfilDocente/'+data[i]['id_pdg_dcn']+'"  data-target="#myModal" target="myModal">'+ // data-toggle="modal" data-target=".bd-example-modal-lg" 
+                                 '<a  href="'+ip+'/perfilDocente/'+data[i]['id_pdg_dcn']+'"  data-target="#myModal" target="myModal">'+ // data-toggle="modal" data-target=".bd-example-modal-lg" 
                                ' <div class="row">'+
                                           '<div class="col-sm-3 text-center">'+
                                               
