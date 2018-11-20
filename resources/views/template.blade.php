@@ -55,7 +55,6 @@
     </button>
     <div class="collapse navbar-collapse " id="navbarResponsive" style=" color: #ffffff; "  >
       <ul class="navbar-nav navbar-sidenav " id="exampleAccordion" style="overflow: auto;background-color: #29282b;color: #ffffff; z-index: 0; margin-top: 73px;">
-       
            <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Trabajo de graduación">
             <a class="nav-link nav-link-collapse collapsed" data-toggle="collapse" href="#collapseTrabajoGraduacion" data-parent="#exampleAccordion" style="color: #ffffff; font-weight: bold; background-color: #DF1D20; ">
               <i class="fa fa-fw fa fa-mortar-board"></i>
@@ -74,6 +73,7 @@
                     
                   </a>  
               </li>
+              @endcan
               @can('grupoAsesor.index')
                 <li>
                   <a class="nav-link" href="{{route('listadoGrupos')}}" style="color: #ffffff">
@@ -181,7 +181,7 @@
             
           </ul>
         </li>
-        @endcan
+     
         
 
       </ul>
