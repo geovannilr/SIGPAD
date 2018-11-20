@@ -27,6 +27,7 @@ class pdg_apr_eta_tra_aprobador_etapa_trabajoModel extends Model
 		];
 
     public static function getEtapa($idTraGra,$idTipoBusqueda){
+        DB::statement("SET SESSION sql_mode='STRICT_ALL_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO'");
         DB::statement(
             'CALL sp_pdg_eta_eva_get_Etapa(:idTraGra,:idTpoBusqueda,@idAprbxEta,@idCatEtaEva)',
             array(
@@ -42,6 +43,7 @@ class pdg_apr_eta_tra_aprobador_etapa_trabajoModel extends Model
         }
     }
     public static function contarEtapas($idTraGra,$idTipoConteo){
+        DB::statement("SET SESSION sql_mode='STRICT_ALL_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO'");
         DB::statement(
             'CALL sp_pdg_eta_eva_get_CantEtapas(:idTraGra,:idTpoConteo,@total)',
             array($idTraGra, $idTipoConteo)
