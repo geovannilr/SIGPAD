@@ -200,6 +200,8 @@
 							@else
 								@if($prePerfil->id_cat_sta == "12" )
 									<span class="badge badge-danger">{{ $prePerfil->categoriaEstado->nombre_cat_sta }}</span>&nbsp;
+								@else
+								<span class="badge badge-info">{{ $prePerfil->categoriaEstado->nombre_cat_sta }}</span>&nbsp; 	
 								@endif
 									
 							@endif
