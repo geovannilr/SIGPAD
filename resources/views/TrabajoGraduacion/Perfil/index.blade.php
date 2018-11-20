@@ -217,7 +217,7 @@
 								
 								</td>
 						@endcan
-						@can('prePerfil.destroy')
+						@can('perfil.destroy')
 							<td style="text-align: center;">
 								{!! Form::open(['route'=>['perfil.destroy',$perfil->id_pdg_per],'method'=>'DELETE','class' => 'deleteButton']) !!}
 							 		<div class="btn-group">

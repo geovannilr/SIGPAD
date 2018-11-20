@@ -160,6 +160,7 @@
               </div>
   </div>
     @endif
+    @can('nota.create')
    <div class="col-md-4">
     <div class="card text-black bg-secundary o-hidden h-100">
                 <div class="card-body">
@@ -176,6 +177,7 @@
                 </a>
               </div>
   </div>
+  @endcan
     @if($actual!=0)
    <div class="col-md-4">
     <div class="card text-black bg-secundary o-hidden h-100">
