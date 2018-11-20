@@ -21,7 +21,8 @@ class pdg_dcn_docenteModel extends Model
             'carnet_pdg_dcn',
             'anio_titulacion_pdg_dcn',
             'activo',
-            'id_gen_usuario'
+            'id_gen_usuario',
+            'perfilPrivado'
         ];
 
     /***

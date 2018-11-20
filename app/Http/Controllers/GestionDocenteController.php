@@ -11,10 +11,7 @@ use \App\pdg_dcn_docenteModel;
 use \App\dcn_exp_experienciaModel;
 use \App\dcn_his_historial_academicoModel;
 use \App\cat_mat_materiaModel;
-
-
-
-
+use \App\dcn_cer_certificacionesModel;
 class GestionDocenteController extends Controller
 {
     function create(){
@@ -24,6 +21,8 @@ class GestionDocenteController extends Controller
         $validatedData = $request->validate([
             'documentoPerfil' => 'required',
         ]);
+        //return var_dump($request);
+        $bodyHtml = '';
         $userLogin = Auth::user();
         $docente = pdg_dcn_docenteModel::where("id_gen_usuario","=",$userLogin->id)->first();
         $idDocente = $docente->id_pdg_dcn;
@@ -40,7 +39,7 @@ class GestionDocenteController extends Controller
         $experienciaLaboral = $dataLaboral->toArray();
         $experienciaAcademica = $dataAcademica->toArray();
         $certificaciones = $dataCertificaciones->toArray();
-        //return var_dump($experienciaAcademica[0]);
+        //return var_dump($certificaciones[0]);
         //INSERTANDO LA EXPERIENCIA LABORAL
         try {
             foreach ($experienciaLaboral as $laboral) {
@@ -61,9 +60,17 @@ class GestionDocenteController extends Controller
                     ]);
                 }
             }
-            return "EXPERIENCIA LABORAL INSERTADA";
+            $bodyHtml .= '<tr>';
+                        $bodyHtml .= '<td>EXPERIENCIA LABORAL</td>';
+                        $bodyHtml .= '<td><span class="badge badge-success">OK</span></td>';
+                        $bodyHtml .= '<td>Todos los registros se realizaron exitosamente.</td>';
+                        $bodyHtml .= '</tr>';
         } catch (Exception $e) {
-            return "Error al cargar  experiencia laboral";
+           $bodyHtml .= '<tr>';
+                        $bodyHtml .= '<td>EXPERIENCIA LABORAL</td>';
+                        $bodyHtml .= '<td><span class="badge badge-danger">Error</span></td>';
+                        $bodyHtml .= '<td>Ocurrió un problema en alguno de los registros de la experiencia Laboral</td>';
+                        $bodyHtml .= '</tr>';
         }
 
         //INSERTANDO LA EXPERIENCIA ACADEMICA
@@ -87,11 +94,58 @@ class GestionDocenteController extends Controller
                     ]);
                 }
             }
-            return "EXPERIENCIA ACADEMICA INSERTADA";
+            $bodyHtml .= '<tr>';
+                        $bodyHtml .= '<td>EXPERIENCIA ACADEMICA</td>';
+                        $bodyHtml .= '<td><span class="badge badge-success">OK</span></td>';
+                        $bodyHtml .= '<td>Todos los registros se realizaron exitosamente.</td>';
+                        $bodyHtml .= '</tr>';
         } catch (Exception $e) {
-            return "Error al cargar  experiencia academica";
+           $bodyHtml .= '<tr>';
+                        $bodyHtml .= '<td>EXPERIENCIA ACADEMICA</td>';
+                        $bodyHtml .= '<td><span class="badge badge-danger">Error</span></td>';
+                        $bodyHtml .= '<td>Ocurrió un problema en alguno de los registros de la experiencia academica.</td>';
+                        $bodyHtml .= '</tr>';
         }
+
+        //INSERTANDO CERTIFICACIONES
+         
+        try {
+            foreach ($certificaciones as $certificacion) {
+                if (!is_null($certificacion["nombrecert"]) && !is_null($certificacion["anhocert"]) && !is_null($certificacion["institucioncert"]) && !is_null($certificacion["idiomacert"])) {
+                    
+                   $lastId = dcn_cer_certificacionesModel::create
+                    ([
+                        'nombre_dcn_cer'                => $certificacion["nombrecert"],
+                        'anio_expedicion_dcn_cer'       => $certificacion["anhocert"],
+                        'institucion_dcn_cer'           => $certificacion["institucioncert"],
+                        'id_cat_idi'                    => $certificacion["idiomacert"],
+                        'id_dcn'                        => $idDocente               
+                    ]);
+                }
+            }
+            $bodyHtml .= '<tr>';
+                        $bodyHtml .= '<td>CERTIFICACIONES</td>';
+                        $bodyHtml .= '<td><span class="badge badge-success">OK</span></td>';
+                        $bodyHtml .= '<td>Todos los registros se realizaron exitosamente.</td>';
+                        $bodyHtml .= '</tr>';
+        } catch (Exception $e) {
+           $bodyHtml .= '<tr>';
+                        $bodyHtml .= '<td>EXPERIENCIA LABORAL</td>';
+                        $bodyHtml .= '<td><span class="badge badge-danger">Error</span></td>';
+                        $bodyHtml .= '<td>Ocurrió un problema en alguno de los registros de la experiencia Laboral</td>';
+                        $bodyHtml .= '</tr>';
+        }
+        $docenteObjeto = pdg_dcn_docenteModel::find($idDocente);
+        if (isset($request["perfilPrivado"])) {
+            $docenteObjeto->perfilPrivado='0'; //PERFIL DEBE SER PUBLICO
+            $docenteObjeto->save();
+        }else{
+             $docenteObjeto->perfilPrivado='1'; //PERFIL DEBE SER PRIVADO
+             $docenteObjeto->save();
+        }
+       
         
+        return view('PerfilDocente.resultadoCarga', compact('bodyHtml'));
     }
 	function index(){
 

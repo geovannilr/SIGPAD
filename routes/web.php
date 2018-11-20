@@ -17,6 +17,8 @@ Route::resource('login', 'LogController');
 
 //USUARIO
 Route::resource('usuario', 'gen_UsuarioController');
+Route::get('cargarUsuarios', 'gen_UsuarioController@createUsuarios')->name('cargarUsuarios');
+Route::post('guardarUsuarios', 'gen_UsuarioController@storeUsuarios')->name('guardarUsuarios');
 
 //LOGIN
 Route::get('/logout', 'LogController@logout')->name('LogOut');
