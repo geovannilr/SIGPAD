@@ -340,8 +340,17 @@ class gen_UsuarioController extends Controller {
 	public function createUsuariosUesPlay() {
 		return view('uesplay.create');
 	}
-    function downloadPlantilla(Request $request){
+    function downloadPlantillaUesplay(Request $request){
         $path= public_path().$_ENV['PATH_RECURSOS'].'temp-usuarios-uesplay.xlsx';
+        if (File::exists($path)){
+            return response()->download($path);
+        }else{
+            Session::flash('error','El documento no se encuentra disponible , es posible que haya sido  borrado');
+            return view('PerfilDocente.create');
+        }
+    }
+    public function downloadPlantillaSigpad(){
+        $path= public_path().$_ENV['PATH_RECURSOS'].'temp-usuarios-sigpad.xlsx';
         if (File::exists($path)){
             return response()->download($path);
         }else{

@@ -19,6 +19,7 @@ Route::resource('login', 'LogController');
 Route::resource('usuario', 'gen_UsuarioController');
 Route::get('cargarUsuarios', 'gen_UsuarioController@createUsuarios')->name('cargarUsuarios');
 Route::post('guardarUsuarios', 'gen_UsuarioController@storeUsuarios')->name('guardarUsuarios');
+Route::post('plantillaUsuarioSigpad','gen_UsuarioController@downloadPlantillaSigpad')->name('plantillaUsuarioSigpad');
 
 //LOGIN
 Route::get('/logout', 'LogController@logout')->name('LogOut');
@@ -132,5 +133,5 @@ Route::post('plantillaPerfilDocente','GestionDocenteController@downloadPlantilla
 //------------------UESPLAY--------------------------------------------------------------------------------------
 Route::post('storeUsersUplay', 'gen_UsuarioController@storeUsuariosUesplay')->name('storeUsersUplay');
 Route::get('cargarUsuariosUesplay', 'gen_UsuarioController@createUsuariosUesPlay')->name('cargarUsuariosUesplay');
-Route::post('plantillaUsuarioUesplay','gen_UsuarioController@downloadPlantilla')->name('plantillaUsuarioUesplay');
+Route::post('plantillaUsuarioUesplay','gen_UsuarioController@downloadPlantillaUesplay')->name('plantillaUsuarioUesplay');
 //------------------------------------------------------------------------------------------------------------------------
