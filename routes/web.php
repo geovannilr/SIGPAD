@@ -89,7 +89,7 @@ Route::resource('documento', 'TrabajoGraduacion\DocumentoController');
 Route::post('downloadDocumento', 'TrabajoGraduacion\DocumentoController@downloadDocumento')->name('downloadDocumento');
 //------------------------------------------------------------------------------------------------------------------------
 
-//------------------PUBLICACIONES DE TRABAJOS DE RADUACIÓN----------------------------------------------------------------
+//------------------PUBLICACIONES DE TRABAJOS DE GRADUACIÓN----------------------------------------------------------------
 Route::resource('publicacion', 'Publicaciones\publicacionController');
 Route::get('nuevoDocumentoPublicacion/{idPublicacion}', 'Publicaciones\publicacionController@createDocumento')->name('nuevoDocumentoPublicacion');
 Route::post('storageDocPublicacion', 'Publicaciones\publicacionController@storeDocumento')->name('storageDocPublicacion');
@@ -122,3 +122,11 @@ Route::post('getListadoDocentes', 'GestionDocenteController@getListadoDocentes')
 Route::post('storeUsersUplay', 'gen_UsuarioController@storeUsuariosUesplay')->name('storeUsersUplay');
 Route::get('cargarUsuariosUesplay', 'gen_UsuarioController@createUsuariosUesPlay')->name('cargarUsuariosUesplay');
 //------------------------------------------------------------------------------------------------------------------------
+
+//------------------------------------CATÁLOGOS-------------------------------------------------------------------
+// Catálogo Categoría Trabajo de Graduación
+Route::resource ('categoriaTDG','cat_ctg_tra_categoria_trabajo_graduacionController');
+Route::resource ('tipoDocumento','cat_tpo_doc_tipo_documentoController');
+Route::resource ('tipoTrabajo','cat_tpo_tra_gra_tipo_trabajo_graduacionController');
+
+

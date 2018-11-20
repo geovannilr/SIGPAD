@@ -11,6 +11,7 @@ class cat_tpo_tra_gra_tipo_trabajo_graduacionModel extends Model
 	public $timestamps=false;
 		protected $fillable=
 		[
-			'nombre_cat_tpo_tra_gra'
+			'nombre_cat_tpo_tra_gra',
+            'anio_cat_tpo_tra_gra'
 		];
 }

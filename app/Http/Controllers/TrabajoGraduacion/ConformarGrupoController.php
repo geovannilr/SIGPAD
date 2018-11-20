@@ -77,7 +77,7 @@ class ConformarGrupoController extends Controller
                 $card.='<table>
                             <tr>
                                 ';
-                 if ($miCarnet == $estudiante->carnet && $estudiante->estado == "5" ) { //si soy el líder automaticamente ya acepte, estado 5 no aceptado , estado 6 aceptado
+                 if ($miCarnet == $estudiante->carnet && $estudiante->estado == "5" ) { //si soy el líder automaticamente ya acepte, tipoDocumento 5 no aceptado , tipoDocumento 6 aceptado
                     $card.='    <td>
                                     <h5 class="card-title">Estado</h5>
                                     <p class="card-text">Agregado al grupo</p><br>
@@ -272,7 +272,7 @@ class ConformarGrupoController extends Controller
                          return response()->json(['errorCode'=>0,'errorMessage'=>'Has confirmado que perteceneces a este grupo de trabajo de graduación','msg'=>$resultado]);
                   }else
                   {
-                     return response()->json(['errorCode'=>2,'errorMessage'=>'Error al modificar estado de alumno en el grupo de trabajo de graduación','msg'=>$resultado]);
+                     return response()->json(['errorCode'=>2,'errorMessage'=>'Error al modificar tipoDocumento de alumno en el grupo de trabajo de graduación','msg'=>$resultado]);
 
                   }
                   

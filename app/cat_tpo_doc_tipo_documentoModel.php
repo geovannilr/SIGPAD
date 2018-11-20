@@ -10,9 +10,9 @@ class cat_tpo_doc_tipo_documentoModel extends Model{
 	public $timestamps=false;
 		protected $fillable=
 		[
-			'nombre_pdg_tpo_doc',
-			'descripcion_pdg_tpo_doc',
-			'puede_observar_cat_pdg_tpo_doc',
-			'anio_cat_pdg_tpo_doc',
+                'nombre_pdg_tpo_doc',
+                'descripcion_pdg_tpo_doc',
+                'puede_observar_cat_pdg_tpo_doc',
+                'anio_cat_pdg_tpo_doc',
 		];
 }
