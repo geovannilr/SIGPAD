@@ -162,6 +162,14 @@
                     <span class="nav-link-text">Usuarios</span>
                   </a>  
               </li>
+              @can('usuario.cargar')
+                  <li>
+                    <a class="nav-link" href="{{route('cargarUsuarios')}}" style="color: #ffffff">
+                      <i class="fa fa-users"></i>
+                      <span class="nav-link-text">Cargar Usuarios</span>
+                    </a>
+                  </li>
+              @endcan
             @endcan
             @can('rol.create','rol.edit','rol.destroy','rol.index')
                 <li>
@@ -183,8 +191,15 @@
           </ul>
         </li>
         @endcan
-        
 
+        @can('uesplay.cargar')
+                  <li>
+                    <a class="nav-link" href="{{route('cargarUsuariosUesplay')}}" style="color: #ffffff">
+                      <i class="fa fa-users"></i>
+                      <span class="nav-link-text">Cargar Usuarios UESPLAY</span>
+                    </a>
+                  </li>
+        @endcan
       </ul>
       <ul class="navbar-nav sidenav-toggler" >
         <li class="nav-item">
@@ -196,10 +211,19 @@
       <ul class="navbar-nav ml-auto">
          <a class="nav-link">
             <i class="fa fa-user"></i>&nbsp;{!!Auth::user()->name!!}</a>
+        @can('perfilDocente.cargar')
+                  <li>
+                    <a class="nav-link" href="{{route('cargarPerfilDocente')}}" style="color: #ffffff">
+                      <i class="fa fa-user-circle"></i>
+                      <span class="nav-link-text">Mi Perfil</span>
+                    </a>
+                  </li>
+        @endcan    
         <li class="nav-item">
           <a class="nav-link"  data-toggle="modal" data-target="#exampleModal">
             <i class="fa fa-fw fa-sign-out"></i>Salir</a>
         </li>
+
       </ul>
     </div>
   </nav>

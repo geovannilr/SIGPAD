@@ -161,13 +161,34 @@ function getListadoDocente(idJornada){
                  var contador1=1;
                  var contador2=1;
                  for (var i = 0;i<data.length;i++) {
-                
+                 var perfilPrivado = data[i]['perfilPrivado'];
+                 var urlPerfil = ip+'/perfilDocente/'+data[i]['id_pdg_dcn'];
+
+                 
                  if(data[i]['tipoJornada']==1) 
                  {
                       body="";
-                     
-                  //body+='<li><i class="fa-li fa fa-check"></i>'+data[i]['primer_nombre']+'</li>' + '<img class="img-circle" style="width: 100px;height:100px;" src= "'+data[i]['dcn_profileFoto']+' "></img>';
-                        body+='<td style="border: hidden">'+
+                       if (parseInt(perfilPrivado)==1) {
+                            body+='<td style="border: hidden">'+
+                                '<blockquote>'+
+                               ' <div class="row">'+
+                                          '<div class="col-sm-3 text-center">'+
+                                              
+                                                    '<img class="img-circle" src="'+data[i]['dcn_profileFoto']+' " style="width: 80px;height:80px;" > '+
+                                                    
+                                            '</div>'+
+                                            '<div class="col-sm-9">'+
+                                              '<p style="color:#DFC15E; ">'+data[i]['primer_nombre']+' '+data[i]['segundo_nombre'] +' '+data[i]['primer_apellido']+' '+data[i]['segundo_apellido']+'</p>'+
+                                              '<small>'+data[i]['nombre_cargo']+'</small>'+
+                                            '</div>'+
+                                            '</div>'+
+                                        '</blockquote>'+
+                                      '</div>'+
+
+                                    '</td>  '
+
+                        }else{
+                              body+='<td style="border: hidden">'+
                                 '<blockquote>'+
                                 '<a  href="'+ip+'/perfilDocente/'+data[i]['id_pdg_dcn']+'"  data-target="#myModal" target="myModal">'+ // data-toggle="modal" data-target=".bd-example-modal-lg" 
                                ' <div class="row">'+
@@ -187,6 +208,9 @@ function getListadoDocente(idJornada){
 
                                     '</td>  '
 
+                        }
+                  //body+='<li><i class="fa-li fa fa-check"></i>'+data[i]['primer_nombre']+'</li>' + '<img class="img-circle" style="width: 100px;height:100px;" src= "'+data[i]['dcn_profileFoto']+' "></img>';
+                        
                                     if((contador1%3)==0){
 
                                       if(contador1==0){
@@ -207,8 +231,42 @@ function getListadoDocente(idJornada){
                   {
 
                         body2="";
-                  //body+='<li><i class="fa-li fa fa-check"></i>'+data[i]['primer_nombre']+'</li>' + '<img class="img-circle" style="width: 100px;height:100px;" src= "'+data[i]['dcn_profileFoto']+' "></img>';
-                        body2+='<td style="border: hidden">'+
+                        if (parseInt(perfilPrivado)==1) {
+                          body2+='<td style="border: hidden">'+
+                                
+                                '<blockquote>'+
+                               ' <div class="row">'+
+                                          '<div class="col-sm-3 text-center">'+
+                                              
+                                                    '<img class="img-circle" src="'+data[i]['dcn_profileFoto']+' " style="width: 80px;height:80px;" > '+
+                                                    
+                                            '</div>'+
+                                            '<div class="col-sm-9">'+
+                                              '<p style="color:#DFC15E; ">'+data[i]['primer_nombre']+' '+data[i]['segundo_nombre'] +' '+data[i]['primer_apellido']+' '+data[i]['segundo_apellido']+'</p>'+
+                                              '<small>'+data[i]['nombre_cargo']+'</small>'+
+                                            '</div>'+
+                                            '</div>'+
+                                        '</blockquote>'+
+                                      '</div>'+
+
+                                    '</td>  '
+
+                                    if((contador2%3)==0){
+
+                                      if(contador2==0){
+                                          contador2++;
+                                      } else{
+                                        contador2++;
+                                        body2+='</tr><tr>';
+                                      }
+                                      
+                                    }
+                                    else{
+                                      contador2++;
+                                    }
+                                html2+=body2;
+                        }else{
+                          body2+='<td style="border: hidden">'+
                                 
                                 '<blockquote>'+
                                 '<a  href='+ip+'"/perfilDocente/'+data[i]['id_pdg_dcn']+'"  data-target="#myModal" target="myModal">'+ // data-toggle="modal" data-target=".bd-example-modal-lg" 
@@ -243,6 +301,9 @@ function getListadoDocente(idJornada){
                                       contador2++;
                                     }
                                 html2+=body2;
+                        }
+                  //body+='<li><i class="fa-li fa fa-check"></i>'+data[i]['primer_nombre']+'</li>' + '<img class="img-circle" style="width: 100px;height:100px;" src= "'+data[i]['dcn_profileFoto']+' "></img>';
+                        
                   }
                  }
 

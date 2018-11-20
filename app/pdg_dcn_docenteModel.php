@@ -249,7 +249,8 @@ class pdg_dcn_docenteModel extends Model
             COALESCE(usr.segundo_apellido, '') as segundo_apellido ,            
             car.nombre_cargo,
             COALESCE(dcn.dcn_profileFoto ,'https://profile.actionsprout.com/default.jpeg') as dcn_profileFoto,
-            dcn.tipoJornada
+            dcn.tipoJornada,
+            dcn.perfilPrivado
             from pdg_dcn_docente dcn 
             inner join gen_usuario usr on usr.id=dcn.id_gen_usuario 
             left join cat_car_cargo_eisi car on car.id_cat_car=dcn.id_cargo_actual

@@ -124,7 +124,7 @@ function getListadoDocente(idJornada){
              var html = '<ul class="fa-ul mb-0">';
              for (var i = 0;i<data.length;i++) {
               body="";
-             body+='<li><i class="fa-li fa fa-check"></i>'+data[i]['primer_nombre']+'</li>' + '<img class="img-circle" style="width: 100px;height:100px;" src= "'+data[i]['dcn_profileFoto']+' "></img>';
+             body+='<li><i class="fa-li fa fa-check"></i>'+data[i]['primer_nombre']+'</li>' + '<img class="img-circle" style="width: 100px;height:100px;" src= "'+data[i]['dcn_profileFoto']+' "></img></p>';
               html+=body;
              }
 

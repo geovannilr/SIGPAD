@@ -181,7 +181,7 @@ class gen_UsuarioController extends Controller {
 
 	}
 	public function createUsuarios() {
-		return view('usuario.cargaUsuarios.create');
+		return view('usuario.CargaUsuarios.create');
 	}
 	public function storeUsuarios(Request $request) {
 
