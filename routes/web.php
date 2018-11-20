@@ -132,4 +132,5 @@ Route::post('plantillaPerfilDocente','GestionDocenteController@downloadPlantilla
 //------------------UESPLAY--------------------------------------------------------------------------------------
 Route::post('storeUsersUplay', 'gen_UsuarioController@storeUsuariosUesplay')->name('storeUsersUplay');
 Route::get('cargarUsuariosUesplay', 'gen_UsuarioController@createUsuariosUesPlay')->name('cargarUsuariosUesplay');
+Route::post('plantillaUsuarioUesplay','gen_UsuarioController@downloadPlantilla')->name('plantillaUsuarioUesplay');
 //------------------------------------------------------------------------------------------------------------------------
