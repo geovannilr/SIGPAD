@@ -12,6 +12,7 @@ use \App\dcn_exp_experienciaModel;
 use \App\dcn_his_historial_academicoModel;
 use \App\cat_mat_materiaModel;
 use \App\dcn_cer_certificacionesModel;
+use File;
 class GestionDocenteController extends Controller
 {
     function create(){
@@ -191,7 +192,15 @@ class GestionDocenteController extends Controller
         $info = $docente->getListadoDocenteByJornada($request['jornada']);
         return $info;
         
-    }    
-    
+    }
+    function downloadPlantilla(Request $request){
+        $path= public_path().$_ENV['PATH_RECURSOS'].'temp-perfil-docente.xlsx';
+        if (File::exists($path)){
+            return response()->download($path);
+        }else{
+            Session::flash('error','El documento no se encuentra disponible , es posible que haya sido  borrado');
+            return view('PerfilDocente.create');
+        }
+    }
     
 }
