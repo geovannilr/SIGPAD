@@ -33,7 +33,7 @@
           <li class="breadcrumb-item">
             <h5>  <a href="{{ redirect()->getUrlGenerator()->previous() }}" style="margin-left: 0em"><i class="fa fa-arrow-left fa-lg" style="z-index: 1;margin-top: 0em;margin-right: 0.5em; color: black"></i></a>     Trabajo de Graduación</h5>
           </li>
-          <li class="breadcrumb-item active">Grupo {{$numero}}</li>
+          <li class="breadcrumb-item active">Grupo {{$numero}} </li>
     </ol>
     <h3 class="text-center">{{strtoupper($tema)}}</h3>
       <br>
@@ -151,6 +151,29 @@
               @endif
           @endforeach
         @endif
+      </div>
+      <div class="row">
+        <div class="col-sm-4">
+        </div>
+
+          <div class="col-sm-4">
+            <div class="card text-gray  o-hidden h-100">
+                    <div class="card-body">
+                      <div class="card-body-icon">
+                        <i class="fa fa-flag-checkered"></i>
+                      </div>
+                      <div class="mr-5">Cierre de Trabajo de graduación</div>
+                    </div>
+                    <a class="card-footer text-gray clearfix small z-1" href="{{url("/")."/cierreTDG"}}">
+                      <span class="float-left">Realizar</span>
+                      <span class="float-right">
+                        <i class="fa fa-angle-right"></i>
+                      </span>
+                    </a>
+                  </div>
+          </div>
+          <div class="col-sm-4">
+        </div>
       </div>
     </div>
 @stop

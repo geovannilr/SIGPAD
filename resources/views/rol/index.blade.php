@@ -85,6 +85,7 @@
   				<thead>
 					<th>Nombre</th>
 					<th>Descipción</th>
+          <th>Permisos asignados</th>
 					<th>Fecha de Registro</th>
 					@can('rol.edit')
             <th>Modificar</th>
@@ -95,9 +96,20 @@
   				</thead>
   				<tbody>
   				@foreach($roles as $rol)
+            <?php
+              $permisos=$rol->getPermissions();
+            ?>
 					<tr>
 						<td>{{ $rol->name }}</td>
 						<td>{{ $rol->description }}</td>
+            <td>
+              @foreach($permisos as $permiso)
+                <?php
+                   $name= Caffeinated\Shinobi\Models\Permission::where("slug","=",$permiso)->first();
+                ?>
+                   <span class="badge badge-info">{{$name->name}}</span>
+              @endforeach
+            </td>
 						<td>{{$rol->created_at->format('d/m/Y H:i:s')}}</td>
 						@can('rol.edit')
                 <td style="text-align: center;">
