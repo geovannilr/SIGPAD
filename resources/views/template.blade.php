@@ -62,7 +62,7 @@
               <span class="nav-link-text" style="color: #ffffff" >Trabajo de Graduacion</span>
             </a>
             <ul class="sidenav-second-level collapse" id="collapseTrabajoGraduacion">
-              @can('grupotdg.create','grupo.index')
+              @can('grupotdg.create')
                 <li>
                   <a class="nav-link" href="{{route('grupo.create')}}" style="color: #ffffff">
                     <i class="fa fa-users"></i>
