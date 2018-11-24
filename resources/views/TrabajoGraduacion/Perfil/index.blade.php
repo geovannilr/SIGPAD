@@ -128,7 +128,7 @@
 </script>
 		<ol class="breadcrumb" style="text-align: center; margin-top: 1em">
 	        <li class="breadcrumb-item"  style="text-align: center;">
-	          <h5  style="text-align: center;"">  <a href="{{ redirect()->getUrlGenerator()->previous() }}" style="margin-left: 0em"><i class="fa fa-arrow-left fa-lg" style="z-index: 1;margin-top: 0em;margin-right: 0.5em; color: black"></i></a>     Perfil</h5>
+	          <h5  style="text-align: center;"">  <a href="{{ redirect()->getUrlGenerator()->previous() }}" style="margin-left: 0em"><i class="fa fa-arrow-left fa-lg" style="z-index: 1;margin-top: 0em;margin-right: 0.5em; color: black"></i></a>Perfil</h5>
 	        </li>
 	        @if(isset($numero))
 				 <li class="breadcrumb-item active" >Grupo {{$numero}} </li>
@@ -150,8 +150,6 @@
 			   </div>
 			  @endif			 
 		</div> 
-
-
 		<br>
 		
 	<!-- 	<br>

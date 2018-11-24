@@ -113,7 +113,7 @@ Route::get('BuscarPublicaciones', 'Publicaciones\publicacionController@searchVie
 //------------------------------------------------------------------------------------------------------------------------
 
 //------------------GESTION DOCENTE----------------------------------------------------------------
-Route::get('pruebaGestionDocente', 'GestionDocenteController@index')->name('pruebaGestionDocente');
+Route::get('DashboardPerfilDocente', 'GestionDocenteController@index')->name('DashboardPerfilDocente');
 Route::post('getInfoDocente', 'GestionDocenteController@getInfoDocente')->name('getInfoDocente');
 Route::post('getHistorial', 'GestionDocenteController@getHistorial')->name('getHistorial');
 Route::post('getExperiencia', 'GestionDocenteController@getExperiencia')->name('getExperiencia');

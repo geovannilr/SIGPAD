@@ -14,7 +14,20 @@ use \App\cat_mat_materiaModel;
 use \App\dcn_cer_certificacionesModel;
 use File;
 class GestionDocenteController extends Controller
-{
+{   
+    function index(){
+       $userLogin = Auth::user();
+       $docente = pdg_dcn_docenteModel::where("id_gen_usuario","=",$userLogin->id)->first();
+       $idDocente = $docente->id_pdg_dcn; 
+       $docente = new pdg_dcn_docenteModel();
+       $info = $docente->getDataGestionDocente($idDocente);
+       $academica = $docente->getHistorialAcademico($idDocente);
+       $laboral = $docente->getDataExperienciaDocente($idDocente);
+       $certificaciones = $docente->getDataCertificacionesDocente($idDocente);
+       $habilidades = $docente->getDataSkillsDocente($idDocente);
+      
+       return view('PerfilDocente.index', compact('info','academica','laboral','certificaciones','habilidades'));
+    }
     function create(){
         return view('PerfilDocente.create');
     }
@@ -148,10 +161,7 @@ class GestionDocenteController extends Controller
         
         return view('PerfilDocente.resultadoCarga', compact('bodyHtml'));
     }
-	function index(){
-
-		return "test";
-	}
+	
     function getInfoDocente(Request $request){
     	$docente = new pdg_dcn_docenteModel();
     	$info = $docente->getDataGestionDocente($request['docente']);
@@ -187,20 +197,20 @@ class GestionDocenteController extends Controller
         
     }
 
- function getListadoDocentes(Request $request){
-        $docente = new pdg_dcn_docenteModel();
-        $info = $docente->getListadoDocenteByJornada($request['jornada']);
-        return $info;
-        
+    function getListadoDocentes(Request $request){
+            $docente = new pdg_dcn_docenteModel();
+            $info = $docente->getListadoDocenteByJornada($request['jornada']);
+            return $info;
+            
     }
     function downloadPlantilla(Request $request){
-        $path= public_path().$_ENV['PATH_RECURSOS'].'temp-perfil-docente.xlsx';
-        if (File::exists($path)){
-            return response()->download($path);
-        }else{
-            Session::flash('error','El documento no se encuentra disponible , es posible que haya sido  borrado');
-            return view('PerfilDocente.create');
-        }
+            $path= public_path().$_ENV['PATH_RECURSOS'].'temp-perfil-docente.xlsx';
+            if (File::exists($path)){
+                return response()->download($path);
+            }else{
+                Session::flash('error','El documento no se encuentra disponible , es posible que haya sido  borrado');
+                return view('PerfilDocente.create');
+            }
     }
     
 }
