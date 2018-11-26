@@ -8,7 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
     <meta name="author" content="">
-
+    <meta name="current-url" content="{{\Illuminate\Support\Facades\URL::to('/')}}">
     <title>.::Perfl Docente - EISI</title>
 
     <!-- Custom fonts for this template -->
@@ -18,7 +18,8 @@
     <!-- Bootstrap core CSS -->
     {!!Html::style('PerfilDocente/vendor/fontawesome-free/css/all.min.css')!!}
     {!!Html::style('PerfilDocente/vendor/bootstrap/css/bootstrap.min.css')!!}
-     {!!Html::style('PerfilDocente/css/resume.css')!!}
+    {!!Html::style('PerfilDocente/css/resume.css')!!}
+    {!!Html::script('js/main.js')!!}
   </head>
 
   <body id="page-top">
@@ -129,8 +130,7 @@
    {!!Html::script('PerfilDocente/vendor/jquery-easing/jquery.easing.min.js')!!}
 	 {!!Html::script('PerfilDocente/js/main.js')!!}
         <!-- Custom scripts for this template -->
-    {!!Html::script('PerfilDocente/js/resume.js')!!}
-        <!-- Plugin JavaScript -->
+    {!!Html::script('PerfilDocente/js/resume.js')!!}        <!-- Plugin JavaScript -->
    
 
 	<script>

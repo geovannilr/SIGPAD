@@ -169,6 +169,7 @@ class pdg_dcn_docenteModel extends Model
     public function getDataExperienciaDocente($idDocente){
 
         $data = DB::select("select distinct
+                            id_dcn_exp,
                             lugar_trabajo_dcn_exp,
                             anio_inicio_dcn_exp,
                             anio_fin_dcn_exp,
@@ -186,6 +187,7 @@ class pdg_dcn_docenteModel extends Model
     public function getDataCertificacionesDocente($idDocente){
 
         $data = DB::select("select distinct
+                            id_dcn_cer,
                             nombre_dcn_cer,
                             anio_expedicion_dcn_cer,
                             institucion_dcn_cer,
