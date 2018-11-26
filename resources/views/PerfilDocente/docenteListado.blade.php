@@ -25,7 +25,7 @@
      {!!Html::style('PerfilDocente/css/resume.css')!!}
   </head>
 
-  <body id="page-top" style="background-color: #7C1111">
+  <body id="page-top" style="background-color: #ffffff">
 
 
 
