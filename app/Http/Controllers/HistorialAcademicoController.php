@@ -3,9 +3,21 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Session;
+use Redirect;
+use \App\cat_mat_materiaModel;
+use \App\cat_car_cargo_eisiModel;
+use \App\dcn_his_historial_academicoModel;
+use \App\pdg_dcn_docenteModel;
+
+
 
 class HistorialAcademicoController extends Controller
-{
+{   
+    public function __construct(){
+        $this->middleware('auth');
+    }
     /**
      * Display a listing of the resource.
      *
@@ -13,7 +25,7 @@ class HistorialAcademicoController extends Controller
      */
     public function index()
     {
-        //
+        
     }
 
     /**
@@ -21,9 +33,11 @@ class HistorialAcademicoController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
-    {
-        //
+    public function create(){
+
+        $materias = cat_mat_materiaModel::pluck('nombre_mat','id_cat_mat');
+        $cargos = cat_car_cargo_eisiModel::pluck('nombre_cargo','id_cat_car');
+        return view('PerfilDocente.Catalogos.Academico.create',compact('materias','cargos'));
     }
 
     /**
@@ -32,9 +46,37 @@ class HistorialAcademicoController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
-    {
-        //
+    public function store(Request $request){
+        $validatedData = $request->validate(
+            [
+                'id_cat_mat' => 'required',
+                'id_cat_car' => 'required',
+                'anio' => 'required|max:4',
+                'descripcion_adicional' => 'max:500'                
+            ],
+            [
+                'id_cat_mat.required' => 'Debe seleccionar una materia',
+                'id_cat_car.required' => 'Debe seleccionar un cargo.',
+                'anio.required' => 'Debe seleccionar un año.',
+                'anio.max' => 'El año debe ser máximo de 4 digitos',
+                'descripcion_adicional.max' => 'La descripcición debe ser máximo de 500 caracteres.'
+            ]
+        );
+       $userLogin = Auth::user();
+       $docente = pdg_dcn_docenteModel::where("id_gen_usuario","=",$userLogin->id)->first();
+       $idDocente = $docente->id_pdg_dcn; 
+        $lastId = dcn_his_historial_academicoModel::create
+                    ([
+                        'id_pdg_dcn'                => $idDocente,
+                        'id_cat_mat'                => $request['id_cat_mat'],
+                        'id_cat_car'                => $request['id_cat_car'],
+                        'anio'                      => $request['anio'],
+                        'descripcion_adicional'     => $request['descripcion_adicional']
+                        
+                    ]);
+
+       Session::flash('message','Registro de historial académico realizado correctamente!');
+       return Redirect::to('DashboardPerfilDocente/');                     
     }
 
     /**
@@ -43,8 +85,7 @@ class HistorialAcademicoController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
-    {
+    public function show($id){
         //
     }
 

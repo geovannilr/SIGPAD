@@ -128,7 +128,7 @@ Route::post('getListadoDocentes', 'GestionDocenteController@getListadoDocentes')
 Route::get('cargarPerfilDocente', 'GestionDocenteController@create')->name('cargarPerfilDocente');
 Route::post('guardarPerfilDocente', 'GestionDocenteController@store')->name('guardarPerfilDocente');
 Route::post('plantillaPerfilDocente','GestionDocenteController@downloadPlantilla')->name('plantillaPerfilDocente');
-Route::resource('academico', 'HistorialAcemicoController');
+Route::resource('academico', 'HistorialAcademicoController');
 Route::resource('laboral', 'ExperienciaLaboralController');
 Route::resource('certificacion', 'CertificacionController');
 //------------------------------------------------------------------------------------------------------------------------
