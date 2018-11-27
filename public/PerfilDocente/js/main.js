@@ -1,5 +1,4 @@
-//var ip ="http://eisi.fia.ues.edu.sv/SIGPAD/public"; //quitar el localhost y poner la URL correcta antes del commit
-var ip =getCurrentUrl();
+var ip =$('meta[name="current-url"]').attr('content');
 console.log(ip);
 function getHistorialAcademico(idDcn){
 	$.ajax({
@@ -7,7 +6,7 @@ function getHistorialAcademico(idDcn){
            url:ip+'/getHistorial',
            data:{'docente':idDcn},
            success:function(data){
-            console.log(data.length);
+            //console.log(data.length);
              var html = '<table class="table table-striped"><thead><tr><th scope="col">#</th><th scope="col">Cargo</th><th scope="col">Código</th><th scope="col">Materia</th><th scope="col">Ciclo</th><th scope="col">Año</th> </tr></thead><tbody>';
  
              for (var i = 0;i<data.length;i++) {
@@ -38,7 +37,7 @@ function getExperienciaDocente(idDcn){
            url:ip+'/getExperiencia',
            data:{'docente':idDcn},
            success:function(data){
-            console.log(data.length);
+            //console.log(data.length);
              var html = "";
              for (var i = 0;i<data.length;i++) {
            		html="";
@@ -67,7 +66,7 @@ function getCertificacionesDocente(idDcn){
            url:ip+'/getCertificaciones',
            data:{'docente':idDcn},
            success:function(data){
-            console.log(data.length);
+            //console.log(data.length);
              var html = '<table class="table table-striped"><thead><tr><th scope="col">#</th><th scope="col">Nombre</th><th scope="col">Año</th><th scope="col">Institución</th><th scope="col">Idioma</th></tr></thead><tbody>';
  
              for (var i = 0;i<data.length;i++) {
@@ -97,7 +96,7 @@ function getSkillsDocente(idDcn){
            url:ip+'/getSkills',
            data:{'docente':idDcn},
            success:function(data){
-            console.log(data.length);
+            //console.log(data.length);
              var html = '<ul class="fa-ul mb-0">';
              for (var i = 0;i<data.length;i++) {
            		body="";
@@ -157,7 +156,7 @@ function getListadoDocente(idJornada){
            data:{'jornada':idJornada},
            success:function(data)
            {
-                console.log(data);
+                //console.log(data);
                  var html = '<table class="table"><tbody><tr>';
                  var html2 = '<table class="table"><tbody><tr>';
                  var contador1=1;
@@ -315,7 +314,7 @@ function getListadoDocente(idJornada){
                 $("#seccionListado2").append(html2);
            }, 
         error : function(xhr, status) {
-            console("Hubo un problema al momento de obetener los datos de Docente");
+            console.log("Hubo un problema al momento de obetener los datos de Docente");
             
         }
         });      

@@ -19,7 +19,7 @@
     {!!Html::style('PerfilDocente/vendor/fontawesome-free/css/all.min.css')!!}
     {!!Html::style('PerfilDocente/vendor/bootstrap/css/bootstrap.min.css')!!}
     {!!Html::style('PerfilDocente/css/resume.css')!!}
-    {!!Html::script('js/main.js')!!}
+    
   </head>
 
   <body id="page-top">
