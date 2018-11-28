@@ -142,6 +142,7 @@
   @endcan
 </div> -->
 <div class="row">
+    @can('etapa.config')
     @if($configura)
   <div class="col-md-4">
     <div class="card text-black bg-secundary o-hidden h-100">
@@ -160,6 +161,7 @@
               </div>
   </div>
     @endif
+    @endcan
     @can('nota.create')
    <div class="col-md-4">
     <div class="card text-black bg-secundary o-hidden h-100">
@@ -178,6 +180,7 @@
               </div>
   </div>
   @endcan
+  @can('etapa.aprobar')
     @if($actual!=0)
    <div class="col-md-4">
     <div class="card text-black bg-secundary o-hidden h-100">
@@ -197,11 +200,13 @@
               </div>
   </div>
     @endif
+      @endcan
 </div>
     <br>
     {!!$bodyHtml!!}
     <!-- Button trigger modal -->
 <!-- Modal -->
+@can('etapa.config')
 <div class="modal fade" id="modalConfig" tabindex="-1" role="dialog" aria-labelledby="modalConfig" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
@@ -233,7 +238,9 @@
     </div>
   </div>
 </div>
+@endcan
 {!!Html::script('js/TrabajoGraduacion/etapaEvaluativa.js')!!}
+@can('etapa.aprobar')
 <!-- Modal APROBAR ETAPA -->
 <div class="modal fade" id="modalAprobar" tabindex="-1" role="dialog" aria-labelledby="modalAprobar" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered" role="document">
@@ -265,5 +272,6 @@
 <div id="infoAprb" style="display: none;">
     Tenga en cuenta que para aprobar la etapa no es obligatorio haber añadido notas, únicamente es OBLIGATORIO que el grupo haya cargado, por lo menos, un archivo.
 </div>
+@endcan
 <input type="hidden" id="nomEtapa" value="{{$nombreEtapa}}" />
 @stop
