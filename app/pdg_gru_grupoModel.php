@@ -77,4 +77,14 @@ class pdg_gru_grupoModel extends Model{
 		$errorCode = DB::select('select @result as resultado');
 		return  $errorCode;
 	}
+	public static function deleteGrupoAndRelations($idGrupo){
+        $result = 0;
+        try{
+            DB::table('pdg_gru_est_grupo_estudiante')->where('id_pdg_gru','=',$idGrupo)->delete();
+            pdg_gru_grupoModel::destroy($idGrupo);
+        } catch (\Exception $exception){
+            $result = 1;
+        }
+        return $result;
+    }
 }

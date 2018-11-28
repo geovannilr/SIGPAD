@@ -240,7 +240,9 @@ class ConformarGrupoController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function destroy($id){
-
+        $res = pdg_gru_grupoModel::deleteGrupoAndRelations($id);
+        Session::flash($res==0?'message-warning':'message-error',$res==0?'Grupo eliminado con éxito':'No es posible eliminar el grupo');
+        return redirect()->route('grupo.index');
     }
 
     public function getAlumno(Request $request) 
