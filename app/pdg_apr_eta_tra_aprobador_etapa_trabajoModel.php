@@ -13,7 +13,7 @@ class pdg_apr_eta_tra_aprobador_etapa_trabajoModel extends Model
     const T_BUSQ_SIGUIENTE      = 2;
 
     protected $table='pdg_apr_eta_tra_aprobador_etapa_trabajo';
-    protected $primaryKey='id_pdg_apr_eta_tra_';
+    protected $primaryKey='id_pdg_apr_eta_tra';
     public $timestamps=false;
     protected $fillable=
 		[

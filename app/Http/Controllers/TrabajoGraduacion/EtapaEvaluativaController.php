@@ -17,6 +17,7 @@ use \App\pdg_not_cri_tra_nota_criterio_trabajoModel;
 use \App\pdg_ppe_pre_perfilModel;
 use \App\pdg_tra_gra_trabajo_graduacionModel;
 use \App\pdg_apr_eta_tra_aprobador_etapa_trabajoModel;
+use \App\pdg_eta_eva_tra_etapa_trabajoModel;
 use File;
 
 class EtapaEvaluativaController extends Controller {
@@ -278,7 +279,7 @@ class EtapaEvaluativaController extends Controller {
 				}
 			}
 			$actual =  self::getIdEtapaActual($trabajoGraduacion->id_pdg_tra_gra);
-			$configura = ($trabajoGraduacion->id_cat_tpo_tra_gra!=1);//validar si ya se configuró, consultando la tabla de EntregablesxEtapa
+			$configura = ($trabajoGraduacion->id_cat_tpo_tra_gra!=1)&&(sizeof($documentos) != 0);
 			return view('TrabajoGraduacion.EtapaEvaluativa.show', compact('bodyHtml', 'nombreEtapa', 'ponderacion', 'id','idGrupo','actual','configura'));
 			//return $bodyHtml;
 		
@@ -514,14 +515,17 @@ class EtapaEvaluativaController extends Controller {
 
         if(!empty($etapa->id_cat_eta_eva)){
             if($etapa->id_cat_eta_eva!=999){//Valor etapa de cierre
+                $cantArch = pdg_eta_eva_tra_etapa_trabajoModel::contarArchivos($traGra->id_pdg_tra_gra,$idEtapa);
                 if($etapaSig!=null){
                     $coinciden = (intval($idEtapa) === $etapa->id_cat_eta_eva);
-                    $message = $coinciden ? "Aprobar esta etapa bloqueará la subida de archivos al grupo y, por consiguiente, habilitará la subida de archivos, calficaciones y configuraciones de la siguiente etapa: <b>".$etapaSig->nombre_cat_eta_eva.".</b><br>¿Desea continuar?"
-                        : "No puede aprobar esta etapa.<br>El proceso se encuentra en <b>".$etapa->nombre_cat_eta_eva."</b>, verifique el estado de dicha etapa primero.";
+                    $message = !$coinciden ? "No puede aprobar esta etapa.<br>El proceso se encuentra en <b>".$etapa->nombre_cat_eta_eva."</b>, verifique el estado de dicha etapa primero.":
+                        ($cantArch>0 ? "Aprobar esta etapa, habilitará la subida de archivos, calficaciones y configuraciones de la siguiente etapa: <b>".$etapaSig->nombre_cat_eta_eva.".</b><br>¿Desea continuar?"
+                                : "<i>Para poder aprobar la etapa, el grupo debe subir al menos un documento.</i>");
+                    $coinciden = $coinciden&&$cantArch>0;
                 }else{
-                    $coinciden = true;
-                    $message =  "Aprobar esta etapa habilitará la etapa de <b>Cierre de Trabajo de Graduación</b>, los estudiantes podrán cargar los documentos requeridos para la Biblioteca de Trabajos de Graduación<br>".
-                        "<i>Tenga en cuenta que tiene que calificar todas las etapas para dar por finalizado el Proceso de Trabajo de Graduación.</i>";
+                    $coinciden = $cantArch>0;
+                    $message = $coinciden?"Aprobar esta etapa habilitará la etapa de <b>Cierre de Trabajo de Graduación</b>, los estudiantes podrán cargar los documentos requeridos para la Biblioteca de Trabajos de Graduación<br>".
+                        "<i>Tenga en cuenta que tiene que revisar y aprobar esos documentos para dar por finalizado el Proceso de Trabajo de Graduación.</i>":"<i>Para poder aprobar la etapa, el grupo debe subir al menos un documento.</i>";
                 }
             }else{
                 $message = "El proceso se encuentra en etapa de <b>Cierre de Trabajo de Graduación</b>, consulte la opción en el Dashboard";

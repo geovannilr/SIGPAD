@@ -263,7 +263,7 @@
   </div>
 </div>
 <div id="infoAprb" style="display: none;">
-    Tenga en cuenta que para aprobar la etapa no es obligatorio haber añadido notas. Sin embargo, al final del proceso será necesario haber calificado todas las etapas para dar por cerrado el Trabajo de Graduación.
+    Tenga en cuenta que para aprobar la etapa no es obligatorio haber añadido notas, únicamente es OBLIGATORIO que el grupo haya cargado, por lo menos, un archivo.
 </div>
 <input type="hidden" id="nomEtapa" value="{{$nombreEtapa}}" />
 @stop
