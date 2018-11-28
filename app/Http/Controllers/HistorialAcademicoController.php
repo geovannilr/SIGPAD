@@ -95,9 +95,11 @@ class HistorialAcademicoController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
-    {
-        //
+    public function edit($id){
+        $materias = cat_mat_materiaModel::pluck('nombre_mat','id_cat_mat');
+        $cargos = cat_car_cargo_eisiModel::pluck('nombre_cargo','id_cat_car');
+        $academico = dcn_his_historial_academicoModel::find($id);
+        return view('PerfilDocente.Catalogos.Academico.edit',compact('materias','cargos','academico'));
     }
 
     /**
@@ -107,9 +109,30 @@ class HistorialAcademicoController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
-    {
-        //
+    public function update(Request $request, $id){
+        $validatedData = $request->validate(
+            [
+                'id_cat_mat' => 'required',
+                'id_cat_car' => 'required',
+                'anio' => 'required|max:4',
+                'descripcion_adicional' => 'max:500'                
+            ],
+            [
+                'id_cat_mat.required' => 'Debe seleccionar una materia',
+                'id_cat_car.required' => 'Debe seleccionar un cargo.',
+                'anio.required' => 'Debe seleccionar un año.',
+                'anio.max' => 'El año debe ser máximo de 4 digitos',
+                'descripcion_adicional.max' => 'La descripcición debe ser máximo de 500 caracteres.'
+            ]
+        );
+        $academico = dcn_his_historial_academicoModel::find($id);
+        $academico -> id_cat_mat = $request['id_cat_mat'];
+        $academico -> id_cat_car = $request['id_cat_car'];
+        $academico -> anio = $request['anio'];
+        $academico -> descripcion_adicional = $request['descripcion_adicional'];
+        $academico->save();
+        Session::flash('message','Actualización  de historial académico realizado correctamente!');
+       return Redirect::to('DashboardPerfilDocente/'); 
     }
 
     /**
