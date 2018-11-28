@@ -181,11 +181,11 @@ class PerfilController extends Controller
         Storage::disk('Uploads')->put($nombreResumen, File::get($resumen));
          //movemos el archivo a la ubicación correspondiente segun grupo y años
         if ($_ENV['SERVER'] =="win") {
-                $nuevaUbicacion=$anioGrupo.'/Grupo'.$numeroGrupo.'/Perfil/'.$nombre;
-                $nuevaUbicacionResumen=$anioGrupo.'/Grupo'.$numeroGrupo.'/Perfil/'.$nombreResumen;
-             }else{
                 $nuevaUbicacion=$anioGrupo.'\Grupo'.$numeroGrupo.'\Perfil\ '.$nombre;
                 $nuevaUbicacionResumen=$anioGrupo.'\Grupo'.$numeroGrupo.'\Perfil\ '.$nombreResumen;
+             }else{
+                $nuevaUbicacion=$anioGrupo.'/Grupo'.$numeroGrupo.'/Perfil/'.$nombre;
+                $nuevaUbicacionResumen=$anioGrupo.'/Grupo'.$numeroGrupo.'/Perfil/'.$nombreResumen;
              }
             
         Storage::disk('Uploads')->move($nombre, $nuevaUbicacion);
@@ -349,9 +349,9 @@ class PerfilController extends Controller
             Storage::disk('Uploads')->put($nombre, File::get($file));
              //movemos el archivo a la ubicación correspondiente segun grupo y años
             if ($_ENV['SERVER'] =="win") {
-                $nuevaUbicacion=$anioGrupo.'/Grupo'.$numeroGrupo.'/Perfil/'.$nombre;
-             }else{
                 $nuevaUbicacion=$anioGrupo.'\Grupo'.$numeroGrupo.'\Perfil\ '.$nombre;
+             }else{
+                $nuevaUbicacion=$anioGrupo.'/Grupo'.$numeroGrupo.'/Perfil/'.$nombre;
              }
             
             Storage::disk('Uploads')->move($nombre, $nuevaUbicacion);
@@ -383,9 +383,9 @@ class PerfilController extends Controller
             Storage::disk('Uploads')->put($nombreResumen, File::get($resumen));
              //movemos el archivo a la ubicación correspondiente segun grupo y años
            if ($_ENV['SERVER'] =="win") {
-                $nuevaUbicacionResumen=$anioGrupo.'/Grupo'.$numeroGrupo.'/Perfil/'.$nombreResumen;
-             }else{
                 $nuevaUbicacionResumen=$anioGrupo.'\Grupo'.$numeroGrupo.'\Perfil\ '.$nombreResumen;
+             }else{
+                $nuevaUbicacionResumen=$anioGrupo.'/Grupo'.$numeroGrupo.'/Perfil/'.$nombreResumen;
              }
             
             Storage::disk('Uploads')->move($nombreResumen, $nuevaUbicacionResumen);
