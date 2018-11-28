@@ -35,6 +35,8 @@
     {!!Html::script('js/jquery.multi-select.js')!!}
     {!!Html::script('js/publicaciones.js')!!}
     {!!Html::script('js/jquery.quicksearch.js')!!}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.8.0/js/bootstrap-datepicker.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.8.0/css/bootstrap-datepicker.css" rel="stylesheet"/>
  <style type="text/css">
 @font-face {
     font-family: 'American_Captain';
@@ -270,6 +272,7 @@
       </div>
     </div>
   </div>
+   
   {!!Html::script('https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.bundle.min.js')!!}
   {!!Html::script('js/sb-admin.min.js')!!}
   {!!Html::script('https://unpkg.com/sweetalert/dist/sweetalert.min.js')!!}

@@ -8,7 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
     <meta name="author" content="">
-
+	<meta name="current-url" content="{{\Illuminate\Support\Facades\URL::to('/')}}">
     <title>.::Perfl Docente - EISI</title>
 
 
@@ -25,11 +25,11 @@
      {!!Html::style('PerfilDocente/css/resume.css')!!}
   </head>
 
-  <body id="page-top" style="background-color: #faebd7">
+  <body id="page-top" style="background-color: #ffffff">
 
 
 
-<section  style="background-color: #faebd7; height: 100%; width: 100%;" id="listado">
+<section  style="background-color: #ffffff; height: 100%; width: 100%;" id="listado">
         <div class="my-auto" id="seccionListado">
           <span class="elementor-divider-separator"></span>
           <h2 class="mb-5" style="margin-top: 1em;margin-bottom: 1em;color: #212656  ; text-align: center;  font-family: 'Segoe UI'; font-size: 35px; text-transform: uppercase;
@@ -41,7 +41,7 @@
   
 </section>
 
-<section  style="background-color: #faebd7; height: 100%; width: 100%; " id="listado">
+<section  style="background-color: #ffffff; height: 100%; width: 100%; " id="listado">
         <div class="my-auto" id="seccionListado2" style="">
           <span class="elementor-divider-separator"></span>
           <h2 class="mb-5" style="margin-top: 2em;margin-bottom: 1em;color: #212656  ; text-align: center;  font-family: 'Segoe UI'; font-size: 35px; text-transform: uppercase;

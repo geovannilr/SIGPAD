@@ -98,7 +98,95 @@
 </ul>
 <div class="tab-content" id="myTabContent">
   <div class="tab-pane fade show active" id="general" role="tabpanel" aria-labelledby="general-tab">
-	GENERAL
+  	<br>
+  	<br>
+	<div class="row">
+		<div class="col-md-6">
+			<div class="row">
+				<div class="col-md-6 text-center">
+					<div class="row">
+						<img src="https://d500.epimg.net/cincodias/imagenes/2016/07/04/lifestyle/1467646262_522853_1467646344_noticia_normal.jpg" class="rounded img-fluid rounded-circle" alt="...">
+					</div>
+					<div class="row">
+						<input type="file" name="fotoPerfil">
+					</div>
+				 	
+				</div>
+					
+				<div class="col-md-6">
+				 <div  class="row">
+				 	NOMBRE
+				 </div>
+				  <div  class="row">
+				 	CARGO
+				 </div>
+				  <div  class="row">
+				 	EMAIL
+				 </div>
+
+				</div>
+			</div>
+			
+		</div>
+		<div class="col-md-6">
+			<div class="row">
+				<p>Público <input type="checkbox" class="form-control" name="redesPublico"></p>
+				
+			</div>
+			
+			<div class="row">
+				<div class="col-md-1">
+					<a href="#" id="linkLinkedind_" target="_blank">
+              			<i class="fa fa-linkedin fa-2x text-danger"></i>
+            		</a>
+				</div>
+				<div class="col-md-6">
+					<input type="text" name="linkedin" class="form-control" readonly>
+				</div>	
+            	
+			</div>
+			<br>
+			<div class="row">
+				<div class="col-md-1">
+					<a href="#" id="linkLinkedind_" target="_blank">
+              			<i class="fa fa-github fa-2x text-danger"></i>
+            		</a>
+				</div>
+				<div class="col-md-6">
+					<input type="text" name="linkedin" class="form-control" readonly>
+				</div>	
+            	
+			</div>
+			<br>
+			<div class="row">
+				<div class="col-md-1">
+					<a href="#" id="linkLinkedind_" target="_blank">
+              			<i class="fa fa-twitter fa-2x text-danger"></i>
+            		</a>
+				</div>
+				<div class="col-md-6">
+					<input type="text" name="linkedin" class="form-control" readonly>
+				</div>	
+            	
+			</div>
+			<br>
+			<div class="row">
+				<div class="col-md-1">
+					<a href="#" id="linkLinkedind_" target="_blank">
+              			<i class="fa fa-facebook fa-2x text-danger"></i>
+            		</a>
+				</div>
+				<div class="col-md-6">
+					<input type="text" name="linkedin" class="form-control" readonly>
+				</div>	
+            	
+			</div>
+			
+		</div>
+		
+         
+
+	</div>
   </div>
 
   <div class="tab-pane fade" id="academica" role="tabpanel" aria-labelledby="academica-tab">
@@ -112,16 +200,32 @@
 					<th>Materia</th>
 					<th>Ciclo</th>
 					<th>Año</th>
+					<th>Modificar</th>
+					<th>Eliminar</th>
 					
   				</thead>
   				<tbody>
   				@foreach($academica as $aca)
   						<tr>
-  						<td>{{ $aca->Cargo }}</td>	
-						<td>{{ $aca->Codigo }}</td>
-						<td>{{ $aca->Materia}}</td>
-						<td>{{ $aca->Ciclo}}</td>
-						<td>{{ $aca->anio}}</td>
+	  						<td>{{ $aca->Cargo }}</td>	
+							<td>{{ $aca->Codigo }}</td>
+							<td>{{ $aca->Materia}}</td>
+							<td>{{ $aca->Ciclo}}</td>
+							<td>{{ $aca->anio}}</td>
+							@can('publicacion.edit')
+								<td style="text-align: center;">
+									<a class="btn " style="background-color:  #102359;color: white" href="{{route('academico.edit',$aca->id_dcn_his)}}"><i class="fa fa-pencil"></i></a>
+								</td>
+							@endcan
+							@can('publicacion.destroy')
+								<td>
+									{!! Form::open(['route'=>['academico.destroy',$aca->id_dcn_his],'method'=>'DELETE','class' => 'deleteButton']) !!}
+								 		<div class="btn-group">
+											<button type="submit" class="btn btn-danger" ><i class="fa fa-trash"></i></button>
+										</div>
+									{!! Form:: close() !!}
+								</td>
+							@endcan
 						</tr>				
 				@endforeach 
 				</tbody>
@@ -140,6 +244,8 @@
 					<th>Descripción</th>
 					<th>Año Inicio</th>
 					<th>Año Fin</th>
+					<th>Modificar</th>
+					<th>Eliminar</th>
 					
   				</thead>
   				<tbody>
@@ -150,6 +256,21 @@
 						<td>{{ $labo->descripcionExperiencia}}</td>
 						<td>{{ $labo->anio_inicio_dcn_exp}}</td>
 						<td>{{ $labo->anio_fin_dcn_exp}}</td>
+						@can('publicacion.edit')
+								<td style="text-align: center;">
+									<a class="btn " style="background-color:  #102359;color: white" href="{{route('laboral.edit',$labo->id_dcn_exp)}}"><i class="fa fa-pencil"></i></a>
+								</td>
+							@endcan
+							@can('publicacion.destroy')
+								<td>
+									{!! Form::open(['route'=>['academico.destroy',$labo->id_dcn_exp],'method'=>'DELETE','class' => 'deleteButton']) !!}
+								 		<div class="btn-group">
+											<button type="submit" class="btn btn-danger" ><i class="fa fa-trash"></i></button>
+										</div>
+									{!! Form:: close() !!}
+								</td>
+							@endcan
+						
 						</tr>				
 				@endforeach 
 				</tbody>
@@ -167,6 +288,8 @@
 					<th>Año</th>
 					<th>Institución</th>
 					<th>Idioma</th>
+					<th>Modificar</th>
+					<th>Eliminar</th>
   				</thead>
   				<tbody>
   				@if(empty($certificaciones[0]->nombre_dcn_cer))
@@ -178,6 +301,20 @@
 						<td>{{ $certificacion->anio_expedicion_dcn_cer }}</td>
 						<td>{{ $certificacion->institucion_dcn_cer}}</td>
 						<td>{{ $certificacion->idiomaCert}}</td>
+						@can('publicacion.edit')
+								<td style="text-align: center;">
+									<a class="btn " style="background-color:  #102359;color: white" href="{{route('certificacion.edit',$certificacion->id_dcn_cer)}}"><i class="fa fa-pencil"></i></a>
+								</td>
+							@endcan
+							@can('publicacion.destroy')
+								<td>
+									{!! Form::open(['route'=>['academico.destroy',$certificacion->id_dcn_cer],'method'=>'DELETE','class' => 'deleteButton']) !!}
+								 		<div class="btn-group">
+											<button type="submit" class="btn btn-danger" ><i class="fa fa-trash"></i></button>
+										</div>
+									{!! Form:: close() !!}
+								</td>
+							@endcan
 						
 						</tr>				
 					@endforeach 
