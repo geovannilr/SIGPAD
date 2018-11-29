@@ -132,7 +132,7 @@ class HistorialAcademicoController extends Controller
         $academico -> descripcion_adicional = $request['descripcion_adicional'];
         $academico->save();
         Session::flash('message','Actualización  de historial académico realizado correctamente!');
-       return Redirect::to('DashboardPerfilDocente/'); 
+       return Redirect::to('DashboardPerfilDocente'); 
     }
 
     /**
@@ -141,8 +141,9 @@ class HistorialAcademicoController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
-    {
-        //
+    public function destroy($id){
+        dcn_his_historial_academicoModel::destroy($id);
+        Session::flash('message','Registro de Historial académico Eliminado Correctamente!');
+        return Redirect::to('DashboardPerfilDocente');
     }
 }

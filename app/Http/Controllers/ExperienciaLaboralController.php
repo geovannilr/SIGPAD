@@ -3,16 +3,23 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Session;
+use Redirect;
+use \App\cat_idi_idiomaModel;
+use \App\pdg_dcn_docenteModel;
 
 class ExperienciaLaboralController extends Controller
-{
+{   
+    public function __construct(){
+        $this->middleware('auth');
+    }
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
-    {
+    public function index(){
         //
     }
 
@@ -23,7 +30,8 @@ class ExperienciaLaboralController extends Controller
      */
     public function create()
     {
-        //
+        $idiomas = cat_idi_idiomaModel::pluck('nombre_cat_idi','id_cat_idi');
+        return view('PerfilDocente.Catalogos.Laboral.create',compact('idiomas'));
     }
 
     /**

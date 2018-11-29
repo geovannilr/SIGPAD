@@ -8,11 +8,6 @@
         </li>
         <li class="breadcrumb-item active">Nuevo Registro  </li> 
 </ol>
-
-   <div class="row">
-              <div class="col-md-6"></div>
-              <div class="col-md-6 "> </div>
-    </div>
  <!-- <div class="form-group col-sm-6 " >   </div> -->
   		<div class="panel-body">
         @if ($errors->any())

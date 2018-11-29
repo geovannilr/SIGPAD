@@ -53,8 +53,18 @@
 			event.preventDefault();
     		var titulo;
    			var mensaje;
-      		titulo ="Eliminar Publicación de Trabajo de graduación";
-      		mensaje="Estas seguro que quiere eliminar esta publicación de trabajo de graduación?";
+   			mensaje="Estas seguro que quiere eliminar este registro?";
+   			if(this.id == "ACAD"){
+   				titulo ="Eliminar Registro de historial Académico";
+      			
+   			}else if(this.id == "LAB"){
+   				titulo ="Eliminar Registro de experiencia Laboral";
+   			}else if (this.id == "CERT"){
+   				titulo ="Eliminar Registro de Certificaciones";
+   			}else{
+   				titulo ="Eliminar Registro de Habilidades";
+   			}
+      		
 	        swal({
 	            title: titulo,
 	            text: mensaje, 
@@ -191,6 +201,17 @@
 
   <div class="tab-pane fade" id="academica" role="tabpanel" aria-labelledby="academica-tab">
 	<br>
+	<div class="row">
+	  <div class="col-sm-3"></div>
+	  <div class="col-sm-3"></div>
+	  <div class="col-sm-3"></div>
+	  @can('perfilDocente.create')
+	    <div class="col-sm-3">
+	      <a class="btn " href="{{route('academico.create')}}" style="background-color: #DF1D20; color: white"><i class="fa fa-plus"></i> Nuevo Registro</a>
+	    </div>
+	  @endcan
+  	</div>
+  	<br>
  	<div class="table-responsive">
   			<table class="table table-hover table-striped">
 
@@ -200,40 +221,53 @@
 					<th>Materia</th>
 					<th>Ciclo</th>
 					<th>Año</th>
-					<th>Modificar</th>
-					<th>Eliminar</th>
+					<th>Acciones</th>
+					
 					
   				</thead>
   				<tbody>
-  				@foreach($academica as $aca)
-  						<tr>
-	  						<td>{{ $aca->Cargo }}</td>	
-							<td>{{ $aca->Codigo }}</td>
-							<td>{{ $aca->Materia}}</td>
-							<td>{{ $aca->Ciclo}}</td>
-							<td>{{ $aca->anio}}</td>
-							@can('publicacion.edit')
-								<td style="text-align: center;">
-									<a class="btn " style="background-color:  #102359;color: white" href="{{route('academico.edit',$aca->id_dcn_his)}}"><i class="fa fa-pencil"></i></a>
-								</td>
-							@endcan
-							@can('publicacion.destroy')
-								<td>
-									{!! Form::open(['route'=>['academico.destroy',$aca->id_dcn_his],'method'=>'DELETE','class' => 'deleteButton']) !!}
-								 		<div class="btn-group">
-											<button type="submit" class="btn btn-danger" ><i class="fa fa-trash"></i></button>
-										</div>
-									{!! Form:: close() !!}
-								</td>
-							@endcan
-						</tr>				
-				@endforeach 
+  				@if(empty($academica[0]->id_dcn_his))
+  					<tr><td colspan="6">NO SE ENCONTRARON REGISTROS DE HISTORIAL ACADEMICO</td></tr>
+  				@else
+	  				@foreach($academica as $aca)
+	  						<tr>
+		  						<td>{{ $aca->Cargo }}</td>	
+								<td>{{ $aca->Codigo }}</td>
+								<td>{{ $aca->Materia}}</td>
+								<td>{{ $aca->Ciclo}}</td>
+								<td>{{ $aca->anio}}</td>
+								@can('perfilDocente.edit','perfilDocenteDestroy')
+									<td>
+										{!! Form::open(['route'=>['academico.destroy',$aca->id_dcn_his],'method'=>'DELETE','class' => 'deleteButton','id'=>'ACAD']) !!}
+									 			@can('perfilDocente.edit')
+									 				<a class="btn " style="background-color:  #102359;color: white" href="{{route('academico.edit',$aca->id_dcn_his)}}"><i class="fa fa-pencil"></i></a>
+									 			@endcan	
+									 			@can('perfilDocente.destroy')
+													<button type="submit" class="btn btn-danger" ><i class="fa fa-trash"></i></button>
+												@endcan
+										{!! Form:: close() !!}
+									</td>
+								@endcan
+							</tr>				
+					@endforeach 
+				@endif
 				</tbody>
 			</table>
 	   </div>
   </div>
 
   <div class="tab-pane fade" id="laboral" role="tabpanel" aria-labelledby="contact-tab">
+  	<br>
+  	<div class="row">
+	  <div class="col-sm-3"></div>
+	  <div class="col-sm-3"></div>
+	  <div class="col-sm-3"></div>
+	  @can('perfilDocente.create')
+	    <div class="col-sm-3">
+	      <a class="btn " href="{{route('laboral.create')}}" style="background-color: #DF1D20; color: white"><i class="fa fa-plus"></i> Nuevo Registro</a>
+	    </div>
+	  @endcan
+  	</div>
   	<br>
  	<div class="table-responsive">
   			<table class="table table-hover table-striped">
@@ -244,35 +278,35 @@
 					<th>Descripción</th>
 					<th>Año Inicio</th>
 					<th>Año Fin</th>
-					<th>Modificar</th>
-					<th>Eliminar</th>
-					
+					<th>acciones</th>
   				</thead>
   				<tbody>
-  				@foreach($laboral as $labo)
-  						<tr>
-  						<td>{{ $labo->lugar_trabajo_dcn_exp }}</td>	
-						<td>{{ $labo->idiomaExper }}</td>
-						<td>{{ $labo->descripcionExperiencia}}</td>
-						<td>{{ $labo->anio_inicio_dcn_exp}}</td>
-						<td>{{ $labo->anio_fin_dcn_exp}}</td>
-						@can('publicacion.edit')
-								<td style="text-align: center;">
-									<a class="btn " style="background-color:  #102359;color: white" href="{{route('laboral.edit',$labo->id_dcn_exp)}}"><i class="fa fa-pencil"></i></a>
-								</td>
+  				@if(empty($laboral[0]->id_dcn_exp))
+  					<tr><td colspan="6">NO SE ENCONTRARON REGISTROS DE EXPERIENCIA LABORAL</td></tr>
+  				@else
+	  				@foreach($laboral as $labo)
+	  						<tr>
+	  						<td>{{ $labo->lugar_trabajo_dcn_exp }}</td>	
+							<td>{{ $labo->idiomaExper }}</td>
+							<td>{{ $labo->descripcionExperiencia}}</td>
+							<td>{{ $labo->anio_inicio_dcn_exp}}</td>
+							<td>{{ $labo->anio_fin_dcn_exp}}</td>
+							@can('perfilDocente.edit','perfilDocenteDestroy')
+									<td>
+										{!! Form::open(['route'=>['laboral.destroy',$labo->id_dcn_exp],'method'=>'DELETE','class' => 'deleteButton','id'=>'ACAD']) !!}
+									 			@can('perfilDocente.edit')
+									 				<a class="btn " style="background-color:  #102359;color: white" href="{{route('laboral.edit',$labo->id_dcn_exp)}}"><i class="fa fa-pencil"></i></a>
+									 			@endcan	
+									 			@can('perfilDocente.destroy')
+													<button type="submit" class="btn btn-danger" ><i class="fa fa-trash"></i></button>
+												@endcan
+										{!! Form:: close() !!}
+									</td>
 							@endcan
-							@can('publicacion.destroy')
-								<td>
-									{!! Form::open(['route'=>['academico.destroy',$labo->id_dcn_exp],'method'=>'DELETE','class' => 'deleteButton']) !!}
-								 		<div class="btn-group">
-											<button type="submit" class="btn btn-danger" ><i class="fa fa-trash"></i></button>
-										</div>
-									{!! Form:: close() !!}
-								</td>
-							@endcan
-						
-						</tr>				
-				@endforeach 
+							
+							</tr>				
+					@endforeach 
+				@endif	
 				</tbody>
 			</table>
 	   </div>
@@ -288,12 +322,11 @@
 					<th>Año</th>
 					<th>Institución</th>
 					<th>Idioma</th>
-					<th>Modificar</th>
-					<th>Eliminar</th>
+					<th>Acciones</th>
   				</thead>
   				<tbody>
   				@if(empty($certificaciones[0]->nombre_dcn_cer))
-  				<tr><td colspan="4">NO HAY CERTIFICACIONES REGISTRADAS</td></tr>
+  				<tr><td colspan="5">NO SE ENCONTRARON REGISTROS DE CERTIFICACIONES</td></tr>
   				@else
   					@foreach($certificaciones as $certificacion)
   						<tr>
@@ -301,12 +334,12 @@
 						<td>{{ $certificacion->anio_expedicion_dcn_cer }}</td>
 						<td>{{ $certificacion->institucion_dcn_cer}}</td>
 						<td>{{ $certificacion->idiomaCert}}</td>
-						@can('publicacion.edit')
+						@can('perfilDocente.edit')
 								<td style="text-align: center;">
 									<a class="btn " style="background-color:  #102359;color: white" href="{{route('certificacion.edit',$certificacion->id_dcn_cer)}}"><i class="fa fa-pencil"></i></a>
 								</td>
 							@endcan
-							@can('publicacion.destroy')
+							@can('perfilDocente.destroy')
 								<td>
 									{!! Form::open(['route'=>['academico.destroy',$certificacion->id_dcn_cer],'method'=>'DELETE','class' => 'deleteButton']) !!}
 								 		<div class="btn-group">
