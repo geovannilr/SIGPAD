@@ -278,7 +278,7 @@
 					<th>Descripción</th>
 					<th>Año Inicio</th>
 					<th>Año Fin</th>
-					<th>acciones</th>
+					<th>Acciones</th>
   				</thead>
   				<tbody>
   				@if(empty($laboral[0]->id_dcn_exp))
@@ -293,7 +293,8 @@
 							<td>{{ $labo->anio_fin_dcn_exp}}</td>
 							@can('perfilDocente.edit','perfilDocenteDestroy')
 									<td>
-										{!! Form::open(['route'=>['laboral.destroy',$labo->id_dcn_exp],'method'=>'DELETE','class' => 'deleteButton','id'=>'ACAD']) !!}
+										<fieldset>
+											{!! Form::open(['route'=>['laboral.destroy',$labo->id_dcn_exp],'method'=>'DELETE','class' => 'deleteButton','id'=>'LAB']) !!}
 									 			@can('perfilDocente.edit')
 									 				<a class="btn " style="background-color:  #102359;color: white" href="{{route('laboral.edit',$labo->id_dcn_exp)}}"><i class="fa fa-pencil"></i></a>
 									 			@endcan	
@@ -301,6 +302,8 @@
 													<button type="submit" class="btn btn-danger" ><i class="fa fa-trash"></i></button>
 												@endcan
 										{!! Form:: close() !!}
+										</fieldset>
+										
 									</td>
 							@endcan
 							

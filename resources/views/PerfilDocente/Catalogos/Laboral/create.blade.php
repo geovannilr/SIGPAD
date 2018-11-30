@@ -20,7 +20,7 @@
               </ul>
           </div>
         @endif
-        {!! Form:: open(['route'=>'academico.store','method'=>'POST']) !!}
+        {!! Form:: open(['route'=>'laboral.store','method'=>'POST']) !!}
           @include('PerfilDocente.Catalogos.Laboral.forms.formCreate')
         <div class="row">
           <div class="form-group col-sm-6">
@@ -34,10 +34,11 @@
   
   $( document ).ready(function() {
  $("#from").datepicker({
-        format: 'dd/mm/yyyy',
+        format: 'yyyy',
         autoclose: 1,
         locale:'es',
-        //startDate: new Date(),
+        viewMode: "years", 
+        minViewMode: "years",
         todayHighlight: false,
         //endDate: new Date()
     }).on('changeDate', function (selected) {
@@ -48,10 +49,10 @@
     });
 
     $("#to").datepicker({
-        format: 'dd/mm/yyyy',
+        format: 'yyyy',
         todayHighlight: true,
-        locale:'es'
-        //endDate: new Date()
+        locale:'es',viewMode: "years", 
+        minViewMode: "years"
     }).on('changeDate', function (selected) {
         $(this).datepicker('hide');
     });
