@@ -15,6 +15,43 @@
 			});
   		</script>		
 @endif
+<style type="text/css">
+	body{
+    padding-top: 68px;
+    padding-bottom: 50px;
+}
+        .image-container {
+            position: relative;
+        }
+
+        .image {
+            opacity: 1;
+            display: block;
+            width: 100%;
+            height: auto;
+            transition: .5s ease;
+            backface-visibility: hidden;
+        }
+
+        .middle {
+            transition: .5s ease;
+            opacity: 0;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            -ms-transform: translate(-50%, -50%);
+            text-align: center;
+        }
+
+        .image-container:hover .image {
+            opacity: 0.3;
+        }
+
+        .image-container:hover .middle {
+            opacity: 1;
+        }
+</style>
 <script type="text/javascript">
 	$( document ).ready(function() {
     	$("#academicaTable").DataTable({
@@ -80,6 +117,45 @@
 	          }
 	        });		
 		});
+
+		 $imgSrc = $('#imgProfile').attr('src');
+            function readURL(input) {
+
+                if (input.files && input.files[0]) {
+                    var reader = new FileReader();
+
+                    reader.onload = function (e) {
+                        $('#imgProfile').attr('src', e.target.result);
+                    };
+
+                    reader.readAsDataURL(input.files[0]);
+                }
+            }
+            $('#btnChangePicture').on('click', function () {
+                // document.getElementById('profilePicture').click();
+                if (!$('#btnChangePicture').hasClass('changing')) {
+                    $('#profilePicture').click();
+                }
+                else {
+                    // change
+                }
+            });
+            $('#profilePicture').on('change', function () {
+                readURL(this);
+                $('#btnChangePicture').addClass('changing');
+                $('#btnChangePicture').attr('value', 'Confirm');
+                $('#btnDiscard').removeClass('d-none');
+                // $('#imgProfile').attr('src', '');
+            });
+            $('#btnDiscard').on('click', function () {
+                // if ($('#btnDiscard').hasClass('d-none')) {
+                $('#btnChangePicture').removeClass('changing');
+                $('#btnChangePicture').attr('value', 'Change');
+                $('#btnDiscard').addClass('d-none');
+                $('#imgProfile').attr('src', $imgSrc);
+                $('#profilePicture').val('');
+                // }
+            });
 	});
 </script>
 		<ol class="breadcrumb" style="text-align: center; margin-top: 1em">
@@ -110,7 +186,7 @@
   <div class="tab-pane fade show active" id="general" role="tabpanel" aria-labelledby="general-tab">
   	<br>
   	<br>
-	<div class="row">
+	<!-- <div class="row">
 		<div class="col-md-6">
 			<div class="row">
 				<div class="col-md-6 text-center">
@@ -197,6 +273,155 @@
          
 
 	</div>
+	!-->
+	
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+
+                    <div class="card-body">
+                        <div class="card-title mb-4">
+                            <div class="d-flex justify-content-start">
+                                <div class="image-container">
+                                    <img src="http://placehold.it/150x150" id="imgProfile" style="width: 150px; height: 150px" class="img-thumbnail" />
+                                    <div class="middle">
+                                        <input type="button" class="btn btn-secondary" id="btnChangePicture" value="Change" />
+                                        <input type="file" style="display: none;" id="profilePicture" name="file" />
+                                    </div>
+                                </div>
+                                <div class="userData ml-3">
+                                    <h2 class="d-block" style="font-size: 1.5rem; font-weight: bold"><a href="javascript:void(0);" class="text-danger">NOMBRE DE PERFIL</a></h2>
+                                    <h6 class="d-block">CARGO SELECCIONADO</h6>
+                                    <h6 class="d-block">CORREO</h6>
+                                
+                                </div>
+                                <div class="ml-auto">
+                                    <input type="button" class="btn btn-primary d-none" id="btnDiscard" value="Discard Changes" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                        	 <p>
+                                    	Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
+                                    </p>
+                        </div>
+                        <div class="row">
+                            <div class="col-12">
+                                <ul class="nav nav-tabs mb-4" id="myTab" role="tablist">
+                                    <li class="nav-item">
+                                        <a class="nav-link active text-danger" id="basicInfo-tab" data-toggle="tab" href="#basicInfo" role="tab" aria-controls="basicInfo" aria-selected="true">Basica</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link text-danger" id="connectedServices-tab" data-toggle="tab" href="#connectedServices" role="tab" aria-controls="connectedServices" aria-selected="false">Redes</a>
+                                    </li>
+                                </ul>
+                                <div class="tab-content ml-1" id="myTabContent">
+                                    <div class="tab-pane fade show active" id="basicInfo" role="tabpanel" aria-labelledby="basicInfo-tab">
+                                        
+
+                                        <div class="row">
+                                            <div class="col-sm-3 col-md-2 col-5">
+                                                <label style="font-weight:bold;">Nombre</label>
+                                            </div>
+                                            <div class="col-md-8 col-6">
+                                             	<input type="text" name="nombre" class="form-control">
+                                            </div>
+                                        </div>
+                                        <hr />
+
+                                        <div class="row">
+                                            <div class="col-sm-3 col-md-2 col-5">
+                                                <label style="font-weight:bold;">Cargo 1</label>
+                                            </div>
+                                            <div class="col-md-8 col-6">
+                                                <select name="cargo" class="form-control">
+                                                	<option value="0">Seleccione un cargo principal</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <hr />
+                                        
+                                        
+                                        <div class="row">
+                                            <div class="col-sm-3 col-md-2 col-5">
+                                                <label style="font-weight:bold;">Cargo 2</label>
+                                            </div>
+                                            <div class="col-md-8 col-6">
+                                                <select name="cargo" class="form-control">
+                                                	<option value="0">Seleccione un cargo secundario</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <hr />
+                                        <div class="row">
+                                            <div class="col-sm-3 col-md-2 col-5">
+                                                <label style="font-weight:bold;">Descripcion</label>
+                                            </div>
+                                            <div class="col-md-8 col-6">
+                                                <textarea class="form-control"></textarea>
+                                            </div>
+                                        </div>
+                                        <hr />
+                                        
+                                        <hr />
+
+                                    </div>
+                                    <div class="tab-pane fade" id="connectedServices" role="tabpanel" aria-labelledby="ConnectedServices-tab">
+                                        <div class="row">
+                                            <div class="col-sm-3 col-md-2 col-5">
+                                                <label style="font-weight:bold;">Nombre</label>
+                                            </div>
+                                            <div class="col-md-8 col-6">
+                                             	<input type="text" name="nombre" class="form-control">
+                                            </div>
+                                        </div>
+                                        <hr />
+
+                                        <div class="row">
+                                            <div class="col-sm-3 col-md-2 col-5">
+                                                <label style="font-weight:bold;">Cargo 1</label>
+                                            </div>
+                                            <div class="col-md-8 col-6">
+                                                <select name="cargo" class="form-control">
+                                                	<option value="0">Seleccione un cargo principal</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <hr />
+                                        
+                                        
+                                        <div class="row">
+                                            <div class="col-sm-3 col-md-2 col-5">
+                                                <label style="font-weight:bold;">Cargo 2</label>
+                                            </div>
+                                            <div class="col-md-8 col-6">
+                                                <select name="cargo" class="form-control">
+                                                	<option value="0">Seleccione un cargo secundario</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <hr />
+                                        <div class="row">
+                                            <div class="col-sm-3 col-md-2 col-5">
+                                                <label style="font-weight:bold;">Descripcion</label>
+                                            </div>
+                                            <div class="col-md-8 col-6">
+                                                <textarea class="form-control"></textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <br>
+    
   </div>
 
   <div class="tab-pane fade" id="academica" role="tabpanel" aria-labelledby="academica-tab">
@@ -317,6 +542,17 @@
 
   <div class="tab-pane fade" id="certificaciones" role="tabpanel" aria-labelledby="certificaciones-tab">
   	<br>
+  	<div class="row">
+	  <div class="col-sm-3"></div>
+	  <div class="col-sm-3"></div>
+	  <div class="col-sm-3"></div>
+	  @can('perfilDocente.create')
+	    <div class="col-sm-3">
+	      <a class="btn " href="{{route('certificacion.create')}}" style="background-color: #DF1D20; color: white"><i class="fa fa-plus"></i> Nuevo Registro</a>
+	    </div>
+	  @endcan
+  	</div>
+  	<br>
  	<div class="table-responsive">
   			<table class="table table-hover table-striped">
 
@@ -337,21 +573,21 @@
 						<td>{{ $certificacion->anio_expedicion_dcn_cer }}</td>
 						<td>{{ $certificacion->institucion_dcn_cer}}</td>
 						<td>{{ $certificacion->idiomaCert}}</td>
-						@can('perfilDocente.edit')
-								<td style="text-align: center;">
-									<a class="btn " style="background-color:  #102359;color: white" href="{{route('certificacion.edit',$certificacion->id_dcn_cer)}}"><i class="fa fa-pencil"></i></a>
-								</td>
+						@can('perfilDocente.edit','perfilDocenteDestroy')
+									<td>
+										<fieldset>
+											{!! Form::open(['route'=>['certificacion.destroy',$certificacion->id_dcn_cer],'method'=>'DELETE','class' => 'deleteButton','id'=>'CERT']) !!}
+									 			@can('perfilDocente.edit')
+									 				<a class="btn " style="background-color:  #102359;color: white" href="{{route('certificacion.edit',$certificacion->id_dcn_cer)}}"><i class="fa fa-pencil"></i></a>
+									 			@endcan	
+									 			@can('perfilDocente.destroy')
+													<button type="submit" class="btn btn-danger" ><i class="fa fa-trash"></i></button>
+												@endcan
+										{!! Form:: close() !!}
+										</fieldset>
+										
+									</td>
 							@endcan
-							@can('perfilDocente.destroy')
-								<td>
-									{!! Form::open(['route'=>['academico.destroy',$certificacion->id_dcn_cer],'method'=>'DELETE','class' => 'deleteButton']) !!}
-								 		<div class="btn-group">
-											<button type="submit" class="btn btn-danger" ><i class="fa fa-trash"></i></button>
-										</div>
-									{!! Form:: close() !!}
-								</td>
-							@endcan
-						
 						</tr>				
 					@endforeach 
   				@endif	

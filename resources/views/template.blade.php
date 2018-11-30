@@ -35,6 +35,7 @@
     {!!Html::script('js/jquery.multi-select.js')!!}
     {!!Html::script('js/publicaciones.js')!!}
     {!!Html::script('js/jquery.quicksearch.js')!!}
+    {!!Html::script('js/GestionDocente/GestionDocente.js')!!}
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.8.0/js/bootstrap-datepicker.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.8.0/css/bootstrap-datepicker.css" rel="stylesheet"/>
  <style type="text/css">

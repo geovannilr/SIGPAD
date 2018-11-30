@@ -30,33 +30,5 @@
         </div> 
         {!! Form:: close() !!}
   </div>
-<script type="text/javascript">
-  
-  $( document ).ready(function() {
- $("#from").datepicker({
-        format: 'yyyy',
-        autoclose: 1,
-        locale:'es',
-        viewMode: "years", 
-        minViewMode: "years",
-        todayHighlight: false,
-        //endDate: new Date()
-    }).on('changeDate', function (selected) {
-        var minDate = new Date(selected.date.valueOf());
-        $('#to').datepicker('setStartDate', minDate);
-        $("#to").val($("#from").val());
-        $(this).datepicker('hide');
-    });
 
-    $("#to").datepicker({
-        format: 'yyyy',
-        todayHighlight: true,
-        locale:'es',viewMode: "years", 
-        minViewMode: "years"
-    }).on('changeDate', function (selected) {
-        $(this).datepicker('hide');
-    });
-  });
-  
-</script>
 @stop

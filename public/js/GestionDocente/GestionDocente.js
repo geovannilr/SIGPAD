@@ -138,3 +138,55 @@ function getListadoDocente(idJornada){
         }
         });      
 }
+
+//Administracion de perfil docente
+
+$( document ).ready(function() {
+    //CREAR REGISTRO ACADEMICO
+    $("#datepicker").datepicker( {
+    format: " yyyy", // Notice the Extra space at the beginning
+    viewMode: "years", 
+    minViewMode: "years"
+    }).on('changeDate', function(e){
+    $(this).datepicker('hide');
+
+    });
+
+    //CREAR CERTIFICACIONES
+    $("#from").datepicker({
+        format: 'yyyy',
+        autoclose: 1,
+        locale:'es',
+        viewMode: "years", 
+        minViewMode: "years",
+        todayHighlight: false,
+        //endDate: new Date()
+    }).on('changeDate', function (selected) {
+        $(this).datepicker('hide');
+    });
+
+    //CREAR EXPERIENCIA LABORAL
+    $("#fromIni").datepicker({
+        format: 'yyyy',
+        autoclose: 1,
+        locale:'es',
+        viewMode: "years", 
+        minViewMode: "years",
+        todayHighlight: false,
+        //endDate: new Date()
+    }).on('changeDate', function (selected) {
+        var minDate = new Date(selected.date.valueOf());
+        $('#toFin').datepicker('setStartDate', minDate);
+        $("#toFin").val($("#fromIni").val());
+        $(this).datepicker('hide');
+    });
+
+    $("#toFin").datepicker({
+        format: 'yyyy',
+        todayHighlight: true,
+        locale:'es',viewMode: "years", 
+        minViewMode: "years"
+    }).on('changeDate', function (selected) {
+        $(this).datepicker('hide');
+    });
+  });

@@ -5,11 +5,11 @@
 					</div>
 					<div class="form-group col-sm-4">
 						{!! Form::label('Año de Inicio') !!}
-						{!!Form::text('anio_inicio_dcn_exp',null,['class'=>'form-control ','placeholder'=>'####','id'=>'from','readonly'])  !!}
+						{!!Form::text('anio_inicio_dcn_exp',null,['class'=>'form-control ','placeholder'=>'####','id'=>'fromIni','readonly'])  !!}
 					</div>
 					<div class="form-group col-sm-4">
 						{!! Form::label('Año de Fin') !!}
-						{!!Form::text('anio_fin_dcn_exp',null,['class'=>'form-control ','placeholder'=>'####','id'=>'to','readonly'])  !!}
+						{!!Form::text('anio_fin_dcn_exp',null,['class'=>'form-control ','placeholder'=>'####','id'=>'toFin','readonly'])  !!}
 					</div>
 				</div>
 				<div class="row">

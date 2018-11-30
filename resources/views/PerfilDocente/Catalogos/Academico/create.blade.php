@@ -29,17 +29,4 @@
 				</div> 
 			  {!! Form:: close() !!}
   </div>
-<script type="text/javascript">
-  $( document ).ready(function() {
-    console.log( "ready!" );
-    $("#datepicker").datepicker( {
-    format: " yyyy", // Notice the Extra space at the beginning
-    viewMode: "years", 
-    minViewMode: "years"
-    }).on('changeDate', function(e){
-    $(this).datepicker('hide');
-    });
-  });
-  
-</script>
 @stop
