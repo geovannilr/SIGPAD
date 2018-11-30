@@ -124,7 +124,7 @@ class DocumentoController extends Controller{
 	        Storage::disk('Uploads')->put($nombre, File::get($file));
 	        //movemos el archivo a la ubicación correspondiente segun grupo y años
 	        if ($_ENV['SERVER'] =="win") {
-	        	$nuevaUbicacion=$anioGrupo.'\Grupo'.$correlativo.'\Etapas\ '.$nombre;
+	        	$nuevaUbicacion=trim($anioGrupo.'\Grupo'.$correlativo.'\Etapas\ ').$nombre;
 	        }else{
 	        	$nuevaUbicacion=$anioGrupo.'/Grupo'.$correlativo.'/Etapas/'.$nombre;
 	        }

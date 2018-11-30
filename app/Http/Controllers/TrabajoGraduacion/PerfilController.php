@@ -181,8 +181,8 @@ class PerfilController extends Controller
         Storage::disk('Uploads')->put($nombreResumen, File::get($resumen));
          //movemos el archivo a la ubicación correspondiente segun grupo y años
         if ($_ENV['SERVER'] =="win") {
-                $nuevaUbicacion=$anioGrupo.'\Grupo'.$numeroGrupo.'\Perfil\ '.$nombre;
-                $nuevaUbicacionResumen=$anioGrupo.'\Grupo'.$numeroGrupo.'\Perfil\ '.$nombreResumen;
+                $nuevaUbicacion=trim($anioGrupo.'\Grupo'.$numeroGrupo.'\Perfil\ ').$nombre;
+                $nuevaUbicacionResumen=trim($anioGrupo.'\Grupo'.$numeroGrupo.'\Perfil\ ').$nombreResumen;
              }else{
                 $nuevaUbicacion=$anioGrupo.'/Grupo'.$numeroGrupo.'/Perfil/'.$nombre;
                 $nuevaUbicacionResumen=$anioGrupo.'/Grupo'.$numeroGrupo.'/Perfil/'.$nombreResumen;
@@ -349,7 +349,7 @@ class PerfilController extends Controller
             Storage::disk('Uploads')->put($nombre, File::get($file));
              //movemos el archivo a la ubicación correspondiente segun grupo y años
             if ($_ENV['SERVER'] =="win") {
-                $nuevaUbicacion=$anioGrupo.'\Grupo'.$numeroGrupo.'\Perfil\ '.$nombre;
+                $nuevaUbicacion=trim($anioGrupo.'\Grupo'.$numeroGrupo.'\Perfil\ ').$nombre;
              }else{
                 $nuevaUbicacion=$anioGrupo.'/Grupo'.$numeroGrupo.'/Perfil/'.$nombre;
              }
@@ -374,7 +374,7 @@ class PerfilController extends Controller
                                                           ->first();
             $nombreViejo = $archivo->ubicacion_arc_doc;
             if ($_ENV['SERVER'] =="win") {
-                $path= public_path().$_ENV['PATH_UPLOADS'].$anioGrupo.'\Grupo'.$numeroGrupo.'\Perfil\ ';
+                $path= trim(public_path().$_ENV['PATH_UPLOADS'].$anioGrupo.'\Grupo'.$numeroGrupo.'\Perfil\ ');
             }else{
                 $path= public_path().$_ENV['PATH_UPLOADS'].$anioGrupo.'/Grupo'.$numeroGrupo.'/Perfil/';
             }
@@ -383,7 +383,7 @@ class PerfilController extends Controller
             Storage::disk('Uploads')->put($nombreResumen, File::get($resumen));
              //movemos el archivo a la ubicación correspondiente segun grupo y años
            if ($_ENV['SERVER'] =="win") {
-                $nuevaUbicacionResumen=$anioGrupo.'\Grupo'.$numeroGrupo.'\Perfil\ '.$nombreResumen;
+                $nuevaUbicacionResumen=trim($anioGrupo.'\Grupo'.$numeroGrupo.'\Perfil\ ').$nombreResumen;
              }else{
                 $nuevaUbicacionResumen=$anioGrupo.'/Grupo'.$numeroGrupo.'/Perfil/'.$nombreResumen;
              }
