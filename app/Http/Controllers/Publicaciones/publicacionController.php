@@ -171,7 +171,7 @@ class publicacionController extends Controller{
       	  return response()->download($ruta);
      	}else{
      		Session::flash('error','El documento no se encuentra disponible , es posible que haya sido  borrado');
-            return Redirect::to('publicacion/'.$publicacion->id_pub);
+            return Redirect::to('publicacion/'.$archivo->id_pub);
      	}
     	//return $path;
     }
@@ -186,192 +186,71 @@ class publicacionController extends Controller{
         $asesor = $request["asesor"];
         $bodyHtml="";
         if ($autor=="1") {
-            $bodyHtml.='<div class="table-responsive">
-            <p class="text-center"><b>RESULTADOS POR AUTOR</b></p>
-            <table class="table table-hover table-striped  display" id="listTable">
-
-                <thead>
-                    <th>Cod. Pubicación</th>
-                    <th>Año</th>
-                    <th>Título</th>
-                    <th>Autor</th>
-                    <th>Detalle</th> 
-                </thead>
-                <tbody>';
             $publicacion = new pub_publicacionModel();
             $publicacionesAutor = $publicacion->getPubNombreAutor($request["texto"]);
-            if (sizeof($publicacionesAutor)!=0) {
-                foreach ($publicacionesAutor as $publicacion) {
-                    $bodyHtml.='<tr>';
-                    $bodyHtml.='<td>'.$publicacion->codigo_pub.'</td>';
-                    $bodyHtml.='<td>'.$publicacion->anio_pub.'</td>';
-                    $bodyHtml.='<td>'.$publicacion->titulo_pub.'</td>';
-                     $bodyHtml.='<td>'.$publicacion->nombre_autor.'</td>';
-                    $bodyHtml.='<td style="text-align: center;">
-                                <a class="btn btn-dark" href="'.url("/").'/publicacion/'.$publicacion->id_pub.'" target="_blank"><i class="fa fa-eye"></i></a>
-                                </td>';
-                    $bodyHtml.='</tr>';
-                }
-            }else{
-                $bodyHtml.='<tr><td colspan="5">NO SE ENCONTRARON RESULTADOS EN LA BUSQUEDA</td></tr>';
-            }
-            $bodyHtml.='</tbody>
-                        </table>
-                        </div><br><br>';
+            $bodyHtml = self::armarHTMLResultado($publicacionesAutor,$bodyHtml,'Autor');
         }
-
-       if ($docenteDirector=="1") {
-            $bodyHtml.='<div class="table-responsive">
-            <p class="text-center"><b>RESULTADOS POR DOCENTE DIRECTOR</b></p>
-            <table class="table table-hover table-striped  display" id="listTable">
-
-                <thead>
-                    <th>Cod. Pubicación</th>
-                    <th>Año</th>
-                    <th>Título</th>
-                    <th>Colaborador</th>
-                    <th>Tipo</th>
-                    <th>Detalle</th> 
-                </thead>
-                <tbody>';
+        if ($docenteDirector=="1") {
             $publicacion = new pub_publicacionModel();
             $publicacionesDocente = $publicacion->getPubNombreColaborador($request["texto"],3);
-            
-            if (sizeof($publicacionesDocente)!=0) {
-                foreach ($publicacionesDocente as $publicacion) {
-                    $bodyHtml.='<tr>';
-                    $bodyHtml.='<td>'.$publicacion->codigo_pub.'</td>';
-                    $bodyHtml.='<td>'.$publicacion->anio_pub.'</td>';
-                    $bodyHtml.='<td>'.$publicacion->titulo_pub.'</td>';
-                    $bodyHtml.='<td>'.$publicacion->nombre_colaborador.'</td>';
-                    $bodyHtml.='<td>'.$publicacion->nombre_cat_tpo_col_pub.'</td>';
-                    $bodyHtml.='<td style="text-align: center;">
-                                <a class="btn btn-dark" href="'.url("/").'/publicacion/'.$publicacion->id_pub.'" target="_blank"><i class="fa fa-eye"></i></a>
-                                </td>';
-                    $bodyHtml.='</tr>';
-                }
-            }else{
-                $bodyHtml.='<tr><td colspan="6">NO SE ENCONTRARON RESULTADOS EN LA BUSQUEDA</td></tr>';
-            }
-            $bodyHtml.='</tbody>
-                        </table>
-                        </div><br><br>';
+            $bodyHtml = self::armarHTMLResultado($publicacionesDocente,$bodyHtml,'Docente Director');
         }
-
         if ($observador=="1") {
-            $bodyHtml.='<div class="table-responsive">
-            <p class="text-center"><b>RESULTADOS POR OBSERVADOR</b></p>
-            <table class="table table-hover table-striped  display" id="listTable">
-
-                <thead>
-                    <th>Cod. Pubicación</th>
-                    <th>Año</th>
-                    <th>Título</th>
-                    <th>Colaborador</th>
-                    <th>Tipo</th>
-                    <th>Detalle</th> 
-                </thead>
-                <tbody>';
             $publicacion = new pub_publicacionModel();
             $publicacionesObservador = $publicacion->getPubNombreColaborador($request["texto"],4);
-            
-            if (sizeof($publicacionesObservador)!=0) {
-                foreach ($publicacionesObservador as $publicacion) {
-                    $bodyHtml.='<tr>';
-                    $bodyHtml.='<td>'.$publicacion->codigo_pub.'</td>';
-                    $bodyHtml.='<td>'.$publicacion->anio_pub.'</td>';
-                    $bodyHtml.='<td>'.$publicacion->titulo_pub.'</td>';
-                    $bodyHtml.='<td>'.$publicacion->nombre_colaborador.'</td>';
-                    $bodyHtml.='<td>'.$publicacion->nombre_cat_tpo_col_pub.'</td>';
-                    $bodyHtml.='<td style="text-align: center;">
-                                <a class="btn btn-dark" href="'.url("/").'/publicacion/'.$publicacion->id_pub.'" target="_blank"><i class="fa fa-eye"></i></a>
-                                </td>';
-                    $bodyHtml.='</tr>';
-                }
-            }else{
-                $bodyHtml.='<tr><td colspan="6">NO SE ENCONTRARON RESULTADOS EN LA BUSQUEDA</td></tr>';
-            }
-            $bodyHtml.='</tbody>
-                        </table>
-                        </div><br><br>';
+            $bodyHtml = self::armarHTMLResultado($publicacionesObservador,$bodyHtml,'Observador');
         }
         if ($coordinador=="1") {
-            $bodyHtml.='<div class="table-responsive">
-            <p class="text-center"><b>RESULTADOS POR COORDINADOR</b></p>
-            <table class="table table-hover table-striped  display" id="listTable">
-
-                <thead>
-                    <th>Cod. Pubicación</th>
-                    <th>Año</th>
-                    <th>Título</th>
-                    <th>Colaborador</th>
-                    <th>Tipo</th>
-                    <th>Detalle</th> 
-                </thead>
-                <tbody>';
             $publicacion = new pub_publicacionModel();
             $publicacionesCoordinador = $publicacion->getPubNombreColaborador($request["texto"],1);
-            
-            if (sizeof($publicacionesCoordinador)!=0) {
-                foreach ($publicacionesCoordinador as $publicacion) {
-                    $bodyHtml.='<tr>';
-                    $bodyHtml.='<td>'.$publicacion->codigo_pub.'</td>';
-                    $bodyHtml.='<td>'.$publicacion->anio_pub.'</td>';
-                    $bodyHtml.='<td>'.$publicacion->titulo_pub.'</td>';
-                    $bodyHtml.='<td>'.$publicacion->nombre_colaborador.'</td>';
-                    $bodyHtml.='<td>'.$publicacion->nombre_cat_tpo_col_pub.'</td>';
-                    $bodyHtml.='<td style="text-align: center;">
-                                <a class="btn btn-dark" href="'.url("/").'/publicacion/'.$publicacion->id_pub.'" target="_blank"><i class="fa fa-eye"></i></a>
-                                </td>';
-                    $bodyHtml.='</tr>';
-                }
-            }else{
-                $bodyHtml.='<tr><td colspan="6">NO SE ENCONTRARON RESULTADOS EN LA BUSQUEDA</td></tr>';
-            }
-            $bodyHtml.='</tbody>
-                        </table>
-                        </div><br><br>';
+            $bodyHtml = self::armarHTMLResultado($publicacionesCoordinador,$bodyHtml,'Coordinador');
         }
         if ($asesor=="1") {
-            $bodyHtml.='<div class="table-responsive">
-            <p class="text-center"><b>RESULTADOS POR ASESOR</b></p>
+            $publicacion = new pub_publicacionModel();
+            $publicacionesAsesor = $publicacion->getPubNombreColaborador($request["texto"],2);
+            $bodyHtml = self::armarHTMLResultado($publicacionesAsesor,$bodyHtml,'Asesor');
+        }
+        return $bodyHtml;
+    }
+
+    private function armarHTMLResultado($publicaciones,$bodyHtml,$criterio){
+        $bodyHtml.='<div class="table-responsive">
+            <p class="text-center"><b>RESULTADOS POR '.strtoupper($criterio).'</b></p>
             <table class="table table-hover table-striped  display" id="listTable">
 
                 <thead>
-                    <th>Cod. Pubicación</th>
+                    <th>Cod. Publicación</th>
                     <th>Año</th>
                     <th>Título</th>
-                    <th>Colaborador</th>
-                    <th>Tipo</th>
-                    <th>Detalle</th> 
+                    <th>'.$criterio.'</th>
+                    '.($criterio=="Autor"?"":"<th>Acción</th>").'
+                    <th style="width: 150px !important;">Acción</th> 
                 </thead>
                 <tbody>';
-            $publicacion = new pub_publicacionModel();
-            $publicacionesAsesor = $publicacion->getPubNombreColaborador($request["texto"],2);
-            
-            if (sizeof($publicacionesAsesor)!=0) {
-                foreach ($publicacionesAsesor as $publicacion) {
-                    $bodyHtml.='<tr>';
-                    $bodyHtml.='<td>'.$publicacion->codigo_pub.'</td>';
-                    $bodyHtml.='<td>'.$publicacion->anio_pub.'</td>';
-                    $bodyHtml.='<td>'.$publicacion->titulo_pub.'</td>';
-                    $bodyHtml.='<td>'.$publicacion->nombre_colaborador.'</td>';
-                    $bodyHtml.='<td>'.$publicacion->nombre_cat_tpo_col_pub.'</td>';
-                    $bodyHtml.='<td style="text-align: center;">
-                                <a class="btn btn-dark" href="'.url("/").'/publicacion/'.$publicacion->id_pub.'" target="_blank"><i class="fa fa-eye"></i></a>
-                                </td>';
-                    $bodyHtml.='</tr>';
-                }
-            }else{
-                $bodyHtml.='<tr><td colspan="6">NO SE ENCONTRARON RESULTADOS EN LA BUSQUEDA</td></tr>';
+
+        if (sizeof($publicaciones)!=0) {
+            foreach ($publicaciones as $publicacion) {
+                $archivo = pub_arc_publicacion_archivoModel::where('id_pub',$publicacion->id_pub)->first();
+                $bodyHtml.='<tr>';
+                $bodyHtml.='<td>'.$publicacion->codigo_pub.'</td>';
+                $bodyHtml.='<td>'.$publicacion->anio_pub.'</td>';
+                $bodyHtml.='<td>'.$publicacion->titulo_pub.'</td>';
+                $bodyHtml.='<td>'.$publicacion->nombre_criterio.'</td>';
+                if($criterio!="Autor")
+                    $bodyHtml.='<td>'.$publicacion->tipo_criterio.'</td>';
+                $bodyHtml.='<td style="text-align: center;">
+                                <a class="btn btn-dark" href="'.url("/").'/publicacion/'.$publicacion->id_pub.'" target="_blank" title="Ver detalles"><i class="fa fa-eye"></i></a>';
+                if(!empty($archivo->id_pub_arc))
+                    $bodyHtml.='&nbsp;&nbsp;<button type="button" class="btn btn-outline-info" onclick="downloadDocument('.($archivo->id_pub_arc).')" title="Descargar archivo"><i class="fa fa-download"></i></button>';
+                $bodyHtml.='</td>';
+                $bodyHtml.='</tr>';
             }
-            $bodyHtml.='</tbody>
+        }else{
+            $bodyHtml.='<tr><td colspan="5">NO SE ENCONTRARON RESULTADOS EN LA BUSQUEDA</td></tr>';
+        }
+        $bodyHtml.='</tbody>
                         </table>
                         </div><br><br>';
-        }
-
-
-
         return $bodyHtml;
     }
 }

@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 
 class pub_publicacionModel extends Model{
- 
+
 	protected $table='pub_publicacion';
 	protected $primaryKey='id_pub';
 	public $timestamps=false;
@@ -43,7 +43,8 @@ class pub_publicacionModel extends Model{
 		pub.titulo_pub,
 		pub.anio_pub,
 		pub.codigo_pub,
-		CONCAT(autor.nombres_pub_aut, '  ', autor.apellidos_pub_aut) As nombre_autor	
+		CONCAT(autor.nombres_pub_aut, '  ', autor.apellidos_pub_aut) As nombre_criterio,
+		'X'	AS tipo_criterio
 		from pub_publicacion pub
 		inner join pub_aut_publicacion_autor autor on autor.id_pub=pub.id_pub
 		WHERE autor.nombres_pub_aut like '%".$nombre."%' OR autor.apellidos_pub_aut like '%".$nombre."%'"
@@ -56,8 +57,8 @@ class pub_publicacionModel extends Model{
 		pub.titulo_pub,
 		pub.anio_pub,
 		pub.codigo_pub,
-		CONCAT(colaborador.nombres_pub_col, '  ', colaborador.apellidos_pub_col) As nombre_colaborador,
-		tipo.nombre_cat_tpo_col_pub	
+		CONCAT(colaborador.nombres_pub_col, '  ', colaborador.apellidos_pub_col) As nombre_criterio,
+		tipo.nombre_cat_tpo_col_pub	AS tipo_criterio
 		from pub_publicacion pub
 		inner join rel_col_pub_colaborador_publicacion relacion on relacion.id_pub=pub.id_pub
 		inner join pub_col_colaborador colaborador on colaborador.id_pub_col=relacion.id_pub_col
