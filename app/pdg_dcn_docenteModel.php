@@ -223,6 +223,7 @@ class pdg_dcn_docenteModel extends Model
                             usuario.email,
                             docente.tipoJornada,
                             docente.descripcionDocente,
+                            cargo.id_cat_car,
                             cargo.nombre_cargo,
                             docente.dcn_profileFoto,
                             docente.link_git

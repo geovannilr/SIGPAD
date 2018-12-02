@@ -12,6 +12,7 @@ use \App\dcn_exp_experienciaModel;
 use \App\dcn_his_historial_academicoModel;
 use \App\cat_mat_materiaModel;
 use \App\dcn_cer_certificacionesModel;
+use \App\cat_car_cargo_eisiModel;
 use File;
 class GestionDocenteController extends Controller
 {   
@@ -20,13 +21,33 @@ class GestionDocenteController extends Controller
        $docente = pdg_dcn_docenteModel::where("id_gen_usuario","=",$userLogin->id)->first();
        $idDocente = $docente->id_pdg_dcn; 
        $docente = new pdg_dcn_docenteModel();
-       $info = $docente->getDataGestionDocente($idDocente);
+       $info = $docente->getGeneralInfo($idDocente);
        $academica = $docente->getHistorialAcademico($idDocente);
        $laboral = $docente->getDataExperienciaDocente($idDocente);
        $certificaciones = $docente->getDataCertificacionesDocente($idDocente);
        $habilidades = $docente->getDataSkillsDocente($idDocente);
-      
-       return view('PerfilDocente.index', compact('info','academica','laboral','certificaciones','habilidades'));
+       $cargosPrincipal = cat_car_cargo_eisiModel::all();
+       $cargosSegundarios = cat_car_cargo_eisiModel::all();
+       $bodySelectPrincipal="";
+       $bodySelectSecundario="";
+       foreach ($cargosPrincipal as $principal) {
+            if ($principal->id_cat_car == 1) {
+                 $bodySelectPrincipal.='<option value="'.$principal->id_cat_car.'" selected="selected">
+                                    '.$principal->nombre_cargo.'
+                                    </option>';
+            }else{
+                 $bodySelectPrincipal.='<option value="'.$principal->id_cat_car.'">
+                                    '.$principal->nombre_cargo.'
+                                    </option>';
+            }
+           
+       }
+       foreach ($cargosSegundarios as $secundario) {
+            $bodySelectSecundario.='<option value="'.$secundario->id_cat_car.'">
+                                    '.$secundario->nombre_cargo.'
+                                    </option>';
+       }
+       return view('PerfilDocente.index', compact('info','academica','laboral','certificaciones','habilidades','bodySelectPrincipal','bodySelectSecundario'));
     }
     function create(){
         return view('PerfilDocente.create');
@@ -211,6 +232,9 @@ class GestionDocenteController extends Controller
                 Session::flash('error','El documento no se encuentra disponible , es posible que haya sido  borrado');
                 return view('PerfilDocente.create');
             }
+    }
+    function actualizarPerfilDocente(Request $request){
+       return  var_dump($request);
     }
     
 }

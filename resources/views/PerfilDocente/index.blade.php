@@ -117,45 +117,6 @@
 	          }
 	        });		
 		});
-
-		 $imgSrc = $('#imgProfile').attr('src');
-            function readURL(input) {
-
-                if (input.files && input.files[0]) {
-                    var reader = new FileReader();
-
-                    reader.onload = function (e) {
-                        $('#imgProfile').attr('src', e.target.result);
-                    };
-
-                    reader.readAsDataURL(input.files[0]);
-                }
-            }
-            $('#btnChangePicture').on('click', function () {
-                // document.getElementById('profilePicture').click();
-                if (!$('#btnChangePicture').hasClass('changing')) {
-                    $('#profilePicture').click();
-                }
-                else {
-                    // change
-                }
-            });
-            $('#profilePicture').on('change', function () {
-                readURL(this);
-                $('#btnChangePicture').addClass('changing');
-                $('#btnChangePicture').attr('value', 'Confirm');
-                $('#btnDiscard').removeClass('d-none');
-                // $('#imgProfile').attr('src', '');
-            });
-            $('#btnDiscard').on('click', function () {
-                // if ($('#btnDiscard').hasClass('d-none')) {
-                $('#btnChangePicture').removeClass('changing');
-                $('#btnChangePicture').attr('value', 'Change');
-                $('#btnDiscard').addClass('d-none');
-                $('#imgProfile').attr('src', $imgSrc);
-                $('#profilePicture').val('');
-                // }
-            });
 	});
 </script>
 		<ol class="breadcrumb" style="text-align: center; margin-top: 1em">
@@ -182,99 +143,11 @@
 		    <a class="nav-link text-danger" id="contact-tab" data-toggle="tab" href="#habilidades" role="tab" aria-controls="habilidades" aria-selected="false">Habilidades</a>
 		  </li>
 </ul>
+{!! Form:: open(['route'=>'actualizarPerfilDocente','method'=>'POST','id'=>'formPerfilDocente','files'=>'true','enctype'=>'multipart/form-data']) !!}
 <div class="tab-content" id="myTabContent">
   <div class="tab-pane fade show active" id="general" role="tabpanel" aria-labelledby="general-tab">
   	<br>
   	<br>
-	<!-- <div class="row">
-		<div class="col-md-6">
-			<div class="row">
-				<div class="col-md-6 text-center">
-					<div class="row">
-						<img src="https://d500.epimg.net/cincodias/imagenes/2016/07/04/lifestyle/1467646262_522853_1467646344_noticia_normal.jpg" class="rounded img-fluid rounded-circle" alt="...">
-					</div>
-					<div class="row">
-						<input type="file" name="fotoPerfil">
-					</div>
-				 	
-				</div>
-					
-				<div class="col-md-6">
-				 <div  class="row">
-				 	NOMBRE
-				 </div>
-				  <div  class="row">
-				 	CARGO
-				 </div>
-				  <div  class="row">
-				 	EMAIL
-				 </div>
-
-				</div>
-			</div>
-			
-		</div>
-		<div class="col-md-6">
-			<div class="row">
-				<p>Público <input type="checkbox" class="form-control" name="redesPublico"></p>
-				
-			</div>
-			
-			<div class="row">
-				<div class="col-md-1">
-					<a href="#" id="linkLinkedind_" target="_blank">
-              			<i class="fa fa-linkedin fa-2x text-danger"></i>
-            		</a>
-				</div>
-				<div class="col-md-6">
-					<input type="text" name="linkedin" class="form-control" readonly>
-				</div>	
-            	
-			</div>
-			<br>
-			<div class="row">
-				<div class="col-md-1">
-					<a href="#" id="linkLinkedind_" target="_blank">
-              			<i class="fa fa-github fa-2x text-danger"></i>
-            		</a>
-				</div>
-				<div class="col-md-6">
-					<input type="text" name="linkedin" class="form-control" readonly>
-				</div>	
-            	
-			</div>
-			<br>
-			<div class="row">
-				<div class="col-md-1">
-					<a href="#" id="linkLinkedind_" target="_blank">
-              			<i class="fa fa-twitter fa-2x text-danger"></i>
-            		</a>
-				</div>
-				<div class="col-md-6">
-					<input type="text" name="linkedin" class="form-control" readonly>
-				</div>	
-            	
-			</div>
-			<br>
-			<div class="row">
-				<div class="col-md-1">
-					<a href="#" id="linkLinkedind_" target="_blank">
-              			<i class="fa fa-facebook fa-2x text-danger"></i>
-            		</a>
-				</div>
-				<div class="col-md-6">
-					<input type="text" name="linkedin" class="form-control" readonly>
-				</div>	
-            	
-			</div>
-			
-		</div>
-		
-         
-
-	</div>
-	!-->
-	
         <div class="row">
             <div class="col-12">
                 <div class="card">
@@ -283,27 +156,34 @@
                         <div class="card-title mb-4">
                             <div class="d-flex justify-content-start">
                                 <div class="image-container">
-                                    <img src="http://placehold.it/150x150" id="imgProfile" style="width: 150px; height: 150px" class="img-thumbnail" />
+                                    <img src="{{$info[0]->dcn_profileFoto}}" id="imgProfile" style="width: 150px; height: 150px" class="img-thumbnail" />
                                     <div class="middle">
-                                        <input type="button" class="btn btn-secondary" id="btnChangePicture" value="Change" />
-                                        <input type="file" style="display: none;" id="profilePicture" name="file" />
+                                        <input type="button" class="btn btn-secondary" id="btnChangePicture" value="Cambiar" />
+                                        <input type="file" style="display: none;" id="profilePicture" name="fotoPerfil" />
                                     </div>
                                 </div>
                                 <div class="userData ml-3">
-                                    <h2 class="d-block" style="font-size: 1.5rem; font-weight: bold"><a href="javascript:void(0);" class="text-danger">NOMBRE DE PERFIL</a></h2>
-                                    <h6 class="d-block">CARGO SELECCIONADO</h6>
-                                    <h6 class="d-block">CORREO</h6>
+                                    <h2 class="d-block" style="font-size: 1.5rem; font-weight: bold">
+                                    	<a href="javascript:void(0);" class="text-danger">
+                                    	{{$info[0]->primer_nombre." ".$info[0]->segundo_nombre." ".$info[0]->primer_apellido." ".$info[0]->segundo_apellido}}
+                                    	</a>
+                                    </h2>
+                                    <h6 class="d-block">{{$info[0]->nombre_cargo}}</h6>
+                                    <h6 class="d-block">{{$info[0]->email}}</h6>
                                 
                                 </div>
                                 <div class="ml-auto">
-                                    <input type="button" class="btn btn-primary d-none" id="btnDiscard" value="Discard Changes" />
+                                    
+                                    <a class="btn" id="btnEdit" style="background-color:  #102359;color: white" href="#"><i class="fa fa-pencil"></i></a>
+                                    <a class="btn d-done" id="btnSave" style="background-color:  #102359;color: white" href="#"><i class="fa fa-save"></i></a>
+                                    <a class="btn d-none btn-danger"  id="btnDiscard"  href="#"><i class="fa fa-ban"></i></a>
                                 </div>
                             </div>
                         </div>
                         <div class="row">
                         	 <p>
-                                    	Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
-                                    </p>
+                                 {{$info[0]->descripcionDocente}}
+                             </p>
                         </div>
                         <div class="row">
                             <div class="col-12">
@@ -324,7 +204,7 @@
                                                 <label style="font-weight:bold;">Nombre</label>
                                             </div>
                                             <div class="col-md-8 col-6">
-                                             	<input type="text" name="nombre" class="form-control">
+                                             	<input type="text" name="nombre" id="nombreCompleto" class="form-control" value="{{$info[0]->primer_nombre." ".$info[0]->segundo_nombre." ".$info[0]->primer_apellido." ".$info[0]->segundo_apellido}}" readonly>
                                             </div>
                                         </div>
                                         <hr />
@@ -334,8 +214,10 @@
                                                 <label style="font-weight:bold;">Cargo 1</label>
                                             </div>
                                             <div class="col-md-8 col-6">
-                                                <select name="cargo" class="form-control">
+                                                <select name="cargoPrincipal" class="form-control" id="cargoPrincipal" disabled>
                                                 	<option value="0">Seleccione un cargo principal</option>
+                                                	{!!$bodySelectPrincipal!!}
+                                                	
                                                 </select>
                                             </div>
                                         </div>
@@ -347,8 +229,10 @@
                                                 <label style="font-weight:bold;">Cargo 2</label>
                                             </div>
                                             <div class="col-md-8 col-6">
-                                                <select name="cargo" class="form-control">
+                                                <select name="cargoSegundario" class="form-control" id="cargoSegundario" disabled>
                                                 	<option value="0">Seleccione un cargo secundario</option>
+                                                	{!!$bodySelectSecundario!!}
+                                                	
                                                 </select>
                                             </div>
                                         </div>
@@ -358,7 +242,9 @@
                                                 <label style="font-weight:bold;">Descripcion</label>
                                             </div>
                                             <div class="col-md-8 col-6">
-                                                <textarea class="form-control"></textarea>
+                                                <textarea class="form-control" name="descripcion" id="descripcion" readonly cols="5" rows="7">
+                              						{{$info[0]->descripcionDocente}}
+                                                </textarea>
                                             </div>
                                         </div>
                                         <hr />
@@ -367,47 +253,45 @@
 
                                     </div>
                                     <div class="tab-pane fade" id="connectedServices" role="tabpanel" aria-labelledby="ConnectedServices-tab">
-                                        <div class="row">
+                                    	<div class="row">
                                             <div class="col-sm-3 col-md-2 col-5">
-                                                <label style="font-weight:bold;">Nombre</label>
+                                               <i class="fa fa-linkedin fa-w-9 fa-2x text-danger"></i>
                                             </div>
                                             <div class="col-md-8 col-6">
-                                             	<input type="text" name="nombre" class="form-control">
+                                                <input type="text" name="linkedin" id="linkedin" class="form-control" value="{{$info[0]->link_linke}}" readonly>
+                                            </div>
+                                        </div>
+                                        <hr />
+                                        <div class="row">
+                                            <div class="col-sm-3 col-md-2 col-5">
+                                                <i class="fa fa-facebook-square fa-w-9 fa-2x text-danger"></i>
+                                               
+                                            </div>
+                                            <div class="col-md-8 col-6">
+                                             	<input type="text" name="fb" id="fb" class="form-control" value="{{$info[0]->link_fb}}" readonly>
                                             </div>
                                         </div>
                                         <hr />
 
                                         <div class="row">
                                             <div class="col-sm-3 col-md-2 col-5">
-                                                <label style="font-weight:bold;">Cargo 1</label>
+                                               <i class="fa fa-twitter fa-w-9 fa-2x text-danger"></i>
                                             </div>
                                             <div class="col-md-8 col-6">
-                                                <select name="cargo" class="form-control">
-                                                	<option value="0">Seleccione un cargo principal</option>
-                                                </select>
+                                                <input type="text" name="tw" id="tw" class="form-control" value="{{$info[0]->link_tw}}" readonly>
                                             </div>
                                         </div>
                                         <hr />
                                         
-                                        
                                         <div class="row">
                                             <div class="col-sm-3 col-md-2 col-5">
-                                                <label style="font-weight:bold;">Cargo 2</label>
+                                                <i class="fa fa-github-square fa-w-9 fa-2x text-danger"></i>
+                                                
                                             </div>
-                                            <div class="col-md-8 col-6">
-                                                <select name="cargo" class="form-control">
-                                                	<option value="0">Seleccione un cargo secundario</option>
-                                                </select>
+                                             <div class="col-md-8 col-6">
+                                                <input type="text" name="git" id="git" class="form-control" value="{{$info[0]->link_git}}" readonly>
                                             </div>
-                                        </div>
-                                        <hr />
-                                        <div class="row">
-                                            <div class="col-sm-3 col-md-2 col-5">
-                                                <label style="font-weight:bold;">Descripcion</label>
-                                            </div>
-                                            <div class="col-md-8 col-6">
-                                                <textarea class="form-control"></textarea>
-                                            </div>
+                                            
                                         </div>
                                     </div>
                                 </div>
@@ -620,6 +504,7 @@
 	   </div>
   </div>
 </div>
+{!! Form:: close() !!}
 
   		
 @stop
