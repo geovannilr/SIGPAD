@@ -13,9 +13,11 @@ use \App\dcn_his_historial_academicoModel;
 use \App\cat_mat_materiaModel;
 use \App\dcn_cer_certificacionesModel;
 use \App\cat_car_cargo_eisiModel;
+use \App\gen_UsuarioModel;
 use File;
 class GestionDocenteController extends Controller
 {   
+    
     function index(){
        $userLogin = Auth::user();
        $docente = pdg_dcn_docenteModel::where("id_gen_usuario","=",$userLogin->id)->first();
@@ -31,7 +33,7 @@ class GestionDocenteController extends Controller
        $bodySelectPrincipal="";
        $bodySelectSecundario="";
        foreach ($cargosPrincipal as $principal) {
-            if ($principal->id_cat_car == 1) {
+            if ($principal->id_cat_car == $info[0]->id_cat_car) {
                  $bodySelectPrincipal.='<option value="'.$principal->id_cat_car.'" selected="selected">
                                     '.$principal->nombre_cargo.'
                                     </option>';
@@ -42,10 +44,18 @@ class GestionDocenteController extends Controller
             }
            
        }
+       
        foreach ($cargosSegundarios as $secundario) {
-            $bodySelectSecundario.='<option value="'.$secundario->id_cat_car.'">
-                                    '.$secundario->nombre_cargo.'
-                                    </option>';
+            if ($secundario->id_cat_car == $info[0]->id_segundo_cargo) {
+                 $bodySelectSecundario.='<option value="'.$secundario->id_cat_car.'" selected="selected">
+                '.$secundario->nombre_cargo.'
+                </option>';
+            }else{
+                    $bodySelectSecundario.='<option value="'.$secundario->id_cat_car.'">
+                    '.$secundario->nombre_cargo.'
+                    </option>';
+            }
+           
        }
        return view('PerfilDocente.index', compact('info','academica','laboral','certificaciones','habilidades','bodySelectPrincipal','bodySelectSecundario'));
     }
@@ -234,7 +244,31 @@ class GestionDocenteController extends Controller
             }
     }
     function actualizarPerfilDocente(Request $request){
-       return  var_dump($request);
+      $userLogin = Auth::user();
+      $docente = pdg_dcn_docenteModel::where("id_gen_usuario","=",$userLogin->id)->first();
+      //Obtenemos la información del usuario.
+      $usuario = gen_UsuarioModel::find($userLogin->id);
+      $idDocente = $docente->id_pdg_dcn;
+      //Obtenemos la información del docente
+      $infoDocente = pdg_dcn_docenteModel::find($idDocente);
+      
+      //$usuario->name = $request['nombre'];
+      $usuario->email = $request['email'];
+
+      $infoDocente->descripcionDocente=$request['descripcion'];
+      $infoDocente->id_cargo_actual=$request['cargoPrincipal'];
+      $infoDocente->link_fb=$request['fb'];
+      $infoDocente->link_linke=$request['linkedin'];
+      $infoDocente->link_tw=$request['tw'];
+      $infoDocente->link_git=$request['git'];
+      $infoDocente->display_name=$request['nombre'];
+      $infoDocente->id_segundo_cargo=$request['cargoSegundario'];
+     
+      $infoDocente->save();
+      $usuario->save();
+      Session::flash('message','Actualización  de información general de Perfil Docente realizada con éxito.');
+      return Redirect::to('DashboardPerfilDocente'); 
+
     }
     
 }

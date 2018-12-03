@@ -216,6 +216,7 @@ class pdg_dcn_docenteModel extends Model
     }
      public function getGeneralInfo($idDocente){
          $data = DB::select("select 
+                            usuario.name,
                             usuario.primer_nombre,
                             usuario.segundo_nombre,
                             usuario.primer_apellido,
@@ -223,6 +224,8 @@ class pdg_dcn_docenteModel extends Model
                             usuario.email,
                             docente.tipoJornada,
                             docente.descripcionDocente,
+                            docente.display_name,
+                            docente.id_segundo_cargo,
                             cargo.id_cat_car,
                             cargo.nombre_cargo,
                             docente.dcn_profileFoto,

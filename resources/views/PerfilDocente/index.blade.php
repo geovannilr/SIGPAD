@@ -143,7 +143,9 @@
 		    <a class="nav-link text-danger" id="contact-tab" data-toggle="tab" href="#habilidades" role="tab" aria-controls="habilidades" aria-selected="false">Habilidades</a>
 		  </li>
 </ul>
-{!! Form:: open(['route'=>'actualizarPerfilDocente','method'=>'POST','id'=>'formPerfilDocente','files'=>'true','enctype'=>'multipart/form-data']) !!}
+
+
+
 <div class="tab-content" id="myTabContent">
   <div class="tab-pane fade show active" id="general" role="tabpanel" aria-labelledby="general-tab">
   	<br>
@@ -165,7 +167,8 @@
                                 <div class="userData ml-3">
                                     <h2 class="d-block" style="font-size: 1.5rem; font-weight: bold">
                                     	<a href="javascript:void(0);" class="text-danger">
-                                    	{{$info[0]->primer_nombre." ".$info[0]->segundo_nombre." ".$info[0]->primer_apellido." ".$info[0]->segundo_apellido}}
+                                    	{{$info[0]->display_name}}	
+                                    	
                                     	</a>
                                     </h2>
                                     <h6 class="d-block">{{$info[0]->nombre_cargo}}</h6>
@@ -181,7 +184,7 @@
                             </div>
                         </div>
                         <div class="row">
-                        	 <p>
+                        	 <p text-justify>
                                  {{$info[0]->descripcionDocente}}
                              </p>
                         </div>
@@ -189,12 +192,13 @@
                             <div class="col-12">
                                 <ul class="nav nav-tabs mb-4" id="myTab" role="tablist">
                                     <li class="nav-item">
-                                        <a class="nav-link active text-danger" id="basicInfo-tab" data-toggle="tab" href="#basicInfo" role="tab" aria-controls="basicInfo" aria-selected="true">Basica</a>
+                                        <a class="nav-link active text-danger" id="basicInfo-tab" data-toggle="tab" href="#basicInfo" role="tab" aria-controls="basicInfo" aria-selected="true">Básica</a>
                                     </li>
                                     <li class="nav-item">
                                         <a class="nav-link text-danger" id="connectedServices-tab" data-toggle="tab" href="#connectedServices" role="tab" aria-controls="connectedServices" aria-selected="false">Redes</a>
                                     </li>
                                 </ul>
+								{!! Form:: open(['route'=>'actualizarPerfilDocente','method'=>'POST','id'=>'formPerfilDocente','files'=>'true','enctype'=>'multipart/form-data']) !!}
                                 <div class="tab-content ml-1" id="myTabContent">
                                     <div class="tab-pane fade show active" id="basicInfo" role="tabpanel" aria-labelledby="basicInfo-tab">
                                         
@@ -204,7 +208,8 @@
                                                 <label style="font-weight:bold;">Nombre</label>
                                             </div>
                                             <div class="col-md-8 col-6">
-                                             	<input type="text" name="nombre" id="nombreCompleto" class="form-control" value="{{$info[0]->primer_nombre." ".$info[0]->segundo_nombre." ".$info[0]->primer_apellido." ".$info[0]->segundo_apellido}}" readonly>
+
+                                             	<input type="text" name="nombre" id="nombreCompleto" class="form-control" value="{{$info[0]->display_name}}" readonly>
                                             </div>
                                         </div>
                                         <hr />
@@ -215,7 +220,7 @@
                                             </div>
                                             <div class="col-md-8 col-6">
                                                 <select name="cargoPrincipal" class="form-control" id="cargoPrincipal" disabled>
-                                                	<option value="0">Seleccione un cargo principal</option>
+                                                	<option value="">Seleccione un cargo principal</option>
                                                 	{!!$bodySelectPrincipal!!}
                                                 	
                                                 </select>
@@ -230,10 +235,20 @@
                                             </div>
                                             <div class="col-md-8 col-6">
                                                 <select name="cargoSegundario" class="form-control" id="cargoSegundario" disabled>
-                                                	<option value="0">Seleccione un cargo secundario</option>
+                                                	<option value="">Seleccione un cargo secundario</option>
                                                 	{!!$bodySelectSecundario!!}
                                                 	
                                                 </select>
+                                            </div>
+                                        </div>
+                                        <hr />
+                                        <div class="row">
+                                            <div class="col-sm-3 col-md-2 col-5">
+                                                <label style="font-weight:bold;">Correo</label>
+                                            </div>
+                                            <div class="col-md-8 col-6">
+
+                                             	<input type="text" name="email" id="email" class="form-control" value="{{$info[0]->email}}" readonly>
                                             </div>
                                         </div>
                                         <hr />
@@ -295,6 +310,7 @@
                                         </div>
                                     </div>
                                 </div>
+                                {!! Form:: close() !!}
                             </div>
                         </div>
 
@@ -504,7 +520,8 @@
 	   </div>
   </div>
 </div>
-{!! Form:: close() !!}
+
+
 
   		
 @stop

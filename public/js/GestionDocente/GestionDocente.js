@@ -253,6 +253,7 @@ $( document ).ready(function() {
       $('#cargoPrincipal').removeAttr('disabled');
       $('#cargoSegundario').removeAttr('disabled');
       $('#descripcion').removeAttr('readonly');
+      $('#email').removeAttr('readonly');
       $('#linkedin').removeAttr('readonly');
       $('#fb').removeAttr('readonly');
       $('#tw').removeAttr('readonly');
@@ -270,8 +271,7 @@ $( document ).ready(function() {
           })
           .then((aceptar) => {
             if (aceptar) {
-               $("#formPerfilDocente").submit();
-               console.log("enviando formulario");
+              $("#formPerfilDocente").submit();
             } else {
               return;
             }
