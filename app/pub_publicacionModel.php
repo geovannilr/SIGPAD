@@ -38,6 +38,7 @@ class pub_publicacionModel extends Model{
 	 }
 
 	 public function getPubNombreAutor($nombre){
+         $nombre = str_replace(' ','%',$nombre);
 	 	$publicaciones = DB::select("select 
 		pub.id_pub,
 		pub.titulo_pub,
