@@ -47,7 +47,7 @@ class pub_publicacionModel extends Model{
 		'X'	AS tipo_criterio
 		from pub_publicacion pub
 		inner join pub_aut_publicacion_autor autor on autor.id_pub=pub.id_pub
-		WHERE autor.nombres_pub_aut like '%".$nombre."%' OR autor.apellidos_pub_aut like '%".$nombre."%'"
+		WHERE CONCAT(autor.nombres_pub_aut,' ',autor.apellidos_pub_aut) like '%".$nombre."%' "
         );
         return $publicaciones;
 	 }	
@@ -64,7 +64,7 @@ class pub_publicacionModel extends Model{
 		inner join rel_col_pub_colaborador_publicacion relacion on relacion.id_pub=pub.id_pub
 		inner join pub_col_colaborador colaborador on colaborador.id_pub_col=relacion.id_pub_col
 		inner join cat_tpo_col_pub_tipo_colaborador tipo on tipo.id_cat_tpo_col_pub=relacion.id_cat_tpo_col_pub
-		WHERE (CONCAT(colaborador.nombres_pub_col,colaborador.apellidos_pub_col) like '%".$nombre."%' ) AND tipo.id_cat_tpo_col_pub = ".$tipo
+		WHERE (CONCAT(colaborador.nombres_pub_col,' ',colaborador.apellidos_pub_col) like '%".$nombre."%' ) AND tipo.id_cat_tpo_col_pub = ".$tipo
         );
         return $publicaciones;
 	 }	

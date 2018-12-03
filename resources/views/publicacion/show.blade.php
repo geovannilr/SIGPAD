@@ -85,7 +85,7 @@
                 <table class="table table-hover table-striped">
                   <th colspan="2" style="text-align: center;">Colaboradores</th>
                   @if ($colaboradores=="NA")
-                    <tr><td style="text-align: center;">NO SE HAN REGISTRADO COLABORADORES PARA ESTA PUBLCIACIÓN DE TRABAJO DE GRADUACIÓN</td></tr>
+                    <tr><td style="text-align: center;">NO SE HAN REGISTRADO COLABORADORES PARA ESTA PUBLICACIÓN DE TRABAJO DE GRADUACIÓN</td></tr>
                   @else
 	                   @foreach($colaboradores as $colaborador)
 	                   		<tr>
