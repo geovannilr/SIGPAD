@@ -134,7 +134,7 @@ function getInformacionDocente(idDcn){
             $("#profileFoto").attr("src",docente["dcn_profileFoto"]);
             $("#linkLinkedind_").attr("href",docente["link_linke"]);
             $("#linkGit_").attr("href",docente["link_git"]);
-            $("#linkTw").attr("href",docente["link_tw"]);
+            $("#linkTw_").attr("href",docente["link_tw"]);
             $("#linkFb_").attr("href",docente["link_fb"]);
 
 

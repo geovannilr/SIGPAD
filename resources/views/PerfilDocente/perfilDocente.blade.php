@@ -66,13 +66,13 @@
           </div>
           <p class="lead mb-5" id="descripcionDocente"></p>
           <div class="social-icons">
-            <a href="#" id="linkLinkedind_" target="_blank">
+            <a href="" id="linkLinkedind_" target="_blank">
               <i class="fab fa-linkedin-in"></i>
             </a>
-            <a href="#" id="linkGit_" target="_blank">
+            <a href="" id="linkGit_" target="_blank">
               <i class="fab fa-github"></i>
             </a>
-            <a href="#" id="linkTw:" target="_blank">
+            <a href="" id="linkTw_" target="_blank">
               <i class="fab fa-twitter"></i>
             </a>
             <a href="" id="linkFb_" target="_blank">
