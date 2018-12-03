@@ -193,6 +193,7 @@ $( document ).ready(function() {
     $
     $('#btnSave').addClass('d-none');
     $('#btnDiscard').addClass('d-none');
+    $('#btnChangePicture').addClass('d-none');
     $imgSrc = $('#imgProfile').attr('src');
     function readURL(input) {
 
@@ -205,17 +206,19 @@ $( document ).ready(function() {
       }
     }
     $('#btnChangePicture').on('click', function () {
-      if (!$('#btnChangePicture').hasClass('changing')) {
-          $('#profilePicture').click();
+      /*if (!$('#btnChangePicture').hasClass('changing')) {
+          
       }else {
          // change
-      }
+      }*/
+      $('#profilePicture').click();
     });
 
       $('#profilePicture').on('change', function () {
       readURL(this);
+      console.log($('#profilePicture').val());
       $('#btnChangePicture').addClass('changing');
-      $('#btnChangePicture').attr('value', 'Confirm');
+      //$('#btnChangePicture').attr('value', 'Confirm');
       $('#btnDiscard').removeClass('d-none');
     });
 
@@ -258,10 +261,12 @@ $( document ).ready(function() {
       $('#fb').removeAttr('readonly');
       $('#tw').removeAttr('readonly');
       $('#git').removeAttr('readonly');
+       $('#btnChangePicture').removeClass('d-none');
 
     });
 
      $('#btnSave').on('click', function () {
+      console.log($("#formPerfilDocente").serialize());
         swal({
               title: "Gestion Docente - Información General",
               text: "Estad seguro que desea Guardar los cambios realizados?", 

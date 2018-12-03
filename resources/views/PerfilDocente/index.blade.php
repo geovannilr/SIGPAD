@@ -150,6 +150,7 @@
   <div class="tab-pane fade show active" id="general" role="tabpanel" aria-labelledby="general-tab">
   	<br>
   	<br>
+    {!! Form:: open(['route'=>'actualizarPerfilDocente','method'=>'POST','id'=>'formPerfilDocente','files'=>'true','enctype'=>'multipart/form-data']) !!}
         <div class="row">
             <div class="col-12">
                 <div class="card">
@@ -161,7 +162,8 @@
                                     <img src="{{$info[0]->dcn_profileFoto}}" id="imgProfile" style="width: 150px; height: 150px" class="img-thumbnail" />
                                     <div class="middle">
                                         <input type="button" class="btn btn-secondary" id="btnChangePicture" value="Cambiar" />
-                                        <input type="file" style="display: none;" id="profilePicture" name="fotoPerfil" />
+                                        <!--<input type="file" style="display: none;" id="profilePicture" name="fotoPerfil" /> -->
+                                        {!!Form::file('fotoPerfil',['class'=>'form-control','id'=>'profilePicture','style'=>'display: none;','accept'=>"jpg/png/gif"])  !!}
                                     </div>
                                 </div>
                                 <div class="userData ml-3">
@@ -198,7 +200,7 @@
                                         <a class="nav-link text-danger" id="connectedServices-tab" data-toggle="tab" href="#connectedServices" role="tab" aria-controls="connectedServices" aria-selected="false">Redes</a>
                                     </li>
                                 </ul>
-								{!! Form:: open(['route'=>'actualizarPerfilDocente','method'=>'POST','id'=>'formPerfilDocente','files'=>'true','enctype'=>'multipart/form-data']) !!}
+								
                                 <div class="tab-content ml-1" id="myTabContent">
                                     <div class="tab-pane fade show active" id="basicInfo" role="tabpanel" aria-labelledby="basicInfo-tab">
                                         
@@ -310,7 +312,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                {!! Form:: close() !!}
+                               
                             </div>
                         </div>
 
@@ -320,6 +322,7 @@
                 </div>
             </div>
         </div>
+     {!! Form:: close() !!}    
         <br>
     
   </div>

@@ -15,6 +15,7 @@ use \App\dcn_cer_certificacionesModel;
 use \App\cat_car_cargo_eisiModel;
 use \App\gen_UsuarioModel;
 use File;
+use Illuminate\Support\Facades\Storage;
 class GestionDocenteController extends Controller
 {   
     
@@ -252,7 +253,13 @@ class GestionDocenteController extends Controller
       //Obtenemos la información del docente
       $infoDocente = pdg_dcn_docenteModel::find($idDocente);
       
-      //$usuario->name = $request['nombre'];
+      //OBTENEMOS EL ARCHIVO
+      $file = $request->file('fotoPerfil');
+      //obtenemos el nombre del archivo
+       $nombre = $userLogin->user.$file->getClientOriginalName();
+      //indicamos que queremos guardar un nuevo archivo en el disco local
+      Storage::disk('perfilDocente')->put($nombre, File::get($file));
+      $path= url('/').$_ENV['PATH_PERFIL_DOCENTE'];
       $usuario->email = $request['email'];
 
       $infoDocente->descripcionDocente=$request['descripcion'];
@@ -262,6 +269,7 @@ class GestionDocenteController extends Controller
       $infoDocente->link_tw=$request['tw'];
       $infoDocente->link_git=$request['git'];
       $infoDocente->display_name=$request['nombre'];
+      $infoDocente->dcn_profileFoto=$path.$nombre;
       $infoDocente->id_segundo_cargo=$request['cargoSegundario'];
      
       $infoDocente->save();
