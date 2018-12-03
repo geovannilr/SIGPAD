@@ -146,4 +146,5 @@ class HistorialAcademicoController extends Controller
         Session::flash('message','Registro de Historial académico Eliminado Correctamente!');
         return Redirect::to('DashboardPerfilDocente');
     }
+    
 }
