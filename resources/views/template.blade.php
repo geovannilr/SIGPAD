@@ -212,7 +212,7 @@
         </li>
       </ul>
       <ul class="navbar-nav ml-auto">
-         <a class="nav-link"
+         <a class="nav-link text-white"
          @can('perfilDocente.cargar')
          href="{{route('DashboardPerfilDocente')}}"
          @endcan
