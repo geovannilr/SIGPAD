@@ -212,16 +212,20 @@
         </li>
       </ul>
       <ul class="navbar-nav ml-auto">
-         <a class="nav-link">
+         <a class="nav-link"
+         @can('perfilDocente.cargar')
+         href="{{route('DashboardPerfilDocente')}}"
+         @endcan
+         >
             <i class="fa fa-user"></i>&nbsp;{!!Auth::user()->name!!}</a>
-        @can('perfilDocente.cargar')
-                  <li>
-                    <a class="nav-link" href="{{route('cargarPerfilDocente')}}" style="color: #ffffff">
-                      <i class="fa fa-user-circle"></i>
-                      <span class="nav-link-text">Mi Perfil</span>
-                    </a>
-                  </li>
-        @endcan    
+        {{--@can('perfilDocente.cargar')--}}
+                  {{--<li>--}}
+                    {{--<a class="nav-link" href="{{route('cargarPerfilDocente')}}" style="color: #ffffff">--}}
+                      {{--<i class="fa fa-user-circle"></i>--}}
+                      {{--<span class="nav-link-text">Mi Perfil</span>--}}
+                    {{--</a>--}}
+                  {{--</li>--}}
+        {{--@endcan    --}}
         <li class="nav-item">
           <a class="nav-link"  data-toggle="modal" data-target="#exampleModal">
             <i class="fa fa-fw fa-sign-out"></i>Salir</a>
