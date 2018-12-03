@@ -52,6 +52,7 @@ class pub_publicacionModel extends Model{
         return $publicaciones;
 	 }	
 	 public function getPubNombreColaborador($nombre,$tipo){
+	    $nombre = str_replace(' ','%',$nombre);
 		$publicaciones = DB::select("select 
 		pub.id_pub,
 		pub.titulo_pub,
@@ -63,7 +64,7 @@ class pub_publicacionModel extends Model{
 		inner join rel_col_pub_colaborador_publicacion relacion on relacion.id_pub=pub.id_pub
 		inner join pub_col_colaborador colaborador on colaborador.id_pub_col=relacion.id_pub_col
 		inner join cat_tpo_col_pub_tipo_colaborador tipo on tipo.id_cat_tpo_col_pub=relacion.id_cat_tpo_col_pub
-		WHERE (colaborador.nombres_pub_col like '%".$nombre."%' OR colaborador.apellidos_pub_col like '%".$nombre."%') AND tipo.id_cat_tpo_col_pub = ".$tipo
+		WHERE (CONCAT(colaborador.nombres_pub_col,colaborador.apellidos_pub_col) like '%".$nombre."%' ) AND tipo.id_cat_tpo_col_pub = ".$tipo
         );
         return $publicaciones;
 	 }	
