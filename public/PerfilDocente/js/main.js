@@ -54,7 +54,7 @@ function getExperienciaDocente(idDcn){
 
            },
     		error : function(xhr, status) {
-        		alert("Hubo un problema al momento de obetener los datos de Docente");
+        		alert("Hubo un problema al momento de obtener los datos de Docente");
         		
     		}
         });      
@@ -124,9 +124,8 @@ function getInformacionDocente(idDcn){
            success:function(data){
             var docente = data[0];
             var html = "";
-            html+=docente["primer_nombre"]+" ";
             html+='<span class="text-primary">';
-            html+=docente["primer_apellido"];
+            html+=docente["display_name"];
             html+='</span>';
             $("#nombreDocente").append(html);
             $("#descripcionDocente").append(docente["descripcionDocente"]);

@@ -230,7 +230,8 @@ class pdg_dcn_docenteModel extends Model
                             ,docente.link_linke
                             ,docente.link_tw
                             ,docente.link_fb
-
+                            ,docente.display_name
+                            
                             from  pdg_dcn_docente docente
                             inner join gen_usuario usuario on usuario.id = docente.id_gen_usuario 
                             left join cat_car_cargo_eisi cargo on cargo.id_cat_car=docente.id_cargo_actual
