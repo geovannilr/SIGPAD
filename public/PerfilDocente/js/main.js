@@ -178,7 +178,7 @@ function getListadoDocente(idJornada){
                                                     
                                             '</div>'+
                                             '<div class="col-sm-9">'+
-                                              '<p style="color:#DFC15E; ">'+data[i]['primer_nombre']+' '+data[i]['segundo_nombre'] +' '+data[i]['primer_apellido']+' '+data[i]['segundo_apellido']+'</p>'+
+                                              '<p style="color:#DFC15E; ">'+data[i]['display_name']+'</p>'+
                                               '<small>'+data[i]['nombre_cargo']+'</small>'+
                                             '</div>'+
                                             '</div>'+
@@ -198,7 +198,7 @@ function getListadoDocente(idJornada){
                                                     
                                             '</div>'+
                                             '<div class="col-sm-9">'+
-                                              '<p style="color:#DFC15E; ">'+data[i]['primer_nombre']+' '+data[i]['segundo_nombre'] +' '+data[i]['primer_apellido']+' '+data[i]['segundo_apellido']+'</p>'+
+                                              '<p style="color:#DFC15E; ">'+data[i]['display_name']+'</p>'+
                                               '<small>'+data[i]['nombre_cargo']+'</small>'+
                                             '</div>'+
                                             '</div>'+
@@ -242,7 +242,7 @@ function getListadoDocente(idJornada){
                                                     
                                             '</div>'+
                                             '<div class="col-sm-9">'+
-                                              '<p style="color:#DFC15E; ">'+data[i]['primer_nombre']+' '+data[i]['segundo_nombre'] +' '+data[i]['primer_apellido']+' '+data[i]['segundo_apellido']+'</p>'+
+                                              '<p style="color:#DFC15E; ">'+data[i]['display_name']+'</p>'+
                                               '<small>'+data[i]['nombre_cargo']+'</small>'+
                                             '</div>'+
                                             '</div>'+
@@ -277,7 +277,7 @@ function getListadoDocente(idJornada){
                                                     
                                             '</div>'+
                                             '<div class="col-sm-9">'+
-                                              '<p style="color:#DFC15E; ">'+data[i]['primer_nombre']+' '+data[i]['segundo_nombre'] +' '+data[i]['primer_apellido']+' '+data[i]['segundo_apellido']+'</p>'+
+                                              '<p style="color:#DFC15E; ">'+data[i]['display_name']+'</p>'+
                                               '<small>'+data[i]['nombre_cargo']+'</small>'+
                                             '</div>'+
                                             '</div>'+
