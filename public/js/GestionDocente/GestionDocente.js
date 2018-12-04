@@ -215,11 +215,26 @@ $( document ).ready(function() {
     });
 
       $('#profilePicture').on('change', function () {
+      
+      var sizeByte = this.files[0].size;
+      var siezekiloByte = parseInt(sizeByte / 1024);
+      var nombre = $(this).val();
+      var extension = nombre.substring(nombre.lastIndexOf('.') + 1).toLowerCase();
+      //console.log("Extension "+nombre.substring(nombre.lastIndexOf('.') + 1).toLowerCase());
+     if(siezekiloByte > 1024){
+           swal("", "El tamaño de la foto no debe ser mayor a 1 MB", "error");
+           $(this).val('');
+     }else if(!(extension =='png' || extension =='jpg' || extension =='gif')){
+            swal("", "Solo se permiten fotos de formato .png, .jpg, .gif", "error");
+            $(this).val('');
+    }else{
       readURL(this);
-      console.log($('#profilePicture').val());
       $('#btnChangePicture').addClass('changing');
       //$('#btnChangePicture').attr('value', 'Confirm');
       $('#btnDiscard').removeClass('d-none');
+    }
+
+     
     });
 
     $('#btnDiscard').on('click', function () {
