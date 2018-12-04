@@ -254,14 +254,16 @@ class GestionDocenteController extends Controller
       $idDocente = $docente->id_pdg_dcn;
       //Obtenemos la información del docente
       $infoDocente = pdg_dcn_docenteModel::find($idDocente);
-      
-      //OBTENEMOS EL ARCHIVO
-      $file = $request->file('fotoPerfil');
-      //obtenemos el nombre del archivo
-       $nombre = $userLogin->user.'.'.$file->getClientOriginalExtension();
-      //indicamos que queremos guardar un nuevo archivo en el disco local
-      Storage::disk('perfilDocente')->put($nombre, File::get($file));
-      $path= url('/').$_ENV['PATH_PERFIL_DOCENTE'];
+      if (!empty($request->file('fotoPerfil'))) {
+         //OBTENEMOS EL ARCHIVO
+          $file = $request->file('fotoPerfil');
+          //obtenemos el nombre del archivo
+           $nombre = $userLogin->user.'.'.$file->getClientOriginalExtension();
+          //indicamos que queremos guardar un nuevo archivo en el disco local
+          Storage::disk('perfilDocente')->put($nombre, File::get($file));
+          $path= url('/').$_ENV['PATH_PERFIL_DOCENTE'];
+      }
+     
       $usuario->email = $request['email'];
 
       $infoDocente->descripcionDocente=$request['descripcion'];
@@ -271,7 +273,9 @@ class GestionDocenteController extends Controller
       $infoDocente->link_tw=$request['tw'];
       $infoDocente->link_git=$request['git'];
       $infoDocente->display_name=$request['nombre'];
-      $infoDocente->dcn_profileFoto=$path.$nombre;
+      if (!empty($request->file('fotoPerfil'))) {
+         $infoDocente->dcn_profileFoto=$path.$nombre;
+      }
       $infoDocente->id_segundo_cargo=$request['cargoSegundario'];
      
       $infoDocente->save();
