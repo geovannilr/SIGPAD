@@ -131,6 +131,7 @@ Route::post('plantillaPerfilDocente','GestionDocenteController@downloadPlantilla
 Route::resource('academico', 'HistorialAcademicoController');
 Route::resource('laboral', 'ExperienciaLaboralController');
 Route::resource('certificacion', 'CertificacionController');
+Route::resource('habilidad', 'HabilidadController');
 Route::post('actualizarPerfilDocente','GestionDocenteController@actualizarPerfilDocente')->name('actualizarPerfilDocente');
 //------------------------------------------------------------------------------------------------------------------------
 //------------------UESPLAY--------------------------------------------------------------------------------------

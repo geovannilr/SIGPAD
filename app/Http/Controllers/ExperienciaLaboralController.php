@@ -74,6 +74,7 @@ class ExperienciaLaboralController extends Controller
                         
             ]);
         Session::flash('message','Registro de experiencia laboral realizado correctamente!');
+        Session::flash('apartado','3');
         return Redirect::to('DashboardPerfilDocente');    
     }
 
@@ -133,6 +134,7 @@ class ExperienciaLaboralController extends Controller
          $laboral->descripcion_dcn_exp = $request['descripcion_dcn_exp'];
          $laboral->save();
          Session::flash('message','Actualización  de registro de experiencia laboral realizado correctamente!');
+         Session::flash('apartado','3');
          return Redirect::to('DashboardPerfilDocente');
     }
 
@@ -145,6 +147,7 @@ class ExperienciaLaboralController extends Controller
     public function destroy($id) {
         dcn_exp_experienciaModel::destroy($id);
         Session::flash('message','Registro de Experienica laboral Eliminado Correctamente!');
+        Session::flash('apartado','3');
         return Redirect::to('DashboardPerfilDocente');
     }
 }

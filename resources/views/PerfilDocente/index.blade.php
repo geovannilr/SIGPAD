@@ -15,6 +15,76 @@
 			});
   		</script>		
 @endif
+@if(Session::has('apartado'))
+  		<script type="text/javascript">
+  			$( document ).ready(function() {
+  				if ({{Session::get('apartado')}} == '1') {
+  					$("#general-tab").addClass('active');
+    				$("#academica-tab").removeClass('active');
+    				$("#laboral-tab").removeClass('active');
+    				$("#certificaciones-tab").removeClass('active');
+    				$("#habilidades-tab").removeClass('active');
+
+    				$("#general").addClass('show active');
+    				$("#academica").removeClass('show active');
+    				$("#laboral").removeClass(' show active');
+    				$("#certificaciones").removeClass(' show active');
+    				$("#habilidades").removeClass('show active');  
+  				}else if ({{Session::get('apartado')}} == '2') {
+  					$("#general-tab").removeClass('active');
+    				$("#academica-tab").addClass('active');
+    				$("#laboral-tab").removeClass('active');
+    				$("#certificaciones-tab").removeClass('active');
+    				$("#habilidades-tab").removeClass('active');
+
+    				$("#general").removeClass('show active');
+    				$("#academica").addClass('show active');
+    				$("#laboral").removeClass(' show active');
+    				$("#certificaciones").removeClass(' show active');
+    				$("#habilidades").removeClass('show active');  
+
+  				}else if ({{Session::get('apartado')}} == '3') {
+  					$("#general-tab").removeClass('active');
+    				$("#academica-tab").removeClass('active');
+    				$("#laboral-tab").addClass('active');
+    				$("#certificaciones-tab").removeClass('active');
+    				$("#habilidades-tab").removeClass('active');
+
+    				$("#general").removeClass('show active');
+    				$("#academica").removeClass('show active');
+    				$("#laboral").addClass('show active');
+    				$("#certificaciones").removeClass(' show active');
+    				$("#habilidades").removeClass('show active'); 
+
+  				}else if ({{Session::get('apartado')}} == '4') {
+  					$("#general-tab").removeClass('active');
+    				$("#academica-tab").removeClass('active');
+    				$("#laboral-tab").removeClass('active');
+    				$("#certificaciones-tab").addClass('active');
+    				$("#habilidades-tab").removeClass('active');
+
+    				$("#general").removeClass('show active');
+    				$("#academica").removeClass('show active');
+    				$("#laboral").removeClass('show active');
+    				$("#certificaciones").addClass(' show active');
+    				$("#habilidades").removeClass('show active'); 
+  				}
+    			else if ({{Session::get('apartado')}} == '5') {
+    				$("#general-tab").removeClass('active');
+    				$("#academica-tab").removeClass('active');
+    				$("#laboral-tab-tab").removeClass('active');
+    				$("#certificaciones-tab").removeClass('active');
+    				$("#habilidades-tab").addClass('active');
+
+    				$("#general").removeClass('show active');
+    				$("#academica").removeClass('show active');
+    				$("#laboral").removeClass(' show active');
+    				$("#certificaciones").removeClass(' show active');
+    				$("#habilidades").addClass('show active');    				
+    			}
+			});
+  		</script>		
+@endif
 <style type="text/css">
 	body{
     padding-top: 68px;
@@ -128,19 +198,19 @@
 		<br>
 		<ul class="nav nav-tabs" id="myTab" role="tablist">
 		  <li class="nav-item">
-		    <a class="nav-link active text-danger" id="home-tab" data-toggle="tab" href="#general" role="tab" aria-controls="general" aria-selected="true">General</a>
+		    <a class="nav-link active text-danger" id="general-tab" data-toggle="tab" href="#general" role="tab" aria-controls="general" aria-selected="true">General</a>
 		  </li>
 		  <li class="nav-item">
-		    <a class="nav-link text-danger" id="profile-tab" data-toggle="tab" href="#academica" role="tab" aria-controls="academica" aria-selected="false">Experiencia Académica</a>
+		    <a class="nav-link text-danger" id="academica-tab" data-toggle="tab" href="#academica" role="tab" aria-controls="academica" aria-selected="false">Experiencia Académica</a>
 		  </li>
 		  <li class="nav-item">
-		    <a class="nav-link text-danger" id="contact-tab" data-toggle="tab" href="#laboral" role="tab" aria-controls="laboral" aria-selected="false">Experiencia Laboral</a>
+		    <a class="nav-link text-danger" id="laboral-tab" data-toggle="tab" href="#laboral" role="tab" aria-controls="laboral" aria-selected="false">Experiencia Laboral</a>
 		  </li>
 		  <li class="nav-item">
-		    <a class="nav-link text-danger" id="contact-tab" data-toggle="tab" href="#certificaciones" role="tab" aria-controls="certificaciones" aria-selected="false">Certificaciones</a>
+		    <a class="nav-link text-danger" id="certificaciones-tab" data-toggle="tab" href="#certificaciones" role="tab" aria-controls="certificaciones" aria-selected="false">Certificaciones</a>
 		  </li>
 		   <li class="nav-item">
-		    <a class="nav-link text-danger" id="contact-tab" data-toggle="tab" href="#habilidades" role="tab" aria-controls="habilidades" aria-selected="false">Habilidades</a>
+		    <a class="nav-link text-danger" id="habilidades-tab" data-toggle="tab" href="#habilidades" role="tab" aria-controls="habilidades" aria-selected="false">Habilidades</a>
 		  </li>
 </ul>
 
@@ -500,12 +570,46 @@
   </div>
   <div class="tab-pane fade" id="habilidades" role="tabpanel" aria-labelledby="habilidades-tab">
   	<br>
+  	 <div class="panel-body">
+        @if ($errors->any())
+          <div class="alert alert-danger">
+              <ul>
+                  @foreach ($errors->all() as $error)
+                      <li>{{ $error }}</li>
+                  @endforeach
+              </ul>
+          </div>
+        @endif
+        {!! Form:: open(['route'=>'habilidad.store','method'=>'POST']) !!}
+				<div class="row">
+					<div class="form-group col-sm-4">
+						{!! Form::label('Habilidades') !!}
+						{{ Form::select('id_cat_ski', $habilidadesSelect, null, ['class' => 'form-control']) }}
+					</div>
+					<div class="form-group col-sm-4">
+						{!! Form::label('Nivel') !!}
+						<select class="form-control" name="nivel">
+							<option value="1">Principiante</option>
+							<option value="2">Intermedio</option>
+							<option value="1">Avanzado</option>
+						</select>
+					</div>
+				</div>
+        <div class="row">
+          <div class="form-group col-sm-6">
+            {!! Form::submit('Agregar',['class'=>'btn','style'=>'background-color: #DF1D20; color: white']) !!}
+          </div>
+        </div>
+        </div> 
+        <br><br>
+        {!! Form:: close() !!}
  	<div class="table-responsive">
   			<table class="table table-hover table-striped">
 
   				<thead class="bg-danger text-white">
   					<th>Nombre</th>
 					<th>Nivel</th>
+					<th>Acciones</th>
   				</thead>
   				<tbody>
   				@if(empty($habilidades[0]->nombre_cat_ski))
@@ -515,6 +619,18 @@
   						<tr>
   						<td>{{ $habilidad->nombre_cat_ski }}</td>	
 						<td>{{ $habilidad->Nivel }}</td>
+						@can('perfilDocente.edit','perfilDocenteDestroy')
+									<td>
+										<fieldset>
+											{!! Form::open(['route'=>['habilidad.destroy',$habilidad->id_cat_ski],'method'=>'DELETE','class' => 'deleteButton','id'=>'HAB']) !!}
+									 			@can('perfilDocente.destroy')
+													<button type="submit" class="btn btn-danger" ><i class="fa fa-trash"></i></button>
+												@endcan
+										{!! Form:: close() !!}
+										</fieldset>
+										
+									</td>
+							@endcan
 						</tr>				
 					@endforeach 
   				@endif	

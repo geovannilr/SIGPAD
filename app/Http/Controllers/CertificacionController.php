@@ -70,6 +70,7 @@ class CertificacionController extends Controller
                         'id_dcn'                        => $idDocente               
                     ]);
         Session::flash('message','Registro de certificaciones realizado correctamente!');
+        Session::flash('apartado','4');
         return Redirect::to('DashboardPerfilDocente');    
     }
 
@@ -130,6 +131,7 @@ class CertificacionController extends Controller
         $certificacion->save();
         
         Session::flash('message','Registro de certificaciones actulizado correctamente!');
+        Session::flash('apartado','4');
         return Redirect::to('DashboardPerfilDocente');     
     }
 
@@ -141,5 +143,9 @@ class CertificacionController extends Controller
      */
     public function destroy($id){
         //
+        dcn_cer_certificacionesModel::destroy($id);
+        Session::flash('message','Registro de certificaciones  Eliminado Correctamente!');
+        Session::flash('apartado','4');
+        return Redirect::to('DashboardPerfilDocente');
     }
 }

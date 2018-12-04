@@ -14,6 +14,7 @@ use \App\cat_mat_materiaModel;
 use \App\dcn_cer_certificacionesModel;
 use \App\cat_car_cargo_eisiModel;
 use \App\gen_UsuarioModel;
+use \App\cat_ski_skillModel;
 use File;
 use Illuminate\Support\Facades\Storage;
 class GestionDocenteController extends Controller
@@ -28,6 +29,7 @@ class GestionDocenteController extends Controller
        $academica = $docente->getHistorialAcademico($idDocente);
        $laboral = $docente->getDataExperienciaDocente($idDocente);
        $certificaciones = $docente->getDataCertificacionesDocente($idDocente);
+       $habilidadesSelect = cat_ski_skillModel::pluck("nombre_cat_ski","id_cat_ski");
        $habilidades = $docente->getDataSkillsDocente($idDocente);
        $cargosPrincipal = cat_car_cargo_eisiModel::all();
        $cargosSegundarios = cat_car_cargo_eisiModel::all();
@@ -58,7 +60,7 @@ class GestionDocenteController extends Controller
             }
            
        }
-       return view('PerfilDocente.index', compact('info','academica','laboral','certificaciones','habilidades','bodySelectPrincipal','bodySelectSecundario'));
+       return view('PerfilDocente.index', compact('info','academica','laboral','certificaciones','habilidades','bodySelectPrincipal','bodySelectSecundario','habilidadesSelect'));
     }
     function create(){
         return view('PerfilDocente.create');
@@ -256,7 +258,7 @@ class GestionDocenteController extends Controller
       //OBTENEMOS EL ARCHIVO
       $file = $request->file('fotoPerfil');
       //obtenemos el nombre del archivo
-       $nombre = $userLogin->user.$file->getClientOriginalName();
+       $nombre = $userLogin->user.'.'.$file->getClientOriginalExtension();
       //indicamos que queremos guardar un nuevo archivo en el disco local
       Storage::disk('perfilDocente')->put($nombre, File::get($file));
       $path= url('/').$_ENV['PATH_PERFIL_DOCENTE'];

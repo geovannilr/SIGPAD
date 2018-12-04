@@ -205,6 +205,7 @@ class pdg_dcn_docenteModel extends Model
 
         $data = DB::select("select distinct
                             Nivel,
+                            id_cat_ski,
                             nombre_cat_ski
                             from view_dcn_perfildocente
                             where id_pdg_dcn =  :idDocente",
