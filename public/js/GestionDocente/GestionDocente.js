@@ -261,6 +261,7 @@ $( document ).ready(function() {
       $('#fb').removeAttr('readonly');
       $('#tw').removeAttr('readonly');
       $('#git').removeAttr('readonly');
+      $('#perfilPrivado').removeAttr('disabled');
        $('#btnChangePicture').removeClass('d-none');
 
     });

@@ -234,7 +234,9 @@ class pdg_dcn_docenteModel extends Model
                             ,docente.link_linke
                             ,docente.link_tw
                             ,docente.link_fb
-                            ,docente.display_name
+                            ,docente.display_name,
+                            docente.perfilPrivado,
+                            docente.id_pdg_dcn
                             
                             from  pdg_dcn_docente docente
                             inner join gen_usuario usuario on usuario.id = docente.id_gen_usuario 

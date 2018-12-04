@@ -121,6 +121,7 @@
         .image-container:hover .middle {
             opacity: 1;
         }
+
 </style>
 <script type="text/javascript">
 	$( document ).ready(function() {
@@ -238,12 +239,12 @@
                                 </div>
                                 <div class="userData ml-3">
                                     <h2 class="d-block" style="font-size: 1.5rem; font-weight: bold">
-                                    	<a href="javascript:void(0);" class="text-danger">
+                                    	<a href="{{url('/').'/perfilDocente/'.$info[0]->id_pdg_dcn}}" style="color: #102359" target="_blank">
                                     	{{$info[0]->display_name}}	
                                     	
                                     	</a>
                                     </h2>
-                                    <h6 class="d-block">{{$info[0]->nombre_cargo}}</h6>
+                                    <b><h6 class="d-block text-danger">{{$info[0]->nombre_cargo}}</h6></b>
                                     <h6 class="d-block">{{$info[0]->email}}</h6>
                                 
                                 </div>
@@ -275,6 +276,20 @@
                                     <div class="tab-pane fade show active" id="basicInfo" role="tabpanel" aria-labelledby="basicInfo-tab">
                                         
 
+                                        <div class="row">
+                                            <div class="col-sm-3 col-md-2 col-5">
+                                                <label style="font-weight:bold;">Perfil Privado</label>
+                                            </div>
+                                            <div class="col-md-8 col-6">
+                                                @if($info[0]->perfilPrivado == 1)
+                                                    <input type="checkbox" name="perfilPrivado" id="perfilPrivado" class="form-check-input form-control" value="1" disabled checked>
+                                                @else
+                                                    <input type="checkbox" name="perfilPrivado" id="perfilPrivado" class="form-check-input form-control" value="1" disabled>
+                                                @endif
+                                                
+                                            </div>
+                                        </div>
+                                           <hr />
                                         <div class="row">
                                             <div class="col-sm-3 col-md-2 col-5">
                                                 <label style="font-weight:bold;">Nombre</label>

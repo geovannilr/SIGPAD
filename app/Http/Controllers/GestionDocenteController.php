@@ -276,6 +276,11 @@ class GestionDocenteController extends Controller
       if (!empty($request->file('fotoPerfil'))) {
          $infoDocente->dcn_profileFoto=$path.$nombre;
       }
+      if(isset($request["perfilPrivado"])){
+      	 $infoDocente->perfilPrivado=1;
+      }else{
+      	 $infoDocente->perfilPrivado=0;
+      }
       $infoDocente->id_segundo_cargo=$request['cargoSegundario'];
      
       $infoDocente->save();
