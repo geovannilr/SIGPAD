@@ -19,7 +19,9 @@ use File;
 use Illuminate\Support\Facades\Storage;
 class GestionDocenteController extends Controller
 {   
-    
+    public function __construct(){
+        $this->middleware('auth', ['only' => ['index','create','store','downloadPlantilla','actualizarPerfilDocente']]);
+    }
     function index(){
        $userLogin = Auth::user();
        $docente = pdg_dcn_docenteModel::where("id_gen_usuario","=",$userLogin->id)->first();
@@ -274,7 +276,7 @@ class GestionDocenteController extends Controller
       $infoDocente->link_git=$request['git'];
       $infoDocente->display_name=$request['nombre'];
       if (!empty($request->file('fotoPerfil'))) {
-         $infoDocente->dcn_profileFoto=$path.$nombre;
+         $infoDocente->dcn_profileFoto=$nombre;
       }
       if(isset($request["perfilPrivado"])){
       	 $infoDocente->perfilPrivado=1;
