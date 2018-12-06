@@ -1,5 +1,5 @@
 var ip =$('meta[name="current-url"]').attr('content');
-console.log(ip);
+//console.log(ip);
 function getHistorialAcademico(idDcn){
 	$.ajax({
            type:'POST',
@@ -131,7 +131,7 @@ function getInformacionDocente(idDcn){
             $("#descripcionDocente").append(docente["descripcionDocente"]);
             $("#correoDocente").append(docente["email"]);
             $("#cargoDocente").append(docente["nombre_cargo"]);
-            $("#profileFoto").attr("src",docente["dcn_profileFoto"]);
+            $("#profileFoto").attr("src",ip+"/Uploads/PerfilDocente/"+docente["dcn_profileFoto"]);
             $("#linkLinkedind_").attr("href",docente["link_linke"]);
             $("#linkGit_").attr("href",docente["link_git"]);
             $("#linkTw_").attr("href",docente["link_tw"]);
