@@ -173,8 +173,7 @@ function getListadoDocente(idJornada){
                                 '<blockquote>'+
                                ' <div class="row">'+
                                           '<div class="col-sm-3 text-center">'+
-                                              
-                                                    '<img class="img-circle" src="'+data[i]['dcn_profileFoto']+' " style="width: 80px;height:80px;" > '+
+                                                    '<img class="img-circle" src="'+ip+'/Uploads/PerfilDocente/'+data[i]['dcn_profileFoto']+' " style="width: 80px;height:80px;" > '+
                                                     
                                             '</div>'+
                                             '<div class="col-sm-9">'+
