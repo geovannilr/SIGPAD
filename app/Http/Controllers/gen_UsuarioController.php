@@ -227,7 +227,7 @@ class gen_UsuarioController extends Controller {
 		                    ([
 		                        'name' => $usuario["nombres"]." ".$usuario["apellidos"],
 								'user' => $usuario["usuario"],
-								'email' => "SIN EMAIL",
+								'email' => $usuario["usuario"]."@ues.edu.sv",
 								'password' => "Egresado",
 								'primer_nombre' => $usuario["nombres"],
 								'segundo_nombre' => "",
