@@ -225,6 +225,7 @@ class pdg_dcn_docenteModel extends Model
                             IFNULL(usuario.email,' '),
                             IFNULL(docente.tipoJornada,' '),
                             IFNULL(docente.descripcionDocente,' '),
+                            IFNULL(docente.display_name,''),
                             IFNULL(docente.id_segundo_cargo,' '),
                             IFNULL(cargo.id_cat_car,' '),
                             IFNULL(cargo.nombre_cargo,' '),
@@ -236,7 +237,6 @@ class pdg_dcn_docenteModel extends Model
                             ,IFNULL(docente.display_name,' '),
                             IFNULL(docente.perfilPrivado,' '),
                             IFNULL(docente.id_pdg_dcn,' '),
-                            IFNULL(docente.display_name,' ')
                             
                             from  pdg_dcn_docente docente
                             inner join gen_usuario usuario on usuario.id = docente.id_gen_usuario 
@@ -258,7 +258,7 @@ class pdg_dcn_docenteModel extends Model
             usr.primer_apellido,
             COALESCE(usr.segundo_apellido, '') as segundo_apellido ,            
             car.nombre_cargo,
-            COALESCE(dcn.dcn_profileFoto ,'https://profile.actionsprout.com/default.jpeg') as dcn_profileFoto,
+            COALESCE(dcn.dcn_profileFoto ,'default.jpg') as dcn_profileFoto,
             dcn.tipoJornada,
             dcn.perfilPrivado
             ,COALESCE(dcn.display_name,usr.primer_nombre||' '||usr.primer_apellido) as display_name
