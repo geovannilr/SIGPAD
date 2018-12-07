@@ -169,12 +169,12 @@ class pdg_dcn_docenteModel extends Model
     public function getDataExperienciaDocente($idDocente){
 
         $data = DB::select("select distinct
-                            IFNULL(id_dcn_exp,' '),
-                            IFNULL(lugar_trabajo_dcn_exp,' '),
-                            IFNULL(anio_inicio_dcn_exp,' '),
-                            IFNULL(anio_fin_dcn_exp,' '),
-                            IFNULL(idiomaExper,' '),
-                            IFNULL(descripcionExperiencia,' ')
+                            IFNULL(id_dcn_exp,' ') as id_dcn_exp,
+                            IFNULL(lugar_trabajo_dcn_exp,' ') as lugar_trabajo_dcn_exp,
+                            IFNULL(anio_inicio_dcn_exp,' ') as anio_inicio_dcn_exp,
+                            IFNULL(anio_fin_dcn_exp,' ') as anio_fin_dcn_exp,
+                            IFNULL(idiomaExper,' ') as idiomaExper,
+                            IFNULL(descripcionExperiencia,' ') as descripcionExperiencia
                             from view_dcn_perfildocente
                             where id_pdg_dcn =:idDocente",
             array(
@@ -187,11 +187,11 @@ class pdg_dcn_docenteModel extends Model
     public function getDataCertificacionesDocente($idDocente){
 
         $data = DB::select("select distinct
-                            IFNULL(id_dcn_cer,' '),
-                            IFNULL(nombre_dcn_cer,' '),
-                            IFNULL(anio_expedicion_dcn_cer,' '),
-                            IFNULL(institucion_dcn_cer,' '),
-                            IFNULL(idiomaCert,' ')
+                            IFNULL(id_dcn_cer,' ') as id_dcn_cer,
+                            IFNULL(nombre_dcn_cer,' ') as nombre_dcn_cer,
+                            IFNULL(anio_expedicion_dcn_cer,' ') as anio_expedicion_dcn_cer,
+                            IFNULL(institucion_dcn_cer,' ') as institucion_dcn_cer,
+                            IFNULL(idiomaCert,' ') as idiomaCert
                             from view_dcn_perfildocente
                             where id_pdg_dcn = :idDocente",
             array(
@@ -204,9 +204,9 @@ class pdg_dcn_docenteModel extends Model
     public function getDataSkillsDocente($idDocente){
 
         $data = DB::select("select distinct
-                            IFNULL(Nivel,' '),
-                            IFNULL(id_cat_ski,' '),
-                            IFNULL(nombre_cat_ski,' ')
+                            IFNULL(Nivel,' ') as Nivel,
+                            IFNULL(id_cat_ski,' ') as id_cat_ski,
+                            IFNULL(nombre_cat_ski,' ') as nombre_cat_ski
                             from view_dcn_perfildocente
                             where id_pdg_dcn =  :idDocente",
             array(
@@ -217,26 +217,26 @@ class pdg_dcn_docenteModel extends Model
     }
      public function getGeneralInfo($idDocente){
          $data = DB::select("select 
-                            IFNULL(usuario.name,' '),
-                            IFNULL(usuario.primer_nombre,' '),
-                            IFNULL(usuario.segundo_nombre,' '),
-                            IFNULL(usuario.primer_apellido,' '),
-                            IFNULL(usuario.segundo_apellido,' '),
-                            IFNULL(usuario.email,' '),
-                            IFNULL(docente.tipoJornada,' '),
-                            IFNULL(docente.descripcionDocente,' '),
-                            IFNULL(docente.display_name,''),
-                            IFNULL(docente.id_segundo_cargo,' '),
-                            IFNULL(cargo.id_cat_car,' '),
-                            IFNULL(cargo.nombre_cargo,' '),
-                            IFNULL(docente.dcn_profileFoto,' '),
-                            IFNULL(docente.link_git,' ')
-                            ,IFNULL(docente.link_linke,' ')
-                            ,IFNULL(docente.link_tw,' ')
-                            ,IFNULL(docente.link_fb,' ')
-                            ,IFNULL(docente.display_name,' '),
-                            IFNULL(docente.perfilPrivado,' '),
-                            IFNULL(docente.id_pdg_dcn,' '),
+                            IFNULL(usuario.name,' ') as name,
+                            IFNULL(usuario.primer_nombre,' ') as primer_nombre,
+                            IFNULL(usuario.segundo_nombre,' ') as segundo_nombre,
+                            IFNULL(usuario.primer_apellido,' ') as primer_apellido,
+                            IFNULL(usuario.segundo_apellido,' ') as segundo_apellido,
+                            IFNULL(usuario.email,' ') as email,
+                            IFNULL(docente.tipoJornada,' ') as tipoJornada,
+                            IFNULL(docente.descripcionDocente,' ') as descripcionDocente,
+                            IFNULL(docente.display_name,'') as display_name,
+                            IFNULL(docente.id_segundo_cargo,' ') as id_segundo_cargo,
+                            IFNULL(cargo.id_cat_car,' ') as id_cat_car,
+                            IFNULL(cargo.nombre_cargo,' ') as nombre_cargo,
+                            IFNULL(docente.dcn_profileFoto,' ') as dcn_profileFoto,
+                            IFNULL(docente.link_git,' ') as link_git
+                            ,IFNULL(docente.link_linke,' ') as link_linke
+                            ,IFNULL(docente.link_tw,' ') as link_tw
+                            ,IFNULL(docente.link_fb,' ') as link_fb
+                            ,IFNULL(docente.display_name,' ') as display_name,
+                            IFNULL(docente.perfilPrivado,' ') as perfilPrivado,
+                            IFNULL(docente.id_pdg_dcn,' ') as id_pdg_dcn
                             
                             from  pdg_dcn_docente docente
                             inner join gen_usuario usuario on usuario.id = docente.id_gen_usuario 
