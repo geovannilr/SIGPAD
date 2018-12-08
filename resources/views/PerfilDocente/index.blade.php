@@ -218,6 +218,16 @@
 
 
 <div class="tab-content" id="myTabContent">
+	<br>
+	 @if ($errors->any())
+          <div class="alert alert-danger">
+              <ul>
+                  @foreach ($errors->all() as $error)
+                      <li>{{ $error }}</li>
+                  @endforeach
+              </ul>
+          </div>
+        @endif
   <div class="tab-pane fade show active" id="general" role="tabpanel" aria-labelledby="general-tab">
   	<br>
   	<br>
@@ -586,15 +596,6 @@
   <div class="tab-pane fade" id="habilidades" role="tabpanel" aria-labelledby="habilidades-tab">
   	<br>
   	 <div class="panel-body">
-        @if ($errors->any())
-          <div class="alert alert-danger">
-              <ul>
-                  @foreach ($errors->all() as $error)
-                      <li>{{ $error }}</li>
-                  @endforeach
-              </ul>
-          </div>
-        @endif
         {!! Form:: open(['route'=>'habilidad.store','method'=>'POST']) !!}
 				<div class="row">
 					<div class="form-group col-sm-4">

@@ -249,6 +249,20 @@ class GestionDocenteController extends Controller
             }
     }
     function actualizarPerfilDocente(Request $request){
+       $validatedData = $request->validate(
+            [
+                'nombre' => 'required',
+                'cargoPrincipal' => 'required',
+                'descripcion' => 'max:800',
+                'email' => 'required'
+            ],
+            [
+                'nombre.required' => 'Debe ingresar el nombre para mostrar en su perfil',
+                'email.required' => 'Debe ingresar un correo electrónico',
+                'cargoPrincipal.required' => 'Debe seleccionar un cargo principal.',
+                'descripcion.max' => 'La descripcición debe ser máximo de 800 caracteres.'
+            ]
+        );
       $userLogin = Auth::user();
       $docente = pdg_dcn_docenteModel::where("id_gen_usuario","=",$userLogin->id)->first();
       //Obtenemos la información del usuario.
