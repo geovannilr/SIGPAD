@@ -273,7 +273,7 @@ class pdg_dcn_docenteModel extends Model
             ,COALESCE(dcn.display_name,usr.primer_nombre||' '||usr.primer_apellido) as display_name
             ,CASE dcn.tipoJornada 
               WHEN 1 THEN 'DOCENTES TIEMPO COMPLETO'
-              WHEN 2 THEN 'DOCENTES TEMPO PARCIAL'
+              WHEN 2 THEN 'DOCENTES TIEMPO PARCIAL'
               WHEN 3 THEN 'DOCENTES EN SERVICIO PROFESIONAL'
               WHEN 4 THEN 'PERSONAL ADMINISTRATIVO'
               ELSE 'COLABORADORES'
