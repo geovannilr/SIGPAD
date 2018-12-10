@@ -313,7 +313,7 @@
 
                                         <div class="row">
                                             <div class="col-sm-3 col-md-2 col-5">
-                                                <label style="font-weight:bold;">Cargo 1</label>
+                                                <label style="font-weight:bold;">Cargo Principal</label>
                                             </div>
                                             <div class="col-md-8 col-6">
                                                 <select name="cargoPrincipal" class="form-control" id="cargoPrincipal" disabled>
@@ -328,7 +328,7 @@
                                         
                                         <div class="row">
                                             <div class="col-sm-3 col-md-2 col-5">
-                                                <label style="font-weight:bold;">Cargo 2</label>
+                                                <label style="font-weight:bold;">Cargo Secundario</label>
                                             </div>
                                             <div class="col-md-8 col-6">
                                                 <select name="cargoSegundario" class="form-control" id="cargoSegundario" disabled>

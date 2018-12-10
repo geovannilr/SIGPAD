@@ -20,7 +20,7 @@ use Illuminate\Support\Facades\Storage;
 class GestionDocenteController extends Controller
 {   
     public function __construct(){
-        $this->middleware('auth', ['only' => ['index','create','store','downloadPlantilla','actualizarPerfilDocente']]);
+        $this->middleware('auth', ['only' => ['index','create','store','downloadPlantilla','actualizarPerfilDocente','updateDocente','listadoDocentes','edit']]);
     }
     function index(){
        $userLogin = Auth::user();
@@ -305,5 +305,95 @@ class GestionDocenteController extends Controller
       return Redirect::to('DashboardPerfilDocente'); 
 
     }
+    function listadoDocentes (){
+      $docentes = pdg_dcn_docenteModel::all();
+      return view('PerfilDocente.listadoDocentes',compact('docentes'));
+
+    }
     
+    public function edit($id){
+      $docente = pdg_dcn_docenteModel::find($id);
+      $cargos = cat_car_cargo_eisiModel::all();
+      $bodySelectPrincipal="";
+      $bodySelectSecundario="";
+      $bodySelectJornada="";
+       foreach ($cargos as $principal) {
+            if ($principal->id_cat_car == $docente->id_cargo_actual) {
+                 $bodySelectPrincipal.='<option value="'.$principal->id_cat_car.'" selected="selected">
+                                    '.$principal->nombre_cargo.'
+                                    </option>';
+            }else{
+                 $bodySelectPrincipal.='<option value="'.$principal->id_cat_car.'">
+                                    '.$principal->nombre_cargo.'
+                                    </option>';
+            }
+           
+       }
+       
+       foreach ($cargos as $secundario) {
+            if ($secundario->id_cat_car == $docente->id_segundo_cargo) {
+                 $bodySelectSecundario.='<option value="'.$secundario->id_cat_car.'" selected="selected">
+                '.$secundario->nombre_cargo.'
+                </option>';
+            }else{
+                    $bodySelectSecundario.='<option value="'.$secundario->id_cat_car.'">
+                    '.$secundario->nombre_cargo.'
+                    </option>';
+            }
+           
+       }
+       if ($docente->tipoJornada == 1) {
+         $bodySelectJornada ='
+                  <option value="">Seleccione una Jornada</option>
+                  <option value="1" selected="selected">Tiempo Completo</option>
+                  <option value="2">Tiempo Parcial</option>
+                  <option value="3">Servicio Profesional</option>';
+       }else if($docente->tipoJornada == 2){
+          $bodySelectJornada ='
+                  <option value="">Seleccione una Jornada</option>
+                  <option value="1">Tiempo Completo</option>
+                  <option value="2" selected="selected">Tiempo Parcial</option>
+                  <option value="3">Servicio Profesional</option>';
+       }
+       else if($docente->tipoJornada == 3){
+          $bodySelectJornada ='
+                  <option value="">Seleccione una Jornada</option>
+                  <option value="1">Tiempo Completo</option>
+                  <option value="2">Tiempo Parcial</option>
+                  <option value="3" selected="selected">Servicio Profesional</option>';
+       }else{
+          $bodySelectJornada ='
+                  <option value="">Seleccione una Jornada</option>
+                  <option value="1">Tiempo Completo</option>
+                  <option value="2">Tiempo Parcial</option>
+                  <option value="3">Servicio Profesional</option>';
+       }
+      return view('PerfilDocente.edit',compact('docente','bodySelectPrincipal','bodySelectSecundario','bodySelectJornada'));
+    }
+    public function updateDocente(Request $request){
+       $validatedData = $request->validate(
+            [
+                'docente' => 'required',
+                'cargoPrincipal' => 'required',
+                'jornada' => 'required'
+            ],
+            [
+                'docente.required' => 'El docente es obligatorio',
+                'cargoPrincipal.required' => 'Debe seleccionar un cargo principal.',
+                'jornada.required' => 'Debe seleccionar una jornada'
+            ]
+        );
+       $docente = pdg_dcn_docenteModel::find($request['docente']);
+       if (empty($docente->id_pdg_dcn)) {
+         return Redirect::to('/'); 
+       }
+       $docente->id_cargo_actual    = $request['cargoPrincipal'];
+       if ( $request['cargoSegundario']!="" &&  $request['cargoSegundario']!=NULL &&  isset($request['cargoSegundario'])) {
+          $docente->id_segundo_cargo   = $request['cargoSegundario'];
+       }
+       $docente->tipoJornada        = $request['jornada'];
+       $docente->save();
+      Session::flash('message','Actualización  de información de Docente realizada con éxito.');
+      return Redirect::to('listadoDocentes'); 
+    }
 }

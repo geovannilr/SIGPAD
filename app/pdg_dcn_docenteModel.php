@@ -25,6 +25,14 @@ class pdg_dcn_docenteModel extends Model
             'perfilPrivado'
         ];
 
+
+    public function cargoPrincipal(){
+        return $this->hasOne('App\cat_car_cargo_eisiModel','id_cat_car','id_cargo_actual');
+    }
+     public function cargoSecundario(){
+        return $this->hasOne('App\cat_car_cargo_eisiModel','id_cat_car','id_segundo_cargo');
+    }
+
     /***
      * Función: getDocentesDisponibles($id)
      * Params: $id-> Id del grupo de TDG

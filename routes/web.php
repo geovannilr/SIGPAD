@@ -133,6 +133,11 @@ Route::resource('laboral', 'ExperienciaLaboralController');
 Route::resource('certificacion', 'CertificacionController');
 Route::resource('habilidad', 'HabilidadController');
 Route::post('actualizarPerfilDocente','GestionDocenteController@actualizarPerfilDocente')->name('actualizarPerfilDocente');
+Route::get('listadoDocentes', 'GestionDocenteController@listadoDocentes')->name('listadoDocentes');
+Route::get('docenteEdit/{idDocente}', 'GestionDocenteController@edit')->name('docenteEdit');
+Route::post('actualizarDocente','GestionDocenteController@updateDocente')->name('actualizarDocente');
+
+
 //------------------------------------------------------------------------------------------------------------------------
 //------------------UESPLAY--------------------------------------------------------------------------------------
 Route::post('storeUsersUplay', 'gen_UsuarioController@storeUsuariosUesplay')->name('storeUsersUplay');
