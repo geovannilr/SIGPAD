@@ -71,6 +71,14 @@
 	        <li class="breadcrumb-item active">Listado de Docentes</li>
 		</ol>
 		<br>
+     <div class="row">
+  <div class="col-sm-3"></div>
+  <div class="col-sm-3"></div>
+   <div class="col-sm-3"></div>
+    <div class="col-sm-3">
+       <a class="btn " href="{{route('cargarActulizacionDocente')}}" style="background-color: #DF1D20; color: white"><i class="fa fa-plus">Cargar Actualización de Docentes </i></a>
+    </div>
+</div> 
   		<div class="table-responsive">
   			<table class="table table-hover table-striped  display" id="listTable">
 

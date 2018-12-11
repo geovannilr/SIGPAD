@@ -15,12 +15,13 @@ use \App\dcn_cer_certificacionesModel;
 use \App\cat_car_cargo_eisiModel;
 use \App\gen_UsuarioModel;
 use \App\cat_ski_skillModel;
-use File;
+use \App\User;
+use File;;
 use Illuminate\Support\Facades\Storage;
 class GestionDocenteController extends Controller
 {   
     public function __construct(){
-        $this->middleware('auth', ['only' => ['index','create','store','downloadPlantilla','actualizarPerfilDocente','updateDocente','listadoDocentes','edit']]);
+        $this->middleware('auth', ['only' => ['index','create','store','downloadPlantilla','actualizarPerfilDocente','updateDocente','listadoDocentes','edit','createUpdateDocente','updateDocenteExcel']]);
     }
     function index(){
        $userLogin = Auth::user();
@@ -396,4 +397,75 @@ class GestionDocenteController extends Controller
       Session::flash('message','Actualización  de información de Docente realizada con éxito.');
       return Redirect::to('listadoDocentes'); 
     }
+
+
+    public function createUpdateDocente() {
+    return view('PerfilDocente.UpdateExcel.create');
+  }
+    public function updateDocenteExcel(Request $request) {
+
+        $validatedData = $request->validate([
+          'documentoDocentes' => 'required',
+        ]);
+        $bodyHtml = '';
+        $data = Excel::load($request->file('documentoDocentes'), function ($reader) {
+          $reader->setSelectedSheetIndices(array(1));
+        })->get();
+        $docentes = $data->toArray();
+        if (sizeof($docentes) != 0) {
+          foreach ($docentes as $docente) {
+            //return var_dump($usuario);
+            if (!is_null($docente["usuario"])) {
+              //Verificamos si el docente se encuentra registrado 
+              $user  = User::where('user','=',$docente["usuario"])->first();
+              if (!empty($user->id)){
+                $registroDocente = pdg_dcn_docenteModel::where('id_gen_usuario','=',$user->id)->first();
+                $docenteById=pdg_dcn_docenteModel::find($registroDocente->id_pdg_dcn);
+                $jornada = $docenteById->tipoJornada;
+                if (!is_null($docente["jornada"])){
+                  $jornada=$docente["jornada"];
+                  $docenteById->tipoJornada = $docente["jornada"];
+                }
+                if (!is_null($docente["cargo1"])){
+                  $docenteById->id_cargo_actual = $docente["cargo1"];
+                }
+                if (!is_null($docente["cargo2"])){
+                  $docenteById->id_segundo_cargo = $docente["cargo2"];
+                }
+                $docenteById->save();
+                $jornadaTexto = "N/A";
+                if ($jornada ==1) {
+                  $jornadaTexto ="Tiempo Completo";
+                }else if($jornada ==2){
+                   $jornadaTexto ="Tiempo Parcial";
+                }else{
+                   $jornadaTexto ="Servicio Profesional";
+                }
+
+                $bodyHtml .= '<tr>';
+                $bodyHtml .= '<td>' . $docente["usuario"].'</td>';
+                $bodyHtml .= '<td>' . $docenteById->display_name. '</td>';
+                $bodyHtml .= '<td><span class="badge badge-success">OK</span></td>';
+                $bodyHtml .= '<td>Docente actualizado exitosamente</td>';
+                $bodyHtml .= '</tr>';
+              } else {
+                //Usuario repetido
+                $bodyHtml .= '<tr>';
+                $bodyHtml .= '<td>' .  "N/A"  . '</td>';
+                $bodyHtml .= '<td> N/A</td>';
+                $bodyHtml .= '<td><span class="badge badge-danger">Error</span></td>';
+                $bodyHtml .= '<td>El Docente que esta intentando actualizar no se encuentra registrado.</td>';
+                $bodyHtml .= '</tr>';
+               
+              }
+
+            }
+
+          }
+      
+        }
+
+        return view('PerfilDocente.UpdateExcel.index', compact('bodyHtml'));
+
+  }
 }

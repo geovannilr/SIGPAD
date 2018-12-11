@@ -136,6 +136,8 @@ Route::post('actualizarPerfilDocente','GestionDocenteController@actualizarPerfil
 Route::get('listadoDocentes', 'GestionDocenteController@listadoDocentes')->name('listadoDocentes');
 Route::get('docenteEdit/{idDocente}', 'GestionDocenteController@edit')->name('docenteEdit');
 Route::post('actualizarDocente','GestionDocenteController@updateDocente')->name('actualizarDocente');
+Route::get('cargarActulizacionDocente', 'GestionDocenteController@createUpdateDocente')->name('cargarActulizacionDocente');
+Route::post('actualizarDocenteExcel','GestionDocenteController@updateDocenteExcel')->name('actualizarDocenteExcel');
 
 
 //------------------------------------------------------------------------------------------------------------------------
