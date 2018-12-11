@@ -266,14 +266,24 @@ class pdg_dcn_docenteModel extends Model
             usr.primer_apellido,
             COALESCE(usr.segundo_apellido, '') as segundo_apellido ,            
             car.nombre_cargo,
+            IFNULL(car2.nombre_cargo,'') AS nombre_cargo2,
             COALESCE(dcn.dcn_profileFoto ,'default.jpg') as dcn_profileFoto,
             dcn.tipoJornada,
             dcn.perfilPrivado
             ,COALESCE(dcn.display_name,usr.primer_nombre||' '||usr.primer_apellido) as display_name
+            ,CASE dcn.tipoJornada 
+              WHEN 1 THEN 'DOCENTES TIEMPO COMPLETO'
+              WHEN 2 THEN 'DOCENTES TIEMPO PARCIAL'
+              WHEN 3 THEN 'DOCENTES EN SERVICIO PROFESIONAL'
+              WHEN 4 THEN 'PERSONAL ADMINISTRATIVO'
+              ELSE 'COLABORADORES'
+            END AS emp_clasif
             from pdg_dcn_docente dcn 
             inner join gen_usuario usr on usr.id=dcn.id_gen_usuario 
             left join cat_car_cargo_eisi car on car.id_cat_car=dcn.id_cargo_actual
-            where dcn.activo=1", // and dcn.tipoJornada=:jornada",
+            LEFT JOIN cat_car_cargo_eisi car2 ON car2.id_cat_car=dcn.id_segundo_cargo
+            where dcn.activo=1
+            ORDER BY dcn.tipoJornada ASC, dcn.pdg_dcn_prioridad DESC", // and dcn.tipoJornada=:jornada",
             array(
                 $jornada
             )
