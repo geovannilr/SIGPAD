@@ -9,14 +9,7 @@
   		</script>		
 @endif
 <script type="text/javascript">
-	$( document ).ready(function() {
-		 $('.deleteButton').on('submit',function(e){
-        if(!confirm('Estas seguro que deseas eliminar este Permiso?')){
-
-              e.preventDefault();
-        	}
-      	});
-		
+	$( document ).ready(function() {	
     	$("#listTable").DataTable({
         language: {
                 url: 'es-ar.json' //Ubicacion del archivo con el json del idioma.
