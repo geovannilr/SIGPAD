@@ -136,9 +136,9 @@ Route::post('actualizarPerfilDocente','GestionDocenteController@actualizarPerfil
 Route::get('listadoDocentes', 'GestionDocenteController@listadoDocentes')->name('listadoDocentes');
 Route::get('docenteEdit/{idDocente}', 'GestionDocenteController@edit')->name('docenteEdit');
 Route::post('actualizarDocente','GestionDocenteController@updateDocente')->name('actualizarDocente');
-Route::get('cargarActulizacionDocente', 'GestionDocenteController@createUpdateDocente')->name('cargarActulizacionDocente');
+Route::get('cargarActualizacionDocente', 'GestionDocenteController@createUpdateDocente')->name('cargarActualizacionDocente');
 Route::post('actualizarDocenteExcel','GestionDocenteController@updateDocenteExcel')->name('actualizarDocenteExcel');
-
+Route::post('plantillaAdministraDocente','GestionDocenteController@downloadPlantillaAdministraDocente')->name('plantillaAdministraDocente');
 
 //------------------------------------------------------------------------------------------------------------------------
 //------------------UESPLAY--------------------------------------------------------------------------------------

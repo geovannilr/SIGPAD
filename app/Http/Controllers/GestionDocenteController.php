@@ -468,4 +468,13 @@ class GestionDocenteController extends Controller
         return view('PerfilDocente.UpdateExcel.index', compact('bodyHtml'));
 
   }
+  public function downloadPlantillaAdministraDocente(){
+      $path= public_path().$_ENV['PATH_RECURSOS'].'temp-administra-docentes.xlsx';
+      if (File::exists($path)){
+          return response()->download($path);
+      }else{
+          Session::flash('error','El documento no se encuentra disponible , es posible que haya sido  borrado');
+          return view('PerfilDocente.UpdateExcel.create');
+      }
+  }
 }

@@ -52,7 +52,7 @@
   </div>
    <div id="loader"></div>
     <div id="divFrmDownload" style="display: none;">
-        {!! Form::open(['route'=>['plantillaUsuarioUesplay'],'method'=>'POST', 'id'=>'frmDownload', 'target' => '_blank']) !!}
+        {!! Form::open(['route'=>['plantillaAdministraDocente'],'method'=>'POST', 'id'=>'frmDownload', 'target' => '_blank']) !!}
         <div class="btn-group">
             <button type="submit" class="btn btn-dark"><i class="fa fa-download"></i></button>
         </div>

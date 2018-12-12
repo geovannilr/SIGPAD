@@ -69,7 +69,7 @@
   <div class="col-sm-3"></div>
    <div class="col-sm-3"></div>
     <div class="col-sm-3">
-       <a class="btn " href="{{route('cargarActulizacionDocente')}}" style="background-color: #DF1D20; color: white"><i class="fa fa-plus">Cargar Actualización de Docentes </i></a>
+       <a class="btn " href="{{route('cargarActualizacionDocente')}}" style="background-color: #DF1D20; color: white"><i class="fa fa-plus">Cargar Actualización de Docentes </i></a>
     </div>
 </div> 
   		<div class="table-responsive">
