@@ -55,11 +55,13 @@
               </div>
               </div>
               <br>
+                @can('gestionDocente.edit')
             <div class="row">
               <div class="form-group col-sm-6">
                 {!!Form::submit('Actualizar',['class'=>'btn btn-primary'])!!}
               </div>
             </div>
+                @endcan
   				</div>
   			{!! Form:: close() !!}
 </div>

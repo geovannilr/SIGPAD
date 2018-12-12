@@ -151,6 +151,24 @@
                      
           </li>
         @endcan
+        @can('gestionDocente.index')
+          <li class="nav-item" data-toggle="tooltip" data-placement="right" title="docentes">
+            <a class="nav-link nav-link-collapse collapsed"  data-toggle="collapse" href="#collapseDocentes" data-parent="#exampleAccordion" style="color: #ffffff; font-weight: bold; background-color: #DF1D20; margin-top: 20px"  >
+              <i class="fa fa-address-book"></i>
+              <span class="nav-link-text">Gestión Personal EISI</span>
+            </a>
+
+            <ul class="sidenav-second-level collapse" id="collapseDocentes">
+                <li>
+                  <a class="nav-link" href="{{route('listadoDocentes')}}" style="color: #ffffff">
+                    <i class="fa fa-file-text"></i>
+                    <span class="nav-link-text">Listado Docentes</span>
+                  </a>
+                </li>
+            </ul>
+
+          </li>
+        @endcan
         @can('usuario.index', 'permiso.index', 'rol.index')
         <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Administracion" style="color: #ffffff">
           <a class="nav-link nav-link-collapse collapsed" data-toggle="collapse" href="#collapseAdministracion" data-parent="#exampleAccordion" style="color: #ffffff; font-weight: bold; background-color: #DF1D20; margin-top: 20px">
@@ -218,14 +236,6 @@
          @endcan
          >
             <i class="fa fa-user"></i>&nbsp;{!!Auth::user()->name!!}</a>
-        {{--@can('perfilDocente.cargar')--}}
-                  {{--<li>--}}
-                    {{--<a class="nav-link" href="{{route('cargarPerfilDocente')}}" style="color: #ffffff">--}}
-                      {{--<i class="fa fa-user-circle"></i>--}}
-                      {{--<span class="nav-link-text">Mi Perfil</span>--}}
-                    {{--</a>--}}
-                  {{--</li>--}}
-        {{--@endcan    --}}
         <li class="nav-item">
           <a class="nav-link"  data-toggle="modal" data-target="#exampleModal">
             <i class="fa fa-fw fa-sign-out"></i>Salir</a>

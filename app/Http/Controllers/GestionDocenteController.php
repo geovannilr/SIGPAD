@@ -21,7 +21,7 @@ use Illuminate\Support\Facades\Storage;
 class GestionDocenteController extends Controller
 {   
     public function __construct(){
-        $this->middleware('auth', ['only' => ['index','create','store','downloadPlantilla','actualizarPerfilDocente','updateDocente','listadoDocentes','edit','createUpdateDocente','updateDocenteExcel']]);
+        $this->middleware('auth', ['only' => ['index','create','store','downloadPlantilla','actualizarPerfilDocente','updateDocente','listadoDocentes','edit','createUpdateDocente','updateDocenteExcel','downloadPlantillaAdministraDocente','validaPermiso']]);
     }
     function index(){
        $userLogin = Auth::user();
@@ -307,12 +307,19 @@ class GestionDocenteController extends Controller
 
     }
     function listadoDocentes (){
-      $docentes = pdg_dcn_docenteModel::all();
-      return view('PerfilDocente.listadoDocentes',compact('docentes'));
-
+        if(!self::validaPermiso('gestionDocente.index')){
+            Session::flash('message-error', 'No tiene permisos para acceder a esta opción');
+            return  view('template');
+        }
+        $docentes = pdg_dcn_docenteModel::all();
+        return view('PerfilDocente.listadoDocentes',compact('docentes'));
     }
     
     public function edit($id){
+        if(!self::validaPermiso('gestionDocente.edit')){
+            Session::flash('message-error', 'No tiene permisos para acceder a esta opción');
+            return  view('template');
+        }
       $docente = pdg_dcn_docenteModel::find($id);
       $cargos = cat_car_cargo_eisiModel::all();
       $bodySelectPrincipal="";
@@ -372,6 +379,10 @@ class GestionDocenteController extends Controller
       return view('PerfilDocente.edit',compact('docente','bodySelectPrincipal','bodySelectSecundario','bodySelectJornada'));
     }
     public function updateDocente(Request $request){
+        if(!self::validaPermiso('gestionDocente.edit')){
+            Session::flash('message-error', 'No tiene permisos para acceder a esta opción');
+            return  view('template');
+        }
        $validatedData = $request->validate(
             [
                 'docente' => 'required',
@@ -400,10 +411,17 @@ class GestionDocenteController extends Controller
 
 
     public function createUpdateDocente() {
-    return view('PerfilDocente.UpdateExcel.create');
-  }
+        if(!self::validaPermiso('gestionDocente.cargar')){
+            Session::flash('message-error', 'No tiene permisos para acceder a esta opción');
+            return  view('template');
+        }
+        return view('PerfilDocente.UpdateExcel.create');
+    }
     public function updateDocenteExcel(Request $request) {
-
+        if(!self::validaPermiso('gestionDocente.cargar')){
+            Session::flash('message-error', 'No tiene permisos para acceder a esta opción');
+            return  view('template');
+        }
         $validatedData = $request->validate([
           'documentoDocentes' => 'required',
         ]);
@@ -459,16 +477,18 @@ class GestionDocenteController extends Controller
                
               }
 
+                }
+
+              }
+
             }
-
-          }
-      
-        }
-
-        return view('PerfilDocente.UpdateExcel.index', compact('bodyHtml'));
-
+            return view('PerfilDocente.UpdateExcel.index', compact('bodyHtml'));
   }
   public function downloadPlantillaAdministraDocente(){
+      if(!self::validaPermiso('gestionDocente.cargar')){
+          Session::flash('message-error', 'No tiene permisos para acceder a esta opción');
+          return  view('template');
+      }
       $path= public_path().$_ENV['PATH_RECURSOS'].'temp-administra-docentes.xlsx';
       if (File::exists($path)){
           return response()->download($path);
@@ -476,5 +496,9 @@ class GestionDocenteController extends Controller
           Session::flash('error','El documento no se encuentra disponible , es posible que haya sido  borrado');
           return view('PerfilDocente.UpdateExcel.create');
       }
+  }
+
+  private static function validaPermiso($slug){
+        return Auth::user()->can([$slug]);
   }
 }

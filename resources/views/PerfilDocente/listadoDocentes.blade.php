@@ -68,9 +68,11 @@
   <div class="col-sm-3"></div>
   <div class="col-sm-3"></div>
    <div class="col-sm-3"></div>
+         @can('gestionDocente.cargar')
     <div class="col-sm-3">
        <a class="btn " href="{{route('cargarActualizacionDocente')}}" style="background-color: #DF1D20; color: white"><i class="fa fa-plus">Cargar Actualización de Docentes </i></a>
     </div>
+         @endcan
 </div> 
   		<div class="table-responsive">
   			<table class="table table-hover table-striped  display" id="listTable">
@@ -81,7 +83,9 @@
           <th>Tipo Jornada</th>
           <th>Cargo Principal</th>
           <th>Cargo Secundario</th>
+          @can('gestionDocente.edit')
           <th>Modificar</th>
+          @endcan
   				</thead>
   				<tbody>
   				@foreach($docentes as $docente)
@@ -103,10 +107,12 @@
                <td>NO SE HA INGRESADO</td>
             @else
                <td><span class="badge badge-info">{{ $docente->cargoSecundario->nombre_cargo }}</span></td>
-            @endif 
+            @endif
+                        @can('gestionDocente.edit')
             <td style="text-align: center;">
                 <a class="btn " style="background-color:  #102359;color: white" href="{{route('docenteEdit',$docente->id_pdg_dcn)}}"><i class="fa fa-pencil"></i></a>
-              </td> 
+              </td>
+                        @endcan
 					</tr>
 				@endforeach 
 				</tbody>
