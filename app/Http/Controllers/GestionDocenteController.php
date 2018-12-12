@@ -437,39 +437,49 @@ class GestionDocenteController extends Controller
               //Verificamos si el docente se encuentra registrado 
               $user  = User::where('user','=',$docente["usuario"])->first();
               if (!empty($user->id)){
-                $registroDocente = pdg_dcn_docenteModel::where('id_gen_usuario','=',$user->id)->first();
-                $docenteById=pdg_dcn_docenteModel::find($registroDocente->id_pdg_dcn);
-                $jornada = $docenteById->tipoJornada;
-                if (!is_null($docente["jornada"])){
-                  $jornada=$docente["jornada"];
-                  $docenteById->tipoJornada = $docente["jornada"];
-                }
-                if (!is_null($docente["cargo1"])){
-                  $docenteById->id_cargo_actual = $docente["cargo1"];
-                }
-                if (!is_null($docente["cargo2"])){
-                  $docenteById->id_segundo_cargo = $docente["cargo2"];
-                }
-                $docenteById->save();
-                $jornadaTexto = "N/A";
-                if ($jornada ==1) {
-                  $jornadaTexto ="Tiempo Completo";
-                }else if($jornada ==2){
-                   $jornadaTexto ="Tiempo Parcial";
-                }else{
-                   $jornadaTexto ="Servicio Profesional";
-                }
+              	if ($docente["cargo1"] == $docente["cargo2"]) {
+              		$bodyHtml .= '<tr>';
+	                $bodyHtml .= '<td>' .  $docente["usuario"]  . '</td>';
+	                $bodyHtml .= '<td> N/A</td>';
+	                $bodyHtml .= '<td><span class="badge badge-danger">Error</span></td>';
+	                $bodyHtml .= '<td>El cargo principal y el cargo Secundario no pueden ser el mismo.</td>';
+	                $bodyHtml .= '</tr>';
+              	}else{
+	              	$registroDocente = pdg_dcn_docenteModel::where('id_gen_usuario','=',$user->id)->first();
+	                $docenteById=pdg_dcn_docenteModel::find($registroDocente->id_pdg_dcn);
+	                $jornada = $docenteById->tipoJornada;
+	                if (!is_null($docente["jornada"])){
+	                  $jornada=$docente["jornada"];
+	                  $docenteById->tipoJornada = $docente["jornada"];
+	                }
+	                if (!is_null($docente["cargo1"])){
+	                  $docenteById->id_cargo_actual = $docente["cargo1"];
+	                }
+	                if (!is_null($docente["cargo2"])){
+	                  $docenteById->id_segundo_cargo = $docente["cargo2"];
+	                }
+	                $docenteById->save();
+	                $jornadaTexto = "N/A";
+	                if ($jornada ==1) {
+	                  $jornadaTexto ="Tiempo Completo";
+	                }else if($jornada ==2){
+	                   $jornadaTexto ="Tiempo Parcial";
+	                }else{
+	                   $jornadaTexto ="Servicio Profesional";
+	                }
 
-                $bodyHtml .= '<tr>';
-                $bodyHtml .= '<td>' . $docente["usuario"].'</td>';
-                $bodyHtml .= '<td>' . $docenteById->display_name. '</td>';
-                $bodyHtml .= '<td><span class="badge badge-success">OK</span></td>';
-                $bodyHtml .= '<td>Docente actualizado exitosamente</td>';
-                $bodyHtml .= '</tr>';
+	                $bodyHtml .= '<tr>';
+	                $bodyHtml .= '<td>' . $docente["usuario"].'</td>';
+	                $bodyHtml .= '<td>' . $docenteById->display_name. '</td>';
+	                $bodyHtml .= '<td><span class="badge badge-success">OK</span></td>';
+	                $bodyHtml .= '<td>Docente actualizado exitosamente</td>';
+	                $bodyHtml .= '</tr>';
+              	}
+
               } else {
-                //Usuario repetido
+                //docente no registrado
                 $bodyHtml .= '<tr>';
-                $bodyHtml .= '<td>' .  "N/A"  . '</td>';
+                $bodyHtml .= '<td>' .  $docente["usuario"]  . '</td>';
                 $bodyHtml .= '<td> N/A</td>';
                 $bodyHtml .= '<td><span class="badge badge-danger">Error</span></td>';
                 $bodyHtml .= '<td>El Docente que esta intentando actualizar no se encuentra registrado.</td>';

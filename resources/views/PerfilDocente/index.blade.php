@@ -197,6 +197,17 @@
 				 <li class="breadcrumb-item active">Dashboard </li>
 		</ol>
 		<br>
+        <br>
+         <div class="row">
+  <div class="col-sm-3"></div>
+  <div class="col-sm-3"></div>
+   <div class="col-sm-3"></div>
+  @can('perfilDocente.cargar')
+    <div class="col-sm-3">
+      <a class="btn " href="{{route('cargarPerfilDocente')}}" style="background-color: #DF1D20; color: white"><i class="fa fa-plus"></i> Cargar Perfil</a>
+    </div>
+  @endcan
+  </div> 
 		<ul class="nav nav-tabs" id="myTab" role="tablist">
 		  <li class="nav-item">
 		    <a class="nav-link active text-danger" id="general-tab" data-toggle="tab" href="#general" role="tab" aria-controls="general" aria-selected="true">General</a>
