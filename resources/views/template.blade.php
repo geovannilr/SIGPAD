@@ -15,7 +15,9 @@
   {!!Html::style('css/sb-admin.css')!!}
   {!!Html::style('css/font-awesome/css/font-awesome.min.css')!!}
   {!!Html::style('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css')!!}
+  {!!Html::style('https://cdn.datatables.net/responsive/2.2.3/css/responsive.bootstrap.min.css')!!}
   {!!Html::script('https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js')!!}
+
   
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/responsive/2.2.1/css/responsive.dataTables.min.css">
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.16/css/dataTables.bootstrap4.min.css">
