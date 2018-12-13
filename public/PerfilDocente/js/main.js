@@ -204,7 +204,7 @@ function distribuirData(data) {
             '<td style="border: hidden"><blockquote>'+
             (tpoPriv===1?'':'<a href="'+ip+'/perfilDocente/'+data[i]['id_pdg_dcn']+'"  data-target="#myModal" target="myModal">')+
             '<div class="row"><div class="col-sm-3 text-center">'+
-            '<img class="img-circle" src="'+ip+'/Uploads/PerfilDocente/'+data[i]['dcn_profileFoto']+' " style="width: 80px;height:80px;" > '+
+            '<img class="img-circle" src="'+ip+'/Uploads/PerfilDocente/'+data[i]['dcn_profileFoto']+' " style="width: 80px;height:80px; object-fit: cover;" > '+
             '</div><div class="col-sm-9">'+
             '<p style="color:#DFC15E;">'+data[i]['display_name']+'</p>'+
             '<small>'+data[i]['nombre_cargo']+ (cargo2===''?'':'&nbsp;&sol;&nbsp;<i>'+cargo2+'</i>')+'</small>'+

@@ -251,7 +251,7 @@
                         <div class="card-title mb-4">
                             <div class="d-flex justify-content-start">
                                 <div class="image-container">
-                                    <img src="{{url('/')."/".env('PATH_PERFIL_DOCENTE').$info[0]->dcn_profileFoto}}" id="imgProfile" style="width: 150px; height: 150px" class="img-thumbnail" />
+                                    <img src="{{url('/')."/".env('PATH_PERFIL_DOCENTE').$info[0]->dcn_profileFoto}}" id="imgProfile" style="width: 150px; height: 150px; object-fit: cover;" class="img-thumbnail" />
                                     <div class="middle">
                                         <input type="button" class="btn btn-secondary" id="btnChangePicture" value="Cambiar" />
                                         <!--<input type="file" style="display: none;" id="profilePicture" name="fotoPerfil" /> -->
