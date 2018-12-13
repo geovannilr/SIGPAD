@@ -6,12 +6,14 @@ use App\cat_ctg_tra_categoria_trabajo_graduacionModel;
 use Illuminate\Http\Request;
 use Session;
 use Redirect;
-use Caffeinated\Shinobi\Models\Permission;
-use Caffeinated\Shinobi\Models\Role;
+
 use Illuminate\Support\Facades\Auth;
 
 class cat_ctg_tra_categoria_trabajo_graduacionController extends Controller
 {
+    public function __construct(){
+        $this->middleware('auth');
+    }
     /**
      * Display a listing of the resource.
      *
@@ -60,11 +62,16 @@ class cat_ctg_tra_categoria_trabajo_graduacionController extends Controller
     {
         $validatedData = $request->validate([
             'nombre_cat_ctg_tra' => 'required|max:45'
-        ]);
+        ],
+            [
+                'nombre_cat_ctg_tra.required' => 'El nombre de la categoria de trabajo de graduación es necesario',
+                'nombre_cat_ctg_tra.max' => 'El nombre de la categoria de trabajo de graduación debe contener como maximo 45 caracteres'
+            ]
+            );
 
         cat_ctg_tra_categoria_trabajo_graduacionModel::create
         ([
-            'nombre_cat_ctg_tra'       	 => $request['nombre_cat_ctg_tra']
+            'nombre_cat_ctg_tra'=> $request['nombre_cat_ctg_tra']
         ]);
 
         Return redirect('categoriaTDG')->with('message','Categoría Registrada correctamente!') ;

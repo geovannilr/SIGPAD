@@ -37,7 +37,6 @@ class cat_tpo_doc_tipo_documentoController extends Controller
      */
     public function create()
     {
-
         $userLogin=Auth::user();
         if ($userLogin->can(['tipoDocumento.create'])) {
             return view('tipoDocumento.create');
@@ -58,9 +57,21 @@ class cat_tpo_doc_tipo_documentoController extends Controller
         $validatedData = $request->validate([
             'nombre_pdg_tpo_doc' => 'required|max:45',
             'descripcion_pdg_tpo_doc' => 'required|max:100',
-            'puede_observar_cat_pdg_tpo_doc'=> 'required|max:11',
+            'puede_observar_cat_pdg_tpo_doc'=> 'required|max:1',
             'anio_cat_pdg_tpo_doc' => 'required|max:4'
-             ]);
+        ],
+            [
+                'nombre_pdg_tpo_doc.required' => 'El nombre del tipo de documento es necesario',
+                'nombre_pdg_tpo_doc.max' => 'El nombre dedel tipo de documento debe contener como maximo 45 caracteres',
+                'descripcion_pdg_tpo_doc.required'=> 'La descripcion del tipo de documento es necesario',
+                'descripcion_pdg_tpo_doc.max'=> 'La descripción del tipo de documento debe contener como maximo 100 caracteres',
+                'puede_observar_cat_pdg_tpo_doc.required' => 'Saber si el tipo de documento puede ser observado debe ser posible',
+                'puede_observar_cat_pdg_tpo_doc.max' => 'valor entre 0 y 1',
+                'anio_cat_pdg_tpo_doc.required' => 'Debe ingresar un año',
+                'anio_cat_pdg_tpo_doc.max' => 'El anio del tipo documento debe contener como maximo 4 caractéres'
+                ]
+
+        );
 
 
 

@@ -128,5 +128,7 @@ Route::get('cargarUsuariosUesplay', 'gen_UsuarioController@createUsuariosUesPlay
 Route::resource ('categoriaTDG','cat_ctg_tra_categoria_trabajo_graduacionController');
 Route::resource ('tipoDocumento','cat_tpo_doc_tipo_documentoController');
 Route::resource ('tipoTrabajo','cat_tpo_tra_gra_tipo_trabajo_graduacionController');
+Route::resource ('etapaEvaluativa','cat_eta_eva_etapa_evalutativaController');
+Route::resource ('catEstado','cat_eta_eva_etapa_evalutativaController');
 
 
