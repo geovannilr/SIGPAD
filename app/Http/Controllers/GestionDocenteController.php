@@ -402,6 +402,8 @@ class GestionDocenteController extends Controller
        $docente->id_cargo_actual    = $request['cargoPrincipal'];
        if ( $request['cargoSegundario']!="" &&  $request['cargoSegundario']!=NULL &&  isset($request['cargoSegundario'])) {
           $docente->id_segundo_cargo   = $request['cargoSegundario'];
+       } else {
+           $docente->id_segundo_cargo = null;
        }
        $docente->tipoJornada        = $request['jornada'];
        $docente->save();

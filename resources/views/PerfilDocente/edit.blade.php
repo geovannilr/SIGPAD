@@ -38,7 +38,7 @@
               </div>
                 <div class="col-md-8 col-6">
                   <select name="cargoSegundario" class="form-control" id="cargoSegundario">
-                     <option value="">Seleccione un cargo secundario</option>
+                     <option value="">--Sin cargo secundario--</option>
                      {!!$bodySelectSecundario!!}
                    </select>
               </div>
