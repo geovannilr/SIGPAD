@@ -55,7 +55,13 @@ class cat_tpo_tra_gra_tipo_trabajo_graduacionController extends Controller
             'nombre_cat_tpo_tra_gra' => 'required|max:45',
             'anio_cat_tpo_tra_gra' => 'required|max:4'
 
-        ]);
+        ] ,[
+                'nombre_cat_tpo_tra_gra.required' => 'El nombre del tipo de TDG es necesario',
+                'nombre_cat_tpo_tra_gra.max' => 'El nombre del tipo de TDG debe contener como maximo 45 caracteres',
+                'anio_cat_tpo_tra_gra.required' => 'Debe ingresar un año',
+                'anio_cat_tpo_tra_gra.max' => 'El año del tipo TDG debe contener como maximo 4 caractéres'
+                ]
+);
 
 
 
