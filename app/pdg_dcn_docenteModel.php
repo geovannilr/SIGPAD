@@ -21,8 +21,17 @@ class pdg_dcn_docenteModel extends Model
             'carnet_pdg_dcn',
             'anio_titulacion_pdg_dcn',
             'activo',
-            'id_gen_usuario'
+            'id_gen_usuario',
+            'perfilPrivado'
         ];
+
+
+    public function cargoPrincipal(){
+        return $this->hasOne('App\cat_car_cargo_eisiModel','id_cat_car','id_cargo_actual');
+    }
+     public function cargoSecundario(){
+        return $this->hasOne('App\cat_car_cargo_eisiModel','id_cat_car','id_segundo_cargo');
+    }
 
     /***
      * Función: getDocentesDisponibles($id)
@@ -168,11 +177,12 @@ class pdg_dcn_docenteModel extends Model
     public function getDataExperienciaDocente($idDocente){
 
         $data = DB::select("select distinct
-                            lugar_trabajo_dcn_exp,
-                            anio_inicio_dcn_exp,
-                            anio_fin_dcn_exp,
-                            idiomaExper,
-                            descripcionExperiencia
+                            IFNULL(id_dcn_exp,'') as id_dcn_exp,
+                            IFNULL(lugar_trabajo_dcn_exp,'') as lugar_trabajo_dcn_exp,
+                            IFNULL(anio_inicio_dcn_exp,'') as anio_inicio_dcn_exp,
+                            IFNULL(anio_fin_dcn_exp,'') as anio_fin_dcn_exp,
+                            IFNULL(idiomaExper,'') as idiomaExper,
+                            IFNULL(descripcionExperiencia,'') as descripcionExperiencia
                             from view_dcn_perfildocente
                             where id_pdg_dcn =:idDocente",
             array(
@@ -185,10 +195,11 @@ class pdg_dcn_docenteModel extends Model
     public function getDataCertificacionesDocente($idDocente){
 
         $data = DB::select("select distinct
-                            nombre_dcn_cer,
-                            anio_expedicion_dcn_cer,
-                            institucion_dcn_cer,
-                            idiomaCert
+                            IFNULL(id_dcn_cer,'') as id_dcn_cer,
+                            IFNULL(nombre_dcn_cer,'') as nombre_dcn_cer,
+                            IFNULL(anio_expedicion_dcn_cer,'') as anio_expedicion_dcn_cer,
+                            IFNULL(institucion_dcn_cer,'') as institucion_dcn_cer,
+                            IFNULL(idiomaCert,'') as idiomaCert
                             from view_dcn_perfildocente
                             where id_pdg_dcn = :idDocente",
             array(
@@ -201,8 +212,9 @@ class pdg_dcn_docenteModel extends Model
     public function getDataSkillsDocente($idDocente){
 
         $data = DB::select("select distinct
-                            Nivel,
-                            nombre_cat_ski
+                            IFNULL(Nivel,'') as Nivel,
+                            IFNULL(id_cat_ski,'') as id_cat_ski,
+                            IFNULL(nombre_cat_ski,'') as nombre_cat_ski
                             from view_dcn_perfildocente
                             where id_pdg_dcn =  :idDocente",
             array(
@@ -213,20 +225,27 @@ class pdg_dcn_docenteModel extends Model
     }
      public function getGeneralInfo($idDocente){
          $data = DB::select("select 
-                            usuario.primer_nombre,
-                            usuario.segundo_nombre,
-                            usuario.primer_apellido,
-                            usuario.segundo_apellido,
-                            usuario.email,
-                            docente.tipoJornada,
-                            docente.descripcionDocente,
-                            cargo.nombre_cargo,
-                            docente.dcn_profileFoto,
-                            docente.link_git
-                            ,docente.link_linke
-                            ,docente.link_tw
-                            ,docente.link_fb
-
+                            IFNULL(usuario.name,'') as name,
+                            IFNULL(usuario.primer_nombre,'') as primer_nombre,
+                            IFNULL(usuario.segundo_nombre,'') as segundo_nombre,
+                            IFNULL(usuario.primer_apellido,'') as primer_apellido,
+                            IFNULL(usuario.segundo_apellido,'') as segundo_apellido,
+                            IFNULL(usuario.email,'') as email,
+                            IFNULL(docente.tipoJornada,'') as tipoJornada,
+                            IFNULL(docente.descripcionDocente,'') as descripcionDocente,
+                            IFNULL(docente.display_name,'') as display_name,
+                            IFNULL(docente.id_segundo_cargo,'') as id_segundo_cargo,
+                            IFNULL(cargo.id_cat_car,'') as id_cat_car,
+                            IFNULL(cargo.nombre_cargo,'') as nombre_cargo,
+                            IFNULL(docente.dcn_profileFoto,'') as dcn_profileFoto,
+                            IFNULL(docente.link_git,'') as link_git
+                            ,IFNULL(docente.link_linke,'') as link_linke
+                            ,IFNULL(docente.link_tw,'') as link_tw
+                            ,IFNULL(docente.link_fb,'') as link_fb
+                            ,IFNULL(docente.display_name,'') as display_name,
+                            IFNULL(docente.perfilPrivado,'') as perfilPrivado,
+                            IFNULL(docente.id_pdg_dcn,'') as id_pdg_dcn
+                            
                             from  pdg_dcn_docente docente
                             inner join gen_usuario usuario on usuario.id = docente.id_gen_usuario 
                             left join cat_car_cargo_eisi cargo on cargo.id_cat_car=docente.id_cargo_actual
@@ -247,12 +266,24 @@ class pdg_dcn_docenteModel extends Model
             usr.primer_apellido,
             COALESCE(usr.segundo_apellido, '') as segundo_apellido ,            
             car.nombre_cargo,
-            COALESCE(dcn.dcn_profileFoto ,'https://profile.actionsprout.com/default.jpeg') as dcn_profileFoto,
-            dcn.tipoJornada
+            IFNULL(car2.nombre_cargo,'') AS nombre_cargo2,
+            COALESCE(dcn.dcn_profileFoto ,'default.jpg') as dcn_profileFoto,
+            dcn.tipoJornada,
+            dcn.perfilPrivado
+            ,COALESCE(dcn.display_name,usr.primer_nombre||' '||usr.primer_apellido) as display_name
+            ,CASE dcn.tipoJornada 
+              WHEN 1 THEN 'DOCENTES TIEMPO COMPLETO'
+              WHEN 2 THEN 'DOCENTES TIEMPO PARCIAL'
+              WHEN 3 THEN 'DOCENTES EN SERVICIO PROFESIONAL'
+              WHEN 4 THEN 'PERSONAL ADMINISTRATIVO'
+              ELSE 'COLABORADORES'
+            END AS emp_clasif
             from pdg_dcn_docente dcn 
             inner join gen_usuario usr on usr.id=dcn.id_gen_usuario 
             left join cat_car_cargo_eisi car on car.id_cat_car=dcn.id_cargo_actual
-            where dcn.activo=1", // and dcn.tipoJornada=:jornada",
+            LEFT JOIN cat_car_cargo_eisi car2 ON car2.id_cat_car=dcn.id_segundo_cargo
+            where dcn.activo=1
+            ORDER BY dcn.tipoJornada ASC, dcn.pdg_dcn_prioridad DESC", // and dcn.tipoJornada=:jornada",
             array(
                 $jornada
             )

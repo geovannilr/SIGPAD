@@ -63,7 +63,7 @@ class PerfilController extends Controller
                 $idGrupo = $estudiante->getIdGrupo($userLogin->user);
                 if ($idGrupo != 'NA'){
                     $miGrupo = pdg_gru_grupoModel::find($idGrupo);
-                    if ($miGrupo->id_cat_sta == 9 ) {//APROBADO
+                    if ($miGrupo->id_cat_sta == 3 ) {//APROBADO
                         $prePerfiles =pdg_ppe_pre_perfilModel::where('id_pdg_gru', '=',$idGrupo)->get();
                         if (sizeof($prePerfiles)==0) {
                            Session::flash('message-error', 'Para poder ingresar a Perfiles de trabajo de graduación, primero debes enviar tus Pre-Perfiles y que al menos uno de estos sea aprobado por Coordinación.');
@@ -181,11 +181,11 @@ class PerfilController extends Controller
         Storage::disk('Uploads')->put($nombreResumen, File::get($resumen));
          //movemos el archivo a la ubicación correspondiente segun grupo y años
         if ($_ENV['SERVER'] =="win") {
+                $nuevaUbicacion=trim($anioGrupo.'\Grupo'.$numeroGrupo.'\Perfil\ ').$nombre;
+                $nuevaUbicacionResumen=trim($anioGrupo.'\Grupo'.$numeroGrupo.'\Perfil\ ').$nombreResumen;
+             }else{
                 $nuevaUbicacion=$anioGrupo.'/Grupo'.$numeroGrupo.'/Perfil/'.$nombre;
                 $nuevaUbicacionResumen=$anioGrupo.'/Grupo'.$numeroGrupo.'/Perfil/'.$nombreResumen;
-             }else{
-                $nuevaUbicacion=$anioGrupo.'\Grupo'.$numeroGrupo.'\Perfil\ '.$nombre;
-                $nuevaUbicacionResumen=$anioGrupo.'\Grupo'.$numeroGrupo.'\Perfil\ '.$nombreResumen;
              }
             
         Storage::disk('Uploads')->move($nombre, $nuevaUbicacion);
@@ -349,9 +349,9 @@ class PerfilController extends Controller
             Storage::disk('Uploads')->put($nombre, File::get($file));
              //movemos el archivo a la ubicación correspondiente segun grupo y años
             if ($_ENV['SERVER'] =="win") {
-                $nuevaUbicacion=$anioGrupo.'/Grupo'.$numeroGrupo.'/Perfil/'.$nombre;
+                $nuevaUbicacion=trim($anioGrupo.'\Grupo'.$numeroGrupo.'\Perfil\ ').$nombre;
              }else{
-                $nuevaUbicacion=$anioGrupo.'\Grupo'.$numeroGrupo.'\Perfil\ '.$nombre;
+                $nuevaUbicacion=$anioGrupo.'/Grupo'.$numeroGrupo.'/Perfil/'.$nombre;
              }
             
             Storage::disk('Uploads')->move($nombre, $nuevaUbicacion);
@@ -374,7 +374,7 @@ class PerfilController extends Controller
                                                           ->first();
             $nombreViejo = $archivo->ubicacion_arc_doc;
             if ($_ENV['SERVER'] =="win") {
-                $path= public_path().$_ENV['PATH_UPLOADS'].$anioGrupo.'\Grupo'.$numeroGrupo.'\Perfil\ ';
+                $path= trim(public_path().$_ENV['PATH_UPLOADS'].$anioGrupo.'\Grupo'.$numeroGrupo.'\Perfil\ ');
             }else{
                 $path= public_path().$_ENV['PATH_UPLOADS'].$anioGrupo.'/Grupo'.$numeroGrupo.'/Perfil/';
             }
@@ -383,9 +383,9 @@ class PerfilController extends Controller
             Storage::disk('Uploads')->put($nombreResumen, File::get($resumen));
              //movemos el archivo a la ubicación correspondiente segun grupo y años
            if ($_ENV['SERVER'] =="win") {
-                $nuevaUbicacionResumen=$anioGrupo.'/Grupo'.$numeroGrupo.'/Perfil/'.$nombreResumen;
+                $nuevaUbicacionResumen=trim($anioGrupo.'\Grupo'.$numeroGrupo.'\Perfil\ ').$nombreResumen;
              }else{
-                $nuevaUbicacionResumen=$anioGrupo.'\Grupo'.$numeroGrupo.'\Perfil\ '.$nombreResumen;
+                $nuevaUbicacionResumen=$anioGrupo.'/Grupo'.$numeroGrupo.'/Perfil/'.$nombreResumen;
              }
             
             Storage::disk('Uploads')->move($nombreResumen, $nuevaUbicacionResumen);
@@ -467,25 +467,33 @@ class PerfilController extends Controller
 	    $respuesta = $estudiante->getGrupoCarnet($carnet);
 	    return $respuesta;     
     }
-     public function aprobarPerfil(Request $request) {
-	    $perfil =pdg_per_perfilModel::find($request['idPerfil']);
-	    $perfil->id_cat_sta = 9 ;//APROBADO
-	    $perfil->save();
-	    self::saveTDG($perfil);
-	    Session::flash('message','Perfil Aprobado Correctamente!');
-        return Redirect::to('/indexPerfil/'.$perfil->id_pdg_gru);   
+    public function aprobarPerfil(Request $request) {
+        $perfil =pdg_per_perfilModel::find($request['idPerfil']);
+        $msgType = "error";
+        if(!empty($perfil->id_cat_sta)){
+            if($perfil->id_cat_sta==7){
+                $tragra = self::saveTDG($perfil);
+                if($tragra==null){
+                    $msg = 'Ocurrió un error al intentar aprobar el perfil.\nSolicite al grupo subir el documento nuevamente para aprobarlo';
+                } else {
+                    $perfil->id_cat_sta = 9 ;//APROBADO
+                    $perfil->save();
+                    $msgType = "message";
+                    $msg = '¡Perfil Aprobado Correctamente!\nAdicionalmente se crearon las etapas del Trabajo de Graduación, el grupo puede empezar a subir archivos.';
+                }
+            } else {
+                $msg = "¡Error! Perfil ya fue aprobado.";
+            }
+        }else{
+            Session::flash('error',"¡Error! Ese perfil ya no existe, elimínelo y solicite al grupo que lo suba nuevamente.");
+            return Redirect::back();
+        }
+        Session::flash($msgType,$msg);
+        return Redirect::to('/indexPerfil/'.$perfil->id_pdg_gru);
     }
     private function saveTDG($perfil){
-        $tragra = pdg_tra_gra_trabajo_graduacionModel::where('id_pdg_gru',$perfil->id_pdg_gru)->first();
-        if(empty($tragra)){
-            $tragra = new pdg_tra_gra_trabajo_graduacionModel();
-            $tragra->id_pdg_gru = $perfil->id_pdg_gru;
-        }
-        $tragra->id_cat_tpo_tra_gra = $perfil->id_cat_tpo_tra_gra;
-        $tragra->tema_pdg_tra_gra = $perfil->tema_pdg_per;
-        $tragra->id_cat_ctg_tra = $perfil->id_cat_ctg_tra;
-        $tragra->id_cat_sta = $perfil->id_cat_sta;
-        $tragra->save();
+        $tragra = pdg_tra_gra_trabajo_graduacionModel::createOrUpdateTDG($perfil);
+        return $tragra;
     }
     public function rechazarPerfil(Request $request) {
 	    $perfil =pdg_per_perfilModel::find($request['idPerfil']);

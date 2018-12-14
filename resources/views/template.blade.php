@@ -15,7 +15,9 @@
   {!!Html::style('css/sb-admin.css')!!}
   {!!Html::style('css/font-awesome/css/font-awesome.min.css')!!}
   {!!Html::style('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css')!!}
+  {!!Html::style('https://cdn.datatables.net/responsive/2.2.3/css/responsive.bootstrap.min.css')!!}
   {!!Html::script('https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js')!!}
+
   
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/responsive/2.2.1/css/responsive.dataTables.min.css">
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.16/css/dataTables.bootstrap4.min.css">
@@ -34,6 +36,10 @@
     {!!Html::script('js/TrabajoGraduacion/trabajoGraduacion.js')!!}
     {!!Html::script('js/jquery.multi-select.js')!!}
     {!!Html::script('js/publicaciones.js')!!}
+    {!!Html::script('js/jquery.quicksearch.js')!!}
+    {!!Html::script('js/GestionDocente/GestionDocente.js')!!}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.8.0/js/bootstrap-datepicker.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.8.0/css/bootstrap-datepicker.css" rel="stylesheet"/>
  <style type="text/css">
 @font-face {
     font-family: 'American_Captain';
@@ -61,15 +67,20 @@
               <span class="nav-link-text" style="color: #ffffff" >Trabajo de Graduacion</span>
             </a>
             <ul class="sidenav-second-level collapse" id="collapseTrabajoGraduacion">
-              @can('grupotdg.create','grupo.index')
+              @can('grupotdg.create')
                 <li>
                   <a class="nav-link" href="{{route('grupo.create')}}" style="color: #ffffff">
                     <i class="fa fa-users"></i>
+                    @if(Auth::user()->isRole('estudiante'))
+                    <span class="nav-link-text">Conformar Grupo</span>
+                    @else
                     <span class="nav-link-text">Grupos de TG</span>
+                    @endif
+                    
                   </a>  
               </li>
               @endcan
-              @can('grupo.index')
+              @can('grupoAsesor.index')
                 <li>
                   <a class="nav-link" href="{{route('listadoGrupos')}}" style="color: #ffffff">
                     <i class="fa fa-users"></i>
@@ -142,6 +153,24 @@
                      
           </li>
         @endcan
+        @can('gestionDocente.index')
+          <li class="nav-item" data-toggle="tooltip" data-placement="right" title="docentes">
+            <a class="nav-link nav-link-collapse collapsed"  data-toggle="collapse" href="#collapseDocentes" data-parent="#exampleAccordion" style="color: #ffffff; font-weight: bold; background-color: #DF1D20; margin-top: 20px"  >
+              <i class="fa fa-address-book"></i>
+              <span class="nav-link-text">Gestión Personal EISI</span>
+            </a>
+
+            <ul class="sidenav-second-level collapse" id="collapseDocentes">
+                <li>
+                  <a class="nav-link" href="{{route('listadoDocentes')}}" style="color: #ffffff">
+                    <i class="fa fa-file-text"></i>
+                    <span class="nav-link-text">Listado Docentes</span>
+                  </a>
+                </li>
+            </ul>
+
+          </li>
+        @endcan
         @can('usuario.index', 'permiso.index', 'rol.index')
         <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Administracion" style="color: #ffffff">
           <a class="nav-link nav-link-collapse collapsed" data-toggle="collapse" href="#collapseAdministracion" data-parent="#exampleAccordion" style="color: #ffffff; font-weight: bold; background-color: #DF1D20; margin-top: 20px">
@@ -156,6 +185,14 @@
                     <span class="nav-link-text">Usuarios</span>
                   </a>  
               </li>
+              @can('usuario.cargar')
+                  <li>
+                    <a class="nav-link" href="{{route('cargarUsuarios')}}" style="color: #ffffff">
+                      <i class="fa fa-users"></i>
+                      <span class="nav-link-text">Cargar Usuarios</span>
+                    </a>
+                  </li>
+              @endcan
             @endcan
             @can('rol.create','rol.edit','rol.destroy','rol.index')
                 <li>
@@ -177,8 +214,15 @@
           </ul>
         </li>
         @endcan
-        
 
+        @can('uesplay.cargar')
+                  <li>
+                    <a class="nav-link" href="{{route('cargarUsuariosUesplay')}}" style="color: #ffffff">
+                      <i class="fa fa-users"></i>
+                      <span class="nav-link-text">Cargar Usuarios UESPLAY</span>
+                    </a>
+                  </li>
+        @endcan
       </ul>
       <ul class="navbar-nav sidenav-toggler" >
         <li class="nav-item">
@@ -188,12 +232,17 @@
         </li>
       </ul>
       <ul class="navbar-nav ml-auto">
-         <a class="nav-link">
+         <a class="nav-link text-white"
+         @can('perfilDocente.cargar')
+         href="{{route('DashboardPerfilDocente')}}"
+         @endcan
+         >
             <i class="fa fa-user"></i>&nbsp;{!!Auth::user()->name!!}</a>
         <li class="nav-item">
           <a class="nav-link"  data-toggle="modal" data-target="#exampleModal">
             <i class="fa fa-fw fa-sign-out"></i>Salir</a>
         </li>
+
       </ul>
     </div>
   </nav>
@@ -240,9 +289,12 @@
       </div>
     </div>
   </div>
+   
   {!!Html::script('https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.bundle.min.js')!!}
   {!!Html::script('js/sb-admin.min.js')!!}
-  {!!Html::script('https://unpkg.com/sweetalert/dist/sweetalert.min.js')!!} 
+  {!!Html::script('https://unpkg.com/sweetalert/dist/sweetalert.min.js')!!}
+
+  
 </body>
 
 </html>

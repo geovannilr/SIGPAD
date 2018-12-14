@@ -92,6 +92,7 @@
   			<table class="table table-hover table-striped  display" id="listTable">
 
   				<thead>
+          <th>Grupo</th>
 					<th>Líder</th>
 					<th>Estado</th>
 					<th>Cantidad de Estudiantes</th>
@@ -107,6 +108,12 @@
 
   				@foreach($grupos as $grupo)
   						<tr>
+              @if(empty($grupo->numeroGrupo))
+                <td>PENDIENTE</td>  
+              @else
+                 <td>{{ $grupo->numeroGrupo }}</td>  
+              @endif
+             
 						<td>{{ $grupo->Lider }}</td>
 						<td>
 							@if($grupo->idEstado == 7)

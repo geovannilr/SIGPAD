@@ -7,20 +7,42 @@
       });
       </script>   
 @endif
+@if(Session::has('message-warning'))
+      <script type="text/javascript">
+        $( document ).ready(function() {
+          swal("", "{{Session::get('message-warning')}}", "warning");
+      });
+      </script>   
+@endif
+<script type="text/javascript">
+    $(function () {
+        colorProgress();
+    });
+    function colorProgress() {
+        var val = parseInt({{$avance}});
+        var bgcolor = "";
+        if(val <= 25) bgcolor = "bg-warning";
+        else if (val > 75) bgcolor = "bg-success";
+        else bgcolor = "";
+        $("#progressBarDiv").addClass(bgcolor);
+    }
+</script>
 <div class="container-fluid">
       <!-- Breadcrumbs-->
       <ol class="breadcrumb" style="text-align: center; margin-top: 1em">
           <li class="breadcrumb-item">
             <h5>  <a href="{{ redirect()->getUrlGenerator()->previous() }}" style="margin-left: 0em"><i class="fa fa-arrow-left fa-lg" style="z-index: 1;margin-top: 0em;margin-right: 0.5em; color: black"></i></a>     Trabajo de Graduación</h5>
           </li>
-          <li class="breadcrumb-item active">Grupo {{$numero}}</li>
+          <li class="breadcrumb-item active">Grupo {{$numero}} </li>
     </ol>
-    <h3 class="text-center">{{strtoupper($tema->tema_pdg_tra_gra)}}</h3>
+    <h3 class="text-center">{{strtoupper($tema)}}</h3>
       <br>
       <br>
       Progreso
       <div class="progress">
-        <div class="progress-bar progress-bar-striped" role="progressbar" style="width: 20%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">11%</div>
+        <div id="progressBarDiv" class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: {{$avance}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
+            {{$avance>100.00?100.00:$avance}}%
+        </div>
       </div>
       <hr>
       <div class="row">
@@ -92,7 +114,7 @@
           No se han registrado etapas evaluativas asociadas a ti tipo de trabajo de graduación, consulte al administrador
         @else
            @foreach ($etapas as $etapa)
-              @if($etapa->nombre_cat_eta_eva == "Analisis y Diseño")
+              @if($etapa->id_cat_eta_eva == $actual)
                 <div class="col-xl-3 col-sm-6 mb-3">
                   <div class="card text-gray  o-hidden h-100" style="background-color: #DF1D20">
                     <div class="card-body">
@@ -130,5 +152,30 @@
           @endforeach
         @endif
       </div>
+    @if($actual == 999)
+      <div class="row">
+        <div class="col-sm-4">
+        </div>
+
+          <div class="col-sm-4">
+            <div class="card text-gray  o-hidden h-100">
+                    <div class="card-body">
+                      <div class="card-body-icon">
+                        <i class="fa fa-flag-checkered"></i>
+                      </div>
+                      <div class="mr-5">Cierre de Trabajo de graduación</div>
+                    </div>
+                    <a class="card-footer text-gray clearfix small z-1" href="{{url("/")."/cierreTDG"}}">
+                      <span class="float-left">Realizar</span>
+                      <span class="float-right">
+                        <i class="fa fa-angle-right"></i>
+                      </span>
+                    </a>
+                  </div>
+          </div>
+          <div class="col-sm-4">
+        </div>
+      </div>
+    @endif
     </div>
 @stop

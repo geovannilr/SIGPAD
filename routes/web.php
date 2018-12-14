@@ -17,6 +17,9 @@ Route::resource('login', 'LogController');
 
 //USUARIO
 Route::resource('usuario', 'gen_UsuarioController');
+Route::get('cargarUsuarios', 'gen_UsuarioController@createUsuarios')->name('cargarUsuarios');
+Route::post('guardarUsuarios', 'gen_UsuarioController@storeUsuarios')->name('guardarUsuarios');
+Route::post('plantillaUsuarioSigpad','gen_UsuarioController@downloadPlantillaSigpad')->name('plantillaUsuarioSigpad');
 
 //LOGIN
 Route::get('/logout', 'LogController@logout')->name('LogOut');
@@ -74,7 +77,13 @@ Route::get('detalleEtapa/{idEtapa}/{ifGrupo?}', 'TrabajoGraduacion\EtapaEvaluati
 Route::post('enviarConfigEtapa', 'TrabajoGraduacion\EtapaEvaluativaController@configurarEtapa')->name('enviarConfigEtapa');
 Route::get('createNotas/{idEtapa}', 'TrabajoGraduacion\EtapaEvaluativaController@createNotas')->name('createNotas');
 Route::post('enviarNotas', 'TrabajoGraduacion\EtapaEvaluativaController@storeNotas')->name('enviarNotas');
-Route::get('cierreTDG/{idGrupo}', 'TrabajoGraduacion\TrabajoDeGraduacionController@createCierreGrupo')->name('cierreTDG');
+Route::get('cierreTDG', 'TrabajoGraduacion\TrabajoDeGraduacionController@createCierreGrupo')->name('cierreTDG');
+Route::post('aprobarEtapa','TrabajoGraduacion\EtapaEvaluativaController@aprobarEtapa')->name('aprobarEtapa');
+Route::post('calificaEtapa','TrabajoGraduacion\EtapaEvaluativaController@calificarEtapa')->name('calificaEtapa');
+Route::post('updateNotas','TrabajoGraduacion\EtapaEvaluativaController@updateNotas')->name('updateNotas');
+Route::post('storeCierreTDG', 'TrabajoGraduacion\TrabajoDeGraduacionController@storeCierreGrupo')->name('storeCierreTDG');
+Route::get('dataAprbEta/{ifGrupo?}/{idEtapa}','TrabajoGraduacion\EtapaEvaluativaController@dataAprbEta')->name('dataAprbEta');
+Route::post('plantillaNotasVariable','TrabajoGraduacion\EtapaEvaluativaController@downloadPlantillaNotasVariable')->name('plantillaNotasVariable');
 
 
 //Reportes
@@ -104,7 +113,7 @@ Route::get('BuscarPublicaciones', 'Publicaciones\publicacionController@searchVie
 //------------------------------------------------------------------------------------------------------------------------
 
 //------------------GESTION DOCENTE----------------------------------------------------------------
-Route::get('pruebaGestionDocente', 'GestionDocenteController@index')->name('pruebaGestionDocente');
+Route::get('DashboardPerfilDocente', 'GestionDocenteController@index')->name('DashboardPerfilDocente');
 Route::post('getInfoDocente', 'GestionDocenteController@getInfoDocente')->name('getInfoDocente');
 Route::post('getHistorial', 'GestionDocenteController@getHistorial')->name('getHistorial');
 Route::post('getExperiencia', 'GestionDocenteController@getExperiencia')->name('getExperiencia');
@@ -116,11 +125,26 @@ Route::get('perfilDocente/{idDocente}', 'PerfilDocentePublicoController@index')-
 Route::get('TiempoCompleto/{jornada}', 'PerfilDocentePublicoController@index2')->name('listadoDocentes');
 Route::get('TiempoParcial/{jornada}', 'PerfilDocentePublicoController@index2')->name('listadoDocentes');
 Route::post('getListadoDocentes', 'GestionDocenteController@getListadoDocentes')->name('getListadoDocentes');
+Route::get('cargarPerfilDocente', 'GestionDocenteController@create')->name('cargarPerfilDocente');
+Route::post('guardarPerfilDocente', 'GestionDocenteController@store')->name('guardarPerfilDocente');
+Route::post('plantillaPerfilDocente','GestionDocenteController@downloadPlantilla')->name('plantillaPerfilDocente');
+Route::resource('academico', 'HistorialAcademicoController');
+Route::resource('laboral', 'ExperienciaLaboralController');
+Route::resource('certificacion', 'CertificacionController');
+Route::resource('habilidad', 'HabilidadController');
+Route::post('actualizarPerfilDocente','GestionDocenteController@actualizarPerfilDocente')->name('actualizarPerfilDocente');
+Route::get('listadoDocentes', 'GestionDocenteController@listadoDocentes')->name('listadoDocentes');
+Route::get('docenteEdit/{idDocente}', 'GestionDocenteController@edit')->name('docenteEdit');
+Route::post('actualizarDocente','GestionDocenteController@updateDocente')->name('actualizarDocente');
+Route::get('cargarActualizacionDocente', 'GestionDocenteController@createUpdateDocente')->name('cargarActualizacionDocente');
+Route::post('actualizarDocenteExcel','GestionDocenteController@updateDocenteExcel')->name('actualizarDocenteExcel');
+Route::post('plantillaAdministraDocente','GestionDocenteController@downloadPlantillaAdministraDocente')->name('plantillaAdministraDocente');
 
 //------------------------------------------------------------------------------------------------------------------------
 //------------------UESPLAY--------------------------------------------------------------------------------------
 Route::post('storeUsersUplay', 'gen_UsuarioController@storeUsuariosUesplay')->name('storeUsersUplay');
 Route::get('cargarUsuariosUesplay', 'gen_UsuarioController@createUsuariosUesPlay')->name('cargarUsuariosUesplay');
+Route::post('plantillaUsuarioUesplay','gen_UsuarioController@downloadPlantillaUesplay')->name('plantillaUsuarioUesplay');
 //------------------------------------------------------------------------------------------------------------------------
 
 //------------------------------------CATÁLOGOS-------------------------------------------------------------------

@@ -10,6 +10,7 @@ use Redirect;
 use Session;
 use \App\gen_UsuarioModel;
 use \App\User;
+use File;
 
 class gen_UsuarioController extends Controller {
 	public function __construct() {
@@ -180,6 +181,83 @@ class gen_UsuarioController extends Controller {
 		}
 
 	}
+	public function createUsuarios() {
+		return view('usuario.CargaUsuarios.create');
+	}
+	public function storeUsuarios(Request $request) {
+
+		$validatedData = $request->validate([
+			'documentoUsuarios' => 'required',
+		]);
+		$bodyHtml = '';
+		$data = Excel::load($request->file('documentoUsuarios'), function ($reader) {
+			$reader->setSelectedSheetIndices(array(0));
+		})->get();
+		$usuarios = $data->toArray();
+		//return var_dump($usuarios);
+		if (sizeof($usuarios) != 0) {
+			foreach ($usuarios as $usuario) {
+				//return var_dump($usuario);
+				if (!is_null($usuario["usuario"]) && !is_null($usuario["nombres"]) && !is_null($usuario["apellidos"]) && !is_null($usuario["rol"])) {
+					//Verificamos si esta repetido
+					$user  = User::where('user','=',$usuario["usuario"])->first();
+					//Verificamos si el rol ingresado se encuentra en el catalogo
+					$rol = Role::find($usuario["rol"]);
+					if (!empty($user->id)){
+						//Usuario repetido
+						$bodyHtml .= '<tr>';
+						$bodyHtml .= '<td>' . $usuario["usuario"] . '</td>';
+						$bodyHtml .= '<td>' . $usuario["nombres"] . ' ' . $usuario["apellidos"] . '</td>';
+						$bodyHtml .= '<td>' .  "N/A"  . '</td>';
+						$bodyHtml .= '<td><span class="badge badge-danger">Error</span></td>';
+						$bodyHtml .= '<td>El usuario que esta intentando ingresar ya se encuentra registrado.</td>';
+						$bodyHtml .= '</tr>';
+					} else if (empty($rol->id)) {
+						//el rol ingresado es incorrecto y no esta registrado
+						$bodyHtml .= '<tr>';
+						$bodyHtml .= '<td>' . $usuario["usuario"] . '</td>';
+						$bodyHtml .= '<td>' . $usuario["nombres"] . ' ' . $usuario["apellidos"] . '</td>';
+						$bodyHtml .= '<td>' . "N/A" . '</td>';
+						$bodyHtml .= '<td><span class="badge badge-danger">Error</span></td>';
+						$bodyHtml .= '<td>El rol ingresado es incorrecto o no existe</td>';
+						$bodyHtml .= '</tr>';
+					} else {
+						//Insertamos el usuario
+						$lastIdUser = gen_UsuarioModel::create
+		                    ([
+		                        'name' => $usuario["nombres"]." ".$usuario["apellidos"],
+								'user' => $usuario["usuario"],
+								'email' => $usuario["usuario"]."@ues.edu.sv",
+								'password' => "Egresado",
+								'primer_nombre' => $usuario["nombres"],
+								'segundo_nombre' => "",
+								'primer_apellido' => $usuario["apellidos"],
+								'segundo_apellido' => "",
+								'codigo_carnet' => $usuario["usuario"]  
+		                    ]);
+
+		                //ASIGNAMOS EL ROL RESPECTIVO
+		                $usuarioIngresado = User::find($lastIdUser->id);
+						$usuarioIngresado->assignRole($rol->id);
+						
+						$bodyHtml .= '<tr>';
+						$bodyHtml .= '<td>' . $usuario["usuario"] . '</td>';
+						$bodyHtml .= '<td>' . $usuario["nombres"] . ' ' . $usuario["apellidos"] . '</td>';
+						$bodyHtml .= '<td>' . $rol->name . '</td>';
+						$bodyHtml .= '<td><span class="badge badge-success">OK</span></td>';
+						$bodyHtml .= '<td>Usuario ingresado exitosamente</td>';
+						$bodyHtml .= '</tr>';
+					}
+
+				}
+
+			}
+	
+		}
+
+		return view('usuario.CargaUsuarios.index', compact('bodyHtml'));
+
+	}
 	public function storeUsuariosUesplay(Request $request) {
 
 		$validatedData = $request->validate([
@@ -262,5 +340,22 @@ class gen_UsuarioController extends Controller {
 	public function createUsuariosUesPlay() {
 		return view('uesplay.create');
 	}
-
+    function downloadPlantillaUesplay(Request $request){
+        $path= public_path().$_ENV['PATH_RECURSOS'].'temp-usuarios-uesplay.xlsx';
+        if (File::exists($path)){
+            return response()->download($path);
+        }else{
+            Session::flash('error','El documento no se encuentra disponible , es posible que haya sido  borrado');
+            return view('PerfilDocente.create');
+        }
+    }
+    public function downloadPlantillaSigpad(){
+        $path= public_path().$_ENV['PATH_RECURSOS'].'temp-usuarios-sigpad.xlsx';
+        if (File::exists($path)){
+            return response()->download($path);
+        }else{
+            Session::flash('error','El documento no se encuentra disponible , es posible que haya sido  borrado');
+            return view('PerfilDocente.create');
+        }
+    }
 }

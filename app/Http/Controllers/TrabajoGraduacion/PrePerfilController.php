@@ -158,9 +158,9 @@ class PrePerfilController extends Controller
         Storage::disk('Uploads')->put($nombre, File::get($file));
          //movemos el archivo a la ubicación correspondiente segun grupo y años
         if ($_ENV['SERVER'] =="win") {
-                $nuevaUbicacion=$anioGrupo.'/Grupo'.$numeroGrupo.'/PrePerfil/'.$nombre;
+        		$nuevaUbicacion=trim($anioGrupo.'\Grupo'.$numeroGrupo.'\PrePerfil\ ').$nombre;
              }else{
-                $nuevaUbicacion=$anioGrupo.'\Grupo'.$numeroGrupo.'\PrePerfil\ '.$nombre;
+                $nuevaUbicacion=$anioGrupo.'/Grupo'.$numeroGrupo.'/PrePerfil/'.$nombre;
              }
             
         Storage::disk('Uploads')->move($nombre, $nuevaUbicacion);

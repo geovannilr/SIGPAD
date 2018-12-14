@@ -58,60 +58,37 @@ class LogController extends Controller
             Session::flash('message-error', 'Usuario no se encuentra registrado.');
             return Redirect::to('login');
         }else{
-            $opciones = config('services.ldapues');
-            try{
-            //Bindeo() return TRUE/FALSE
-                $ldap = new Ldap($opciones);
-                $ldap -> bind($usuario, $contrasena);
+            $intentoLogin = Auth::attempt(['user'=>$usuario,'password'=>$contrasena]);
+            if ($intentoLogin) {
+                self::configuracionInicial();
+                return Redirect::to('/');
+            }else{
+                $opciones = config('services.ldapues');
+                try{
+                    //Bindeo() return TRUE/FALSE
+                    $ldap = new Ldap($opciones);
+                    $ldap -> bind($usuario, $contrasena);
 
-            //UpdatePassword() return TRUE/FALSE
-                $usuarioLocal = gen_UsuarioModel::where("user","=",$usuario)->first();
-                //$usuarioLocal = gen_UsuarioModel::find($usuarioLogin->id); //EJRG: No creo que ea necesario, basta con la línea de arriba
-                $usuarioLocal->password = $contrasena;
-                $usuarioLocal->save();
+                    //Borrar contrasenha original de memoria
+                    unset($contrasena);
 
-            //LoginAttempt() return redirect()
-                $intentoLogin = Auth::attempt(['user'=>$usuario,'password'=>$contrasena]);
-                if ($intentoLogin) {
-                    return Redirect::to('/');
-                }else{
-                    Session::flash('message-error', 'Usuario o Contraseña Incorrecta, intente nuevamente.');
-                    return Redirect::to('login');
-                }
-            }catch(\Exception $e){
-            //LoginAttempt() return redirect()
-                $intentoLogin = Auth::attempt(['user'=>$usuario,'password'=>$contrasena]);
-                if ($intentoLogin) {
-                     
-                    if (Auth::user()->isRole('docente_asesor')){
-                        //OBTENEMOS LOS GRUPOS QUE ESTA DIRIGIENDO COMO ASESOR
-                        $userLogin=Auth::user();
-                        $docente = pdg_dcn_docenteModel::where("id_gen_usuario","=",$userLogin->id)->first();
-                        $grupo = new pdg_gru_grupoModel();
-                        $grupos = $grupo->getGruposDocente($docente->id_pdg_dcn);
-                        $i=0;
-                        $misGrupos="";
-                        foreach ($grupos as $grupo) {
-                            if ($i==0) {
-                                $misGrupos.=$grupo->ID;
-                            }else{
-                                $misGrupos.=",".$grupo->ID;
-                            }
-                            $i=1;
-                        }
-                        if ($misGrupos=="") {
-                            session(['misGrupos' => "NA"]);
-                        }else{
-                            // GUARDAMOS EN UNA VARIABLE DE SESION LOS ID DE LOS GRUPOS QUE LE CORRESPONDEN COMO DOCENTE
-                            session(['misGrupos' => $misGrupos]);
-                        }
+                    //UpdatePassword() return TRUE/FALSE
+                    $usuarioLocal = gen_UsuarioModel::where("user","=",$usuario)->first();
+                    $contrasenaGenerica = gen_UsuarioModel::genericPassword(12);
+                    $usuarioLocal->password = $contrasenaGenerica;
+                    $usuarioLocal->save();
+
+                    //LoginAttempt() return redirect()
+                    $intentoLogin = Auth::attempt(['user'=>$usuario,'password'=>$contrasenaGenerica]);
+                    if ($intentoLogin) {
+                        self::configuracionInicial();
                         return Redirect::to('/');
                     }else{
-                        return Redirect::to('/');
+                        Session::flash('message-error', 'Problemas de conexión, intente nuevamente!');
+                        return Redirect::to('login');
                     }
-                    
-                }else{
-                    Session::flash('message-error', 'La contraseña es incorrecta. Vuelva a intentarlo.');
+                }catch(\Exception $e){
+                    Session::flash('message-error', 'Usuario o Contraseña Incorrecta, intente nuevamente.');
                     return Redirect::to('login');
                 }
             }
@@ -256,5 +233,31 @@ class LogController extends Controller
     {
         Auth::logout();
         return Redirect::to('login');
+    }
+
+    public function configuracionInicial(){
+        if (Auth::user()->isRole('docente_asesor')){
+            //OBTENEMOS LOS GRUPOS QUE ESTA DIRIGIENDO COMO ASESOR
+            $userLogin=Auth::user();
+            $docente = pdg_dcn_docenteModel::where("id_gen_usuario","=",$userLogin->id)->first();
+            $grupo = new pdg_gru_grupoModel();
+            $grupos = $grupo->getGruposDocente($docente->id_pdg_dcn);
+            $i=0;
+            $misGrupos="";
+            foreach ($grupos as $grupo) {
+                if ($i==0) {
+                    $misGrupos.=$grupo->ID;
+                }else{
+                    $misGrupos.=",".$grupo->ID;
+                }
+                $i=1;
+            }
+            if ($misGrupos=="") {
+                session(['misGrupos' => "NA"]);
+            }else{
+                // GUARDAMOS EN UNA VARIABLE DE SESION LOS ID DE LOS GRUPOS QUE LE CORRESPONDEN COMO DOCENTE
+                session(['misGrupos' => $misGrupos]);
+            }
+        }
     }
 }

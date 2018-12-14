@@ -18,6 +18,9 @@
 <script type="text/javascript">
   $( document ).ready(function() {
       $("table.display").DataTable({
+        language: {
+                url: 'es-ar.json' //Ubicacion del archivo con el json del idioma.
+        },
         dom: '<"top"l>frt<"bottom"Bip><"clear">',
         buttons: [
            {
@@ -142,7 +145,9 @@
   @endcan
 </div> -->
 <div class="row">
-  <div class="col-md-6">
+    @can('etapa.config')
+    @if($configura)
+  <div class="col-md-4">
     <div class="card text-black bg-secundary o-hidden h-100">
                 <div class="card-body">
                   <div class="card-body-icon">
@@ -158,7 +163,10 @@
                 </a>
               </div>
   </div>
-   <div class="col-md-6">
+    @endif
+    @endcan
+    @can('nota.create')
+   <div class="col-md-4">
     <div class="card text-black bg-secundary o-hidden h-100">
                 <div class="card-body">
                   <div class="card-body-icon">
@@ -166,7 +174,7 @@
                   </div>
                   <div class="mr-5">Notas</div>
                 </div>
-                <a class="card-footer text-black clearfix small z-1" href="{{route('createNotas',$id)}}">
+                <a class="card-footer text-black clearfix small z-1" href="javasript:void(0)" onclick="calificarEtapa({{$idGrupo}},{{$id}}); return false;">
                   <span class="float-left">Ingresar</span>
                   <span class="float-right">
                    <i class="fa fa-angle-right"></i>
@@ -174,15 +182,38 @@
                 </a>
               </div>
   </div>
+  @endcan
+  @can('etapa.aprobar')
+    @if($actual!=0)
+   <div class="col-md-4">
+    <div class="card text-black bg-secundary o-hidden h-100">
+                <div class="card-body">
+                  <div class="card-body-icon">
+                    <i class="fa fa-thumbs-up"></i>
+                  </div>
+                  <div class="mr-5">Aprobar Etapa<i class="btn btn-sm fa fa-info-circle" style="padding: 0; margin-left: 0em; font-size:12px; color: #17a2b8" onclick="showInfoAprb();"></i>
+                  </div>
+                </div>
+                <a class="card-footer text-black clearfix small z-1" data-toggle="modal"  href="javasript:void(0)" onclick="aprobarEtapaFrm({{$idGrupo}},{{$id}}); return false;"> <!--data-target="#modalAprobar"-->
+                  <span class="float-left">Realizar</span>
+                  <span class="float-right">
+                   <i class="fa fa-angle-right"></i>
+                  </span>
+                </a>
+              </div>
+  </div>
+    @endif
+      @endcan
 </div>
     <br>
     {!!$bodyHtml!!}
     <!-- Button trigger modal -->
 <!-- Modal -->
+@can('etapa.config')
 <div class="modal fade" id="modalConfig" tabindex="-1" role="dialog" aria-labelledby="modalConfig" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
-      <div class="modal-header breadcrumb">
+      <div class="modal-header breadcrumb" style="margin-bottom: 0px !important;">
         <h5>Configuración de Etapa Evaluativa</h5>
          
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -210,5 +241,40 @@
     </div>
   </div>
 </div>
-
+@endcan
+{!!Html::script('js/TrabajoGraduacion/etapaEvaluativa.js')!!}
+@can('etapa.aprobar')
+<!-- Modal APROBAR ETAPA -->
+<div class="modal fade" id="modalAprobar" tabindex="-1" role="dialog" aria-labelledby="modalAprobar" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header breadcrumb">
+        <h5>
+            Aprobar Etapa Evaluativa<i class="btn btn-sm fa fa-info-circle" style="padding: 0; margin-left: 0em; font-size:12px; color: #17a2b8" onclick="showInfoAprb();"></i>
+        </h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+    {!! Form:: open(['route'=>'aprobarEtapa','method'=>'POST', 'id'=>'formAprobar']) !!}
+      <div class="modal-body">
+          <div id="msgAprb"></div>
+          <input type="hidden" name="idEtapa" value="{{$id}}" />
+          <input type="hidden" name="idGrupo" value="{{$idGrupo}}" />
+      </div>
+      <div class="modal-footer">
+          @if($actual!=0)
+              <button type="button" class="btn btn-primary" onclick="confirmAprobarEtapa();" id="btnAprb">Aprobar</button>
+          @endif
+              <span class="button btn btn-secondary" data-dismiss="modal" aria-label="Close" id="btnCancel">Cancelar</span>
+      </div>
+    {!! Form:: close() !!}
+    </div>
+  </div>
+</div>
+<div id="infoAprb" style="display: none;">
+    Tenga en cuenta que para aprobar la etapa no es obligatorio haber añadido notas, únicamente es OBLIGATORIO que el grupo haya cargado, por lo menos, un archivo.
+</div>
+@endcan
+<input type="hidden" id="nomEtapa" value="{{$nombreEtapa}}" />
 @stop

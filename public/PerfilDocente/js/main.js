@@ -1,11 +1,12 @@
-var ip ="http://eisi.fia.ues.edu.sv/SIGPAD/public"; //quitar el localhost y poner la URL correcta antes del commit
+var ip =$('meta[name="current-url"]').attr('content');
+//console.log(ip);
 function getHistorialAcademico(idDcn){
 	$.ajax({
            type:'POST',
            url:ip+'/getHistorial',
            data:{'docente':idDcn},
            success:function(data){
-            console.log(data.length);
+            //console.log(data.length);
              var html = '<table class="table table-striped"><thead><tr><th scope="col">#</th><th scope="col">Cargo</th><th scope="col">Código</th><th scope="col">Materia</th><th scope="col">Ciclo</th><th scope="col">Año</th> </tr></thead><tbody>';
  
              for (var i = 0;i<data.length;i++) {
@@ -36,7 +37,7 @@ function getExperienciaDocente(idDcn){
            url:ip+'/getExperiencia',
            data:{'docente':idDcn},
            success:function(data){
-            console.log(data.length);
+            //console.log(data.length);
              var html = "";
              for (var i = 0;i<data.length;i++) {
            		html="";
@@ -53,7 +54,7 @@ function getExperienciaDocente(idDcn){
 
            },
     		error : function(xhr, status) {
-        		alert("Hubo un problema al momento de obetener los datos de Docente");
+        		alert("Hubo un problema al momento de obtener los datos de Docente");
         		
     		}
         });      
@@ -65,7 +66,7 @@ function getCertificacionesDocente(idDcn){
            url:ip+'/getCertificaciones',
            data:{'docente':idDcn},
            success:function(data){
-            console.log(data.length);
+            //console.log(data.length);
              var html = '<table class="table table-striped"><thead><tr><th scope="col">#</th><th scope="col">Nombre</th><th scope="col">Año</th><th scope="col">Institución</th><th scope="col">Idioma</th></tr></thead><tbody>';
  
              for (var i = 0;i<data.length;i++) {
@@ -95,7 +96,7 @@ function getSkillsDocente(idDcn){
            url:ip+'/getSkills',
            data:{'docente':idDcn},
            success:function(data){
-            console.log(data.length);
+            //console.log(data.length);
              var html = '<ul class="fa-ul mb-0">';
              for (var i = 0;i<data.length;i++) {
            		body="";
@@ -123,19 +124,18 @@ function getInformacionDocente(idDcn){
            success:function(data){
             var docente = data[0];
             var html = "";
-            html+=docente["primer_nombre"]+" ";
             html+='<span class="text-primary">';
-            html+=docente["primer_apellido"];
+            html+=docente["display_name"];
             html+='</span>';
             $("#nombreDocente").append(html);
             $("#descripcionDocente").append(docente["descripcionDocente"]);
             $("#correoDocente").append(docente["email"]);
             $("#cargoDocente").append(docente["nombre_cargo"]);
-            $("#profilFoto").append(docente["dcn_profileFoto"]);
-            $("#linkLinkedind").append(docente["link_linke"]);
-            $("#linkGit").append(docente["link_git"]);
-            $("#linkTw").append(docente["link_tw"]);
-            $("#linkFb").append(docente["link_fb"]);
+            $("#profileFoto").attr("src",ip+"/Uploads/PerfilDocente/"+docente["dcn_profileFoto"]);
+            $("#linkLinkedind_").attr("href",docente["link_linke"]);
+            $("#linkGit_").attr("href",docente["link_git"]);
+            $("#linkTw_").attr("href",docente["link_tw"]);
+            $("#linkFb_").attr("href",docente["link_fb"]);
 
 
             
@@ -150,210 +150,79 @@ function getInformacionDocente(idDcn){
 
 function getListadoDocente(idJornada){
   $.ajax({
-           type:'POST',
-           url:ip+'/getListadoDocentes',
-           data:{'jornada':idJornada},
-           success:function(data)
-           {
-                console.log(data);
-                 var html = '<table class="table"><tbody><tr>';
-                 var html2 = '<table class="table"><tbody><tr>';
-                 var contador1=1;
-                 var contador2=1;
-                 for (var i = 0;i<data.length;i++) {
-                
-                 if(data[i]['tipoJornada']==1) 
-                 {
-                      body="";
-                     
-                  //body+='<li><i class="fa-li fa fa-check"></i>'+data[i]['primer_nombre']+'</li>' + '<img class="img-circle" style="width: 100px;height:100px;" src= "'+data[i]['dcn_profileFoto']+' "></img>';
-                        body+='<td style="border: hidden">'+
-                                '<blockquote>'+
-                                '<a  href="'+ip+'/perfilDocente/'+data[i]['id_pdg_dcn']+'"  data-target="#myModal" target="myModal">'+ // data-toggle="modal" data-target=".bd-example-modal-lg" 
-                               ' <div class="row">'+
-                                          '<div class="col-sm-3 text-center">'+
-                                              
-                                                    '<img class="img-circle" src="'+data[i]['dcn_profileFoto']+' " style="width: 80px;height:80px;" > '+
-                                                    
-                                            '</div>'+
-                                            '<div class="col-sm-9">'+
-                                              '<p style="color:#DFC15E; ">'+data[i]['primer_nombre']+' '+data[i]['segundo_nombre'] +' '+data[i]['primer_apellido']+' '+data[i]['segundo_apellido']+'</p>'+
-                                              '<small>'+data[i]['nombre_cargo']+'</small>'+
-                                            '</div>'+
-                                            '</div>'+
-                                            '</a>'+
-                                        '</blockquote>'+
-                                      '</div>'+
-
-                                    '</td>  '
-
-                                    if((contador1%3)==0){
-
-                                      if(contador1==0){
-                                        contador1=contador1+1;
-                                      } else{
-                                        body+='</tr><tr>';
-                                        contador1=contador1+1;
-                                      }
-                                      
-                                    }
-                                    else{
-                                      contador1++;
-                                    }
-                                html+=body;
-
-                  }
-                  else
-                  {
-
-                        body2="";
-                  //body+='<li><i class="fa-li fa fa-check"></i>'+data[i]['primer_nombre']+'</li>' + '<img class="img-circle" style="width: 100px;height:100px;" src= "'+data[i]['dcn_profileFoto']+' "></img>';
-                        body2+='<td style="border: hidden">'+
-                                
-                                '<blockquote>'+
-                                '<a  href='+ip+'"/perfilDocente/'+data[i]['id_pdg_dcn']+'"  data-target="#myModal" target="myModal">'+ // data-toggle="modal" data-target=".bd-example-modal-lg" 
-                               ' <div class="row">'+
-                                          '<div class="col-sm-3 text-center">'+
-                                              
-                                                    '<img class="img-circle" src="'+data[i]['dcn_profileFoto']+' " style="width: 80px;height:80px;" > '+
-                                                    
-                                            '</div>'+
-                                            '<div class="col-sm-9">'+
-                                              '<p style="color:#DFC15E; ">'+data[i]['primer_nombre']+' '+data[i]['segundo_nombre'] +' '+data[i]['primer_apellido']+' '+data[i]['segundo_apellido']+'</p>'+
-                                              '<small>'+data[i]['nombre_cargo']+'</small>'+
-                                            '</div>'+
-                                            '</div>'+
-                                            '</a>'+
-                                        '</blockquote>'+
-                                      '</div>'+
-
-                                    '</td>  '
-
-                                    if((contador2%3)==0){
-
-                                      if(contador2==0){
-                                          contador2++;
-                                      } else{
-                                        contador2++;
-                                        body2+='</tr><tr>';
-                                      }
-                                      
-                                    }
-                                    else{
-                                      contador2++;
-                                    }
-                                html2+=body2;
-                  }
-                 }
-
-
-                //  html+=html2;
-                $("#seccionListado").append(html);
-                $("#seccionListado2").append(html2);
-           }, 
-        error : function(xhr, status) {
-            console("Hubo un problema al momento de obetener los datos de Docente");
-            
-        }
-        });      
-
-   // $.ajax({
-   //         type:'POST',
-   //         url:ip+'/getListadoDocentes',
-   //         data:{'jornada':2},
-   //         success:function(data)
-   //         {
-   //              console.log(data);
-   //               var html = '<table class="table"><tbody><tr>';
-   //               for (var i = 1;i<data.length+1;i++) {
-   //                body="";
-   //                //body+='<li><i class="fa-li fa fa-check"></i>'+data[i]['primer_nombre']+'</li>' + '<img class="img-circle" style="width: 100px;height:100px;" src= "'+data[i]['dcn_profileFoto']+' "></img>';
-   //               body+='<td style="border: hidden">'+
-
-   //               '<blockquote>'+
-   //                '<a  href="http://localhost/SIGPAD/public/perfilDocente/'+data[i-1]['id_pdg_dcn']+'"  data-target="#myModal" target="myModal">'+ // data-toggle="modal" data-target=".bd-example-modal-lg" 
-   //               ' <div class="row">'+
-   //                          '<div class="col-sm-3 text-center">'+
-                                
-   //                                    '<img class="img-circle" src="'+data[i-1]['dcn_profileFoto']+' " style="width: 80px;height:80px;" > '+
-                                      
-   //                            '</div>'+
-   //                            '<div class="col-sm-9">'+
-   //                              '<p style="color:#DFC15E; ">'+data[i-1]['primer_nombre']+' '+data[i-1]['segundo_nombre'] +' '+data[i-1]['primer_apellido']+' '+data[i-1]['segundo_apellido']+'</p>'+
-   //                              '<small>'+data[i-1]['nombre_cargo']+'</small>'+
-   //                            '</div>'+
-   //                            '</div>'+
-   //                            '</a>'+
-   //                        '</blockquote>'+
-   //                      '</div>'+
-
-   //                    '</td>  '
-
-   //                    if((i%3)==0){
-
-   //                      if(i==0){
-
-   //                      } else{
-   //                        body+='</tr><tr>';
-   //                      }
-                        
-   //                    }
-   //                html+=body;
-   //               }
-
-
-   //               html+='</ul>';
-   //              $("#seccionListado2").append(html);
-
-   //         }, 
-   //      error : function(xhr, status) {
-   //          console("Hubo un problema al momento de obetener los datos de Docente");
-            
-   //      }
-   //      });      
+      type:'POST',
+      url:ip+'/getListadoDocentes',
+      data:{'jornada':idJornada},
+      success:function(data){
+          console.log(data);
+          var seccionesHtmlString = armarSecciones(data);
+          var dataHtmlArray = distribuirData(data);
+          for(var m = 1; m<dataHtmlArray.length; m++){
+              seccionesHtmlString = seccionesHtmlString.replace('replaceable_'+m,dataHtmlArray[m]);
+          }
+          $("#divDataEmpleados").append(seccionesHtmlString);
+      }, error : function(xhr, status) {
+          console.log("Hubo un problema al momento de obetener los datos de Docente");
+      }
+  });
 }
 
-// function getListadoDocente(idJornada){
-//   $.ajax({
-//            type:'POST',
-//            url:ip+'/getListadoDocentes',
-//            data:{'jornada':idJornada},
-//            success:function(data)
-//            {
-//                 console.log(data);
-//                  var html = '<ul class="fa-ul mb-0">';
-//                  for (var i = 0;i<data.length;i++) {
-//                   body="";
-//                   //body+='<li><i class="fa-li fa fa-check"></i>'+data[i]['primer_nombre']+'</li>' + '<img class="img-circle" style="width: 100px;height:100px;" src= "'+data[i]['dcn_profileFoto']+' "></img>';
-//                  body+='<blockquote>'+
-//                   '<a  href="http://localhost/SIGPAD/public/perfilDocente/'+data[i]['id_pdg_dcn']+'"  data-target="#myModal" target="myModal">'+ // data-toggle="modal" data-target=".bd-example-modal-lg" 
-//                  ' <div class="row">'+
-//                             '<div class="col-sm-1 text-center">'+
-                                
-//                                       '<img class="img-circle" src="'+data[i]['dcn_profileFoto']+' " style="width: 80px;height:80px;" > '+
-                                      
-//                               '</div>'+
-//                               '<div class="col-sm-9">'+
-//                                 '<p style="color:#DFC15E; ">'+data[i]['primer_nombre']+' '+data[i]['segundo_nombre'] +' '+data[i]['primer_apellido']+' '+data[i]['segundo_apellido']+'</p>'+
-//                                 '<small>'+data[i]['nombre_cargo']+'</small>'+
-//                               '</div>'+
-//                               '</div>'+
-//                               '</a>'+
-//                           '</blockquote>'+
-//                         '</div>'
-//                   html+=body;
-//                  }
-
-
-//                  html+='</ul>';
-//                 $("#seccionListado").append(html);
-
-//            }, 
-//         error : function(xhr, status) {
-//             console("Hubo un problema al momento de obetener los datos de Docente");
-            
-//         }
-//         });      
-//}
+function armarSecciones(data){
+    var html = '';
+    var sections = [];
+    for(var i = 0; i<data.length; i++){
+        var currSec = parseInt(data[i]['tipoJornada']);
+        if(!sections.includes(currSec)){
+            sections.push(currSec);
+            var currTitle = data[i]['emp_clasif'];
+            html += '<section class="customSectionStyle" id="listado"> ' +
+                    '<div class="my-auto" id="seccionListado_' + currSec + '"> ' +
+                    '<span class="elementor-divider-separator"></span> ' +
+                    '<h2 class="mb-5 customSectionH2Title">' + currTitle + '</h2> ' +
+                    '<span class="elementor-divider-separator"></span> ' + 'replaceable_' + currSec +
+                    '</div></section><br/>';
+        }
+    }
+    return html;
+}
+function distribuirData(data) {
+    var sectionData = [];
+    var counters = [];
+    var rowFlags = [];
+    for(var i = 0; i<data.length; i++){
+        var cargo2 = data[i]['nombre_cargo2'];
+        var tpoPriv = parseInt(data[i]['perfilPrivado']);
+        var currSec = parseInt(data[i]['tipoJornada']);
+        var aux = parseInt(counters[currSec]);
+        var flag = rowFlags[currSec];
+        if(isNaN(aux)||aux===0){//primera
+            aux = 1;
+            flag = true;
+            sectionData[currSec] = '<table class="table"><tbody>';
+        }
+        sectionData[currSec] += (flag?'<tr>':'') +
+            '<td style="border: hidden"><blockquote>'+
+            (tpoPriv===1?'':'<a href="'+ip+'/perfilDocente/'+data[i]['id_pdg_dcn']+'"  data-target="#myModal" target="myModal">')+
+            '<div class="row"><div class="col-sm-3 text-center">'+
+            '<img class="img-circle" src="'+ip+'/Uploads/PerfilDocente/'+data[i]['dcn_profileFoto']+' " style="width: 80px;height:80px; object-fit: cover;" > '+
+            '</div><div class="col-sm-9">'+
+            '<p style="color:#DFC15E;">'+data[i]['display_name']+'</p>'+
+            '<small>'+data[i]['nombre_cargo']+ (cargo2===''?'':'&nbsp;&sol;&nbsp;<i>'+cargo2+'</i>')+'</small>'+
+            '</div></div></div>'+
+            (tpoPriv===1?'':'</a>')+
+            '</blockquote></td>';
+        rowFlags[currSec] = false;
+        if (aux%3==0){//tercera, sexta, novena, etc.
+            sectionData[currSec] += '</tr>';
+            rowFlags[currSec] = true;
+        }
+        counters[currSec] =  aux + 1;
+    }
+    for(var j = 1; j<counters.length; j++){
+        var flag = rowFlags[j];
+        sectionData[j] += (flag?'':'</tr>')+'</tbody></table>';
+    }
+    return sectionData;
+}
 
 	

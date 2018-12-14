@@ -22,6 +22,9 @@
       	});
 		
     	$("#listTable").DataTable({
+        language: {
+                url: 'es-ar.json' //Ubicacion del archivo con el json del idioma.
+        },
         dom: '<"top"l>frt<"bottom"Bip><"clear">',
         buttons: [
            {

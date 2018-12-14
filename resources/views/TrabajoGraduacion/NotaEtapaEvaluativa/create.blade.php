@@ -23,6 +23,27 @@
               </ul>
           </div>
         @endif
+        <div class="row">
+          <div class="form-group col-sm-1">
+              Descargar
+            {!! Form::open(['route'=>['plantillaNotasVariable'],'method'=>'POST','target' => '_blank']) !!}
+                  <div class="btn-group">
+                    <button type="submit" class="btn btn-dark"><i class="fa fa-download"></i></button>
+                  </div>
+                {!! Form:: close() !!}
+          </div>
+          <div class="form-group col-sm-6">
+            <p><h5>INDICACIONES GENERALES</h5></p>
+            <ul>
+              <li>Descargar el formato de subida de notas en el caso que no lo tenga.</li>
+              <li>Ingrese una nota por cada sub-etapa que usted configuro para dicha etapa anteriormente.</li>
+              <li>Se asignará una nota promedio de todas las sub-etapas como la nota del alumno.</li>
+              <li>Verificar que todos los campos solicitados esten llenos correctamente.</li>
+            </ul>
+          </div>
+          
+        </div>
+     
     		{!! Form:: open(['route'=>'enviarNotas','method'=>'POST', 'id'=>'formNotas','files'=>'true','enctype'=>'multipart/form-data']) !!}
     			@include('TrabajoGraduacion.NotaEtapaEvaluativa.forms.formCreate')
         <div class="row">

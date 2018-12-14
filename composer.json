@@ -13,7 +13,8 @@
         "laravel/tinker": "~1.0",
         "laravelcollective/html": "^5.4.0",
         "laraveles/spanish": "^1.0",
-        "zendframework/zend-ldap": "^2.10"
+        "zendframework/zend-ldap": "^2.10",
+        "barryvdh/laravel-dompdf": "0.8.2"
     },
     "require-dev": {
         "filp/whoops": "~2.0",

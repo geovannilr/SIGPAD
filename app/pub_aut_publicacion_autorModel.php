@@ -11,6 +11,7 @@ class pub_aut_publicacion_autorModel extends Model{
 		protected $fillable=
 		[
 			'id_pub',
+			'id_gen_int',
 			'nombres_pub_aut',
 			'apellidos_pub_aut'
 		];

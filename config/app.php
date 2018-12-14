@@ -167,6 +167,7 @@ return [
         Caffeinated\Shinobi\ShinobiServiceProvider::class,
         Laraveles\Spanish\SpanishServiceProvider::class,
         Maatwebsite\Excel\ExcelServiceProvider::class,
+        
 
         /*
          * Package Service Providers...

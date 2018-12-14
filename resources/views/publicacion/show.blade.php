@@ -85,7 +85,7 @@
                 <table class="table table-hover table-striped">
                   <th colspan="2" style="text-align: center;">Colaboradores</th>
                   @if ($colaboradores=="NA")
-                    <tr><td style="text-align: center;">NO SE HAN REGISTRADO COLABORADORES PARA ESTA PUBLCIACIÓN DE TRABAJO DE GRADUACIÓN</td></tr>
+                    <tr><td style="text-align: center;">NO SE HAN REGISTRADO COLABORADORES PARA ESTA PUBLICACIÓN DE TRABAJO DE GRADUACIÓN</td></tr>
                   @else
 	                   @foreach($colaboradores as $colaborador)
 	                   		<tr>
@@ -112,12 +112,7 @@
 		<h5 style="text-align: center; font-weight: bold"> RESUMEN  </h5>
 		<br>
 
-		<p class="text-center"> Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-		tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-		quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-		consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-		cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-		proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+		<p class="text-center"> {{$publicacion->resumen_pub}}</p>
       <br>
 
 

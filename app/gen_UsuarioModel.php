@@ -34,5 +34,16 @@ class gen_UsuarioModel extends Model
 			}
 
 		}
+
+		public static function genericPassword($length){
+            $keyspace = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+            $pieces = [];
+            $max = mb_strlen($keyspace, '8bit') - 1;
+            for ($i = 0; $i < $length; ++$i) {
+                $pieces []= $keyspace[random_int(0, $max)];
+            }
+            $password = implode('', $pieces);
+		    return $password;
+        }
 		
 }

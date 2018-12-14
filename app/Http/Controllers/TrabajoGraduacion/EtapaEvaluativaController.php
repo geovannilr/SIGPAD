@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Facades\Excel;
+use Monolog\Handler\ElasticSearchHandler;
 use Redirect;
 use Session;
 use \App\cat_eta_eva_etapa_evalutativaModel;
@@ -15,7 +16,9 @@ use \App\pdg_gru_grupoModel;
 use \App\pdg_not_cri_tra_nota_criterio_trabajoModel;
 use \App\pdg_ppe_pre_perfilModel;
 use \App\pdg_tra_gra_trabajo_graduacionModel;
-
+use \App\pdg_apr_eta_tra_aprobador_etapa_trabajoModel;
+use \App\pdg_eta_eva_tra_etapa_trabajoModel;
+use File;
 
 class EtapaEvaluativaController extends Controller {
 	public function __construct() {
@@ -81,8 +84,8 @@ class EtapaEvaluativaController extends Controller {
 				// NO CONFIGURADOS LOS DOCUMENTOS QUE SE VAN A REQUERIR EN UNA ETAPA EN ESPECIFICO
 				$documentos = "NA";
 				$bodyHtml = '<p class="text-center">NO SE HAN REGISTRADO DOCUMENTOS ASOCIADOS A ESTA ETAPA EVALUATIVA, CONSULTE AL ADMINISTRADOR<p>';
-				$nombreEtapa = "";
-				$ponderacion = "";
+//				$nombreEtapa = "";
+//				$ponderacion = "";
 			} else {
 				$nombreEtapa = $documentos[0]->nombre_cat_eta_eva;
 				$ponderacion = $documentos[0]->ponderacion_cat_eta_eva . '%';
@@ -275,7 +278,9 @@ class EtapaEvaluativaController extends Controller {
 
 				}
 			}
-			return view('TrabajoGraduacion.EtapaEvaluativa.show', compact('bodyHtml', 'nombreEtapa', 'ponderacion', 'id','idGrupo'));
+			$actual =  self::getIdEtapaActual($trabajoGraduacion->id_pdg_tra_gra);
+			$configura = ($trabajoGraduacion->id_cat_tpo_tra_gra!=1)&&(sizeof($documentos) != 0);
+			return view('TrabajoGraduacion.EtapaEvaluativa.show', compact('bodyHtml', 'nombreEtapa', 'ponderacion', 'id','idGrupo','actual','configura'));
 			//return $bodyHtml;
 		
 
@@ -286,7 +291,7 @@ class EtapaEvaluativaController extends Controller {
 		$trabajoGraduacion = pdg_tra_gra_trabajo_graduacionModel::where('id_pdg_gru', '=',$request['idGrupo'])->first();
 		$resultado = $trabajoGraduacion->updateEntregablesEtapaGrupo($request["cantidadEntregables"],$trabajoGraduacion->id_pdg_tra_gra, $request["idEtapa"]);
 		Session::flash('message', 'Entregables por Etapa Modificado con éxito!');
-		return Redirect::to('etapaEvaluativa/' . $request['idEtapa']."/".$request['idGrupo']);
+		return Redirect::to('detalleEtapa/' . $request['idEtapa']."/".$request['idGrupo']);
 	}
 	public function createNotas($idEtapa) {
 		//VERIFICAMOS SI EXISTEN EN LA BASE DE DATOS ESOS ID
@@ -365,30 +370,36 @@ class EtapaEvaluativaController extends Controller {
 							$idEstGrupo = $est->id_pdg_gru_est;
 						}
 						if ($idEstGrupo != "NA") {
-							$nota = pdg_not_cri_tra_nota_criterio_trabajoModel::where("id_pdg_gru_est","=",$idEstGrupo)->get();
-							if (sizeof($nota)!=0) {
+							//$nota = pdg_not_cri_tra_nota_criterio_trabajoModel::where("id_pdg_gru_est","=",$idEstGrupo)->get();
+							$evaluado= pdg_not_cri_tra_nota_criterio_trabajoModel::verificarNotaAlumno($idEtapa,$idEstGrupo); // NOS TRAE EL CAMPO SI YA ESTA EVALUADO
+							$nota=pdg_not_cri_tra_nota_criterio_trabajoModel::find($evaluado->idNota);
+							$nota->nota_pdg_not_cri_tra = $alumno ["nota"];
+							$nota->evaluado_pdg_not_cri_tra = 1; //YA SE LLENO
+							$nota->save();
+							if ($evaluado->yaEvaluado==1) {
+
 								$bodyHtml .= '<tr>';
 								$bodyHtml .= '<td>' . $alumno ["carnet"] . '</td>';
 								$bodyHtml .= '<td>' . $nombreEstudiante . '</td>';
 								$bodyHtml .= '<td>' . $alumno ["nota"] . '</td>';
 								$bodyHtml .= '<td><span class="badge badge-warning">Actualizado</span></td>';
-								$bodyHtml .= '<td>Se actualizó la nota de esta etapa para el alumno.</td>';
+								$bodyHtml .= '<td>La nota se actualizó exitosamente.</td>';
 								$bodyHtml .= '</tr>';
 							}else{
-								$lastId = pdg_not_cri_tra_nota_criterio_trabajoModel::create
+								/*$lastId = pdg_not_cri_tra_nota_criterio_trabajoModel::create
 								([
 								'nota_pdg_not_cri_tra' => $row["nota"],
 								'id_cat_cri_eva' => 1,
 								'id_pdg_tra_gra' => $idTraGra,
 								'id_pdg_gru_est' => $idEstGrupo,
-								]);
+								]);*/
 
 								$bodyHtml .= '<tr>';
 								$bodyHtml .= '<td>' . $alumno ["carnet"] . '</td>';
 								$bodyHtml .= '<td>' . $nombreEstudiante . '</td>';
 								$bodyHtml .= '<td>' . $alumno ["nota"] . '</td>';
 								$bodyHtml .= '<td><span class="badge badge-success">OK</span></td>';
-								$bodyHtml .= '<td>La nota se ingreso exitosamente.</td>';
+								$bodyHtml .= '<td>La nota se ingresó exitosamente.</td>';
 								$bodyHtml .= '</tr>';
 							}
 							
@@ -427,7 +438,7 @@ class EtapaEvaluativaController extends Controller {
 			}
 			
 		}
-		return view('TrabajoGraduacion.NotaEtapaEvaluativa.index', compact('bodyHtml','etapa',"nombreGrupo"));
+		return view('TrabajoGraduacion.NotaEtapaEvaluativa.index', compact('bodyHtml','etapa',"nombreGrupo",'idGrupo'));
 
 	}
 	public function verificarGrupo($carnet) {
@@ -435,4 +446,109 @@ class EtapaEvaluativaController extends Controller {
 		$respuesta = $estudiante->getGrupoCarnet($carnet);
 		return $respuesta;
 	}
+    public function calificarEtapa(Request $request){
+        $idGrupo = $request['grupo'];
+        $idEtaEva = $request['etapa'];
+
+        $criterios = pdg_not_cri_tra_nota_criterio_trabajoModel::getCriteriosEtapa($idGrupo,$idEtaEva);
+        $notas = pdg_not_cri_tra_nota_criterio_trabajoModel::getNotasEtapa($idGrupo,$idEtaEva);
+        $grupo = pdg_gru_grupoModel::find($idGrupo);
+        $etapa = cat_eta_eva_etapa_evalutativaModel::find($idEtaEva);
+        $subida = ($grupo->relacion_gru_tdg->id_cat_tpo_tra_gra!=1);  // 1-Tipo clásico de trabajo de graduación 2-Variable
+        //$subida = true; PARA PRUEBAS CON GRUPOS QUE NO SEAN DE TIPO VARIABLE!!!!!!!!!!!!
+        if (empty($grupo->id_pdg_gru) || empty($etapa->id_cat_eta_eva)){
+            return view('error');
+        }
+        return view('TrabajoGraduacion.NotaEtapaEvaluativa.list',
+            compact('criterios', 'notas', 'grupo','etapa', 'subida')
+        );
+    }
+    public function updateNotas(Request $request){
+        $errorCode = -1;
+        $errorMessage = "No se procesaron los datos";
+        try{
+            $idGru = $request['idGru'];
+            $idEtaEva = $request['idEtaEva'];
+            $notas = $request['notas'];
+            $errorCode = pdg_not_cri_tra_nota_criterio_trabajoModel::bulkUpdateNotas($idGru,$idEtaEva,$notas);
+            $errorMessage = "¡Notas del grupo GRUPO-04 guardadas éxitosamente!";
+            $info = $notas;
+        }catch (Exception $exception){
+            $info = $exception->getMessage();
+            $errorCode = 1;
+            $errorMessage = "Su solicitud no pudo ser procesada, intente más tarde.";
+        }
+        return response()->json(['errorCode'=>$errorCode,'errorMessage'=>$errorMessage,'info'=>$info]);
+    }
+	
+	public function aprobarEtapa(Request $request){
+        $idGrupo=$request['idGrupo'];
+        $idEtapa =$request['idEtapa'];
+
+        $msgType = "error";
+
+    	$trabajoGraduacion = pdg_tra_gra_trabajo_graduacionModel::where('id_pdg_gru', '=',$idGrupo)->first();
+        $idEtaActual = self::getIdEtapaActual($trabajoGraduacion->id_pdg_tra_gra);
+
+        if (intval($idEtapa)==$idEtaActual){
+            $resultadoAvance = pdg_tra_gra_trabajo_graduacionModel::avanzarProceso($trabajoGraduacion->id_pdg_tra_gra);
+            if($resultadoAvance->p_result == 0){
+                $msgType = "success";
+                $msg = "Etapa aprobada éxitosamente!";
+            }else{
+                $msg = "Error al intentar aprobar la etapa";
+            }
+        }else{
+            $msg = "No puede aprobar esta etapa, no es la etapa actual.";
+        }
+        Session::flash($msgType,$msg);
+        return Redirect::to('detalleEtapa/'.$idEtapa.'/'.$idGrupo);
+    }
+
+    public function dataAprbEta($idGrupo,$idEtapa){
+        $traGra = pdg_tra_gra_trabajo_graduacionModel::where('id_pdg_gru', '=',$idGrupo)->first();
+
+        $etapa = pdg_apr_eta_tra_aprobador_etapa_trabajoModel::getEtapa($traGra->id_pdg_tra_gra,pdg_apr_eta_tra_aprobador_etapa_trabajoModel::T_BUSQ_ACTUAL);
+        $etapaSig = pdg_apr_eta_tra_aprobador_etapa_trabajoModel::getEtapa($traGra->id_pdg_tra_gra,pdg_apr_eta_tra_aprobador_etapa_trabajoModel::T_BUSQ_SIGUIENTE);
+
+        $coinciden = false;
+
+        if(!empty($etapa->id_cat_eta_eva)){
+            if($etapa->id_cat_eta_eva!=999){//Valor etapa de cierre
+                $cantArch = pdg_eta_eva_tra_etapa_trabajoModel::contarArchivos($traGra->id_pdg_tra_gra,$idEtapa);
+                if($etapaSig!=null){
+                    $coinciden = (intval($idEtapa) === $etapa->id_cat_eta_eva);
+                    $message = !$coinciden ? "No puede aprobar esta etapa.<br>El proceso se encuentra en <b>".$etapa->nombre_cat_eta_eva."</b>, verifique el estado de dicha etapa primero.":
+                        ($cantArch>0 ? "Aprobar esta etapa, habilitará la subida de archivos, calficaciones y configuraciones de la siguiente etapa: <b>".$etapaSig->nombre_cat_eta_eva.".</b><br>¿Desea continuar?"
+                                : "<i>Para poder aprobar la etapa, el grupo debe subir al menos un documento.</i>");
+                    $coinciden = $coinciden&&$cantArch>0;
+                }else{
+                    $coinciden = $cantArch>0;
+                    $message = $coinciden?"Aprobar esta etapa habilitará la etapa de <b>Cierre de Trabajo de Graduación</b>, los estudiantes podrán cargar los documentos requeridos para la Biblioteca de Trabajos de Graduación<br>".
+                        "<i>Tenga en cuenta que tiene que revisar y aprobar esos documentos para dar por finalizado el Proceso de Trabajo de Graduación.</i>":"<i>Para poder aprobar la etapa, el grupo debe subir al menos un documento.</i>";
+                }
+            }else{
+                $message = "El proceso se encuentra en etapa de <b>Cierre de Trabajo de Graduación</b>, consulte la opción en el Dashboard";
+            }
+        }else{
+            $message = "Esta acción está deshabilitada debido el avance actual del Trabajo de Graduación.";
+        }
+	    return response()->json(['success'=>$coinciden,'msg'=>$message]);
+    }
+
+    public function getIdEtapaActual($idTraGra){
+        $etapaActual = pdg_apr_eta_tra_aprobador_etapa_trabajoModel::getEtapa($idTraGra,pdg_apr_eta_tra_aprobador_etapa_trabajoModel::T_BUSQ_ACTUAL);
+        $actual = empty($etapaActual->id_cat_eta_eva) ? 0 : $etapaActual->id_cat_eta_eva;
+        return $actual;
+    }
+
+    public function downloadPlantillaNotasVariable(){
+        $path= public_path().$_ENV['PATH_RECURSOS'].'temp-subida-notas.xlsx';
+        if (File::exists($path)){
+            return response()->download($path);
+        }else{
+            Session::flash('error','El documento no se encuentra disponible , es posible que haya sido  borrado');
+            return view('PerfilDocente.create');
+        }
+    }
 }

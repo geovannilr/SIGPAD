@@ -18,6 +18,9 @@
 <script type="text/javascript">
 	$( document ).ready(function() {
     	$("#listTable").DataTable({
+    	language: {
+                url: 'es-ar.json' //Ubicacion del archivo con el json del idioma.
+        },
         dom: '<"top"l>frt<"bottom"Bip><"clear">',
         buttons: [
            {
@@ -128,7 +131,7 @@
 </script>
 		<ol class="breadcrumb" style="text-align: center; margin-top: 1em">
 	        <li class="breadcrumb-item"  style="text-align: center;">
-	          <h5  style="text-align: center;"">  <a href="{{ redirect()->getUrlGenerator()->previous() }}" style="margin-left: 0em"><i class="fa fa-arrow-left fa-lg" style="z-index: 1;margin-top: 0em;margin-right: 0.5em; color: black"></i></a>     Perfil</h5>
+	          <h5  style="text-align: center;"">  <a href="{{ redirect()->getUrlGenerator()->previous() }}" style="margin-left: 0em"><i class="fa fa-arrow-left fa-lg" style="z-index: 1;margin-top: 0em;margin-right: 0.5em; color: black"></i></a>Perfil</h5>
 	        </li>
 	        @if(isset($numero))
 				 <li class="breadcrumb-item active" >Grupo {{$numero}} </li>
@@ -150,8 +153,6 @@
 			   </div>
 			  @endif			 
 		</div> 
-
-
 		<br>
 		
 	<!-- 	<br>
@@ -203,7 +204,9 @@
 								<span class="badge badge-success">{{ $perfil->categoriaEstado->nombre_cat_sta }}</span>&nbsp;
 							@else
 								@if($perfil->id_cat_sta == "11" )
-									<span class="badge badge-danger">{{ $perfil->categoriaEstado->nombre_cat_sta }}</span>&nbsp;	
+									<span class="badge badge-danger">{{ $perfil->categoriaEstado->nombre_cat_sta }}</span>&nbsp;
+								@else 
+									<span class="badge badge-info">{{ $perfil->categoriaEstado->nombre_cat_sta }}</span>&nbsp;	
 								@endif
 							@endif
 							
@@ -215,7 +218,7 @@
 								
 								</td>
 						@endcan
-						@can('prePerfil.destroy')
+						@can('perfil.destroy')
 							<td style="text-align: center;">
 								{!! Form::open(['route'=>['perfil.destroy',$perfil->id_pdg_per],'method'=>'DELETE','class' => 'deleteButton']) !!}
 							 		<div class="btn-group">

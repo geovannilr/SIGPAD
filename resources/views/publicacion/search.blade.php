@@ -49,4 +49,19 @@
         <br>
         <br>
         <div id="resultadoBusqueda"></div>
+		<div id="divDownloadFrm" style="visibility: hidden;">
+			{!! Form::open(['route'=>['downloadDocumentoPublicacion'],'method'=>'POST', 'id' => 'downloadFrm', 'target' => '_blank']) !!}
+				<input class="form-control" id="idPubArc" name="archivo" type="hidden" value="-1">
+			{!! Form:: close() !!}
+		</div>
+		<script type="text/javascript">
+			function downloadDocument(id){
+			    if(id!==-1){
+			        $("#idPubArc").val(id);
+			        $("#downloadFrm").submit();
+				}else{
+                    swal("","No puedes descargar el archivo todavía","warning");
+				}
+			}
+		</script>
 @stop
