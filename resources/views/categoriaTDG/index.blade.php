@@ -23,28 +23,28 @@
            {
                 extend: 'excelHtml5',
                 exportOptions: {
-                    columns: [ 0,1,2,3]
+                    columns: [0]
                 },
                 title: 'Listado de Categorías'
             },
             {
                 extend: 'pdfHtml5',
                 exportOptions: {
-                    columns: [ 0,1,2,3]
+                    columns: [ 0]
                 },
                 title: 'Listado de Categorías'
             },
              {
                 extend: 'csvHtml5',
                 exportOptions: {
-                    columns: [ 0,1,2,3]
+                    columns: [0]
                 },
                 title: 'Listado de Categorías'
             },
             {
                 extend: 'print',
                 exportOptions: {
-                    columns: [ 0,1,2,3]
+                    columns: [ 0]
                 },
                 title: 'Listado de Categorías'
             }
@@ -56,14 +56,14 @@
                 type: 'column'
             }
         },
-        order: [ 1, 'asc' ],
+        order: [ 0, 'asc' ],
     	});
 	});
 	
 </script>
 		<ol class="breadcrumb"  style="text-align: center; margin-top: 1em">
 	        <li class="breadcrumb-item">
-	          <h5><a href="{{ redirect()->getUrlGenerator()->previous() }}" style="margin-left: 0em"><i class="fa fa-arrow-left fa-lg" style="z-index: 1;margin-top: 0em;margin-right: 0.5em; color: black"></i></a>     CATEGORIAS DE TDG</h5>
+	          <h5><a href="{{ redirect()->getUrlGenerator()->previous() }}" style="margin-left: 0em"><i class="fa fa-arrow-left fa-lg" style="z-index: 1;margin-top: 0em;margin-right: 0.5em; color: black"></i></a>CATEGORIAS DE TDG</h5>
 	        </li>
 	        <li class="breadcrumb-item active">Listado de Categorías de Trabajo de Graduación</li>
 		</ol>
