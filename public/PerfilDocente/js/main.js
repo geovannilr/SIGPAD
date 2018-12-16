@@ -198,29 +198,30 @@ function distribuirData(data) {
         if(isNaN(aux)||aux===0){//primera
             aux = 1;
             flag = true;
-            sectionData[currSec] = '<table class="table"><tbody>';
+            sectionData[currSec]="";
+            //sectionData[currSec] = '<table class="table"><tbody>';
         }
-        sectionData[currSec] += (flag?'<tr>':'') +
-            '<td style="border: hidden"><blockquote>'+
+        sectionData[currSec] += (flag?'<div class="row">':'') +
+            '<div class="col-md-4"><blockquote style ="border-left:none;">'+
             (tpoPriv===1?'':'<a href="'+ip+'/perfilDocente/'+data[i]['id_pdg_dcn']+'"  data-target="#myModal" target="myModal">')+
-            '<div class="row"><div class="col-sm-3 text-center">'+
-            '<img class="img-circle" src="'+ip+'/Uploads/PerfilDocente/'+data[i]['dcn_profileFoto']+' " style="width: 80px;height:80px; object-fit: cover;" > '+
-            '</div><div class="col-sm-9">'+
+            '<div class="col-md-4 col-lg-3 col-5  col-sm-3 text-center">'+
+            '<img class="img-circle img-fluid" src="'+ip+'/Uploads/PerfilDocente/'+data[i]['dcn_profileFoto']+' " style=" object-fit: cover;" > '+
+            '</div><div class="col-md-8 col-7 col-sm-9 col-lg-9">'+
             '<p style="color:#DFC15E;">'+data[i]['display_name']+'</p>'+
             '<small>'+data[i]['nombre_cargo']+ (cargo2===''?'':'&nbsp;&sol;&nbsp;<i>'+cargo2+'</i>')+'</small>'+
-            '</div></div></div>'+
+            '</div>'+
             (tpoPriv===1?'':'</a>')+
-            '</blockquote></td>';
+            '</blockquote></div>';
         rowFlags[currSec] = false;
         if (aux%3==0){//tercera, sexta, novena, etc.
-            sectionData[currSec] += '</tr>';
+            sectionData[currSec] += '</div><br><br>';
             rowFlags[currSec] = true;
         }
         counters[currSec] =  aux + 1;
     }
     for(var j = 1; j<counters.length; j++){
         var flag = rowFlags[j];
-        sectionData[j] += (flag?'':'</tr>')+'</tbody></table>';
+        //sectionData[j] += (flag?'':'</tr>')+'</tbody></table>';
     }
     return sectionData;
 }

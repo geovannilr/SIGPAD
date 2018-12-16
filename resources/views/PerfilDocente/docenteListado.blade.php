@@ -36,7 +36,7 @@
 
 <body id="page-top" style="background-color: #ffffff">
 
-<div id="divDataEmpleados"></div>
+<div id="divDataEmpleados" ></div>
 
 <div class="modal fade" id="myModal">
     <div class="modal-dialog">
