@@ -25,12 +25,18 @@
      {!!Html::style('PerfilDocente/css/resume.css')!!}
    <!-- Bootstrap core CSS -->
     <style type="text/css">
+      
       .customSectionH2Title{
         margin-top: 1em;margin-bottom: 1em;color: #212656  ; text-align: center;  font-family: 'Segoe UI'; font-size: 35px; text-transform: uppercase; letter-spacing: -2px;
       }
       .customSectionStyle{
         background-color: #ffffff; height: 100%; width: 100%;
       }
+      #imgPerfil {
+        width: 80px;
+        height: 80px;
+      }
+     
     </style>
   </head>
 
