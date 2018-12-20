@@ -74,9 +74,8 @@ class HistorialAcademicoController extends Controller
                         'descripcion_adicional'     => $request['descripcion_adicional']
                         
                     ]);
-
+       Session::flash('apartado','2');            
        Session::flash('message','Registro de historial académico realizado correctamente!');
-       Session::flash('apartado','2');
        return Redirect::to('DashboardPerfilDocente/');                     
     }
 
@@ -97,10 +96,21 @@ class HistorialAcademicoController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function edit($id){
+
         $materias = cat_mat_materiaModel::pluck('nombre_mat','id_cat_mat');
         $cargos = cat_car_cargo_eisiModel::pluck('nombre_cargo','id_cat_car');
         $academico = dcn_his_historial_academicoModel::find($id);
-        return view('PerfilDocente.Catalogos.Academico.edit',compact('materias','cargos','academico'));
+        $userLogin = Auth::user();
+        $docente = pdg_dcn_docenteModel::where("id_gen_usuario","=",$userLogin->id)->first();
+        $idDocente = $docente->id_pdg_dcn; 
+        if (empty($academico->id_dcn_his)){
+           return Redirect::to('/');     
+        }else if ($idDocente != $academico->id_pdg_dcn) {
+           return Redirect::to('/');  
+        }else{
+            return view('PerfilDocente.Catalogos.Academico.edit',compact('materias','cargos','academico'));
+        }
+        
     }
 
     /**
@@ -132,8 +142,8 @@ class HistorialAcademicoController extends Controller
         $academico -> anio = $request['anio'];
         $academico -> descripcion_adicional = $request['descripcion_adicional'];
         $academico->save();
-        Session::flash('message','Actualización  de historial académico realizado correctamente!');
         Session::flash('apartado','2');
+        Session::flash('message','Actualización  de historial académico realizado correctamente!');
        return Redirect::to('DashboardPerfilDocente'); 
     }
 

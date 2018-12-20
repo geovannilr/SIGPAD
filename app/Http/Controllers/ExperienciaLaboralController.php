@@ -43,7 +43,6 @@ class ExperienciaLaboralController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request){
-
         $validatedData = $request->validate(
             [
                 'lugar_trabajo_dcn_exp' => 'required',
@@ -73,8 +72,8 @@ class ExperienciaLaboralController extends Controller
                 'id_pdg_dcn'            => $idDocente  
                         
             ]);
-        Session::flash('message','Registro de experiencia laboral realizado correctamente!');
         Session::flash('apartado','3');
+        Session::flash('message','Registro de experiencia laboral realizado correctamente!');
         return Redirect::to('DashboardPerfilDocente');    
     }
 
@@ -99,7 +98,17 @@ class ExperienciaLaboralController extends Controller
     {
         $idiomas = cat_idi_idiomaModel::pluck('nombre_cat_idi','id_cat_idi');
         $laboral = dcn_exp_experienciaModel::find($id);
-        return view('PerfilDocente.Catalogos.Laboral.edit',compact('idiomas','laboral'));
+        $userLogin = Auth::user();
+        $docente = pdg_dcn_docenteModel::where("id_gen_usuario","=",$userLogin->id)->first();
+        $idDocente = $docente->id_pdg_dcn;
+        if (empty($laboral->id_dcn_exp)){
+           return Redirect::to('/');     
+        }else if ($idDocente != $laboral->id_pdg_dcn) {
+           return Redirect::to('/');  
+        }else{
+            return view('PerfilDocente.Catalogos.Laboral.edit',compact('idiomas','laboral'));
+        }
+        
     }
 
     /**
@@ -133,8 +142,8 @@ class ExperienciaLaboralController extends Controller
          $laboral->id_cat_idi = $request['id_cat_idi'];
          $laboral->descripcion_dcn_exp = $request['descripcion_dcn_exp'];
          $laboral->save();
-         Session::flash('message','Actualización  de registro de experiencia laboral realizado correctamente!');
          Session::flash('apartado','3');
+         Session::flash('message','Actualización  de registro de experiencia laboral realizado correctamente!');
          return Redirect::to('DashboardPerfilDocente');
     }
 

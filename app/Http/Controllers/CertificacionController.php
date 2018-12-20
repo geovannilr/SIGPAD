@@ -69,8 +69,8 @@ class CertificacionController extends Controller
                         'id_cat_idi'                    => $request["id_cat_idi"],
                         'id_dcn'                        => $idDocente               
                     ]);
-        Session::flash('message','Registro de certificaciones realizado correctamente!');
         Session::flash('apartado','4');
+        Session::flash('message','Registro de certificaciones realizado correctamente!');
         return Redirect::to('DashboardPerfilDocente');    
     }
 
@@ -94,7 +94,17 @@ class CertificacionController extends Controller
     public function edit($id){
         $idiomas = cat_idi_idiomaModel::pluck('nombre_cat_idi','id_cat_idi');
         $certificacion = dcn_cer_certificacionesModel::find($id);
-        return view('PerfilDocente.Catalogos.Certificaciones.edit',compact('idiomas','certificacion'));
+        $userLogin = Auth::user();
+        $docente = pdg_dcn_docenteModel::where("id_gen_usuario","=",$userLogin->id)->first();
+        $idDocente = $docente->id_pdg_dcn;
+        if (empty($certificacion->id_dcn_cer)){
+           return Redirect::to('/');     
+        }else if ($idDocente != $certificacion->id_dcn) {
+           return Redirect::to('/');  
+        }else{
+            return view('PerfilDocente.Catalogos.Certificaciones.edit',compact('idiomas','certificacion'));
+        }
+        
     }
 
     /**
@@ -129,9 +139,8 @@ class CertificacionController extends Controller
         $certificacion ->institucion_dcn_cer = $request["institucion_dcn_cer"];
         $certificacion ->id_cat_idi = $request["id_cat_idi"];
         $certificacion->save();
-        
-        Session::flash('message','Registro de certificaciones actulizado correctamente!');
         Session::flash('apartado','4');
+        Session::flash('message','Registro de certificaciones actulizado correctamente!');
         return Redirect::to('DashboardPerfilDocente');     
     }
 
