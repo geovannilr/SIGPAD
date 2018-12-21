@@ -315,16 +315,20 @@ class GestionDocenteController extends Controller
         return view('PerfilDocente.listadoDocentes',compact('docentes'));
     }
     
-    public function edit($id){
-        if(!self::validaPermiso('gestionDocente.edit')){
-            Session::flash('message-error', 'No tiene permisos para acceder a esta opción');
-            return  view('template');
-        }
+      public function edit($id){
+          if(!self::validaPermiso('gestionDocente.edit')){
+              Session::flash('message-error', 'No tiene permisos para acceder a esta opción');
+             return Redirect::to('/'); 
+      }
       $docente = pdg_dcn_docenteModel::find($id);
+      if (empty($docente->id_pdg_dcn)) {
+        return Redirect::to('/'); 
+      }
       $cargos = cat_car_cargo_eisiModel::all();
       $bodySelectPrincipal="";
       $bodySelectSecundario="";
       $bodySelectJornada="";
+      $bodySelectDisponibilidad = "";
        foreach ($cargos as $principal) {
             if ($principal->id_cat_car == $docente->id_cargo_actual) {
                  $bodySelectPrincipal.='<option value="'.$principal->id_cat_car.'" selected="selected">
@@ -376,7 +380,17 @@ class GestionDocenteController extends Controller
                   <option value="2">Tiempo Parcial</option>
                   <option value="3">Servicio Profesional</option>';
        }
-      return view('PerfilDocente.edit',compact('docente','bodySelectPrincipal','bodySelectSecundario','bodySelectJornada'));
+
+       if ($docente->activo == 1) {
+          $bodySelectDisponibilidad ='
+                  <option value="1" selected="selected">Activo</option>
+                  <option value="0">Inactivo</option>';
+       }else{
+        $bodySelectDisponibilidad ='
+                  <option value="1">Activo</option>
+                  <option value="0" selected="selected">Inactivo</option>';
+       }
+      return view('PerfilDocente.edit',compact('docente','bodySelectPrincipal','bodySelectSecundario','bodySelectJornada','bodySelectDisponibilidad'));
     }
     public function updateDocente(Request $request){
         if(!self::validaPermiso('gestionDocente.edit')){
@@ -387,12 +401,15 @@ class GestionDocenteController extends Controller
             [
                 'docente' => 'required',
                 'cargoPrincipal' => 'required',
-                'jornada' => 'required'
+                'jornada' => 'required',
+                'disponibilidad' => 'required'
+                
             ],
             [
                 'docente.required' => 'El docente es obligatorio',
                 'cargoPrincipal.required' => 'Debe seleccionar un cargo principal.',
-                'jornada.required' => 'Debe seleccionar una jornada'
+                'jornada.required' => 'Debe seleccionar una jornada',
+                'disponibilidad.required' => 'Debe seleccionar la disponibilidad'
             ]
         );
        $docente = pdg_dcn_docenteModel::find($request['docente']);
@@ -406,6 +423,7 @@ class GestionDocenteController extends Controller
            $docente->id_segundo_cargo = null;
        }
        $docente->tipoJornada        = $request['jornada'];
+       $docente->activo             = $request['disponibilidad'];
        $docente->save();
       Session::flash('message','Actualización  de información de Docente realizada con éxito.');
       return Redirect::to('listadoDocentes'); 
