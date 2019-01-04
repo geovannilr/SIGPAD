@@ -69,40 +69,91 @@
 	        </li>
 	        <li class="breadcrumb-item active">Mis Grupos</li>
 		</ol>
-	
-		<br>
-  		<div class="table-responsive">
-  			<table class="table table-hover table-striped  display" id="listTable">
+	   <ul class="nav nav-tabs" id="tabGrupos" role="tablist">
+      <li class="nav-item">
+        <a class="nav-link active" id="activos-tab" data-toggle="tab" href="#activos" role="tab" aria-controls="activos" aria-selected="true">Activos</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" id="finalizados-tab" data-toggle="tab" href="#finalizados" role="tab" aria-controls="finalizados" aria-selected="false">Finalizados</a>
+      </li>
+    </ul>
+<div class="tab-content" id="myTabContent">
+  <div class="tab-pane fade show active" id="activos" role="tabpanel" aria-labelledby="activos-tab">
+     <br><br>
+    <div class="table-responsive">
+        <table class="table table-hover table-striped  display" id="listTable">
 
-  				<thead>
-					<th>Número</th>
-					<th>Líder</th>
-					<th>Cantidad de Estudiantes</th>
+          <thead>
+          <th>Número</th>
+          <th>Líder</th>
+          <th>Cantidad de Estudiantes</th>
           <th>Estado</th>
-					<th>Dashboard</th>
-  				</thead>
-  				<tbody>
+          <th>Dashboard</th>
+          </thead>
+          <tbody>
 
-  				@foreach($grupos as $grupo)
-  						<tr>
-						<td>{{ $grupo->numeroGrupo }}</td>
-						<td>
-							 	{{ $grupo->Lider }}
-						</td>
-						<td>{{$grupo->Cant}}</td>
+          @foreach($grupos as $grupo)
+              <tr>
+            <td>{{ $grupo->numeroGrupo }}</td>
+            <td>
+                {{ $grupo->Lider }}
+            </td>
+            <td>{{$grupo->Cant}}</td>
             @if( $grupo->estado == 1)
                <td><span class="badge badge-success">Proceso TDG Iniciado</span></td>
                @else
                  <td><span class="badge badge-info">Proceso TDG Sin Iniciar</span></td>
             @endif
-						<td style="text-align: center;">
+            <td style="text-align: center;">
               @if( $grupo->estado == 1)
                 <a class="btn btn-dark" href="{{route('dashboardGrupo',$grupo->ID)}}" ><i class="fa fa-eye"></i></a>  
             @endif
-						</td>
-					</tr>
-				@endforeach 
-				</tbody>
-			</table>
-	   </div>
+            </td>
+          </tr>
+        @endforeach 
+        </tbody>
+      </table>
+     </div>
+  </div>
+  <div class="tab-pane fade" id="finalizados" role="tabpanel" aria-labelledby="finalizados-tab">
+     <br><br>
+    <div class="table-responsive">
+        <table class="table table-hover table-striped  display" id="listTable">
+
+          <thead>
+          <th>Número</th>
+          <th>Líder</th>
+          <th>Cantidad de Estudiantes</th>
+          <th>Estado</th>
+          <th>Dashboard</th>
+          </thead>
+          <tbody>
+
+          @foreach($grupos as $grupo)
+              <tr>
+            <td>{{ $grupo->numeroGrupo }}</td>
+            <td>
+                {{ $grupo->Lider }}
+            </td>
+            <td>{{$grupo->Cant}}</td>
+            @if( $grupo->estado == 1)
+               <td><span class="badge badge-success">Proceso TDG Iniciado</span></td>
+               @else
+                 <td><span class="badge badge-info">Proceso TDG Sin Iniciar</span></td>
+            @endif
+            <td style="text-align: center;">
+              @if( $grupo->estado == 1)
+                <a class="btn btn-dark" href="{{route('dashboardGrupo',$grupo->ID)}}" ><i class="fa fa-eye"></i></a>  
+            @endif
+            </td>
+          </tr>
+        @endforeach 
+        </tbody>
+      </table>
+     </div>
+  </div>
+
+</div>
+		<br>
+  		
 @stop
