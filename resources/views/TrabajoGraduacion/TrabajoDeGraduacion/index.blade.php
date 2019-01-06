@@ -111,7 +111,7 @@
       <!-- Icon Cards-->
       <div class="row">
         @if($etapas == "NA")
-          No se han registrado etapas evaluativas asociadas a ti tipo de trabajo de graduación, consulte al administrador
+          No se han registrado etapas evaluativas asociadas a tu tipo de trabajo de graduación, consulte al administrador
         @else
            @foreach ($etapas as $etapa)
               @if($etapa->id_cat_eta_eva == $actual)
