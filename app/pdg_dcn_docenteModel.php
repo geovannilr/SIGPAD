@@ -54,6 +54,7 @@ class pdg_dcn_docenteModel extends Model
 //            })
         ->leftJoin('pdg_tri_gru_tribunal_grupo','pdg_tri_gru_tribunal_grupo.id_pdg_dcn','=','pdg_dcn_docente.id_pdg_dcn')
 //        ->whereNull('pdg_tri_gru_tribunal_grupo.id_pdg_gru')
+        ->where('pdg_dcn_docente.activo','=',1)
         ->whereNotIn('pdg_dcn_docente.id_pdg_dcn',$array)
         ->select('gen_usuario.name','gen_usuario.email','pdg_dcn_docente.id_pdg_dcn',
             DB::raw('count(if(pdg_tri_gru_tribunal_grupo.id_pdg_tri_rol=1,1,null)) as asigned_as_A, 
