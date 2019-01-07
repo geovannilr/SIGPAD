@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\File;
 use \App\pdg_ppe_pre_perfilModel;
+use \App\pdg_per_perfilModel;
 use \App\gen_EstudianteModel;
 use \App\pdg_gru_grupoModel;
 use \App\cat_tpo_tra_gra_tipo_trabajo_graduacionModel;
@@ -78,9 +79,24 @@ class PrePerfilController extends Controller
     public function indexPrePerfil($id){
         $userLogin=Auth::user();
         if ($userLogin->can(['prePerfil.index'])) {
+            $perfil = new  pdg_per_perfilModel();
+            $grupos = $perfil->getGruposPerfilDocente($userLogin->id);
+            $contador = 0 ;
+            foreach ($grupos as $grupo) {
+                if ($grupo->id_pdg_gru == $id) {
+                    $contador++;
+                }   
+            }
+            if ($contador==0) {
+                 return redirect('prePerfil');
+            }
                 //VERIFICAMOS EL ROL
+            $tribunal = pdg_tri_gru_tribunal_grupoModel::getTribunalData($id);
+            if(empty($tribunal)){
+                $tribunal="NA";
+            }
                 $prePerfiles =pdg_ppe_pre_perfilModel::where('id_pdg_gru', '=',$id)->get();
-                return view('TrabajoGraduacion.PrePerfil.index',compact('prePerfiles'));
+                return view('TrabajoGraduacion.PrePerfil.index',compact('prePerfiles','tribunal'));
         }else{
             Session::flash('message-error', 'No tiene permisos para acceder a esta opción');
             return  view('template');

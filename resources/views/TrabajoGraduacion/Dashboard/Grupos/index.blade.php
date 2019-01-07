@@ -59,6 +59,46 @@
         },
         order: [ 2, 'asc' ],
     	});
+
+      $("#listTableFin").DataTable({
+        language: {
+                url: 'es-ar.json' //Ubicacion del archivo con el json del idioma.
+        },
+        dom: '<"top"l>frt<"bottom"Bip><"clear">',
+        buttons: [
+           {
+                extend: 'excelHtml5',
+                exportOptions: {
+                    columns: [ 0, 1, 2]
+                },
+                title: 'Listado de Grupos de trabajo de graduación'
+            },
+            {
+                extend: 'pdfHtml5',
+                exportOptions: {
+                    columns: [ 0, 1, 2]
+                },
+                title: 'Listado de Grupos de trabajo de graduación'
+            },
+             {
+                extend: 'csvHtml5',
+                exportOptions: {
+                    columns: [ 0, 1, 2]
+                },
+                title: 'Listado de Grupos de trabajo de graduación'
+            },
+            {
+                extend: 'print',
+                exportOptions: {
+                    columns: [ 0, 1, 2]
+                },
+                title: 'Listado de Grupos de trabajo de graduación'
+            }
+
+
+        ],
+        order: [ 2, 'asc' ],
+      });
 	});
 	
 	
@@ -120,7 +160,7 @@
   <div class="tab-pane fade" id="finalizados" role="tabpanel" aria-labelledby="finalizados-tab">
      <br><br>
     <div class="table-responsive">
-        <table class="table table-hover table-striped  display" id="listTable">
+        <table class="table table-hover table-striped  display" id="listTableFin">
 
           <thead>
           <th>Número</th>
