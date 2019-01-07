@@ -84,10 +84,13 @@ class pdg_per_perfilModel extends Model
             $ids.=")";
 	        $perfiles = DB::select("
         				select 
-						per.*,
+						per.*,gru.numero_pdg_gru,sta.nombre_cat_sta,tpotragra.nombre_cat_tpo_tra_gra,
 						(SELECT aprobo from pdg_apr_eta_tra_aprobador_etapa_Trabajo where id_cat_eta_eva = 999 AND id_pdg_tra_gra = 
 							(SELECT id_pdg_tra_gra from pdg_tra_gra_trabajo_graduacion where id_pdg_gru = per.id_pdg_gru )) as finalizo
 						 from pdg_per_perfil  per
+						 INNER JOIN pdg_gru_grupo gru ON (gru.id_pdg_gru=per.id_pdg_gru)
+						 INNER JOIN cat_sta_estado sta ON (sta.id_cat_sta=per.id_cat_sta)
+						 INNER JOIN cat_tpo_tra_gra_tipo_trabajo_graduacion tpotragra ON (tpotragra.id_cat_tpo_tra_gra=per.id_cat_tpo_tra_gra)
 						 where per.id_pdg_gru IN ".$ids
 						);
 
