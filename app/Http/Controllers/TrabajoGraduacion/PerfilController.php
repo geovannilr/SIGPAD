@@ -38,7 +38,7 @@ class PerfilController extends Controller
     public function index()
     {
         $userLogin=Auth::user();
-        if ($userLogin->can(['prePerfil.index'])) {
+        if ($userLogin->can(['perfil.index'])) {
             if (Auth::user()->isRole('administrador_tdg')){
                  $perfil = new  pdg_per_perfilModel();
                  $gruposPerfil=$perfil->getGruposPerfil();
@@ -46,12 +46,10 @@ class PerfilController extends Controller
             }elseif (Auth::user()->isRole('docente_asesor')) { 
                 $perfil = new  pdg_per_perfilModel();
                 $grupos = $perfil->getGruposPerfilDocente($userLogin->id);
-                $array=array();
                 if (sizeof($grupos) != 0) {
-                    foreach ($grupos as $grupo) {
-                    $array [] = $grupo->id_pdg_gru;
-                    }
-                    $perfiles =pdg_per_perfilModel::whereIn('id_pdg_gru',$array)->get();
+                    
+                    $perfiles =pdg_per_perfilModel::getPerfilesByDocente($grupos);
+                   
                     return view('TrabajoGraduacion.Perfil.index',compact('perfiles'));
                 }else{
                     Session::flash('message-error', 'Usted no ha sido asignado como asesor de un grupo de trabajo de graduación');

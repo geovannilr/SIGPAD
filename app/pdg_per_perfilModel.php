@@ -38,11 +38,24 @@ class pdg_per_perfilModel extends Model
                  ->select('id_pdg_gru', DB::raw('count(*) as cantidadPrePerfiles'))
                  ->groupBy('id_pdg_gru')
                  ->get();*/
-        $grupos = pdg_per_perfilModel::with('grupo')
+        /*$grupos = pdg_per_perfilModel::with('grupo')
         ->select('id_pdg_gru', DB::raw('count(*) as cantidadPerfiles'))
         ->orderBy('id_pdg_per','desc')
         ->groupBy('id_pdg_gru','id_pdg_per')
-        ->get();
+        ->get();*/
+
+        $grupos = DB::select("
+        		select 
+				per.id_pdg_gru,
+				gru.numero_pdg_gru,
+				count(*) as cantidadPerfiles,
+				(select aprobo from pdg_apr_eta_tra_aprobador_etapa_Trabajo where id_cat_eta_eva = 999 AND id_pdg_tra_gra = 
+				(SELECT id_pdg_tra_gra from pdg_tra_gra_trabajo_graduacion where id_pdg_gru = gru.id_pdg_gru )) as finalizo
+				 from pdg_per_perfil per
+				inner join  pdg_gru_grupo  gru on per.id_pdg_gru = gru.id_pdg_gru
+				group by per.id_pdg_gru,gru.numero_pdg_gru
+				order by per.id_pdg_per desc"
+			);
         return $grupos;
 
 	 }
@@ -55,5 +68,36 @@ class pdg_per_perfilModel extends Model
             ->get();
         return $grupos;
 	 }
+
+	 public static function getPerfilesByDocente($grupos){
+        $ids = "";
+        $contador = 0 ;
+        if (sizeof($grupos) != 0) {
+                foreach ($grupos as $grupo) {
+                	if ($contador == 0) {
+                		$ids.= "(".$grupo->id_pdg_gru;
+                	}else{
+                		$ids.= ",".$grupo->id_pdg_gru;
+                	}
+                $contador++;
+            }
+            $ids.=")";
+	        $perfiles = DB::select("
+        				select 
+						per.*,
+						(SELECT aprobo from pdg_apr_eta_tra_aprobador_etapa_Trabajo where id_cat_eta_eva = 999 AND id_pdg_tra_gra = 
+							(SELECT id_pdg_tra_gra from pdg_tra_gra_trabajo_graduacion where id_pdg_gru = per.id_pdg_gru )) as finalizo
+						 from pdg_per_perfil  per
+						 where per.id_pdg_gru IN ".$ids
+						);
+
+        }else{
+        	$perfiles = "NA";
+        }
+ 		
+ 		return $perfiles;
+	 }
+    
+	 
 	 
 }

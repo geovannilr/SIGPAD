@@ -53,6 +53,33 @@
         },
         order: [ 1, 'asc' ],
     	});
+        $("#listTableFin").DataTable({
+        language: {
+                url: 'es-ar.json' //Ubicacion del archivo con el json del idioma.
+        },
+        dom: '<"top"l>frt<"bottom"Bip><"clear">',
+        buttons: [
+           {
+                extend: 'excelHtml5',
+                title: 'Listado de Grupos de trabajo de graduación'
+            },
+            {
+                extend: 'pdfHtml5',
+                title: 'Listado de Grupos de trabajo de graduación'
+            },
+             {
+                extend: 'csvHtml5',
+                title: 'Listado de Grupos de trabajo de graduación'
+            },
+            {
+                extend: 'print',
+                title: 'Listado de Grupos de trabajo de graduación'
+            }
+
+
+        ],
+        order: [ 1, 'asc' ],
+      });
 	});
 	function borrar(id) {
 		var idUsuario=id;
@@ -77,38 +104,89 @@
 	  </div>
   @endcan
 </div> 
+<ul class="nav nav-tabs" id="tabGrupos" role="tablist">
+      <li class="nav-item">
+        <a class="nav-link active" id="activos-tab" data-toggle="tab" href="#activos" role="tab" aria-controls="activos" aria-selected="true">Activos</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" id="finalizados-tab" data-toggle="tab" href="#finalizados" role="tab" aria-controls="finalizados" aria-selected="false">Finalizados</a>
+      </li>
+</ul>
+<div class="tab-content" id="myTabContent">
+  <div class="tab-pane fade show active" id="activos" role="tabpanel" aria-labelledby="activos-tab">
+    <br><br>
+    <div class="table-responsive">
+        <table class="table table-hover table-striped  display" id="listTable">
 
+          <thead>
+          <th>Grupo</th>
+          <th>Cant. de Pre-Perfiles Enviados</th>
+          <th>Detalle de Grupo</th>
+          <th>Detalle de Pre-Perfiles</th>
+
+          </thead>
+          <tbody>
+
+          @foreach($gruposPrePerfil as $grupo)
+            @if($grupo->finalizo != 1)
+              <tr>
+                <td>{{ $grupo->numero_pdg_gru }}</td>
+                <td>{{ $grupo->cantidadPrePerfiles }}</td>
+                <td style="text-align: center;">
+                    <a class="btn btn-dark" href="#" onclick="getGrupo({{ $grupo->id_pdg_gru }});"><i class="fa fa-eye"></i></a>
+                    <button id="btnAsignAsesor" type="button" onclick="getTribunalData({{ $grupo->id_pdg_gru }});" class="btn btn-secondary" title="Asignar evaluadores">
+                      <i class="fa fa-balance-scale" ></i>
+                    </button>
+                </td>
+                <td style="text-align: center;">
+                    <a class="btn " style="background-color:  #102359;color: white" href="{{route('indexPrePerfil', [$grupo->id_pdg_gru])}}"><i class="fa fa-list-alt"></i></a>
+                </td>
+              </tr>
+            @endif
+        @endforeach 
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="tab-pane fade" id="finalizados" role="tabpanel" aria-labelledby="finalizados-tab">
+    <br><br>
+    <div class="table-responsive">
+        <table class="table table-hover table-striped  display" id="listTableFin">
+
+          <thead>
+          <th>Grupo</th>
+          <th>Cant. de Pre-Perfiles Enviados</th>
+          <th>Detalle de Grupo</th>
+          <th>Detalle de Pre-Perfiles</th>
+
+          </thead>
+          <tbody>
+
+          @foreach($gruposPrePerfil as $grupo)
+           @if($grupo->finalizo == 1)
+            <tr>
+              <td>{{ $grupo->numero_pdg_gru }}</td>
+              <td>{{ $grupo->cantidadPrePerfiles }}</td>
+              <td style="text-align: center;">
+                  <a class="btn btn-dark" href="#" onclick="getGrupo({{ $grupo->id_pdg_gru }});"><i class="fa fa-eye"></i></a>
+                  <button id="btnAsignAsesor" type="button" onclick="getTribunalData({{ $grupo->id_pdg_gru }});" class="btn btn-secondary" title="Asignar evaluadores">
+                    <i class="fa fa-balance-scale" ></i>
+                  </button>
+              </td>
+              <td style="text-align: center;">
+                  <a class="btn " style="background-color:  #102359;color: white" href="{{route('indexPrePerfil', [$grupo->id_pdg_gru])}}"><i class="fa fa-list-alt"></i></a>
+              </td>
+            </tr>
+           @endif 
+        @endforeach 
+        </tbody>
+      </table>
+    </div>
+  </div>
+  
+</div>
 		<br>
-  		<div class="table-responsive">
-  			<table class="table table-hover table-striped  display" id="listTable">
-
-  				<thead>
-					<th>Grupo</th>
-					<th>Cant. de Pre-Perfiles Enviados</th>
-					<th>Detalle de Grupo</th>
-					<th>Detalle de Pre-Perfiles</th>
-
-  				</thead>
-  				<tbody>
-
-  				@foreach($gruposPrePerfil as $grupo)
-  						<tr>
-						<td>{{ $grupo->grupo->numero_pdg_gru }}</td>
-						<td>{{ $grupo->cantidadPrePerfiles }}</td>
-						<td style="text-align: center;">
-							 	<a class="btn btn-dark" href="#" onclick="getGrupo({{ $grupo->id_pdg_gru }});"><i class="fa fa-eye"></i></a>
-								<button id="btnAsignAsesor" type="button" onclick="getTribunalData({{ $grupo->id_pdg_gru }});" class="btn btn-secondary" title="Asignar evaluadores">
-									<i class="fa fa-balance-scale" ></i>
-								</button>
-						</td>
-						<td style="text-align: center;">
-								<a class="btn " style="background-color:  #102359;color: white" href="{{route('indexPrePerfil', [$grupo->id_pdg_gru])}}"><i class="fa fa-list-alt"></i></a>
-							</td>
-					</tr>
-				@endforeach 
-				</tbody>
-			</table>
-	   </div>
+  		
 	  
 <!-- Modal Detalle de grupo -->
 <div class="modal fade" id="detalleGrupo" tabindex="-1" role="dialog" aria-labelledby="Detalle grupo de trabajo de graduación" aria-hidden="true">
