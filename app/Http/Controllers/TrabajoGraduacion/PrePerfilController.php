@@ -55,7 +55,11 @@ class PrePerfilController extends Controller
                     if ($miGrupo->id_cat_sta == 3 ) {//APROBADO
                         $prePerfiles =pdg_ppe_pre_perfilModel::where('id_pdg_gru', '=',$idGrupo)->get();
                         $numero=$miGrupo->numero_pdg_gru;
-                        return view('TrabajoGraduacion.PrePerfil.index',compact('prePerfiles','numero'));
+                        $tribunal = pdg_tri_gru_tribunal_grupoModel::getTribunalData($idGrupo);
+                        if(empty($tribunal)){
+                            $tribunal="NA";
+                        }
+                        return view('TrabajoGraduacion.PrePerfil.index',compact('prePerfiles','numero','tribunal'));
                     }else{
                         //EL GRUPO AUN NO HA SIDO APROBADO
                     Session::flash('message-error', 'Tu grupo de trabajo de graduación aún no ha sido aprobado');
