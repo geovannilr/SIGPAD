@@ -87,4 +87,28 @@ class pdg_gru_grupoModel extends Model{
         }
         return $result;
     }
+
+    public static function getEstadoGrupos(){
+        $grupos = DB::select("
+        	SELECT 
+			gru.id_pdg_gru,
+			tra.id_pdg_tra_gra,
+			gru.numero_pdg_gru,
+			eta.nombre_cat_eta_eva,
+			genEst.carnet_gen_est,
+			genEst.nombre_gen_est,
+			(SELECT count(*) from pdg_apr_eta_tra_aprobador_etapa_trabajo where aprobo = 1 AND id_pdg_tra_gra = tra.id_pdg_tra_gra ) as CantAprobadas,
+			(SELECT count(*) from pdg_apr_eta_tra_aprobador_etapa_trabajo where  id_pdg_tra_gra = tra.id_pdg_tra_gra ) as totalEtapas
+			from pdg_gru_grupo gru
+			inner join pdg_tra_gra_trabajo_graduacion tra on tra.id_pdg_gru = gru.id_pdg_gru
+			inner join pdg_apr_eta_tra_aprobador_etapa_trabajo apr on apr.id_pdg_tra_gra = tra.id_pdg_tra_gra
+			inner join cat_eta_eva_etapa_evaluativa eta on eta.id_cat_eta_eva = apr.id_cat_eta_eva
+			inner join pdg_gru_est_grupo_estudiante est on est.id_pdg_gru = gru.id_pdg_gru
+			inner join gen_est_estudiante genEst on genEst.id_gen_est = est.id_gen_est
+			where apr.inicio = 1 AND aprobo = 0 AND est.eslider_pdg_gru_est = 1
+			group by gru.id_pdg_gru,tra.id_pdg_tra_gra,gru.numero_pdg_gru,eta.nombre_cat_eta_eva,est.id_gen_est,genEst.carnet_gen_est,
+			genEst.nombre_gen_est"
+        );
+        return $grupos;
+    }
 }
