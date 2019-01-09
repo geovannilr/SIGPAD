@@ -91,6 +91,7 @@ Route::get('reportesTDG', 'TrabajoGraduacion\ReportesController@index')->name('r
 Route::get('reportesTDG/R1', 'TrabajoGraduacion\ReportesController@r1')->name('R1');
 Route::get('reportesTDG/R2', 'TrabajoGraduacion\ReportesController@r2')->name('R2');
 Route::get('testReporte', 'ReportesController@test')->name('testReporte');
+Route::get('reportes/tribunalPorGrupo', 'ReportesController@tribunalPorGrupo')->name('reportes/tribunalPorGrupo');
 
 
 //Documentos de trabajo de graduación

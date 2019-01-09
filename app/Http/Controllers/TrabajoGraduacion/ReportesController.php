@@ -18,14 +18,14 @@ class ReportesController extends Controller{
     }
     public function r1(){
         $title = "Grupos y Jurados";
-        $datos = pdg_dcn_docenteModel::getLideres(2018);
-        $tribs = pdg_dcn_docenteModel::getTribunales(2018);
+        $datos = pdg_dcn_docenteModel::getLideres(2019);
+        $tribs = pdg_dcn_docenteModel::getTribunales(2019);
         return view('TrabajoGraduacion.Reports.R1',compact('datos','tribs', 'title'));
     }
     public function r2(){
         $title = "Docentes y Asignaciones";
-        $datos = pdg_dcn_docenteModel::getDocentes(2018);
-        $grupos = pdg_dcn_docenteModel::getGrupos(2018);
+        $datos = pdg_dcn_docenteModel::getDocentes(2019);
+        $grupos = pdg_dcn_docenteModel::getGrupos(2019);
         return view('TrabajoGraduacion.Reports.R2',compact('datos','grupos', 'title'));
     }
 }
