@@ -14,4 +14,7 @@ class cat_sta_estadoModel extends Model{
 			'nombre_cat_sta',
 			'descripcion_cat_sta'
 		];
+    public function tipoEstado(){
+        return $this->belongsTo('App\cat_tpo_sta_tipo_estadoModel','id_cat_tpo_sta','id_cat_tpo_sta');
+    }
 }

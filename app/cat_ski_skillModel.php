@@ -13,4 +13,8 @@ class cat_ski_skillModel extends Model{
 			'nombre_cat_ski',
 			'id_tpo_ski'
 		];
-}
+    public function tipoSki(){
+        return $this->belongsTo('App\cat_tpo_ski_tipo_skillModel','id_tpo_ski','id_tpo_ski');
+    }
+
+	}

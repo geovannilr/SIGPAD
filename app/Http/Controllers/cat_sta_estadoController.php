@@ -7,6 +7,7 @@ use Session;
 use Redirect;
 use Illuminate\Support\Facades\Auth;
 use App\cat_sta_estadoModel;
+use App\cat_tpo_sta_tipo_estadoModel;
 
 class cat_sta_estadoController extends Controller
 {
@@ -16,9 +17,9 @@ class cat_sta_estadoController extends Controller
     public function index()
     {
         $userLogin=Auth::user();
-        if ($userLogin->can(['etapaEvaluativa.index'])) {
-            $etapaEvaluativa =cat_eta_eva_etapa_evalutativaModel::all();
-            return view('etapaEvaluativa.index',compact('etapaEvaluativa'));
+        if ($userLogin->can(['catEstado.index'])) {
+            $catEstado=cat_sta_estadoModel::all();
+            return view('catEstado.index',compact('catEstado'));
         }else{
             Session::flash('message-error', 'No tiene permisos para acceder a esta opción');
             return  view('template');
@@ -33,8 +34,9 @@ class cat_sta_estadoController extends Controller
     public function create()
     {
         $userLogin=Auth::user();
-        if ($userLogin->can(['etapaEvaluativa.create'])) {
-            return view('etapaEvaluativa.create');
+        if ($userLogin->can(['catEstado.create'])) {
+            $tpoSta = cat_tpo_sta_tipo_estadoModel::pluck("nombre_cat_tpo_sta","id_cat_tpo_sta");
+            return view('catEstado.create',compact('tpoSta'));
         }else{
             Session::flash('message-error', 'No tiene permisos para acceder a esta opción');
             return  view('template');
@@ -51,40 +53,26 @@ class cat_sta_estadoController extends Controller
     public function store(Request $request)
     {
         $validatedData = $request->validate([
-            'nombre_cat_eta_eva' => 'required|max:45',
-            'ponderacion_cat_eta_eva' => 'required|max:5',
-            'anio_cat_eta_eva' => 'required|max:4',
-            'tiene_defensas_cat_eta_eva'=> 'required|max:11',
-            'puede_observar_cat_eta_eva'=> 'required|max:11'
+            'nombre_cat_sta' => 'required|max:45',
+            'descripcion_cat_sta' => 'required|max:250'
         ],
             [
-                'nombre_cat_eta_eva.required' => 'El nombre de la etapa evaluativa es necesario',
-                'nombre_cat_eta_eva.max' => 'El nombre de la etapa evaluativa debe contener como maximo 45 caracteres',
-                'ponderacion_cat_eta_eva.required'=> 'La ponderacion de la etapa evaluativa es necesario',
-                'ponderacion_cat_eta_eva.max'=> 'La ponderacion de la etapa evaluativa debe contener como maximo 5 caracteres',
-                'anio_cat_eta_eva.required' => 'El anio de  la etapa evaluativa es necesario',
-                'anio_cat_eta_eva.max' => 'El anio de la etapa evaluativa debe contener como maximo 4 caracteres',
-                'tiene_defensas_cat_eta_eva.required' => 'Si tiene defensas es necesario saberlo',
-                'tiene_defensas_cat_eta_eva.max' => 'La cantidad maxima de caracteres para saber si tiene defensas no debe ser mayor a 11',
-                'puede_observar_cat_eta_eva.required' => 'Saber si puede observar etapa evaluativa es necesario',
-                'puede_observar_cat_eta_eva.max' => 'La cantidad maxima de caracteres para poder observar la etapa evaluativa es de 11'
-
+                'nombre_cat_sta.required' => 'El nombre del estado es necesario',
+                'nombre_cat_sta.max' => 'El nombre del estado debe contener como maximo 45 caracteres',
+                'descripcion_cat_sta.required'=> 'La descripcion del estado es necesaria',
+                'descripcion_cat_sta.max'=> 'La descripción del estado debe contener como maximo 250 caracteres',
             ]
         );
 
-
-
-        cat_eta_eva_etapa_evalutativaModel::create
+//        return var_dump($request);
+        cat_sta_estadoModel::create
         ([
-            'nombre_cat_eta_eva'       	 => $request['nombre_cat_eta_eva'],
-            'ponderacion_cat_eta_eva'       	 => $request['ponderacion_cat_eta_eva'],
-            'anio_cat_eta_eva'       	 => $request['anio_cat_eta_eva'],
-            'tiene_defensas_cat_eta_eva'       	 => $request['tiene_defensas_cat_eta_eva'],
-            'puede_observar_cat_eta_eva'       	 => $request['puede_observar_cat_eta_eva'],
-
+            'nombre_cat_sta'       	 => $request['nombre_cat_sta'],
+            'descripcion_cat_sta'       	 => $request['descripcion_cat_sta'],
+            'id_cat_tpo_sta'        => $request['id_cat_tpo_sta']
         ]);
 
-        Return redirect('etapaEvaluativa')->with('message','Etapa Evaluativa Registrada correctamente!') ;
+        Return redirect('catEstado')->with('message','Estado Registrado correctamente!') ;
     }
 
     /**
@@ -107,14 +95,16 @@ class cat_sta_estadoController extends Controller
     public function edit($id)
     {
         $userLogin=Auth::user();
-        if ($userLogin->can(['etapaEvaluativa.edit'])) {
-            $etapaEvaluativa= cat_eta_eva_etapa_evalutativaModel::find($id);
+        if ($userLogin->can(['catEstado.edit'])) {
+            $catEstado= cat_sta_estadoModel::find($id);
+            $tpoSta = cat_tpo_sta_tipo_estadoModel::pluck("nombre_cat_tpo_sta","id_cat_tpo_sta");
 
-            return view('etapaEvaluativa.edit',compact(['etapaEvaluativa']));
+            return view('catEstado.edit',compact(['catEstado'],'tpoSta'));
         }else{
             Session::flash('message-error', 'No tiene permisos para acceder a esta opción');
             return  view('template');
         }
+
     }
 
     /**
@@ -126,12 +116,12 @@ class cat_sta_estadoController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $etapaEvaluativa=cat_eta_eva_etapa_evalutativaModel::find($id);
+        $catEstado=cat_sta_estadoModel::find($id);
 
-        $etapaEvaluativa->fill($request->all());
-        $etapaEvaluativa->save();
+        $catEstado->fill($request->all());
+        $catEstado->save();
         // Session::flash('message','Tipo Documento Modificado correctamente!');
-        return Redirect::to('etapaEvaluativa');
+        return Redirect::to('catEstado');
     }
 
     /**
@@ -143,14 +133,23 @@ class cat_sta_estadoController extends Controller
     public function destroy($id)
     {
         $userLogin=Auth::user();
-        if ($userLogin->can(['etapaEvaluativa.destroy'])) {
-            cat_eta_eva_etapa_evalutativaModel::destroy($id);
-            Session::flash('message','Etapa Evaluativa Eliminado Correctamente!');
-            return Redirect::to('etapaEvaluativa');
+        if ($userLogin->can(['catEstado.destroy']))
+        {
+        try {
+            cat_sta_estadoModel::destroy($id);
+        } catch (\PDOException $e)
+        {
+            Session::flash('message-error', 'No es posible eliminar este registro, está siendo usado.');
+            return Redirect::to('catEstado');
+        }
+            Session::flash('message','Estado Eliminado Correctamente!');
+            return Redirect::to('catEstado');
+
         }else{
             Session::flash('message-error', 'No tiene permisos para acceder a esta opción');
             return  view('template');
         }
+
 
     }
 }

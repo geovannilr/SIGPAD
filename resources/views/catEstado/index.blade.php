@@ -11,42 +11,45 @@
 <script type="text/javascript">
 	$( document ).ready(function() {
 		 $('.deleteButton').on('submit',function(e){
-        if(!confirm('Estas seguro que deseas eliminar esta Etapa Evaluativa?')){
+        if(!confirm('Estas seguro que deseas eliminar este Estado?')){
 
               e.preventDefault();
         	}
       	});
 		
     	$("#listTable").DataTable({
+            language: {
+                url: 'es-ar.json' //Ubicacion del archivo con el json del idioma.
+            },
         dom: '<"top"l>frt<"bottom"Bip><"clear">',
         buttons: [
            {
                 extend: 'excelHtml5',
                 exportOptions: {
-                    columns: [ 0, 1, 2, 3]
+                    columns: [ 0, 1]
                 },
-                title: 'Listado de Etapa evaluativa'
+                title: 'Listado de estados'
             },
             {
                 extend: 'pdfHtml5',
                 exportOptions: {
-                    columns: [ 0, 1, 2, 3]
+                    columns: [ 0, 1]
                 },
-                title: 'Listado de Etapa evaluativa'
+                title: 'Listado de Estados'
             },
              {
                 extend: 'csvHtml5',
                 exportOptions: {
-                    columns: [ 0, 1, 2, 3]
+                    columns: [ 0, 1]
                 },
-                title: 'Listado de Etapa evaluativa'
+                title: 'Listado de Estados'
             },
             {
                 extend: 'print',
                 exportOptions: {
-                    columns: [ 0, 1, 2, 3]
+                    columns: [ 0, 1]
                 },
-                title: 'Listado de Etapa evaluativa'
+                title: 'Listado de Estados'
             }
 
 
@@ -56,14 +59,14 @@
                 type: 'column'
             }
         },
-        order: [ 1, 'asc' ],
+        order: [ 0, 'asc' ],
     	});
 	});
 	
 </script>
 		<ol class="breadcrumb"  style="text-align: center; margin-top: 1em">
 	        <li class="breadcrumb-item">
-	          <h5><a href="{{ redirect()->getUrlGenerator()->previous() }}" style="margin-left: 0em"><i class="fa fa-arrow-left fa-lg" style="z-index: 1;margin-top: 0em;margin-right: 0.5em; color: black"></i></a>     Etapa Evaluativa</h5>
+	          <h5><a href="{{ redirect()->getUrlGenerator()->previous() }}" style="margin-left: 0em"><i class="fa fa-arrow-left fa-lg" style="z-index: 1;margin-top: 0em;margin-right: 0.5em; color: black"></i></a>     Estados</h5>
 	        </li>
 	        <li class="breadcrumb-item active">Listado</li>
 		</ol>
@@ -73,7 +76,7 @@
    <div class="col-sm-3"></div>
   @can('permiso.create')
     <div class="col-sm-3">
-      <a class="btn " href="{{route('etapaEvaluativa.create')}}" style="background-color: #DF1D20; color: white"><i class="fa fa-plus"></i> Nueva Etapa evaluativa</a>
+      <a class="btn " href="{{route('catEstado.create')}}" style="background-color: #DF1D20; color: white"><i class="fa fa-plus"></i> Nuevo estado</a>
     </div>
   @endcan
   </div> 
@@ -83,38 +86,39 @@
   			<table class="table table-hover table-striped  display" id="listTable">
 
   				<thead>
-					<th>Nombre Etapa evaluativa</th>
-                    <th>Ponderación</th>
-                    <th>Año</th>
+					<th>Estado</th>
+                    <th>Descripcion</th>
+                    <th>Tipo Estado</th>
 
-                    @can('etapaEvaluativa.edit')
-                    <th>Modificar</th>
+                    @can('catEstado.destroy')
+                    <th>Acciones</th>
+                    @can('catEstado.edit')
+
                     @endcan
-                   {{-- @can('etapaEvaluativa.destroy')
-					<th>Eliminar</th>
-                    @endcan--}}
-  				</thead>
-  				<tbody>
-  				@foreach($etapaEvaluativa as $etapaEvaluativ)
-					<tr>
-						<td>{{ $etapaEvaluativ->nombre_cat_eta_eva}}</td>
-                        <td>{{ $etapaEvaluativ->ponderacion_cat_eta_eva}}</td>
-                        <td>{{ $etapaEvaluativ->anio_cat_eta_eva}}</td>
+                    @endcan
 
-                    @can('etapaEvaluativa.edit')
+                </thead>
+                <tbody>
+                @foreach($catEstado as $catEstad)
+					<tr>
+						<td>{{ $catEstad->nombre_cat_sta}}</td>
+                        <td>{{ $catEstad->descripcion_cat_sta}}</td>
+                        <td>{{ $catEstad->tipoEstado->nombre_cat_tpo_sta}}</td>
+                    @can('catEstado.edit')
+                            @can('catEstado.destroy')
                           <td style="text-align: center;">
-  			            	<a class="btn " style="background-color:  #102359;color: white" href="{{route('etapaEvaluativa.edit',$etapaEvaluativ->id_cat_eta_eva)}}"><i class="fa fa-pencil"></i></a>
+                             <div class="d-inline-block">
+                              <a class="btn " style="background-color: #102359;color: white" href="{{route('catEstado.edit',$catEstad->id_cat_sta)}}"><i class="fa fa-pencil"></i></a>
+                             </div>
+                              {!! Form::open(['route'=>['catEstado.destroy',$catEstad->id_cat_sta],'method'=>'DELETE','class' => 'deleteButton']) !!}
+                              <div class="d-inline-block">
+                                  <button type="submit" class="btn btn-danger"><i class="fa fa-trash"></i></button>
+                              </div>
+                              {!! Form:: close() !!}
+
                           </td>
                          @endcan
-                        {{--@can('etapaEvaluativa.destroy')
-  						<td style="text-align: center;">
-  							{!! Form::open(['route'=>['etapaEvaluativa.destroy',$etapaEvaluativ->id_cat_eta_eva],'method'=>'DELETE','class' => 'deleteButton']) !!}
-  						 		<div class="btn-group">
-  									<button type="submit" class="btn btn-danger"><i class="fa fa-trash"></i></button>
-  								</div>
-  							{!! Form:: close() !!}
-  						</td>
-                        @endcan--}}
+                            @endcan
 					</tr>
 				@endforeach 
 				</tbody>

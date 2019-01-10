@@ -18,33 +18,36 @@
       	});
 		
     	$("#listTable").DataTable({
+            language: {
+                url: 'es-ar.json' //Ubicacion del archivo con el json del idioma.
+            },
         dom: '<"top"l>frt<"bottom"Bip><"clear">',
         buttons: [
            {
                 extend: 'excelHtml5',
                 exportOptions: {
-                    columns: [ 0, 1, 2, 3]
+                    columns: [ 0, 1]
                 },
                 title: 'Listado de tipo Trabajo'
             },
             {
                 extend: 'pdfHtml5',
                 exportOptions: {
-                    columns: [ 0, 1, 2, 3]
+                    columns: [ 0, 1]
                 },
                 title: 'Listado de tipo Trabajo'
             },
              {
                 extend: 'csvHtml5',
                 exportOptions: {
-                    columns: [ 0, 1, 2, 3]
+                    columns: [ 0, 1]
                 },
                 title: 'Listado de tipo Trabajo'
             },
             {
                 extend: 'print',
                 exportOptions: {
-                    columns: [ 0, 1, 2, 3]
+                    columns: [ 0, 1]
                 },
                 title: 'Listado de tipo Trabajo'
             }
@@ -56,7 +59,7 @@
                 type: 'column'
             }
         },
-        order: [ 1, 'asc' ],
+        order: [ 0, 'asc' ],
     	});
 	});
 	

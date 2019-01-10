@@ -153,6 +153,15 @@ Route::resource ('categoriaTDG','cat_ctg_tra_categoria_trabajo_graduacionControl
 Route::resource ('tipoDocumento','cat_tpo_doc_tipo_documentoController');
 Route::resource ('tipoTrabajo','cat_tpo_tra_gra_tipo_trabajo_graduacionController');
 Route::resource ('etapaEvaluativa','cat_eta_eva_etapa_evalutativaController');
-Route::resource ('catEstado','cat_eta_eva_etapa_evalutativaController');
-
+Route::resource ('catEstado','cat_sta_estadoController');
+Route::resource ('tipoEstado','cat_tpo_sta_tipo_estadoController');
+Route::resource ('cargoEisi','cat_car_cargo_eisiController');
+Route::resource ('catIdioma','cat_idi_idiomaController');
+Route::resource ('catMateria','cat_mat_materiaController');
+Route::resource ('catSki','cat_ski_skillController');
+Route::resource ('tipoSki','cat_tpo_ski_tipo_skillController');
+Route::resource ('catTitulos','cat_tit_titulos_profesionalesController');
+Route::resource ('catTpublicacion','cat_tpo_pub_tipo_publicacionController');
+Route::resource ('catTcolaborador','cat_tpo_col_pub_tipo_colaboradorController');
+Route::resource ('catCatalogo','gen_cat_catalogoController');
 

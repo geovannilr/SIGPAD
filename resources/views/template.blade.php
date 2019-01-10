@@ -171,7 +171,7 @@
 
           </li>
         @endcan
-        @can('usuario.index', 'permiso.index', 'rol.index')
+        @can('catalogo.index','usuario.index', 'permiso.index', 'rol.index')
         <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Administracion" style="color: #ffffff">
           <a class="nav-link nav-link-collapse collapsed" data-toggle="collapse" href="#collapseAdministracion" data-parent="#exampleAccordion" style="color: #ffffff; font-weight: bold; background-color: #DF1D20; margin-top: 20px">
             <i class="fa fa-slack"></i>
@@ -210,7 +210,14 @@
                   </a>  
               </li>
             @endcan
-            
+            @can('catalogo.index')
+                    <li>
+                        <a class="nav-link" href="{{route('catCatalogo.index')}}" style="color: #ffffff">
+                            <i class="fa fa-table"></i>
+                            <span class="nav-link-text">Cat&aacute;logos</span>
+                        </a>
+                    </li>
+             @endcan
           </ul>
         </li>
         @endcan
