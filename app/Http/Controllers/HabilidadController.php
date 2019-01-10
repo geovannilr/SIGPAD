@@ -43,6 +43,7 @@ class HabilidadController extends Controller
         $userLogin = Auth::user();
         $docente = pdg_dcn_docenteModel::where("id_gen_usuario","=",$userLogin->id)->first();
         $idDocente = $docente->id_pdg_dcn; 
+        Session::flash('apartado','5');
         $validatedData = $request->validate(
             [
                 'id_cat_ski' => [
@@ -76,8 +77,6 @@ class HabilidadController extends Controller
                         
             ]);
         Session::flash('message','Se agregó la habilidad correctamente!');
-        Session::flash('apartado','5');
-        
         return Redirect::to('DashboardPerfilDocente');      
     }
 

@@ -54,6 +54,7 @@ class pdg_dcn_docenteModel extends Model
 //            })
         ->leftJoin('pdg_tri_gru_tribunal_grupo','pdg_tri_gru_tribunal_grupo.id_pdg_dcn','=','pdg_dcn_docente.id_pdg_dcn')
 //        ->whereNull('pdg_tri_gru_tribunal_grupo.id_pdg_gru')
+        ->where('pdg_dcn_docente.activo','=',1)
         ->whereNotIn('pdg_dcn_docente.id_pdg_dcn',$array)
         ->select('gen_usuario.name','gen_usuario.email','pdg_dcn_docente.id_pdg_dcn',
             DB::raw('count(if(pdg_tri_gru_tribunal_grupo.id_pdg_tri_rol=1,1,null)) as asigned_as_A, 
@@ -237,6 +238,7 @@ class pdg_dcn_docenteModel extends Model
                             IFNULL(docente.id_segundo_cargo,'') as id_segundo_cargo,
                             IFNULL(cargo.id_cat_car,'') as id_cat_car,
                             IFNULL(cargo.nombre_cargo,'') as nombre_cargo,
+                            IFNULL(cargo2.nombre_cargo,'') as nombre_cargo2,
                             IFNULL(docente.dcn_profileFoto,'') as dcn_profileFoto,
                             IFNULL(docente.link_git,'') as link_git
                             ,IFNULL(docente.link_linke,'') as link_linke
@@ -249,6 +251,7 @@ class pdg_dcn_docenteModel extends Model
                             from  pdg_dcn_docente docente
                             inner join gen_usuario usuario on usuario.id = docente.id_gen_usuario 
                             left join cat_car_cargo_eisi cargo on cargo.id_cat_car=docente.id_cargo_actual
+                            left join cat_car_cargo_eisi cargo2 on cargo2.id_cat_car=docente.id_segundo_cargo
                             where docente.id_pdg_dcn=:idDocente",
             array(
                 $idDocente

@@ -86,6 +86,7 @@
           @can('gestionDocente.edit')
           <th>Modificar</th>
           @endcan
+          <th>Disponibilidad</th>
   				</thead>
   				<tbody>
   				@foreach($docentes as $docente)
@@ -113,6 +114,13 @@
                 <a class="btn " style="background-color:  #102359;color: white" href="{{route('docenteEdit',$docente->id_pdg_dcn)}}"><i class="fa fa-pencil"></i></a>
               </td>
                         @endcan
+          <td>
+            @if($docente->activo == 1)
+              <span class="badge badge-success">Activo</span>
+            @else
+              <span class="badge badge-danger">Inactivo</span>
+            @endif
+          </td>              
 					</tr>
 				@endforeach 
 				</tbody>

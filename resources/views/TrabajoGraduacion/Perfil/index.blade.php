@@ -163,7 +163,10 @@
 	        @endif</h5> -->
 
 		<br>
-  		<div class="table-responsive">
+@if(!isset($numero))
+	@include('TrabajoGraduacion.Perfil.indexAsesor')
+@else
+	<div class="table-responsive">
   			<table class="table table-hover table-striped  display" id="listTable">
 
   				<thead>
@@ -277,4 +280,5 @@
 				</tbody>
 			</table>
 	   </div>
+@endif
 @stop

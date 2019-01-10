@@ -90,6 +90,12 @@ Route::post('plantillaNotasVariable','TrabajoGraduacion\EtapaEvaluativaControlle
 Route::get('reportesTDG', 'TrabajoGraduacion\ReportesController@index')->name('reportesTDG');
 Route::get('reportesTDG/R1', 'TrabajoGraduacion\ReportesController@r1')->name('R1');
 Route::get('reportesTDG/R2', 'TrabajoGraduacion\ReportesController@r2')->name('R2');
+Route::get('testReporte', 'ReportesController@test')->name('testReporte');
+Route::get('reportes/tribunalPorGrupo', 'ReportesController@tribunalPorGrupo')->name('reportes/tribunalPorGrupo');
+Route::get('reportes/asignacionesPorDocente', 'ReportesController@asignacionesPorDocente')->name('reportes/asignacionesPorDocente');
+Route::get('reportes/estadoGruposEtapa', 'ReportesController@estadoGruposEtapa')->name('reportes/estadoGruposEtapa');
+
+
 
 //Documentos de trabajo de graduación
 Route::get('nuevoDocumento/{idEtapa}/{idTipoDoc?}', 'TrabajoGraduacion\DocumentoController@createDocumento')->name('nuevoDocumento');

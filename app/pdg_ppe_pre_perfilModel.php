@@ -35,6 +35,7 @@ class pdg_ppe_pre_perfilModel extends Model
 	  public function grupo(){
 	 	Return $this->belongsTo('App\pdg_gru_grupoModel','id_pdg_gru');
 	 }
+	
 
 
 	 public function getGruposPrePerfil(){
@@ -42,11 +43,25 @@ class pdg_ppe_pre_perfilModel extends Model
                  ->select('id_pdg_gru', DB::raw('count(*) as cantidadPrePerfiles'))
                  ->groupBy('id_pdg_gru')
                  ->get();*/
-        $grupos = pdg_ppe_pre_perfilModel::with('grupo')
+       /* $grupos = pdg_ppe_pre_perfilModel::with('grupo')
         ->select('id_pdg_gru', DB::raw('count(*) as cantidadPrePerfiles'))
+        ->join('pdg_apr_eta_tra_aprobador_etapa_Trabajo','gen_usuario.id','=','pdg_dcn_docente.id_gen_usuario')
         ->orderBy('id_pdg_ppe','desc')
         ->groupBy('id_pdg_gru')
-        ->get();
+        ->get();*/
+        $grupos = DB::select("
+        				select 
+						prep.id_pdg_gru,
+						gru.numero_pdg_gru,
+						count(*) as cantidadPrePerfiles,
+						(select aprobo from pdg_apr_eta_tra_aprobador_etapa_Trabajo where id_cat_eta_eva = 999 AND id_pdg_tra_gra = 
+							(SELECT id_pdg_tra_gra from pdg_tra_gra_trabajo_graduacion where id_pdg_gru = gru.id_pdg_gru )) as finalizo
+						 from pdg_ppe_pre_perfil prep
+						inner join  pdg_gru_grupo  gru on prep.id_pdg_gru = gru.id_pdg_gru
+						group by prep.id_pdg_gru,gru.numero_pdg_gru
+						order by prep.id_pdg_ppe desc"
+						);
+
         return $grupos;
 
 	 }
@@ -55,16 +70,38 @@ class pdg_ppe_pre_perfilModel extends Model
 	 	$perfil = new  pdg_per_perfilModel();
         $grupos = $perfil->getGruposPerfilDocente($idUsuario);
         $array=array();
+        $ids = "";
+        $contador = 0 ;
         if (sizeof($grupos) != 0) {
                 foreach ($grupos as $grupo) {
+                	if ($contador == 0) {
+                		$ids.= "(".$grupo->id_pdg_gru;
+                	}else{
+                		$ids.= ",".$grupo->id_pdg_gru;
+                	}
                 $array [] = $grupo->id_pdg_gru;
+                $contador++;
             }
-            $grupos = pdg_ppe_pre_perfilModel::with('grupo')
+            $ids.=")";
+            /*$grupos = pdg_ppe_pre_perfilModel::with('grupo')
 	        ->select('id_pdg_gru', DB::raw('count(*) as cantidadPrePerfiles'))
 	        ->whereIn('id_pdg_gru',$array)
 	        ->orderBy('id_pdg_ppe','desc')
 	        ->groupBy('id_pdg_gru')
-	        ->get();  
+	        ->get(); */
+	        $grupos = DB::select("
+        				select 
+						prep.id_pdg_gru,
+						gru.numero_pdg_gru,
+						count(*) as cantidadPrePerfiles,
+						(select aprobo from pdg_apr_eta_tra_aprobador_etapa_Trabajo where id_cat_eta_eva = 999 AND id_pdg_tra_gra = 
+							(SELECT id_pdg_tra_gra from pdg_tra_gra_trabajo_graduacion where id_pdg_gru = gru.id_pdg_gru )) as finalizo
+						 from pdg_ppe_pre_perfil prep
+						inner join  pdg_gru_grupo  gru on prep.id_pdg_gru = gru.id_pdg_gru
+						where gru.id_pdg_gru IN ".$ids."
+						group by prep.id_pdg_gru,gru.numero_pdg_gru
+						order by prep.id_pdg_ppe desc"
+						);
 
         }else{
         	$grupos = "NA";

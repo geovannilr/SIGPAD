@@ -265,7 +265,7 @@
                                     	
                                     	</a>
                                     </h2>
-                                    <b><h6 class="d-block text-danger">{{$info[0]->nombre_cargo}}</h6></b>
+                                    <b><h6 class="d-block text-danger"><b>{{$info[0]->nombre_cargo}}</b> / {{$info[0]->nombre_cargo2}}</h6></b>
                                     <h6 class="d-block">{{$info[0]->email}}</h6>
                                 
                                 </div>

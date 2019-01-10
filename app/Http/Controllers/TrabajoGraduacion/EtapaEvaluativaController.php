@@ -208,65 +208,69 @@ class EtapaEvaluativaController extends Controller {
 				$ponderacion = $documentos[0]->ponderacion_cat_eta_eva . '%';
 				foreach ($documentos as $doc) {
 					$tipoDocumento = $doc->id_cat_tpo_doc;
-					$bodyHtml .= '
+					if(Auth::user()->can(['documentoEtapa.create'])){
+                        $bodyHtml .= '
 		    					<div class="col-sm-3">
 		    						<p>Nuevo <a class="btn btn-primary" href="' . url("/") . '/nuevoDocumento/' . $id . '/' . $doc->id_cat_tpo_doc . '"><i class="fa fa-plus"></i></a></p>
 	    						</div>';
+                    }
 					$bodyHtml .= '<h2 class="text-center">Entregables de ' . $doc->nombre_pdg_tpo_doc . '</h2>';
 					$bodyHtml .= '<div class="table-responsive">';
 					$bodyHtml .= '<table class="table table-hover table-striped  display" id="listTable">';
 					$bodyHtml .= '<thead>
-		        				<th>Nombre Archivo</th>
-		        				<th>Fecha Subida</th>
-		        				<th>Modificar</th>
-		        				<th>Eliminar</th>
-		        				<th>Descargar</th>
+                                    <th>Nombre Archivo</th>
+		        				    <th>Fecha Subida</th>';
+                    $bodyHtml .= Auth::user()->can(['documentoEtapa.edit'])?'<th>Modificar</th>':'';
+                    $bodyHtml .= Auth::user()->can(['documentoEtapa.destroy'])?'<th>Eliminar</th>':'';
+                    $bodyHtml .= '<th>Descargar</th>
 		        				</thead>
 		        				<tbody>';
 					$archivos = $etapa->getArchivos($id, $idGrupo);
 					if (sizeof($archivos) != 0) {
+					    $counter = 0;
 						foreach ($archivos as $archivo) {
 							if ($tipoDocumento == $archivo->id_cat_tpo_doc) {
 								$bodyHtml .= '<tr>
-												<td>' . $archivo->nombreArchivo . '</td>
-												<td>' . $archivo->fechaSubidaArchivo . '</td>';
+												<td>' . ($counter==0?'<b>':'') . $archivo->nombreArchivo . ($counter==0?'<b>':''). '</td>
+												<td>' . ($counter==0?'<b>':'') . $archivo->fechaSubidaArchivo . ($counter==0?'</b>':'') . '</td>';
 								if ($archivo->esArchivoActico == 1) {
-									$bodyHtml .= '
-																<td><a class="btn btn-primary" href="' . url("/") . '/editDocumento/' . $id . '/' . $archivo->id_pdg_doc . '/' . $doc->id_cat_tpo_doc . '"><i class="fa fa-pencil"></i></a></td>
-																<td>
-																	<form method="POST" action="' . url("/") . '/documento/' . $archivo->id_pdg_doc . '" class="deleteButton formPost">
-																		<input name="_method" value="DELETE" type="hidden">
-																		<input class="form-control" name="etapa" value="' . $id . '" type="hidden">
-														 				<div class="btn-group">
-																			<button type="submit" class="btn btn-danger"><i class="fa fa-trash"></i></button>
-																		</div>
-																	</form>
-																</td>
-																<td>
-																	<form method="POST" action="' . url("/") . '/downloadDocumento" accept-charset="UTF-8" class ="formPost">
-														 				<div class="btn-group">
-														 					<input class="form-control" name="documento" value="' . $archivo->id_pdg_arc_doc . '" type="hidden">
-														 					<input class="form-control" name="etapa" value="' . $id . '" type="hidden">
-																			<button type="submit" class="btn btn-dark"><i class="fa fa-download"></i></button>
-																		</div>
-																	</form>
-																</td>
-							        						</tr>';
+								    $bodyHtml .= Auth::user()->can(['documentoEtapa.edit'])?'<td><a class="btn btn-primary" href="' . url("/") . '/editDocumento/' . $id . '/' . $archivo->id_pdg_doc . '/' . $doc->id_cat_tpo_doc . '"><i class="fa fa-pencil"></i></a></td>':'';
+								    $bodyHtml .= Auth::user()->can(['documentoEtapa.destroy'])?
+                                                '<td>
+                                                    <form method="POST" action="' . url("/") . '/documento/' . $archivo->id_pdg_doc . '" class="deleteButton formPost">
+                                                        <input name="_method" value="DELETE" type="hidden">
+                                                        <input class="form-control" name="etapa" value="' . $id . '" type="hidden">
+                                                        <div class="btn-group">
+                                                            <button type="submit" class="btn btn-danger"><i class="fa fa-trash"></i></button>
+                                                        </div>
+                                                    </form>
+                                                </td>':'';
+                                    $bodyHtml .=' <td>
+                                                    <form method="POST" action="' . url("/") . '/downloadDocumento" accept-charset="UTF-8" class ="formPost">
+                                                        <div class="btn-group">
+                                                            <input class="form-control" name="documento" value="' . $archivo->id_pdg_arc_doc . '" type="hidden">
+                                                            <input class="form-control" name="etapa" value="' . $id . '" type="hidden">
+                                                            <button type="submit" class="btn btn-dark"><i class="fa fa-download"></i></button>
+                                                        </div>
+                                                    </form>
+                                                  </td>
+                                                </tr>';
 								} else {
-									$bodyHtml .= '
-															<td></td>
-															<td></td>
-															<td>
-																<form method="POST" action="' . url("/") . '/downloadDocumento" accept-charset="UTF-8" class ="formPost">
-													 				<div class="btn-group">
-													 					<input class="form-control" name="documento" value="' . $archivo->id_pdg_arc_doc . '" type="hidden">
-													 					<input class="form-control" name="etapa" value="' . $id . '" type="hidden">
-																		<button type="submit" class="btn btn-dark"><i class="fa fa-download"></i></button>
-																	</div>
-																</form>
-															</td>
-						        						</tr>';
+									$bodyHtml .= Auth::user()->can(['documentoEtapa.edit'])?'<td></td>':'';
+                                    $bodyHtml .= Auth::user()->can(['documentoEtapa.destroy'])?'<td></td>':'';
+                                    $bodyHtml .= '
+                                                    <td>
+                                                        <form method="POST" action="' . url("/") . '/downloadDocumento" accept-charset="UTF-8" class ="formPost">
+                                                            <div class="btn-group">
+                                                                <input class="form-control" name="documento" value="' . $archivo->id_pdg_arc_doc . '" type="hidden">
+                                                                <input class="form-control" name="etapa" value="' . $id . '" type="hidden">
+                                                                <button type="submit" class="btn btn-dark"><i class="fa fa-download"></i></button>
+                                                            </div>
+                                                        </form>
+                                                    </td>
+                                                </tr>';
 								}
+								$counter++;
 							}
 						}
 					}

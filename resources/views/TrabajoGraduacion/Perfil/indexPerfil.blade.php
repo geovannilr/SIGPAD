@@ -53,6 +53,34 @@
         },
         order: [ 1, 'asc' ],
     	});
+
+      $("#listTableFin").DataTable({
+        language: {
+                url: 'es-ar.json' //Ubicacion del archivo con el json del idioma.
+        },
+        dom: '<"top"l>frt<"bottom"Bip><"clear">',
+        buttons: [
+           {
+                extend: 'excelHtml5',
+                title: 'Listado de Grupos de trabajo de graduación'
+            },
+            {
+                extend: 'pdfHtml5',
+                title: 'Listado de Grupos de trabajo de graduación'
+            },
+             {
+                extend: 'csvHtml5',
+                title: 'Listado de Grupos de trabajo de graduación'
+            },
+            {
+                extend: 'print',
+                title: 'Listado de Grupos de trabajo de graduación'
+            }
+
+
+        ],
+        order: [ 1, 'asc' ],
+      });
 	});
 	function borrar(id) {
 		var idUsuario=id;
@@ -77,32 +105,76 @@
 	  </div>
   @endcan
 </div> 
+  <ul class="nav nav-tabs" id="tabGrupos" role="tablist">
+        <li class="nav-item">
+          <a class="nav-link active" id="activos-tab" data-toggle="tab" href="#activos" role="tab" aria-controls="activos" aria-selected="true">Activos</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" id="finalizados-tab" data-toggle="tab" href="#finalizados" role="tab" aria-controls="finalizados" aria-selected="false">Finalizados</a>
+        </li>
+  </ul>
+<div class="tab-content" id="myTabContent">
+  <div class="tab-pane fade show active" id="activos" role="tabpanel" aria-labelledby="activos-tab">
+    <br><br>
+      <div class="table-responsive">
+        <table class="table table-hover table-striped  display" id="listTable">
 
-		<br>
-  		<div class="table-responsive">
-  			<table class="table table-hover table-striped  display" id="listTable">
+          <thead>
+          <th>Grupo</th>
+          <th>Detalle de Grupo</th>
+          <th>Detalle de Perfiles</th>
 
-  				<thead>
-					<th>Grupo</th>
-					<th>Detalle de Grupo</th>
-					<th>Detalle de Perfiles</th>
+          </thead>
+          <tbody>
 
-  				</thead>
-  				<tbody>
+          @foreach($gruposPerfil as $grupo)
+              @if($grupo->finalizo != 1)
+                <tr>
+                  <td>{{ $grupo->numero_pdg_gru }}</td>
+                  <td>
+                      <a class="btn btn-info" href="#" onclick="getGrupo({{ $grupo->id_pdg_gru }});"><i class="fa fa-eye"></i></a>
+                  </td>
+                  <td>
+                      <a class="btn btn-info" href="{{route('indexPerfil', [$grupo->id_pdg_gru])}}"><i class="fa fa-list-alt"></i></a>
+               </tr>
+              @endif 
+        @endforeach 
+        </tbody>
+      </table>
+     </div>
+  </div>
+  <div class="tab-pane fade" id="finalizados" role="tabpanel" aria-labelledby="finalizados-tab">
+    <br><br>
+      <div class="table-responsive">
+        <table class="table table-hover table-striped  display" id="listTableFin">
 
-  				@foreach($gruposPerfil as $grupo)
-  						<tr>
-						<td>{{ $grupo->grupo->numero_pdg_gru }}</td>
-						<td>
-							 	<a class="btn btn-info" href="#" onclick="getGrupo({{ $grupo->id_pdg_gru }});"><i class="fa fa-eye"></i></a>
-						</td>
-						<td>
-								<a class="btn btn-info" href="{{route('indexPerfil', [$grupo->id_pdg_gru])}}"><i class="fa fa-list-alt"></i></a>
-					</tr>
-				@endforeach 
-				</tbody>
-			</table>
-	   </div>
+          <thead>
+          <th>Grupo</th>
+          <th>Detalle de Grupo</th>
+          <th>Detalle de Perfiles</th>
+
+          </thead>
+          <tbody>
+
+          @foreach($gruposPerfil as $grupo)
+            @if($grupo->finalizo == 1)
+              <tr>
+                <td>{{ $grupo->numero_pdg_gru }}</td>
+                <td>
+                    <a class="btn btn-info" href="#" onclick="getGrupo({{ $grupo->id_pdg_gru }});"><i class="fa fa-eye"></i></a>
+                </td>
+                <td>
+                    <a class="btn btn-info" href="{{route('indexPerfil', [$grupo->id_pdg_gru])}}"><i class="fa fa-list-alt"></i></a>
+             </tr>
+            @endif 
+        @endforeach 
+        </tbody>
+      </table>
+     </div>
+  </div>
+  
+</div>
+		
 	  
 <!-- Modal Detalle de grupo -->
 <div class="modal fade" id="detalleGrupo" tabindex="-1" role="dialog" aria-labelledby="Detalle grupo de trabajo de graduación" aria-hidden="true">

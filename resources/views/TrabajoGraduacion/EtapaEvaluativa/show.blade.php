@@ -47,7 +47,7 @@
                 type: 'column'
             }
         },
-        order: [ 2, 'asc' ],
+        order: [ 1, 'desc' ],
       });
       $(".aprobar").submit(function( event ) {
         event.preventDefault();

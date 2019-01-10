@@ -128,6 +128,9 @@
 	        });		
 		});
 	});
+    function verTribunal(){
+        $("#modalTribunalData").modal();
+	}
 </script>
 		<ol class="breadcrumb" style="text-align: center; margin-top: 1em">
 	        <li class="breadcrumb-item"  style="text-align: center;">
@@ -143,21 +146,28 @@
 			  <div class="col-sm-3"></div>
 			   <div class="col-sm-3">
 			   	 	 @can('prePerfil.create')
-					  <div class="col-sm-3"> 
+					  <div class="d-inline col-sm-3">
 					  	 <a class="btn " href="{{route('prePerfil.create')}}" style="background-color: #DF1D20; color: white"><i class="fa fa-plus"></i> Nuevo Pre-perfil </a>
 					  </div>
 				  @endcan
+						 @if ($tribunal!="NA")
+							 <div class="d-inline">
+							 <button id="btnTribunalEvaluador" type="button" onclick="verTribunal();" class="btn btn-secondary" title="Ver Tribunal Evaluador">
+								 <i class="fa fa-balance-scale" ></i>
+							 </button>
+							 </div>
+						 @endif
 			   </div>
-			 
-		</div> 
+
+		</div>
 
 
 		<br>
-		
+
 	<!-- 	<br>
-		<h5  style="text-align: center; font-weight: bold">	
-			Pre-perfiles 
-			@if(isset($numero)) 
+		<h5  style="text-align: center; font-weight: bold">
+			Pre-perfiles
+			@if(isset($numero))
 				Grupo {{$numero}}
 	        @endif</h5> -->
 
@@ -185,8 +195,8 @@
 					@endcan
 					@can('prePerfil.rechazar')
 						<th>Rechazar</th>
-					@endcan	
-						
+					@endcan
+
   				</thead>
   				<tbody>
 
@@ -204,11 +214,11 @@
 								@if($prePerfil->id_cat_sta == "12" )
 									<span class="badge badge-danger">{{ $prePerfil->categoriaEstado->nombre_cat_sta }}</span>&nbsp;
 								@else
-								<span class="badge badge-info">{{ $prePerfil->categoriaEstado->nombre_cat_sta }}</span>&nbsp; 	
+								<span class="badge badge-info">{{ $prePerfil->categoriaEstado->nombre_cat_sta }}</span>&nbsp;
 								@endif
-									
+
 							@endif
-							
+
 						</td>
 						<td>{{ $prePerfil->tipoTrabajo->nombre_cat_tpo_tra_gra}}</td>
 						@can('prePerfil.edit')
@@ -259,10 +269,37 @@
 									@endif
 								</td>
 							@endcan
-						
-					</tr>				
-				@endforeach 
+
+					</tr>
+				@endforeach
 				</tbody>
 			</table>
 	   </div>
+<!-- Modal Tribunal Evaluador -->
+<div class="modal fade" id="modalTribunalData" tabindex="-1" role="dialog" aria-labelledby="Tribunal Evaluador" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="exampleModalLongTitle">Tribunal Evaluador</h5>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div id="modalTribunalBody" class="modal-body">
+				<table class='table table-hover table-striped  display' id='tblTribunal'>
+					<thead><th>Nombre</th><th>Rol</th><th>Contacto</th></thead>
+					<tbody>
+					@foreach($tribunal as $trib)
+						<tr>
+							<td>{{$trib->name}}</td>
+							<td>{{$trib->nombre_tri_rol}}</td>
+							<td>{{$trib->email}}</td>
+						</tr>
+					@endforeach
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>
 @stop

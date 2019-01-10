@@ -26,7 +26,7 @@
            {
                 extend: 'excelHtml5',
                 exportOptions: {
-                    columns: [ 0]
+                    columns: [0]
                 },
                 title: 'Listado de Categorías'
             },
