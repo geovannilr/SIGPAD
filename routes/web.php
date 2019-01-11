@@ -94,6 +94,7 @@ Route::get('testReporte', 'ReportesController@test')->name('testReporte');
 Route::get('reportes/tribunalPorGrupo', 'ReportesController@tribunalPorGrupo')->name('reportes/tribunalPorGrupo');
 Route::get('reportes/asignacionesPorDocente', 'ReportesController@asignacionesPorDocente')->name('reportes/asignacionesPorDocente');
 Route::get('reportes/estadoGruposEtapa', 'ReportesController@estadoGruposEtapa')->name('reportes/estadoGruposEtapa');
+Route::get('reportes/detalleGruposTdg', 'ReportesController@detalleGruposTdg')->name('reportes/detalleGruposTdg');
 
 
 

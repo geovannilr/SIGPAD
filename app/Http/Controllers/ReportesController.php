@@ -29,9 +29,18 @@ class ReportesController extends Controller{
     }
 
     public function estadoGruposEtapa(Request $request){
+        $anio = 2019;
         $title = "Reporte de Estado de Grupos Activos";
-        $datos = pdg_gru_grupoModel::getEstadoGrupos();
+        $datos = pdg_gru_grupoModel::getEstadoGrupos($anio);
         $pdf = PDF::loadView('TrabajoGraduacion.Reports.EstadoGruposEtapas',compact('datos', 'title'));
+        return $pdf->stream('Reporte de Estado de Grupos Activos.pdf');
+    }
+
+    public function detalleGruposTdg(Request $request){
+        $anio = 2019;
+        $title = "Reporte de Detalle de Grupos de Trabajo de Graduación";
+        $datos = pdg_gru_grupoModel::getDetalleGrupos($anio);
+        $pdf = PDF::loadView('TrabajoGraduacion.Reports.detalleGruposTdg',compact('datos', 'title'));
         return $pdf->stream('Reporte de Estado de Grupos Activos.pdf');
     }
 }

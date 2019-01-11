@@ -88,9 +88,9 @@ class pdg_gru_grupoModel extends Model{
         return $result;
     }
 
-    public static function getEstadoGrupos(){
+    public static function getEstadoGrupos($anio){
         $grupos = DB::select("
-        	SELECT 
+            SELECT 
 			gru.id_pdg_gru,
 			tra.id_pdg_tra_gra,
 			gru.numero_pdg_gru,
@@ -105,9 +105,32 @@ class pdg_gru_grupoModel extends Model{
 			inner join cat_eta_eva_etapa_evaluativa eta on eta.id_cat_eta_eva = apr.id_cat_eta_eva
 			inner join pdg_gru_est_grupo_estudiante est on est.id_pdg_gru = gru.id_pdg_gru
 			inner join gen_est_estudiante genEst on genEst.id_gen_est = est.id_gen_est
-			where apr.inicio = 1 AND aprobo = 0 AND est.eslider_pdg_gru_est = 1
+			where apr.inicio = 1 AND aprobo = 0 AND est.eslider_pdg_gru_est = 1 AND gru.anio_pdg_gru = :anio
 			group by gru.id_pdg_gru,tra.id_pdg_tra_gra,gru.numero_pdg_gru,eta.nombre_cat_eta_eva,est.id_gen_est,genEst.carnet_gen_est,
-			genEst.nombre_gen_est"
+			genEst.nombre_gen_est",
+            array($anio)
+        );
+        return $grupos;
+    }
+    public static function getDetalleGrupos($anio){
+        $grupos = DB::select("
+                    SELECT 
+                        (SELECT COUNT(*) FROM pdg_gru_est_grupo_estudiante gru2 WHERE gru2.id_pdg_gru = gru_est.id_pdg_gru) AS cantGru,
+                        gru_est.id_pdg_gru 	AS idGru,
+                        gru.numero_pdg_gru 	AS numGrupo,
+                        sta.nombre_cat_sta	AS nomSta,
+                        est.nombre_gen_est	AS nomEst,
+                        gru_est.eslider_pdg_gru_est AS bLider
+                    FROM
+                        pdg_gru_grupo gru
+                        INNER JOIN pdg_gru_est_grupo_estudiante gru_est ON (gru_est.id_pdg_gru=gru.id_pdg_gru)
+                        INNER JOIN gen_est_estudiante est	ON (est.id_gen_est=gru_est.id_gen_est)
+                        INNER JOIN cat_sta_estado sta	ON (sta.id_cat_sta=gru.id_cat_sta)
+                    WHERE
+                        gru.anio_pdg_gru = :anio
+                    ORDER BY 
+                        gru.numero_pdg_gru ASC, gru_est.eslider_pdg_gru_est DESC",
+            array($anio)
         );
         return $grupos;
     }
