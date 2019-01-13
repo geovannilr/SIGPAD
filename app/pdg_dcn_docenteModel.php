@@ -67,7 +67,7 @@ class pdg_dcn_docenteModel extends Model
         return $docentes;
     }
 
-    public static function getLideres($anio){
+    public static function getLideres($anio,$estado){
         $lideres=DB::select("select distinct x.NumGrupo, x.Carnet, x.Lider 
             from (select gru.numero_pdg_gru as NumGrupo, 
             UPPER(est.carnet_gen_est) as Carnet,
@@ -89,13 +89,20 @@ class pdg_dcn_docenteModel extends Model
         );
         return $lideres;
     }
-    public static function getTribunales($anio){
-        $trib = DB::select("select distinct x.NumGrupo,x.TribunalRol,x.Docente
+    public static function getTribunales($anio,$estado){
+        if ($estado == 0 || $estado == 1 ) {
+            $where = " where ifnull(x.finalizo,0) =:estado "; 
+        }elseif ($estado == 2) {
+           $where = " ";
+        }
+        $select = "select distinct x.NumGrupo,x.TribunalRol,x.Docente
             from (select gru.numero_pdg_gru as NumGrupo,
             est.carnet_gen_est as Carnet,
             est.nombre_gen_est as Lider,
             triR.nombre_tri_rol as TribunalRol,
-            usr.name  as Docente
+            usr.name  as Docente,
+            (select aprobo from pdg_apr_eta_tra_aprobador_etapa_Trabajo where id_cat_eta_eva = 999 AND id_pdg_tra_gra = 
+            (SELECT id_pdg_tra_gra from pdg_tra_gra_trabajo_graduacion where id_pdg_gru = gru.id_pdg_gru )) as finalizo
             from pdg_tri_gru_tribunal_grupo triG
              join pdg_gru_est_grupo_estudiante gruE on triG.id_pdg_gru=gruE.id_pdg_gru and gruE.eslider_pdg_gru_est=1
                  join pdg_tri_rol_tribunal_rol triR on triR.id_pdg_tri_rol=triG.id_pdg_tri_rol
@@ -103,12 +110,16 @@ class pdg_dcn_docenteModel extends Model
                  left join pdg_dcn_docente dcn on dcn.id_pdg_dcn=triG.id_pdg_dcn
                  left join gen_usuario usr on usr.id=dcn.id_gen_usuario
                 left join pdg_gru_grupo gru on gru.id_pdg_gru=gruE.id_pdg_gru
-                where gru.anio_pdg_gru=:anio) x
-                order by x.TribunalRol asc",
-            array(
-                $anio
-            )
-        );
+                where gru.anio_pdg_gru=:anio AND gru.id_cat_sta not in(7,2,1)) x
+                ".$where."
+                order by x.TribunalRol asc";
+
+        if ($estado == 0 || $estado == 1 ) {
+            $trib = DB::select($select,array($anio,$estado));
+        }elseif ($estado == 2) {
+           $trib = DB::select($select,array($anio));
+        }        
+        
         return $trib;
     }
     public static function getDocentes($anio){

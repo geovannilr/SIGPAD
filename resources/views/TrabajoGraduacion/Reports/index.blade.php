@@ -43,20 +43,16 @@
   		<div class="table-responsive">
   			<table class="table table-hover table-striped  display" id="listTable">
   				<thead>
-					<th>Código</th>
 					<th>Nombre</th>
+					<th>Descripción</th>
   				</thead>
   				<tbody>
-  				@foreach($reportes as $clave => $reporte)
-					<tr>
-						<td>{{ $clave }}</td>
-						<td>
-							<a href="{{route($clave)}}">
-								{{ $reporte }}
-							</a>
-						</td>
-					</tr>
-				@endforeach 
+  				<tr>
+  					<td>Tribunal Por Grupo</td>
+  					<td>
+  						Presenta el listado de grupos y su  tribunal evaluador
+  					</td>
+  				</tr>
 				</tbody>
 			</table>
 	   </div>
