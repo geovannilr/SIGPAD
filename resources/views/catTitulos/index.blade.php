@@ -74,7 +74,7 @@
   <div class="col-sm-3"></div>
   <div class="col-sm-3"></div>
    <div class="col-sm-3"></div>
-  @can('permiso.create')
+  @can('catTitulos.create')
     <div class="col-sm-3">
       <a class="btn " href="{{route('catTitulos.create')}}" style="background-color: #DF1D20; color: white"><i class="fa fa-plus"></i> Nuevo Título</a>
     </div>
@@ -88,10 +88,9 @@
   				<thead>
 					<th>Título</th>
          			@can('catTitulos.edit')
-                    <th>Modificar</th>
+                    <th style="text-align: center;">Acciones</th>
                     @endcan
                     @can('catTitulos.destroy')
-					<th>Eliminar</th>
                     @endcan
   				</thead>
   				<tbody>
@@ -99,19 +98,18 @@
 					<tr>
 						<td>{{ $catTitulo->nombre_titulo_cat_tit}}</td>
            				@can('catTitulos.edit')
-                        <td style="text-align: center;">
+                            @can('catTitulos.destroy')
+
+                            <td style="text-align: center;">
   							<a class="btn " style="background-color:  #102359;color: white" href="{{route('catTitulos.edit',$catTitulo->id_cat_tit)}}"><i class="fa fa-pencil"></i></a>
-  						</td>
-            @endcan
-            @can('catTitulos.destroy')
-  						<td style="text-align: center;">
-  							{!! Form::open(['route'=>['catTitulos.destroy',$catTitulo->id_cat_tit],'method'=>'DELETE','class' => 'deleteButton']) !!}
+  						    {!! Form::open(['route'=>['catTitulos.destroy',$catTitulo->id_cat_tit],'method'=>'DELETE','class' => 'deleteButton']) !!}
   						 		<div class="btn-group">
   									<button type="submit" class="btn btn-danger"><i class="fa fa-trash"></i></button>
   								</div>
   							{!! Form:: close() !!}
   						</td>
-            @endcan
+                            @endcan
+                        @endcan
 					</tr>
 				@endforeach 
 				</tbody>

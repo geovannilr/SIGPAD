@@ -74,7 +74,7 @@
   <div class="col-sm-3"></div>
   <div class="col-sm-3"></div>
    <div class="col-sm-3"></div>
-  @can('permiso.create')
+  @can('catEstado.create')
     <div class="col-sm-3">
       <a class="btn " href="{{route('catEstado.create')}}" style="background-color: #DF1D20; color: white"><i class="fa fa-plus"></i> Nuevo estado</a>
     </div>
@@ -91,7 +91,7 @@
                     <th>Tipo Estado</th>
 
                     @can('catEstado.destroy')
-                    <th>Acciones</th>
+                    <th style="text-align: center;">Acciones</th>
                     @can('catEstado.edit')
 
                     @endcan

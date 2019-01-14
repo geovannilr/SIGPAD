@@ -11,7 +11,7 @@
 <script type="text/javascript">
 	$( document ).ready(function() {
 		 $('.deleteButton').on('submit',function(e){
-        if(!confirm('Estas seguro que deseas eliminar este Skill?')){
+        if(!confirm('Estas seguro que deseas eliminar los catalogos')){
 
               e.preventDefault();
         	}
@@ -26,30 +26,30 @@
            {
                 extend: 'excelHtml5',
                 exportOptions: {
-                    columns: [ 0]
+                    columns: [ 0,1]
                 },
-                title: 'Listado de Skills'
+                title: 'Listado de Catálogos'
             },
             {
                 extend: 'pdfHtml5',
                 exportOptions: {
-                    columns: [ 0]
+                    columns: [ 0,1]
                 },
-                title: 'Listado de Skills'
+                title: 'Listado de Catálogos'
             },
              {
                 extend: 'csvHtml5',
                 exportOptions: {
-                    columns: [ 0]
+                    columns: [ 0,1]
                 },
-                title: 'Listado de Skills'
+                title: 'Listado de Catálogos'
             },
             {
                 extend: 'print',
                 exportOptions: {
-                    columns: [ 0]
+                    columns: [ 0,1]
                 },
-                title: 'Listado de Skills'
+                title: 'Listado de Catálogos'
             }
 
 
@@ -66,7 +66,7 @@
 </script>
 		<ol class="breadcrumb"  style="text-align: center; margin-top: 1em">
 	        <li class="breadcrumb-item">
-	          <h5><a href="{{ redirect()->getUrlGenerator()->previous() }}" style="margin-left: 0em"><i class="fa fa-arrow-left fa-lg" style="z-index: 1;margin-top: 0em;margin-right: 0.5em; color: black"></i></a>     Catálogos</h5>
+	          <h5>     Catálogos</h5>
 	        </li>
 	        <li class="breadcrumb-item active">Listado</li>
 		</ol>
@@ -83,10 +83,9 @@
   				<thead>
 					<th>Nombre</th>
                     <th>Descripción</th>
-                    <th>Tipo Catálogo</th>
 
                     @can('catalogo.edit')
-                    <th>Gestionar</th>
+                    <th style="text-align: center;">Gestionar</th>
                     @endcan
                 </thead>
   				<tbody>
@@ -95,7 +94,6 @@
 					<tr>
 						<td>{{ $catCatalog->nombre_gen_cat}}</td>
                         <td>{{ $catCatalog->descripcion_gen_cat}}</td>
-                        <td>{{ $catCatalog->tipo_gen_cat}}</td>
 
                     @can('catalogo.edit')
                           <td style="text-align: center;">

@@ -74,7 +74,7 @@
   <div class="col-sm-3"></div>
   <div class="col-sm-3"></div>
    <div class="col-sm-3"></div>
-  @can('permiso.create')
+  @can('tipoDocumento.create')
     <div class="col-sm-3">
       <a class="btn " href="{{route('tipoDocumento.create')}}" style="background-color: #DF1D20; color: white"><i class="fa fa-plus"></i> Nuevo Tipo Documento</a>
     </div>
@@ -90,10 +90,9 @@
                     <th>Descipción</th>
                     <th>Año</th>
                     @can('tipoDocumento.edit')
-                    <th>Modificar</th>
+                    <th style="text-align: center;">Acciones</th>
                     @endcan
                     @can('tipoDocumento.destroy')
-					<th>Eliminar</th>
                     @endcan
   				</thead>
   				<tbody>
@@ -103,18 +102,16 @@
                         <td>{{ $tipoDocument->descripcion_pdg_tpo_doc }}</td>
 						<td>{{ $tipoDocument->anio_cat_pdg_tpo_doc }}</td>
                          @can('tipoDocumento.edit')
+                            @can('tipoDocumento.destroy')
                           <td style="text-align: center;">
   			            	<a class="btn " style="background-color:  #102359;color: white" href="{{route('tipoDocumento.edit',$tipoDocument->id_cat_tpo_doc)}}"><i class="fa fa-pencil"></i></a>
-                          </td>
-                         @endcan
-                        @can('tipoDocumento.destroy')
-  						<td style="text-align: center;">
   							{!! Form::open(['route'=>['tipoDocumento.destroy',$tipoDocument->id_cat_tpo_doc],'method'=>'DELETE','class' => 'deleteButton']) !!}
   						 		<div class="btn-group">
   									<button type="submit" class="btn btn-danger"><i class="fa fa-trash"></i></button>
   								</div>
   							{!! Form:: close() !!}
   						</td>
+                            @endcan
                         @endcan
 					</tr>
 				@endforeach 

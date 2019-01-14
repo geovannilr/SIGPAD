@@ -11,7 +11,7 @@
 <script type="text/javascript">
 	$( document ).ready(function() {
 		 $('.deleteButton').on('submit',function(e){
-        if(!confirm('Estas seguro que deseas eliminar este tipo Trabajo de Graduación?')){
+        if(!confirm('Estas seguro que deseas eliminar este aspecto?')){
 
               e.preventDefault();
         	}
@@ -28,28 +28,28 @@
                 exportOptions: {
                     columns: [ 0, 1]
                 },
-                title: 'Listado de tipo Trabajo'
+                title: 'Listado de aspectos'
             },
             {
                 extend: 'pdfHtml5',
                 exportOptions: {
                     columns: [ 0, 1]
                 },
-                title: 'Listado de tipo Trabajo'
+                title: 'Listado de aspectos'
             },
              {
                 extend: 'csvHtml5',
                 exportOptions: {
                     columns: [ 0, 1]
                 },
-                title: 'Listado de tipo Trabajo'
+                title: 'Listado de aspectos'
             },
             {
                 extend: 'print',
                 exportOptions: {
                     columns: [ 0, 1]
                 },
-                title: 'Listado de tipo Trabajo'
+                title: 'Listado de aspectos'
             }
 
 
@@ -66,7 +66,7 @@
 </script>
 		<ol class="breadcrumb"  style="text-align: center; margin-top: 1em">
 	        <li class="breadcrumb-item">
-	          <h5><a href="{{ redirect()->getUrlGenerator()->previous() }}" style="margin-left: 0em"><i class="fa fa-arrow-left fa-lg" style="z-index: 1;margin-top: 0em;margin-right: 0.5em; color: black"></i></a>     Tipo Trabajo de Graduación</h5>
+	          <h5><a href="{{ redirect()->getUrlGenerator()->previous() }}" style="margin-left: 0em"><i class="fa fa-arrow-left fa-lg" style="z-index: 1;margin-top: 0em;margin-right: 0.5em; color: black"></i></a>     Aspectos</h5>
 	        </li>
 	        <li class="breadcrumb-item active">Listado</li>
 		</ol>
@@ -74,9 +74,9 @@
   <div class="col-sm-3"></div>
   <div class="col-sm-3"></div>
    <div class="col-sm-3"></div>
-  @can('tipoTrabajo.create')
+  @can('pdgAspectos.create')
     <div class="col-sm-3">
-      <a class="btn " href="{{route('tipoTrabajo.create')}}" style="background-color: #DF1D20; color: white"><i class="fa fa-plus"></i> Nuevo Tipo Trabajo</a>
+      <a class="btn " href="{{route('pdgAspectos.create')}}" style="background-color: #DF1D20; color: white"><i class="fa fa-plus"></i> Nuevo aspecto</a>
     </div>
   @endcan
   </div> 
@@ -86,30 +86,38 @@
   			<table class="table table-hover table-striped  display" id="listTable">
 
   				<thead>
-					<th>Nombre Tipo TDG</th>
-                    <th>Año</th>
-                    @can('tipoTrabajo.edit')
+					<th>Nombre de aspecto</th>
+                    <th>Ponderación</th>
+                    <th>Etapa Evaluativa</th>
+
+                    @can('pdgAspectos.destroy')
                     <th style="text-align: center;">Acciones</th>
+                    @can('pdgAspectos.edit')
+
                     @endcan
-                    @can('tipoTrabajo.destroy')
                     @endcan
-  				</thead>
-  				<tbody>
-  				@foreach($tipoTrabajo as $tipoTrabaj)
+
+                </thead>
+                <tbody>
+                @foreach($pdgAspectos as $pdgAspecto)
 					<tr>
-						<td>{{ $tipoTrabaj->nombre_cat_tpo_tra_gra }}</td>
-                        <td>{{ $tipoTrabaj->anio_cat_tpo_tra_gra }}</td>
-						 @can('tipoTrabajo.edit')
-                            @can('tipoTrabajo.destroy')
+						<td>{{ $pdgAspecto->nombre_pdg_asp}}</td>
+                        <td>{{ $pdgAspecto->ponderacion_pdg_asp}}</td>
+                        <td>{{ $pdgAspecto->catEtaEva->nombre_cat_eta_eva}}</td>
+                    @can('pdgAspectos.edit')
+                            @can('pdgAspectos.destroy')
                           <td style="text-align: center;">
-  			            	<a class="btn " style="background-color:  #102359;color: white" href="{{route('tipoTrabajo.edit',$tipoTrabaj->id_cat_tpo_tra_gra)}}"><i class="fa fa-pencil"></i></a>
-  							{!! Form::open(['route'=>['tipoTrabajo.destroy',$tipoTrabaj->id_cat_tpo_tra_gra],'method'=>'DELETE','class' => 'deleteButton']) !!}
-  						 		<div class="btn-group">
-  									<button type="submit" class="btn btn-danger"><i class="fa fa-trash"></i></button>
-  								</div>
-  							{!! Form:: close() !!}
-  						</td>
-                            @endcan
+                             <div class="d-inline-block">
+                              <a class="btn " style="background-color: #102359;color: white" href="{{route('pdgAspectos.edit',$pdgAspecto->id_pdg_asp)}}"><i class="fa fa-pencil"></i></a>
+                             </div>
+                              {!! Form::open(['route'=>['pdgAspectos.destroy',$pdgAspecto->id_pdg_asp],'method'=>'DELETE','class' => 'deleteButton']) !!}
+                              <div class="d-inline-block">
+                                  <button type="submit" class="btn btn-danger"><i class="fa fa-trash"></i></button>
+                              </div>
+                              {!! Form:: close() !!}
+
+                          </td>
+                         @endcan
                             @endcan
 					</tr>
 				@endforeach 

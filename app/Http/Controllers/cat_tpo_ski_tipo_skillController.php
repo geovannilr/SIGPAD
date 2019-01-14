@@ -125,14 +125,22 @@ class cat_tpo_ski_tipo_skillController extends Controller
     public function destroy($id)
     {
         $userLogin=Auth::user();
+
         if ($userLogin->can(['tipoSki.destroy'])) {
-            cat_tpo_ski_tipo_skillModel::destroy($id);
+
+            try {
+                cat_tpo_ski_tipo_skillModel::destroy($id);
+            } catch (\PDOException $e)
+            {
+                Session::flash('message-error', 'No es posible eliminar este registro, está siendo usado.');
+                return Redirect::to('tipoSki');
+            }
             Session::flash('message','Tipo Skill Eliminado Correctamente!');
             return Redirect::to('tipoSki');
+
         }else{
             Session::flash('message-error', 'No tiene permisos para acceder a esta opción');
             return  view('template');
         }
-
     }
 }

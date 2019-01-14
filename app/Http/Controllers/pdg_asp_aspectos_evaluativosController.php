@@ -3,23 +3,23 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\cat_tit_titulos_profesionalesModel;
 use Session;
 use Redirect;
 use Illuminate\Support\Facades\Auth;
-class cat_tit_titulos_profesionalesController extends Controller
+use App\pdg_asp_aspectos_evaluativosModel;
+use App\cat_eta_eva_etapa_evalutativaModel;
+
+class pdg_asp_aspectos_evaluativosController extends Controller
 {
     public function __construct(){
         $this->middleware('auth');
     }
-
     public function index()
     {
         $userLogin=Auth::user();
-        if ($userLogin->can(['catTitulos.index'])) {
-            $catTitulos= cat_tit_titulos_profesionalesModel::all();
-            return view('catTitulos.index',compact('catTitulos'));
-
+        if ($userLogin->can(['pdgAspectos.index'])) {
+            $pdgAspectos=pdg_asp_aspectos_evaluativosModel::all();
+            return view('pdgAspectos.index',compact('pdgAspectos'));
         }else{
             Session::flash('message-error', 'No tiene permisos para acceder a esta opción');
             return  view('template');
@@ -34,8 +34,9 @@ class cat_tit_titulos_profesionalesController extends Controller
     public function create()
     {
         $userLogin=Auth::user();
-        if ($userLogin->can(['catTitulos.create'])) {
-            return view('catTitulos.create');
+        if ($userLogin->can(['pdgAspectos.create'])) {
+            $catEtaEva= cat_eta_eva_etapa_evalutativaModel::all()->pluck("full_name","id_cat_eta_eva");
+            return view('pdgAspectos.create',compact('catEtaEva'));
         }else{
             Session::flash('message-error', 'No tiene permisos para acceder a esta opción');
             return  view('template');
@@ -51,20 +52,26 @@ class cat_tit_titulos_profesionalesController extends Controller
     public function store(Request $request)
     {
         $validatedData = $request->validate([
-            'nombre_titulo_cat_tit' => 'required|max:45'
+            'nombre_pdg_asp' => 'required|max:45',
+            'ponderacion_pdg_asp' => 'required|numeric'
         ],
             [
-                'nombre_titulo_cat_tit.required' => 'El título es requerido',
-                'nombre_titulo_cat_tit.max' => 'El título debe contener como maximo 45 caracteres'
+                'nombre_pdg_asp.required' => 'El nombre del aspecto es necesario',
+                'nombre_pdg_asp.max' => 'El nombre del aspecto debe contener como maximo 45 caracteres',
+                'ponderacion_pdg_asp.required'=> 'La ponderación del aspecto es necesario',
+                'ponderacion_pdg_asp.max'=> 'La ponderación del aspecto debe contener como maximo 5 caracteres',
             ]
         );
 
-        cat_tit_titulos_profesionalesModel::create
+//        return var_dump($request);
+        pdg_asp_aspectos_evaluativosModel::create
         ([
-            'nombre_titulo_cat_tit'=> $request['nombre_titulo_cat_tit']
+            'nombre_pdg_asp'       	 => $request['nombre_pdg_asp'],
+            'ponderacion_pdg_asp'       	 => $request['ponderacion_pdg_asp'],
+            'id_cat_eta_eva'        => $request['id_cat_eta_eva']
         ]);
 
-        Return redirect('catTitulos')->with('message','Título Registrado correctamente!') ;
+        Return redirect('pdgAspectos')->with('message','Estado Registrado correctamente!') ;
     }
 
     /**
@@ -87,10 +94,11 @@ class cat_tit_titulos_profesionalesController extends Controller
     public function edit($id)
     {
         $userLogin=Auth::user();
-        if ($userLogin->can(['catTitulos.edit'])) {
-            $catTitulos=cat_tit_titulos_profesionalesModel::find($id);
+        if ($userLogin->can(['pdgAspectos.edit'])) {
+            $pdgAspectos= pdg_asp_aspectos_evaluativosModel::find($id);
+            $catEtaEva= cat_eta_eva_etapa_evalutativaModel::pluck("nombre_cat_eta_eva","id_cat_eta_eva");
 
-            return view('catTitulos.edit',compact(['catTitulos']));
+            return view('pdgAspectos.edit',compact(['pdgAspectos'],'catEtaEva'));
         }else{
             Session::flash('message-error', 'No tiene permisos para acceder a esta opción');
             return  view('template');
@@ -106,12 +114,12 @@ class cat_tit_titulos_profesionalesController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $catTitulos=cat_tit_titulos_profesionalesModel::find($id);
+        $pdgAspectos=pdg_asp_aspectos_evaluativosModel::find($id);
 
-        $catTitulos->fill($request->all());
-        $catTitulos->save();
-        Session::flash('message','Titulo Modificado correctamente!');
-        return Redirect::to('catTitulos');
+        $pdgAspectos->fill($request->all());
+        $pdgAspectos->save();
+        // Session::flash('message','Tipo Documento Modificado correctamente!');
+        return Redirect::to('pdgAspectos');
     }
 
     /**
@@ -123,21 +131,22 @@ class cat_tit_titulos_profesionalesController extends Controller
     public function destroy($id)
     {
         $userLogin=Auth::user();
-        if ($userLogin->can(['catTitulos.destroy']))
+        if ($userLogin->can(['pdgAspectos.destroy']))
         {
             try {
-                cat_tit_titulos_profesionalesModel::destroy($id);
+                pdg_asp_aspectos_evaluativosModel::destroy($id);
             } catch (\PDOException $e)
             {
                 Session::flash('message-error', 'No es posible eliminar este registro, está siendo usado.');
-                return Redirect::to('catTitulos');
+                return Redirect::to('pdgAspectos');
             }
-            Session::flash('message','Titulo Eliminado Correctamente!');
-            return Redirect::to('catTitulos');
+            Session::flash('message','Aspecto Eliminado Correctamente!');
+            return Redirect::to('pdgAspectos');
 
         }else{
             Session::flash('message-error', 'No tiene permisos para acceder a esta opción');
             return  view('template');
         }
+
     }
 }

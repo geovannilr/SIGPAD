@@ -35,5 +35,9 @@ class cat_eta_eva_etapa_evalutativaModel extends Model{
 	    	)
 		);
 		return $archivos;
-	}		
+	}
+    public function getFullNameAttribute()
+    {
+        return $this->nombre_cat_eta_eva. ' - ' . $this->anio_cat_eta_eva;
+    }
 }

@@ -126,10 +126,18 @@ class cat_ski_skillController extends Controller
     public function destroy($id)
     {
         $userLogin=Auth::user();
-        if ($userLogin->can(['catSki.destroy'])) {
-            cat_ski_skillModel::destroy($id);
+        if ($userLogin->can(['catSki.destroy']))
+        {
+            try {
+                cat_ski_skillModel::destroy($id);
+            } catch (\PDOException $e)
+            {
+                Session::flash('message-error', 'No es posible eliminar este registro, está siendo usado.');
+                return Redirect::to('catSki');
+            }
             Session::flash('message','Skill Eliminado Correctamente!');
             return Redirect::to('catSki');
+
         }else{
             Session::flash('message-error', 'No tiene permisos para acceder a esta opción');
             return  view('template');

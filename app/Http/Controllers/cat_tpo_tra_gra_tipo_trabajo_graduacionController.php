@@ -134,11 +134,19 @@ class cat_tpo_tra_gra_tipo_trabajo_graduacionController extends Controller
     public function destroy($id)
     {
         $userLogin=Auth::user();
-        if ($userLogin->can(['tipoTrabajo.destroy'])) {
-            cat_tpo_tra_gra_tipo_trabajo_graduacionModel::destroy($id);
-            Session::flash('message','Tipo Trabajo Eliminado Correctamente!');
-            return Redirect::to('tipoTrabajo');
-        }else{
+        if ($userLogin->can(['tipoTrabajo.destroy']))
+            {
+            try {
+                cat_tpo_tra_gra_tipo_trabajo_graduacionModel::destroy($id);
+            } catch (\PDOException $e)
+            {
+                Session::flash('message-error', 'No es posible eliminar este registro, está siendo usado.');
+                return Redirect::to('tipoTrabajo');
+            }
+                Session::flash('message','Tipo Trabajo Eliminado Correctamente!');
+                return Redirect::to('tipoTrabajo');
+
+            }else{
             Session::flash('message-error', 'No tiene permisos para acceder a esta opción');
             return  view('template');
         }

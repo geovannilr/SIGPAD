@@ -129,11 +129,18 @@ class cat_tpo_pub_tipo_publicacionController extends Controller
     public function destroy($id)
     {
         $userLogin=Auth::user();
-        if ($userLogin->can(['catTpublicacion.destroy'])) {
-            cat_tpo_pub_tipo_publicacionModel::destroy($id);
-            Session::flash('message','Tipo publicación Eliminada Correctamente!');
-            return Redirect::to('catTpublicacion');
-        }else{
+        if ($userLogin->can(['catTpublicacion.destroy']))
+            {
+            try {
+                cat_tpo_pub_tipo_publicacionModel::destroy($id);
+            } catch (\PDOException $e)
+            {
+                Session::flash('message-error', 'No es posible eliminar este registro, está siendo usado.');
+                return Redirect::to('catTpublicacion');
+            }
+                Session::flash('message','Tipo publicación Eliminada Correctamente!');
+                return Redirect::to('catTpublicacion');
+            }else{
             Session::flash('message-error', 'No tiene permisos para acceder a esta opción');
             return  view('template');
         }

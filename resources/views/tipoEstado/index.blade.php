@@ -74,7 +74,7 @@
   <div class="col-sm-3"></div>
   <div class="col-sm-3"></div>
    <div class="col-sm-3"></div>
-  @can('permiso.create')
+  @can('tipoEstado.create')
     <div class="col-sm-3">
       <a class="btn " href="{{route('tipoEstado.create')}}" style="background-color: #DF1D20; color: white"><i class="fa fa-plus"></i> Nuevo Tipo Estado</a>
     </div>
@@ -89,10 +89,9 @@
 					<th>Nombre tipo estado</th>
                     <th>Descripción tipo estado</th>
                     @can('tipoEstado.edit')
-                    <th>Modificar</th>
+                    <th style="text-align: center;">Acciones</th>
                     @endcan
                     @can('tipoEstado.destroy')
-					<th>Eliminar</th>
                     @endcan
   				</thead>
   				<tbody>
@@ -101,18 +100,16 @@
 						<td>{{ $tipoEsta->nombre_cat_tpo_sta}}</td>
                         <td>{{ $tipoEsta->descripcion_cat_tpo_sta}}</td>
                     @can('tipoEstado.edit')
+                            @can('tipoEstado.destroy')
                         <td style="text-align: center;">
   							<a class="btn " style="background-color:  #102359;color: white" href="{{route('tipoEstado.edit',$tipoEsta->id_cat_tpo_sta)}}"><i class="fa fa-pencil"></i></a>
-  						</td>
-            @endcan
-            @can('tipoEstado.destroy')
-  						<td style="text-align: center;">
   							{!! Form::open(['route'=>['tipoEstado.destroy',$tipoEsta->id_cat_tpo_sta],'method'=>'DELETE','class' => 'deleteButton']) !!}
   						 		<div class="btn-group">
   									<button type="submit" class="btn btn-danger"><i class="fa fa-trash"></i></button>
   								</div>
   							{!! Form:: close() !!}
   						</td>
+                            @endcan
             @endcan
 					</tr>
 				@endforeach 

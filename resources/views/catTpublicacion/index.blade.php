@@ -74,7 +74,7 @@
   <div class="col-sm-3"></div>
   <div class="col-sm-3"></div>
    <div class="col-sm-3"></div>
-  @can('permiso.create')
+  @can('catTpublicacion.create')
     <div class="col-sm-3">
       <a class="btn " href="{{route('catTpublicacion.create')}}" style="background-color: #DF1D20; color: white"><i class="fa fa-plus"></i> Nuevo Tipo Publicación</a>
     </div>
@@ -89,10 +89,9 @@
 					<th>Nombre</th>
                     <th>Descripción</th>
          			@can('catTpublicacion.edit')
-                    <th>Modificar</th>
+                    <th style="text-align: center;">Acciones</th>
                     @endcan
                     @can('catTpublicacion.destroy')
-					<th>Eliminar</th>
                     @endcan
   				</thead>
   				<tbody>
@@ -101,19 +100,19 @@
 						<td>{{ $catTpublicacio->nombre_cat_tpo_pub}}</td>
                         <td>{{ $catTpublicacio->descripcion_cat_tpo_pub}}</td>
                         @can('catTpublicacion.edit')
-                        <td style="text-align: center;">
+                            @can('catTpublicacion.destroy')
+
+                            <td style="text-align: center;">
   							<a class="btn " style="background-color:  #102359;color: white" href="{{route('catTpublicacion.edit',$catTpublicacio->id_cat_tpo_pub)}}"><i class="fa fa-pencil"></i></a>
-  						</td>
-            @endcan
-            @can('catTpublicacion.destroy')
-  						<td style="text-align: center;">
   							{!! Form::open(['route'=>['catTpublicacion.destroy',$catTpublicacio->id_cat_tpo_pub],'method'=>'DELETE','class' => 'deleteButton']) !!}
   						 		<div class="btn-group">
   									<button type="submit" class="btn btn-danger"><i class="fa fa-trash"></i></button>
   								</div>
   							{!! Form:: close() !!}
   						</td>
-            @endcan
+                            @endcan
+
+                        @endcan
 					</tr>
 				@endforeach 
 				</tbody>

@@ -91,10 +91,9 @@
 
 
                     @can('catSki.edit')
-                    <th>Modificar</th>
+                    <th style="text-align: center;">Acciones</th>
                     @endcan
                    @can('catEstado.destroy')
-					<th>Eliminar</th>
                     @endcan
   				</thead>
   				<tbody>

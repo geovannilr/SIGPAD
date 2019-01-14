@@ -145,11 +145,19 @@ class cat_tpo_doc_tipo_documentoController extends Controller
     public function destroy($id)
     {
         $userLogin=Auth::user();
-        if ($userLogin->can(['tipoDocumento.destroy'])) {
-            cat_tpo_doc_tipo_documentoModel::destroy($id);
-            Session::flash('message','Tipo Documento Eliminado Correctamente!');
-            return Redirect::to('tipoDocumento');
-        }else{
+        if ($userLogin->can(['tipoDocumento.destroy']))
+            {
+            try {
+                cat_tpo_doc_tipo_documentoModel::destroy($id);
+            } catch (\PDOException $e)
+            {
+                Session::flash('message-error', 'No es posible eliminar este registro, está siendo usado.');
+                return Redirect::to('tipoDocumento');
+            }
+                Session::flash('message','Tipo Documento Eliminado Correctamente!');
+                return Redirect::to('tipoDocumento');
+
+            }else{
             Session::flash('message-error', 'No tiene permisos para acceder a esta opción');
             return  view('template');
         }

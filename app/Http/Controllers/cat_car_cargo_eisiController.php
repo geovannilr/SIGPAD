@@ -125,12 +125,25 @@ class cat_car_cargo_eisiController extends Controller
     {
         $userLogin=Auth::user();
         if ($userLogin->can(['cargoEisi.destroy'])) {
-            cat_car_cargo_eisiModel::destroy($id);
-            Session::flash('message','Cargo Eliminado Correctamente!');
-            return Redirect::to('cargoEisi');
-        }else{
+
+            try {
+                cat_car_cargo_eisiModel::destroy($id);
+
+            } catch (\PDOException $e)
+            {
+                Session::flash('message-error', 'No es posible eliminar este registro, está siendo usado.');
+                return Redirect::to('cargoEisi');
+            }
+                Session::flash('message','Cargo Eliminado Correctamente!');
+                return Redirect::to('cargoEisi');
+
+            }else{
             Session::flash('message-error', 'No tiene permisos para acceder a esta opción');
             return  view('template');
         }
+
+
+
+
     }
 }

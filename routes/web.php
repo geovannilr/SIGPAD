@@ -170,4 +170,5 @@ Route::resource ('catTitulos','cat_tit_titulos_profesionalesController');
 Route::resource ('catTpublicacion','cat_tpo_pub_tipo_publicacionController');
 Route::resource ('catTcolaborador','cat_tpo_col_pub_tipo_colaboradorController');
 Route::resource ('catCatalogo','gen_cat_catalogoController');
+Route::resource ('pdgAspectos','pdg_asp_aspectos_evaluativosController');
 

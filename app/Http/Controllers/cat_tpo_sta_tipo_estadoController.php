@@ -127,11 +127,19 @@ class cat_tpo_sta_tipo_estadoController extends Controller
     public function destroy($id)
     {
         $userLogin=Auth::user();
-        if ($userLogin->can(['tipoEstado.destroy'])) {
-            cat_tpo_sta_tipo_estadoModel::destroy($id);
-            Session::flash('message','Tipo Estado Eliminado Correctamente!');
-            return Redirect::to('tipoEstado');
-        }else{
+
+        if ($userLogin->can(['tipoEstado.destroy']))
+            {
+            try {
+                cat_tpo_sta_tipo_estadoModel::destroy($id);
+            } catch (\PDOException $e)
+            {
+                Session::flash('message-error', 'No es posible eliminar este registro, está siendo usado.');
+                return Redirect::to('tipoEstado');
+            }
+                Session::flash('message','Tipo Estado Eliminado Correctamente!');
+                return Redirect::to('tipoEstado');
+            }else{
             Session::flash('message-error', 'No tiene permisos para acceder a esta opción');
             return  view('template');
         }

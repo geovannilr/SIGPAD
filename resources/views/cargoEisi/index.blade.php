@@ -74,7 +74,7 @@
   <div class="col-sm-3"></div>
   <div class="col-sm-3"></div>
    <div class="col-sm-3"></div>
-  @can('permiso.create')
+  @can('cargoEisi.create')
     <div class="col-sm-3">
       <a class="btn " href="{{route('cargoEisi.create')}}" style="background-color: #DF1D20; color: white"><i class="fa fa-plus"></i> Nuevo cargo Eisi</a>
     </div>
@@ -88,30 +88,27 @@
   				<thead>
 					<th>Cargo Eisi</th>
          			@can('cargoEisi.edit')
-                    <th>Modificar</th>
+                    <th style="text-align: center;">Acciones</th>
                     @endcan
                     @can('cargoEisi.destroy')
-					<th>Eliminar</th>
-                    @endcan
+					@endcan
   				</thead>
   				<tbody>
   				@foreach($cargoEisi as $cargoEis)
 					<tr>
 						<td>{{ $cargoEis->nombre_cargo}}</td>
            				@can('cargoEisi.edit')
+                            @can('cargoEisi.destroy')
                         <td style="text-align: center;">
   							<a class="btn " style="background-color:  #102359;color: white" href="{{route('cargoEisi.edit',$cargoEis->id_cat_car)}}"><i class="fa fa-pencil"></i></a>
-  						</td>
-            @endcan
-            @can('cargoEisi.destroy')
-  						<td style="text-align: center;">
-  							{!! Form::open(['route'=>['cargoEisi.destroy',$cargoEis->id_cat_car],'method'=>'DELETE','class' => 'deleteButton']) !!}
+                            {!! Form::open(['route'=>['cargoEisi.destroy',$cargoEis->id_cat_car],'method'=>'DELETE','class' => 'deleteButton']) !!}
   						 		<div class="btn-group">
   									<button type="submit" class="btn btn-danger"><i class="fa fa-trash"></i></button>
   								</div>
   							{!! Form:: close() !!}
   						</td>
-            @endcan
+                            @endcan
+                        @endcan
 					</tr>
 				@endforeach 
 				</tbody>

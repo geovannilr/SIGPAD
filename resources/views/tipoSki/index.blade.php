@@ -74,7 +74,7 @@
   <div class="col-sm-3"></div>
   <div class="col-sm-3"></div>
    <div class="col-sm-3"></div>
-  @can('permiso.create')
+  @can('tipoSki.create')
     <div class="col-sm-3">
       <a class="btn " href="{{route('tipoSki.create')}}" style="background-color: #DF1D20; color: white"><i class="fa fa-plus"></i> Nuevo Tipo Skill</a>
     </div>
@@ -88,10 +88,9 @@
   				<thead>
                     <th>Descripción tipo Skill</th>
                     @can('tipoSki.edit')
-                    <th>Modificar</th>
+                    <th style="text-align: center;">Acciones</th>
                     @endcan
                     @can('tipoSki.destroy')
-					<th>Eliminar</th>
                     @endcan
   				</thead>
   				<tbody>
@@ -99,19 +98,17 @@
 					<tr>
 						<td>{{ $tipoSk->descripcion_tpo_ski}}</td>
                     @can('tipoSki.edit')
-                        <td style="text-align: center;">
+                            @can('tipoSki.destroy')
+                            <td style="text-align: center;">
   							<a class="btn " style="background-color:  #102359;color: white" href="{{route('tipoSki.edit',$tipoSk->id_tpo_ski)}}"><i class="fa fa-pencil"></i></a>
-  						</td>
-            @endcan
-            @can('tipoSki.destroy')
-  						<td style="text-align: center;">
   							{!! Form::open(['route'=>['tipoSki.destroy',$tipoSk->id_tpo_ski],'method'=>'DELETE','class' => 'deleteButton']) !!}
   						 		<div class="btn-group">
   									<button type="submit" class="btn btn-danger"><i class="fa fa-trash"></i></button>
   								</div>
   							{!! Form:: close() !!}
   						</td>
-            @endcan
+                           @endcan
+                     @endcan
 					</tr>
 				@endforeach 
 				</tbody>

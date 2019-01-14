@@ -68,7 +68,7 @@ class cat_mat_materiaController extends Controller
                 'anio_pensum.required' => 'El año de pensum es necesario',
                 'anio_pensum.max' => 'El año de pensum debe contener 4 carácteres como máximo',
                 'ciclo.required' => 'Debe ingresar ciclo',
-                'ciclo.max' => 'El ciclo debe contener como maximo 4 caractéres'
+                'ciclo.max' => 'El ciclo debe contener como maximo 2 caractéres'
             ]
 
         );
@@ -145,14 +145,24 @@ class cat_mat_materiaController extends Controller
     public function destroy($id)
     {
         $userLogin=Auth::user();
-        if ($userLogin->can(['catMateria.destroy'])) {
-            cat_mat_materiaModel::destroy($id);
-            Session::flash('message','Materia Eliminada Correctamente!');
-            return Redirect::to('catMateria');
-        }else{
+    if ($userLogin->can(['catMateria.destroy']))
+    {
+            try {
+                cat_mat_materiaModel::destroy($id);
+
+            } catch (\PDOException $e)
+            {
+                Session::flash('message-error', 'No es posible eliminar este registro, está siendo usado.');
+                return Redirect::to('catMateria');
+            }
+        Session::flash('message','Materia Eliminada Correctamente!');
+        return Redirect::to('catMateria');
+
+    }else{
             Session::flash('message-error', 'No tiene permisos para acceder a esta opción');
             return  view('template');
         }
 
     }
 }
+

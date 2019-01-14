@@ -74,7 +74,7 @@
   <div class="col-sm-3"></div>
   <div class="col-sm-3"></div>
    <div class="col-sm-3"></div>
-  @can('permiso.create')
+  @can('catTcolaborador.create')
     <div class="col-sm-3">
       <a class="btn " href="{{route('catTcolaborador.create')}}" style="background-color: #DF1D20; color: white"><i class="fa fa-plus"></i> Nuevo Tipo Colaborador</a>
     </div>
@@ -89,10 +89,9 @@
 					<th>Nombre</th>
                     <th>Descripción</th>
          			@can('catTcolaborador.edit')
-                    <th>Modificar</th>
+                    <th style="text-align: center;">Acciones</th>
                     @endcan
                     @can('catTcolaborador.destroy')
-					<th>Eliminar</th>
                     @endcan
   				</thead>
   				<tbody>
@@ -101,19 +100,18 @@
 						<td>{{ $catTcolaborado->nombre_cat_tpo_col_pub}}</td>
                         <td>{{ $catTcolaborado->descripcion_cat_tpo_col_pub}}</td>
                         @can('catTcolaborador.edit')
-                        <td style="text-align: center;">
+                            @can('catTcolaborador.destroy')
+
+                            <td style="text-align: center;">
   							<a class="btn " style="background-color:  #102359;color: white" href="{{route('catTcolaborador.edit',$catTcolaborado->id_cat_tpo_col_pub)}}"><i class="fa fa-pencil"></i></a>
-  						</td>
-            @endcan
-            @can('catTcolaborador.destroy')
-  						<td style="text-align: center;">
-  							{!! Form::open(['route'=>['catTcolaborador.destroy',$catTcolaborado->id_cat_tpo_col_pub],'method'=>'DELETE','class' => 'deleteButton']) !!}
+  						    {!! Form::open(['route'=>['catTcolaborador.destroy',$catTcolaborado->id_cat_tpo_col_pub],'method'=>'DELETE','class' => 'deleteButton']) !!}
   						 		<div class="btn-group">
   									<button type="submit" class="btn btn-danger"><i class="fa fa-trash"></i></button>
   								</div>
   							{!! Form:: close() !!}
   						</td>
-            @endcan
+                            @endcan
+                        @endcan
 					</tr>
 				@endforeach 
 				</tbody>

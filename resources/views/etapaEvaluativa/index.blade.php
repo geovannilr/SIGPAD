@@ -74,7 +74,7 @@
   <div class="col-sm-3"></div>
   <div class="col-sm-3"></div>
    <div class="col-sm-3"></div>
-  @can('permiso.create')
+  @can('etapaEvaluativa.create')
     <div class="col-sm-3">
       <a class="btn " href="{{route('etapaEvaluativa.create')}}" style="background-color: #DF1D20; color: white"><i class="fa fa-plus"></i> Nueva Etapa evaluativa</a>
     </div>
@@ -91,7 +91,7 @@
                     <th>Año</th>
 
                     @can('etapaEvaluativa.edit')
-                    <th>Modificar</th>
+                    <th style="text-align: center;">Modificar</th>
                     @endcan
                    {{-- @can('etapaEvaluativa.destroy')
 					<th>Eliminar</th>

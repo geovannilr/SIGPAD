@@ -123,10 +123,18 @@ class cat_idi_idiomaController extends Controller
     public function destroy($id)
     {
         $userLogin=Auth::user();
-        if ($userLogin->can(['catIdioma.destroy'])) {
-            cat_idi_idiomaModel::destroy($id);
-            Session::flash('message','Idioma Eliminado Correctamente!');
-            return Redirect::to('catIdioma');
+        if ($userLogin->can(['catIdioma.destroy']))
+            {
+            try {
+                cat_idi_idiomaModel::destroy($id);
+            } catch (\PDOException $e)
+            {
+                Session::flash('message-error', 'No es posible eliminar este registro, está siendo usado.');
+                return Redirect::to('catIdioma');
+            }
+                Session::flash('message','Idioma Eliminado Correctamente!');
+                return Redirect::to('catIdioma');
+
         }else{
             Session::flash('message-error', 'No tiene permisos para acceder a esta opción');
             return  view('template');

@@ -127,12 +127,21 @@ class cat_tpo_col_pub_tipo_colaboradorController extends Controller
     public function destroy($id)
     {
         $userLogin=Auth::user();
-        if ($userLogin->can(['catTcolaborador.destroy'])) {
-            cat_tpo_col_pub_tipo_colaboradorModel::destroy($id);
-            Session::flash('message','Tipo Colaborador Eliminado Correctamente!');
-            return Redirect::to('catTcolaborador');
+        if ($userLogin->can(['catTcolaborador.destroy']))
+            {
+            try {
+                cat_tpo_col_pub_tipo_colaboradorModel::destroy($id);
+            } catch (\PDOException $e)
+            {
+                Session::flash('message-error', 'No es posible eliminar este registro, está siendo usado.');
+                return Redirect::to('catTcolaborador');
+            }
+                Session::flash('message','Tipo Colaborador Eliminado Correctamente!');
+                return Redirect::to('catTcolaborador');
+
         }else{
             Session::flash('message-error', 'No tiene permisos para acceder a esta opción');
             return  view('template');
-        }}
+        }
+    }
 }

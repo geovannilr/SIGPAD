@@ -128,15 +128,22 @@ class cat_ctg_tra_categoria_trabajo_graduacionController extends Controller
     public function destroy($id)
     {
            $userLogin=Auth::user();
-            if ($userLogin->can(['categoriaTDG.destroy'])) {
+
+        if ($userLogin->can(['categoriaTDG.destroy']))
+        {
+            try {
                 cat_ctg_tra_categoria_trabajo_graduacionModel::destroy($id);
-                Session::flash('message','Categoria Eliminada Correctamente!');
+            } catch (\PDOException $e)
+            {
+                Session::flash('message-error', 'No es posible eliminar este registro, está siendo usado.');
                 return Redirect::to('categoriaTDG');
-            }else{
-                Session::flash('message-error', 'No tiene permisos para acceder a esta opción');
-                return  view('template');
-                }
+            }
+            Session::flash('message','Categoria Eliminada Correctamente!');
+            return Redirect::to('categoriaTDG');
 
-
+        }else{
+            Session::flash('message-error', 'No tiene permisos para acceder a esta opción');
+            return  view('template');
+        }
     }
 }

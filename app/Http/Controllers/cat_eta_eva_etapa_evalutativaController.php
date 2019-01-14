@@ -57,7 +57,7 @@ class cat_eta_eva_etapa_evalutativaController extends Controller
     {
         $validatedData = $request->validate([
             'nombre_cat_eta_eva' => 'required|max:45',
-            'ponderacion_cat_eta_eva' => 'required|max:5',
+            'ponderacion_cat_eta_eva' => 'numeric|required',
             'anio_cat_eta_eva' => 'required|max:4',
             'tiene_defensas_cat_eta_eva'=> 'required|max:11',
             'puede_observar_cat_eta_eva'=> 'required|max:11'
@@ -149,11 +149,19 @@ class cat_eta_eva_etapa_evalutativaController extends Controller
     public function destroy($id)
     {
         $userLogin=Auth::user();
-        if ($userLogin->can(['etapaEvaluativa.destroy'])) {
-            cat_eta_eva_etapa_evalutativaModel::destroy($id);
-            Session::flash('message','Etapa Evaluativa Eliminado Correctamente!');
-            return Redirect::to('etapaEvaluativa');
-        }else{
+        if ($userLogin->can(['etapaEvaluativa.destroy']))
+            {
+            try {
+                cat_eta_eva_etapa_evalutativaModel::destroy($id);
+            } catch (\PDOException $e)
+            {
+                Session::flash('message-error', 'No es posible eliminar este registro, está siendo usado.');
+                return Redirect::to('etapaEvaluativa');
+            }
+                Session::flash('message','Etapa Evaluativa Eliminado Correctamente!');
+                return Redirect::to('etapaEvaluativa');
+
+            }else{
             Session::flash('message-error', 'No tiene permisos para acceder a esta opción');
             return  view('template');
         }
