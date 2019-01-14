@@ -173,7 +173,8 @@ class EtapaEvaluativaController extends Controller {
 		$etaparecibida = cat_eta_eva_etapa_evalutativaModel::find($idEtapa);
 		$grupoRecibido = pdg_gru_grupoModel::find($idGrupo);
 		if (empty($grupoRecibido->id_pdg_gru) || empty($etaparecibida->id_cat_eta_eva)) {
-			return view('error');
+            Session::flash('message-error', 'No puede acceder a esta opción.');
+            return redirect('/');
 		}else if (Auth::user()->isRole('docente_asesor')) {
 			//TRAEMOS LOS GRUPOS QUE ESTAN ASOCIADOS AL DOCENTE ASESOR
         	$grupos = session('misGrupos');
@@ -185,13 +186,20 @@ class EtapaEvaluativaController extends Controller {
         		}
         	}
         	if ($pertenece == 0) {
-        		return view('error');
+                Session::flash('message-error', 'No puede acceder a esta opción.');
+                return redirect('/');
         	}
 		}
 			
 			$id = $idEtapa;
 			$etapa = new cat_eta_eva_etapa_evalutativaModel();
 			$trabajoGraduacion = pdg_tra_gra_trabajo_graduacionModel::where('id_pdg_gru', '=',$idGrupo)->first();
+            $actual =  self::getIdEtapaActual($trabajoGraduacion->id_pdg_tra_gra);
+            $statusEtapa = pdg_apr_eta_tra_aprobador_etapa_trabajoModel::where('id_cat_eta_eva','=',$idEtapa)->where('id_pdg_tra_gra','=',$trabajoGraduacion->id_pdg_tra_gra)->first();
+            if(!Auth::user()->isRole('docente_asesor') && $statusEtapa->inicio == 0){
+                Session::flash('message-error', 'La etapa seleccionada aún no se encuentra disponible.');
+                return redirect('/dashboard');
+            }
 			$documentos = $etapa->getDocumentos($id, $trabajoGraduacion->id_pdg_tra_gra); //ID ETAPA, ID TRABAJO DE GRADUACIÓN QUEMADO, CAMBIAR!!
 			$bodyHtml = "";
 			$userLogin = Auth::user();
@@ -216,7 +224,7 @@ class EtapaEvaluativaController extends Controller {
                     }
 					$bodyHtml .= '<h2 class="text-center">Entregables de ' . $doc->nombre_pdg_tpo_doc . '</h2>';
 					$bodyHtml .= '<div class="table-responsive">';
-					$bodyHtml .= '<table class="table table-hover table-striped  display" id="listTable">';
+					$bodyHtml .= '<table class="table table-hover table-striped display" id="listTable">';
 					$bodyHtml .= '<thead>
                                     <th>Nombre Archivo</th>
 		        				    <th>Fecha Subida</th>';
@@ -229,10 +237,11 @@ class EtapaEvaluativaController extends Controller {
 					if (sizeof($archivos) != 0) {
 					    $counter = 0;
 						foreach ($archivos as $archivo) {
+						    $fecha = date_create($fecha = $archivo->fechaSubidaArchivo);
 							if ($tipoDocumento == $archivo->id_cat_tpo_doc) {
 								$bodyHtml .= '<tr>
 												<td>' . ($counter==0?'<b>':'') . $archivo->nombreArchivo . ($counter==0?'<b>':''). '</td>
-												<td>' . ($counter==0?'<b>':'') . $archivo->fechaSubidaArchivo . ($counter==0?'</b>':'') . '</td>';
+												<td>' . ($counter==0?'<b>':'') . $fecha->format('d/m/Y h:m:s A') . ($counter==0?'</b>':'') . '</td>';
 								if ($archivo->esArchivoActico == 1) {
 								    $bodyHtml .= Auth::user()->can(['documentoEtapa.edit'])?'<td><a class="btn btn-primary" href="' . url("/") . '/editDocumento/' . $id . '/' . $archivo->id_pdg_doc . '/' . $doc->id_cat_tpo_doc . '"><i class="fa fa-pencil"></i></a></td>':'';
 								    $bodyHtml .= Auth::user()->can(['documentoEtapa.destroy'])?
@@ -282,7 +291,7 @@ class EtapaEvaluativaController extends Controller {
 
 				}
 			}
-			$actual =  self::getIdEtapaActual($trabajoGraduacion->id_pdg_tra_gra);
+
 			$configura = ($trabajoGraduacion->id_cat_tpo_tra_gra!=1)&&(sizeof($documentos) != 0);
 			return view('TrabajoGraduacion.EtapaEvaluativa.show', compact('bodyHtml', 'nombreEtapa', 'ponderacion', 'id','idGrupo','actual','configura'));
 			//return $bodyHtml;
@@ -461,7 +470,8 @@ class EtapaEvaluativaController extends Controller {
         $subida = ($grupo->relacion_gru_tdg->id_cat_tpo_tra_gra!=1);  // 1-Tipo clásico de trabajo de graduación 2-Variable
         //$subida = true; PARA PRUEBAS CON GRUPOS QUE NO SEAN DE TIPO VARIABLE!!!!!!!!!!!!
         if (empty($grupo->id_pdg_gru) || empty($etapa->id_cat_eta_eva)){
-            return view('error');
+            Session::flash('message-error', 'No puede acceder a esta opción.');
+            return redirect('/');
         }
         return view('TrabajoGraduacion.NotaEtapaEvaluativa.list',
             compact('criterios', 'notas', 'grupo','etapa', 'subida')
@@ -475,7 +485,8 @@ class EtapaEvaluativaController extends Controller {
             $idEtaEva = $request['idEtaEva'];
             $notas = $request['notas'];
             $errorCode = pdg_not_cri_tra_nota_criterio_trabajoModel::bulkUpdateNotas($idGru,$idEtaEva,$notas);
-            $errorMessage = "¡Notas del grupo GRUPO-04 guardadas éxitosamente!";
+            $grupo = pdg_gru_grupoModel::find($idGru);
+            $errorMessage = "¡Notas del grupo ".$grupo->numero_pdg_gru." guardadas éxitosamente!";
             $info = $notas;
         }catch (Exception $exception){
             $info = $exception->getMessage();
