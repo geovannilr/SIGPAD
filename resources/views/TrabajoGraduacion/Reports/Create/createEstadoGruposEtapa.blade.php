@@ -4,7 +4,7 @@
  
 <ol class="breadcrumb"  style="text-align: center; margin-top: 1em;z-index: 0" >
         <li class="breadcrumb-item">
-          <h5> <a href="{{ redirect()->getUrlGenerator()->previous() }}" style="margin-left: 0em"><i class="fa fa-arrow-left fa-lg" style="z-index: 1;margin-top: 0em;margin-right: 0.5em; color: black"></i></a> Estado de Grupos </h5>
+          <h5> <a href="{{ redirect()->getUrlGenerator()->previous() }}" style="margin-left: 0em"><i class="fa fa-arrow-left fa-lg" style="z-index: 1;margin-top: 0em;margin-right: 0.5em; color: black"></i></a>  {{$title}} </h5>
         </li>
 </ol>
  <!-- <div class="form-group col-sm-6 " >   </div> -->

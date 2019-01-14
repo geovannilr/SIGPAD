@@ -91,4 +91,25 @@ class gen_EstudianteModel extends Model
 
 	 	return $idGrupo;
 	 }
+
+	 public static function getEstudiantesActivos(){
+        $query = "
+                SELECT x.carnet_gen_est, x.nombre_gen_est, x.numero_pdg_gru
+                FROM
+                (SELECT
+                    est.carnet_gen_est, est.nombre_gen_est, gru.numero_pdg_gru
+                    ,(select aprobo from pdg_apr_eta_tra_aprobador_etapa_Trabajo where id_cat_eta_eva = 999 AND id_pdg_tra_gra = 
+                    (SELECT id_pdg_tra_gra from pdg_tra_gra_trabajo_graduacion where id_pdg_gru = gru.id_pdg_gru )) as finalizo
+                FROM
+                    gen_est_estudiante est
+                    INNER JOIN pdg_gru_est_grupo_estudiante gruest ON (gruest.id_gen_est = est.id_gen_est)
+                    INNER JOIN pdg_gru_grupo gru ON (gru.id_pdg_gru=gruest.id_pdg_gru)
+                WHERE 
+                    gru.numero_pdg_gru IS NOT NULL
+                ) x 
+                where ifnull(x.finalizo,0) = 0
+                ORDER BY x.carnet_gen_est";
+        $datos = DB::select($query);
+        return $datos;
+     }
 }

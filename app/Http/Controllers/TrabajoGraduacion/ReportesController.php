@@ -1,5 +1,6 @@
 <?php
 namespace App\Http\Controllers\TrabajoGraduacion;
+use App\gen_EstudianteModel;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\pdg_dcn_docenteModel;
@@ -10,6 +11,14 @@ use PDF;
 
 class ReportesController extends Controller{
 
+    const REPORTES = [
+        'Reporte de Tribunal Evaluador por Grupos',
+        'Reporte de Asignaciones XYZ por Docente',
+        'Reporte de Estado de Grupos',
+        'Reporte de Detalle de Grupos XYZ de Trabajo de Graduación',
+        'Reporte de Estudiantes Activos en Trabajo de Graduacion'
+    ];
+
     public function __construct(){
         $this->middleware('auth');
     }
@@ -19,12 +28,12 @@ class ReportesController extends Controller{
         //return view('pdfTemplate');
     }
     public function index(){
-        $reportes = array('R1'=>'Grupos y Jurados','R2'=>'Docentes y Asignaciones');
-        return view('TrabajoGraduacion.Reports.index',compact('reportes'));
+        return view('TrabajoGraduacion.Reports.index');
     }
 
     public function createTribunalPorGrupo(){
-        return view('TrabajoGraduacion.Reports.Create.createTribunalPorGrupo');
+        $title = self::REPORTES[0];
+        return view('TrabajoGraduacion.Reports.Create.createTribunalPorGrupo',compact('title'));
     }
     public function tribunalPorGrupo(Request $request){
         $anio = $request['anio'];
@@ -41,14 +50,14 @@ class ReportesController extends Controller{
             $nombre = ""; 
                 break;
         }
-        $title = "Reporte de Tribunal Evaluador por Grupos ". $nombre." - ".$anio;
+        $title = self::REPORTES[0]." ". $nombre." - ".$anio;
         $datos = pdg_dcn_docenteModel::getLideres($anio,$estado);
         $tribs = pdg_dcn_docenteModel::getTribunales($anio,$estado);
         $pdf = PDF::loadView('TrabajoGraduacion.Reports.TribunalPorGrupo',compact('datos','tribs', 'title'));
         if ($tipo == 1) {
-            return $pdf->stream('Reporte de Tribunal Evaluador por Grupos Activos.pdf');
+            return $pdf->stream($title.'.pdf');
         }elseif ($tipo == 2) {
-            return $pdf->download('Reporte de Tribunal Evaluador por Grupos Activos.pdf');
+            return $pdf->download($title.'.pdf');
         }else{
             return view("template");
         }
@@ -56,7 +65,9 @@ class ReportesController extends Controller{
     }
 
     public function createAsignacionesPorDocente(){
-        return view('TrabajoGraduacion.Reports.Create.createAsignacionesPorDocente');
+        $title = self::REPORTES[1];
+        $title = str_replace("XYZ","",$title);
+        return view('TrabajoGraduacion.Reports.Create.createAsignacionesPorDocente',compact('title'));
     }
 
     public function asignacionesPorDocente(Request $request){
@@ -74,21 +85,23 @@ class ReportesController extends Controller{
                 $nombre = "";
                 break;
         }
-        $title = "Reporte de Asignaciones ".$nombre." por Docente ".$anio;
+        $title = self::REPORTES[1]." ".$anio;
+        $title = str_replace("XYZ",$nombre,$title);
         $datos = pdg_dcn_docenteModel::getDocentes($anio,$estado);
         $grupos = pdg_dcn_docenteModel::getGrupos($anio,$estado);
         $pdf = PDF::loadView('TrabajoGraduacion.Reports.asignacionesPorDocente',compact('datos','grupos', 'title'));
         if ($tipo == 1) {
-            return $pdf->stream('Reporte de Tribunal Evaluador por Grupos Activos.pdf');
+            return $pdf->stream($title.'.pdf');
         }elseif ($tipo == 2) {
-            return $pdf->download('Reporte de Tribunal Evaluador por Grupos Activos.pdf');
+            return $pdf->download($title.'.pdf');
         }else{
             return view("template");
         }
     }
 
     public function createEstadoGruposEtapa(){
-        return view('TrabajoGraduacion.Reports.Create.createEstadoGruposEtapa');
+        $title = self::REPORTES[2];
+        return view('TrabajoGraduacion.Reports.Create.createEstadoGruposEtapa',compact('title'));
     }
 
     public function estadoGruposEtapa(Request $request){
@@ -106,27 +119,68 @@ class ReportesController extends Controller{
                 $nombre = "";
                 break;
         }
-        $title = "Reporte de Estado de Grupos";
+        $title = self::REPORTES[2];
         $datos = pdg_gru_grupoModel::getEstadoGrupos($anio, $estado);
         $pdf = PDF::loadView('TrabajoGraduacion.Reports.EstadoGruposEtapas',compact('datos', 'title'));
         if ($tipo == 1) {
-            return $pdf->stream('Reporte de Estado de Grupos Activos.pdf');
+            return $pdf->stream($title.'.pdf');
         }elseif ($tipo == 2) {
-            return $pdf->download('Reporte de Estado de Grupos Activos.pdf');
+            return $pdf->download($title.'.pdf');
         }else{
             return view("template");
         }
     }
 
     public function createDetalleGruposTdg(){
-        return view('TrabajoGraduacion.Reports.Create.createDetalleGruposTdg');
+        $title = self::REPORTES[3];
+        $title = str_replace("XYZ","",$title);
+        return view('TrabajoGraduacion.Reports.Create.createDetalleGruposTdg',compact('title'));
     }
 
     public function detalleGruposTdg(Request $request){
-        $anio = 2019;
-        $title = "Reporte de Detalle de Grupos de Trabajo de Graduación";
-        $datos = pdg_gru_grupoModel::getDetalleGrupos($anio);
+        $anio = $request['anio'];
+        $estado = $request['estado'];
+        $tipo = $request['tipo'];
+        switch ($estado) {
+            case '0':
+                $nombre = "Activos";
+                break;
+            case '1':
+                $nombre = "Finalizados";
+                break;
+            default:
+                $nombre = "";
+                break;
+        }
+        $title = self::REPORTES[3]." ".$anio;
+        $title = str_replace("XYZ"," ".$nombre,$title);
+        $datos = pdg_gru_grupoModel::getDetalleGrupos($anio,$estado);
         $pdf = PDF::loadView('TrabajoGraduacion.Reports.detalleGruposTdg',compact('datos', 'title'));
-        return $pdf->stream('Reporte de Estado de Grupos Activos.pdf');
+        if ($tipo == 1) {
+            return $pdf->stream($title.'.pdf');
+        }elseif ($tipo == 2) {
+            return $pdf->download($title.'.pdf');
+        }else{
+            return view("template");
+        }
+    }
+
+    public function createEstudiantesTdg(){
+        $title = self::REPORTES[4];
+        return view('TrabajoGraduacion.Reports.Create.createEstudiantesTdg',compact('title'));
+    }
+
+    public function estudiantesTdg(Request $request){
+        $tipo = $request['tipo'];
+        $title = self::REPORTES[4];
+        $datos = gen_EstudianteModel::getEstudiantesActivos();
+        $pdf = PDF::loadView('TrabajoGraduacion.Reports.estudiantesTdg',compact('datos', 'title'));
+        if ($tipo == 1) {
+            return $pdf->stream($title.'.pdf');
+        }elseif ($tipo == 2) {
+            return $pdf->download($title.'.pdf');
+        }else{
+            return view("template");
+        }
     }
 }

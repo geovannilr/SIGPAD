@@ -78,6 +78,14 @@
 						Presenta el detalle de Grupos de Trabajo de Graduación.
 					</td>
   				</tr>
+				<tr>
+					<td>
+						<a href="{{route('reportes/createEstudiantesTdg')}}">Estudiantes en Trabajo de Graduación</a>
+					</td>
+					<td>
+						Presenta el listado de Estudiante Activos en Trabajo de Graduación.
+					</td>
+				</tr>
 				</tbody>
 			</table>
 	   </div>

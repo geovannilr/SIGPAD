@@ -158,26 +158,38 @@ class pdg_gru_grupoModel extends Model{
                 $grupos = DB::select($fullQuery, array('anio2'=>$anio));
         return $grupos;
     }
-    public static function getDetalleGrupos($anio){
-        $grupos = DB::select("
-                    SELECT 
-                        (SELECT COUNT(*) FROM pdg_gru_est_grupo_estudiante gru2 WHERE gru2.id_pdg_gru = gru_est.id_pdg_gru) AS cantGru,
-                        gru_est.id_pdg_gru 	AS idGru,
-                        gru.numero_pdg_gru 	AS numGrupo,
-                        sta.nombre_cat_sta	AS nomSta,
-                        est.nombre_gen_est	AS nomEst,
-                        gru_est.eslider_pdg_gru_est AS bLider
+    public static function getDetalleGrupos($anio,$estado){
+        if ($estado == 0 || $estado == 1 ) {
+            $where = " where ifnull(x.finalizo,0) =:estado ";
+        }elseif ($estado == 2) {
+            $where = " ";
+        }
+        $query = "SELECT x.cantGru, x.idGru, x.numGrupo, x.nomSta, x.nomEst, x.bLider
                     FROM
-                        pdg_gru_grupo gru
-                        INNER JOIN pdg_gru_est_grupo_estudiante gru_est ON (gru_est.id_pdg_gru=gru.id_pdg_gru)
-                        INNER JOIN gen_est_estudiante est	ON (est.id_gen_est=gru_est.id_gen_est)
-                        INNER JOIN cat_sta_estado sta	ON (sta.id_cat_sta=gru.id_cat_sta)
-                    WHERE
-                        gru.anio_pdg_gru = :anio
-                    ORDER BY 
-                        gru.numero_pdg_gru ASC, gru_est.eslider_pdg_gru_est DESC",
-            array($anio)
-        );
+                        (SELECT 
+                                (SELECT COUNT(*) FROM pdg_gru_est_grupo_estudiante gru2 WHERE gru2.id_pdg_gru = gru_est.id_pdg_gru) AS cantGru,
+                                gru_est.id_pdg_gru 	AS idGru,
+                                gru.numero_pdg_gru 	AS numGrupo,
+                                sta.nombre_cat_sta	AS nomSta,
+                                est.nombre_gen_est	AS nomEst,
+                                gru_est.eslider_pdg_gru_est AS bLider
+                                ,(select aprobo from pdg_apr_eta_tra_aprobador_etapa_Trabajo where id_cat_eta_eva = 999 AND id_pdg_tra_gra = 
+                                    (SELECT id_pdg_tra_gra from pdg_tra_gra_trabajo_graduacion where id_pdg_gru = gru.id_pdg_gru )) as finalizo
+                            FROM
+                                pdg_gru_grupo gru
+                                INNER JOIN pdg_gru_est_grupo_estudiante gru_est ON (gru_est.id_pdg_gru=gru.id_pdg_gru)
+                                INNER JOIN gen_est_estudiante est	ON (est.id_gen_est=gru_est.id_gen_est)
+                                INNER JOIN cat_sta_estado sta	ON (sta.id_cat_sta=gru.id_cat_sta)
+                            WHERE
+                                gru.anio_pdg_gru = :anio
+                        ) x
+                    ".$where."
+                    ORDER BY x.numGrupo ASC, x.bLider DESC";
+        if ($estado == 0 || $estado == 1 ) {
+            $grupos = DB::select($query, array($anio,$estado));
+        }elseif ($estado == 2) {
+            $grupos = DB::select($query, array($anio));
+        }
         return $grupos;
     }
 }
