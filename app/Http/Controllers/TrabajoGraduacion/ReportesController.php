@@ -9,6 +9,7 @@ use Redirect;
 use PDF;
 
 class ReportesController extends Controller{
+
     public function __construct(){
         $this->middleware('auth');
     }
@@ -23,7 +24,6 @@ class ReportesController extends Controller{
     }
 
     public function createTribunalPorGrupo(){
-
         return view('TrabajoGraduacion.Reports.Create.createTribunalPorGrupo');
     }
     public function tribunalPorGrupo(Request $request){
@@ -41,7 +41,7 @@ class ReportesController extends Controller{
             $nombre = ""; 
                 break;
         }
-        $title = "Reporte de Tribunal Evaluador por Grupos ". $nombre;
+        $title = "Reporte de Tribunal Evaluador por Grupos ". $nombre." - ".$anio;
         $datos = pdg_dcn_docenteModel::getLideres($anio,$estado);
         $tribs = pdg_dcn_docenteModel::getTribunales($anio,$estado);
         $pdf = PDF::loadView('TrabajoGraduacion.Reports.TribunalPorGrupo',compact('datos','tribs', 'title'));
@@ -54,20 +54,72 @@ class ReportesController extends Controller{
         }
         
     }
+
+    public function createAsignacionesPorDocente(){
+        return view('TrabajoGraduacion.Reports.Create.createAsignacionesPorDocente');
+    }
+
     public function asignacionesPorDocente(Request $request){
-        $title = "Reporte de Asignaciones Activas por Docente Asesor";
-        $datos = pdg_dcn_docenteModel::getDocentes(2019);
-        $grupos = pdg_dcn_docenteModel::getGrupos(2019);
+        $anio = $request['anio'];
+        $estado = $request['estado'];
+        $tipo = $request['tipo'];
+        switch ($estado) {
+            case '0':
+                $nombre = "Activas";
+                break;
+            case '1':
+                $nombre = "Finalizadas";
+                break;
+            default:
+                $nombre = "";
+                break;
+        }
+        $title = "Reporte de Asignaciones ".$nombre." por Docente ".$anio;
+        $datos = pdg_dcn_docenteModel::getDocentes($anio,$estado);
+        $grupos = pdg_dcn_docenteModel::getGrupos($anio,$estado);
         $pdf = PDF::loadView('TrabajoGraduacion.Reports.asignacionesPorDocente',compact('datos','grupos', 'title'));
-        return $pdf->stream('Reporte de Tribunal Evaluador por Grupos Activos.pdf');
+        if ($tipo == 1) {
+            return $pdf->stream('Reporte de Tribunal Evaluador por Grupos Activos.pdf');
+        }elseif ($tipo == 2) {
+            return $pdf->download('Reporte de Tribunal Evaluador por Grupos Activos.pdf');
+        }else{
+            return view("template");
+        }
+    }
+
+    public function createEstadoGruposEtapa(){
+        return view('TrabajoGraduacion.Reports.Create.createEstadoGruposEtapa');
     }
 
     public function estadoGruposEtapa(Request $request){
-        $anio = 2019;
-        $title = "Reporte de Estado de Grupos Activos";
-        $datos = pdg_gru_grupoModel::getEstadoGrupos($anio);
+        $anio = $request['anio'];
+        $estado = $request['estado'];
+        $tipo = $request['tipo'];
+        switch ($estado) {
+            case '0':
+                $nombre = "Activas";
+                break;
+            case '1':
+                $nombre = "Finalizadas";
+                break;
+            default:
+                $nombre = "";
+                break;
+        }
+        $title = "Reporte de Estado de Grupos";
+        $datos = pdg_gru_grupoModel::getEstadoGrupos($anio, $estado);
         $pdf = PDF::loadView('TrabajoGraduacion.Reports.EstadoGruposEtapas',compact('datos', 'title'));
-        return $pdf->stream('Reporte de Estado de Grupos Activos.pdf');
+        if ($tipo == 1) {
+            return $pdf->stream('Reporte de Estado de Grupos Activos.pdf');
+        }elseif ($tipo == 2) {
+            return $pdf->download('Reporte de Estado de Grupos Activos.pdf');
+        }else{
+            return view("template");
+        }
+    }
+
+    public function createDetalleGruposTdg(){
+        return view('TrabajoGraduacion.Reports.Create.createDetalleGruposTdg');
     }
 
     public function detalleGruposTdg(Request $request){

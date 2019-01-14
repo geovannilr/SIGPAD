@@ -20,7 +20,6 @@
                 type: 'column'
             }
         },
-        order: [ 0, 'asc' ],
 		info : false,
 		bLengthChange: false,
     	});
@@ -29,7 +28,7 @@
 </script>
 		<ol class="breadcrumb" style="text-align: center; margin-top: 1em">
 	        <li class="breadcrumb-item ">
-	          <h5> <a href="{{ redirect()->getUrlGenerator()->previous() }}" style="margin-left: 0em">
+	          <h5> <a href="{{ route('reportesTDG') }}" style="margin-left: 0em">
 					  <i class="fa fa-arrow-left fa-lg" style="z-index: 1;margin-top: 0em;margin-right: 0.5em; color: black"></i>
 				  </a>Trabajo de Graduación</h5>
 	        </li>
@@ -48,10 +47,36 @@
   				</thead>
   				<tbody>
   				<tr>
-  					<td>Tribunal Por Grupo</td>
   					<td>
-  						Presenta el listado de grupos y su  tribunal evaluador
+						<a href="{{route('reportes/createTribunalPorGrupo')}}">Tribunal Por Grupo</a>
+					</td>
+  					<td>
+  						Presenta el listado de grupos y su  tribunal evaluador.
   					</td>
+				</tr>
+				<tr>
+					<td>
+						<a href="{{route('reportes/createAsignacionesPorDocente')}}">Asignaciones Por Docente</a>
+					</td>
+					<td>
+						Presenta el listado docentes y sus asignaciones.
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<a href="{{route('reportes/createEstadoGruposEtapa')}}">Estado de Grupos Por Etapa</a>
+					</td>
+					<td>
+						Presenta el listado de grupos en Trabajo de Graduación.
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<a href="{{route('reportes/createDetalleGruposTdg')}}">Detalle de Grupos de Trabajo de Graduación</a>
+					</td>
+					<td>
+						Presenta el detalle de Grupos de Trabajo de Graduación.
+					</td>
   				</tr>
 				</tbody>
 			</table>

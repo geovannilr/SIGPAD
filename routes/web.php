@@ -92,10 +92,13 @@ Route::get('reportesTDG', 'TrabajoGraduacion\ReportesController@index')->name('r
 //Route::get('reportesTDG/R2', 'TrabajoGraduacion\ReportesController@r2')->name('R2');
 Route::get('testReporte', 'TrabajoGraduacion\ReportesController@test')->name('testReporte');
 Route::post('reportes/tribunalPorGrupo', 'TrabajoGraduacion\ReportesController@tribunalPorGrupo')->name('reportes/tribunalPorGrupo');
-Route::get('reportes/asignacionesPorDocente', 'TrabajoGraduacion\ReportesController@asignacionesPorDocente')->name('reportes/asignacionesPorDocente');
-Route::get('reportes/estadoGruposEtapa', 'TrabajoGraduacion\ReportesController@estadoGruposEtapa')->name('reportes/estadoGruposEtapa');
-Route::get('reportes/detalleGruposTdg', 'TrabajoGraduacion\ReportesController@detalleGruposTdg')->name('reportes/detalleGruposTdg');
+Route::post('reportes/asignacionesPorDocente', 'TrabajoGraduacion\ReportesController@asignacionesPorDocente')->name('reportes/asignacionesPorDocente');
+Route::post('reportes/estadoGruposEtapa', 'TrabajoGraduacion\ReportesController@estadoGruposEtapa')->name('reportes/estadoGruposEtapa');
+Route::post('reportes/detalleGruposTdg', 'TrabajoGraduacion\ReportesController@detalleGruposTdg')->name('reportes/detalleGruposTdg');
 Route::get('reportes/createTribunalPorGrupo', 'TrabajoGraduacion\ReportesController@createTribunalPorGrupo')->name('reportes/createTribunalPorGrupo');
+Route::get('reportes/createAsignacionesPorDocente', 'TrabajoGraduacion\ReportesController@createAsignacionesPorDocente')->name('reportes/createAsignacionesPorDocente');
+Route::get('reportes/createEstadoGruposEtapa', 'TrabajoGraduacion\ReportesController@createEstadoGruposEtapa')->name('reportes/createEstadoGruposEtapa');
+Route::get('reportes/createDetalleGruposTdg', 'TrabajoGraduacion\ReportesController@createDetalleGruposTdg')->name('reportes/createDetalleGruposTdg');
 
 
 

@@ -4,7 +4,7 @@
  
 <ol class="breadcrumb"  style="text-align: center; margin-top: 1em;z-index: 0" >
         <li class="breadcrumb-item">
-          <h5> <a href="{{ redirect()->getUrlGenerator()->previous() }}" style="margin-left: 0em"><i class="fa fa-arrow-left fa-lg" style="z-index: 1;margin-top: 0em;margin-right: 0.5em; color: black"></i></a> Reporte de Tribunal Por Grupo </h5>
+          <h5> <a href="{{ redirect()->getUrlGenerator()->previous() }}" style="margin-left: 0em"><i class="fa fa-arrow-left fa-lg" style="z-index: 1;margin-top: 0em;margin-right: 0.5em; color: black"></i></a> Asignaciones Por Docente </h5>
         </li>
 </ol>
  <!-- <div class="form-group col-sm-6 " >   </div> -->
@@ -18,7 +18,7 @@
               </ul>
           </div>
         @endif
-    		{!! Form:: open(['route'=>'reportes/tribunalPorGrupo','method'=>'POST','id'=>'formReporte','target'=>'_blank']) !!}
+    		{!! Form:: open(['route'=>'reportes/asignacionesPorDocente','method'=>'POST','id'=>'formReporte','target'=>'_blank']) !!}
     			<div class="row">
             <div class="form-group col-sm-4">
                 {!! Form::label('Año de inicio') !!}

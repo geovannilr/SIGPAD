@@ -21,15 +21,15 @@
     		{!! Form:: open(['route'=>'reportes/tribunalPorGrupo','method'=>'POST','id'=>'formReporte','target'=>'_blank']) !!}
     			<div class="row">
             <div class="form-group col-sm-4">
-                {!! Form::label('Año de inicio') !!}
-                {!!Form::text('anio',null,['class'=>'form-control ','placeholder'=>'Seleccione el año','id'=>'datepicker','readonly'=>'true','required'=>'true'])  !!}
+              {!! Form::label('Año') !!}
+              {!!Form::text('anio',null,['class'=>'form-control ','placeholder'=>'Seleccione el año','id'=>'datepicker','readonly'=>'true','required'=>'true'])  !!}
             </div>
             <div class="form-group col-sm-4">
               {!! Form::label('Estado de grupo') !!}
             <select class="form-control" name="estado">
               <option value="0">Activos</option>
               <option value="1">Finalizados</option>
-              <option value="2">Todos</option>
+              <option value="2">Ambos</option>
             </select>
             </div>
         </div>

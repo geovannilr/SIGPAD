@@ -68,12 +68,19 @@ class pdg_dcn_docenteModel extends Model
     }
 
     public static function getLideres($anio,$estado){
-        $lideres=DB::select("select distinct x.NumGrupo, x.Carnet, x.Lider 
+        if ($estado == 0 || $estado == 1 ) {
+            $where = " where ifnull(x.finalizo,0) =:estado ";
+        }elseif ($estado == 2) {
+            $where = " ";
+        }
+        $query = "select distinct x.NumGrupo, x.Carnet, x.Lider
             from (select gru.numero_pdg_gru as NumGrupo, 
             UPPER(est.carnet_gen_est) as Carnet,
             est.nombre_gen_est as Lider, 
             triR.nombre_tri_rol as TribunalRol,
-            usr.name  as Docente
+            usr.name  as Docente,
+			(select aprobo from pdg_apr_eta_tra_aprobador_etapa_Trabajo where id_cat_eta_eva = 999 AND id_pdg_tra_gra = 
+            (SELECT id_pdg_tra_gra from pdg_tra_gra_trabajo_graduacion where id_pdg_gru = gru.id_pdg_gru )) as finalizo
             from pdg_tri_gru_tribunal_grupo triG
              join pdg_gru_est_grupo_estudiante gruE on triG.id_pdg_gru=gruE.id_pdg_gru and gruE.eslider_pdg_gru_est=1
                  join pdg_tri_rol_tribunal_rol triR on triR.id_pdg_tri_rol=triG.id_pdg_tri_rol
@@ -81,12 +88,15 @@ class pdg_dcn_docenteModel extends Model
                  left join pdg_dcn_docente dcn on dcn.id_pdg_dcn=triG.id_pdg_dcn
                  left join gen_usuario usr on usr.id=dcn.id_gen_usuario
                 left join pdg_gru_grupo gru on gru.id_pdg_gru=gruE.id_pdg_gru
-                where gru.anio_pdg_gru=:anio
-                order by gru.numero_pdg_gru asc) x",
-            array(
-                $anio,
-            )
-        );
+                where gru.anio_pdg_gru = :anio
+                order by gru.numero_pdg_gru asc) x
+                ".$where."
+          order by x.NumGrupo ASC";
+        if ($estado == 0 || $estado == 1 ) {
+            $lideres=DB::select($query, array($anio,$estado));
+        }elseif ($estado == 2) {
+            $lideres=DB::select($query, array($anio));
+        }
         return $lideres;
     }
     public static function getTribunales($anio,$estado){
@@ -122,14 +132,21 @@ class pdg_dcn_docenteModel extends Model
         
         return $trib;
     }
-    public static function getDocentes($anio){
-        $docentes = DB::select("select distinct x.CarnetDoc,x.Docente
+    public static function getDocentes($anio,$estado){
+        if ($estado == 0 || $estado == 1 ) {
+            $where = " where ifnull(x.finalizo,0) =:estado ";
+        }elseif ($estado == 2) {
+            $where = " ";
+        }
+        $select = "select distinct x.CarnetDoc,x.Docente
             from (select gru.numero_pdg_gru as NumGrupo,
             est.carnet_gen_est as Carnet,
             est.nombre_gen_est as Lider,
             triR.nombre_tri_rol as TribunalRol,
             usr.name  as Docente,
-            usr.user as CarnetDoc
+            usr.user as CarnetDoc,
+            (select aprobo from pdg_apr_eta_tra_aprobador_etapa_Trabajo where id_cat_eta_eva = 999 AND id_pdg_tra_gra = 
+            (SELECT id_pdg_tra_gra from pdg_tra_gra_trabajo_graduacion where id_pdg_gru = gru.id_pdg_gru )) as finalizo
             from pdg_tri_gru_tribunal_grupo triG
              join pdg_gru_est_grupo_estudiante gruE on triG.id_pdg_gru=gruE.id_pdg_gru and gruE.eslider_pdg_gru_est=1
                  join pdg_tri_rol_tribunal_rol triR on triR.id_pdg_tri_rol=triG.id_pdg_tri_rol
@@ -138,21 +155,30 @@ class pdg_dcn_docenteModel extends Model
                  left join gen_usuario usr on usr.id=dcn.id_gen_usuario
                 left join pdg_gru_grupo gru on gru.id_pdg_gru=gruE.id_pdg_gru
                 where gru.anio_pdg_gru=:anio) x
-                order by x.CarnetDoc asc",
-            array(
-                $anio
-            )
-        );
+                ".$where."
+                order by x.CarnetDoc asc";
+        if ($estado == 0 || $estado == 1 ) {
+            $docentes = DB::select($select,array($anio,$estado));
+        }elseif ($estado == 2) {
+            $docentes = DB::select($select,array($anio));
+        }
         return $docentes;
     }
-    public static function getGrupos($anio){
-        $docentes = DB::select("select distinct x.CarnetDoc,x.NumGrupo, x.TribunalRol
+    public static function getGrupos($anio,$estado){
+        if ($estado == 0 || $estado == 1 ) {
+            $where = " where ifnull(x.finalizo,0) =:estado ";
+        }elseif ($estado == 2) {
+            $where = " ";
+        }
+        $query = "select distinct x.CarnetDoc,x.NumGrupo, x.TribunalRol
             from (select gru.numero_pdg_gru as NumGrupo,
             est.carnet_gen_est as Carnet,
             est.nombre_gen_est as Lider,
             triR.nombre_tri_rol as TribunalRol,
             usr.name  as Docente,
-            usr.user as CarnetDoc
+            usr.user as CarnetDoc,
+            (select aprobo from pdg_apr_eta_tra_aprobador_etapa_Trabajo where id_cat_eta_eva = 999 AND id_pdg_tra_gra = 
+            (SELECT id_pdg_tra_gra from pdg_tra_gra_trabajo_graduacion where id_pdg_gru = gru.id_pdg_gru )) as finalizo
             from pdg_tri_gru_tribunal_grupo triG
              join pdg_gru_est_grupo_estudiante gruE on triG.id_pdg_gru=gruE.id_pdg_gru and gruE.eslider_pdg_gru_est=1
                  join pdg_tri_rol_tribunal_rol triR on triR.id_pdg_tri_rol=triG.id_pdg_tri_rol
@@ -161,11 +187,13 @@ class pdg_dcn_docenteModel extends Model
                  left join gen_usuario usr on usr.id=dcn.id_gen_usuario
                 left join pdg_gru_grupo gru on gru.id_pdg_gru=gruE.id_pdg_gru
                 where gru.anio_pdg_gru=:anio) x
-                order by x.NumGrupo, x.TribunalRol asc",
-            array(
-                $anio
-            )
-        );
+                ".$where."
+                order by x.NumGrupo, x.TribunalRol asc";
+        if ($estado == 0 || $estado == 1 ) {
+            $docentes = DB::select($query, array($anio,$estado));
+        }elseif ($estado == 2) {
+            $docentes = DB::select($query, array($anio));
+        }
         return $docentes;
     }
     public static function reportDocentesAsignaciones($anio){
