@@ -192,4 +192,9 @@ class pdg_gru_grupoModel extends Model{
         }
         return $grupos;
     }
+
+    public static function getAllGrupos(){
+        $grupos = DB::select('CALL sp_pdg_gru_select_gruposPendientesDeAprobacion();');
+        return  $grupos;
+    }
 }

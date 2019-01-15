@@ -38,7 +38,7 @@ class pdg_not_cri_tra_nota_criterio_trabajoModel extends Model
 
     public static function bulkUpdateNotas($idGrupo,$idEtapa,$notas){
         $result = -1;
-        $templateQuery = "update view_pdg_notas set notaCriterio = notaParam where idNota = idParam and idGru = '".$idGrupo."' and idEtapa = '".$idEtapa."'";
+        $templateQuery = "update view_pdg_notas set notaCriterio = notaParam , yaEvaluado = 1 where idNota = idParam and idGru = '".$idGrupo."' and idEtapa = '".$idEtapa."'";
         $queries = pdg_not_cri_tra_nota_criterio_trabajoModel::builtUpdateQuery($templateQuery,$notas);
         DB::beginTransaction();
         try {
@@ -74,5 +74,32 @@ class pdg_not_cri_tra_nota_criterio_trabajoModel extends Model
               WHERE  vwn.idEtapa = :idEtapa
               AND vwn.idGruEst = :idEstGrupo',array($idEtapa,$idEstGrupo));
         return $evaluado[0];
+    }
+
+    public static function getConsolidadoNotas($grupo){
+        //TODO: Agregar al query validación para "Ya evaluados VS Nota Cero"
+        $query = " SELECT
+                         cantEtapas, cantEstudiantes, carnet, estudiante, etapa, SUM(nota) as notaEtapa
+                    FROM
+                    (SELECT 
+                        vwnotas.notaCriterio*(vwnotas.ponderaCriterio*vwnotas.ponderaAspecto)/10000 AS nota,
+                        (SELECT count(DISTINCT idEtapa) 
+                            FROM view_pdg_notas 
+                                WHERE  idGru = vwnotas.idGru) AS cantEtapas,
+                        (SELECT count(DISTINCT idGruEst) 
+                            FROM view_pdg_notas 
+                                WHERE  idGru = vwnotas.idGru) AS cantEstudiantes,
+                        vwnotas.nombreEtapa AS etapa,
+                        vwnotas.carnetEstudiante AS carnet,
+                        vwnotas.nombreEstudiante AS estudiante
+                    FROM 
+                        sigpad_dev.view_pdg_notas vwnotas
+                    WHERE
+                        vwnotas.idGru = :grupo
+                    ) x
+                    GROUP BY 
+                        cantEtapas, cantEstudiantes, carnet, estudiante, etapa";
+        $notas = DB::select($query,array($grupo));
+        return $notas;
     }
 }

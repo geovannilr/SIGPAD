@@ -2,6 +2,7 @@
 namespace App\Http\Controllers\TrabajoGraduacion;
 use App\gen_EstudianteModel;
 use App\Http\Controllers\Controller;
+use App\pdg_not_cri_tra_nota_criterio_trabajoModel;
 use Illuminate\Http\Request;
 use App\pdg_dcn_docenteModel;
 use App\pdg_gru_grupoModel;
@@ -16,7 +17,8 @@ class ReportesController extends Controller{
         'Reporte de Asignaciones XYZ por Docente',
         'Reporte de Estado de Grupos',
         'Reporte de Detalle de Grupos XYZ de Trabajo de Graduación',
-        'Reporte de Estudiantes Activos en Trabajo de Graduacion'
+        'Reporte de Estudiantes Activos en Trabajo de Graduacion',
+        'Reporte Consolidado de Notas'
     ];
 
     public function __construct(){
@@ -175,6 +177,31 @@ class ReportesController extends Controller{
         $title = self::REPORTES[4];
         $datos = gen_EstudianteModel::getEstudiantesActivos();
         $pdf = PDF::loadView('TrabajoGraduacion.Reports.estudiantesTdg',compact('datos', 'title'));
+        if ($tipo == 1) {
+            return $pdf->stream($title.'.pdf');
+        }elseif ($tipo == 2) {
+            return $pdf->download($title.'.pdf');
+        }else{
+            return view("template");
+        }
+    }
+
+    public function createConsolidadoNotas(){
+        $title = self::REPORTES[5];
+        $grupos = pdg_gru_grupoModel::getAllGrupos();
+        return view('TrabajoGraduacion.Reports.Create.createConsolidadoNotas',compact('title','grupos'));
+    }
+
+    public function consolidadoNotas(Request $request){
+        $tipo = $request['tipo'];
+        $grupo = $request['grupo'];
+        $title = self::REPORTES[5];
+        $datos = pdg_not_cri_tra_nota_criterio_trabajoModel::getConsolidadoNotas($grupo);
+
+        return $datos;//<--- Aqui van los datos de las notas por etapas, falta ver como se traduce eso a una tabla.
+
+        //TODO: crear la vista 'TrabajoGraduacion.Reports.consolidadoNotas.blade.php', consumir el array 'datos' en esa vista
+        $pdf = PDF::loadView('TrabajoGraduacion.Reports.consolidadoNotas',compact('datos', 'title'));
         if ($tipo == 1) {
             return $pdf->stream($title.'.pdf');
         }elseif ($tipo == 2) {
