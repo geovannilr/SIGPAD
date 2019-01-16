@@ -79,26 +79,30 @@ class pdg_not_cri_tra_nota_criterio_trabajoModel extends Model
     public static function getConsolidadoNotas($grupo){
         //TODO: Agregar al query validación para "Ya evaluados VS Nota Cero"
         $query = " SELECT
-                         cantEtapas, cantEstudiantes, carnet, estudiante, etapa, SUM(nota) as notaEtapa
+                         cantEtapas, cantEstudiantes, carnet, estudiante, etapa, ROUND(SUM(nota),2) as notaEtapa
                     FROM
                     (SELECT 
                         vwnotas.notaCriterio*(vwnotas.ponderaCriterio*vwnotas.ponderaAspecto)/10000 AS nota,
                         (SELECT count(DISTINCT idEtapa) 
                             FROM view_pdg_notas 
-                                WHERE  idGru = vwnotas.idGru) AS cantEtapas,
+                                WHERE  idGru = vwnotas.idGru) AS cantEtapas, 
                         (SELECT count(DISTINCT idGruEst) 
                             FROM view_pdg_notas 
                                 WHERE  idGru = vwnotas.idGru) AS cantEstudiantes,
                         vwnotas.nombreEtapa AS etapa,
                         vwnotas.carnetEstudiante AS carnet,
-                        vwnotas.nombreEstudiante AS estudiante
+                        vwnotas.nombreEstudiante AS estudiante,
+                        vwnotas.idGruEst	AS ordenGrupo,
+						vwnotas.ordenEtapa	AS ordenEtapa
                     FROM 
                         sigpad_dev.view_pdg_notas vwnotas
                     WHERE
                         vwnotas.idGru = :grupo
                     ) x
                     GROUP BY 
-                        cantEtapas, cantEstudiantes, carnet, estudiante, etapa";
+                        cantEtapas, cantEstudiantes, carnet, estudiante, etapa
+                    ORDER BY 
+						ordenGrupo ASC, ordenEtapa ASC";
         $notas = DB::select($query,array($grupo));
         return $notas;
     }

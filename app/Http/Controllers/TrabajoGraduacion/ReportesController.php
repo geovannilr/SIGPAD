@@ -196,12 +196,9 @@ class ReportesController extends Controller{
         $tipo = $request['tipo'];
         $grupo = $request['grupo'];
         $title = self::REPORTES[5];
+        $subtitle = 'GRUPO '.pdg_gru_grupoModel::find($grupo)->numero_pdg_gru;
         $datos = pdg_not_cri_tra_nota_criterio_trabajoModel::getConsolidadoNotas($grupo);
-
-        return $datos;//<--- Aqui van los datos de las notas por etapas, falta ver como se traduce eso a una tabla.
-
-        //TODO: crear la vista 'TrabajoGraduacion.Reports.consolidadoNotas.blade.php', consumir el array 'datos' en esa vista
-        $pdf = PDF::loadView('TrabajoGraduacion.Reports.consolidadoNotas',compact('datos', 'title'));
+        $pdf = PDF::loadView('TrabajoGraduacion.Reports.consolidadoNotas',compact('datos', 'title', 'subtitle'));
         if ($tipo == 1) {
             return $pdf->stream($title.'.pdf');
         }elseif ($tipo == 2) {
