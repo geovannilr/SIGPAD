@@ -2,28 +2,24 @@
 
 namespace App\Http\Controllers;
 
-use App\cat_mat_materiaModel;
 use Illuminate\Http\Request;
 use Session;
 use Redirect;
 use Illuminate\Support\Facades\Auth;
+use App\cat_cri_eva_criterio_evaluacionModel;
+use App\pdg_asp_aspectos_evaluativosModel;
 
-class cat_mat_materiaController extends Controller
+class cat_cri_eva_criterio_evaluacionController extends Controller
 {
     public function __construct(){
         $this->middleware('auth');
     }
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index()
     {
         $userLogin=Auth::user();
-        if ($userLogin->can(['catMateria.index'])) {
-            $catMateria =cat_mat_materiaModel::all();
-            return view('catMateria.index',compact('catMateria'));
+        if ($userLogin->can(['catCriterios.index'])) {
+            $catCriterios=cat_cri_eva_criterio_evaluacionModel::all();
+            return view('catCriterios.index',compact('catCriterios'));
         }else{
             Session::flash('message-error', 'No tiene permisos para acceder a esta opción');
             return  view('template');
@@ -38,8 +34,9 @@ class cat_mat_materiaController extends Controller
     public function create()
     {
         $userLogin=Auth::user();
-        if ($userLogin->can(['catMateria.create'])) {
-            return view('catMateria.create');
+        if ($userLogin->can(['catCriterios.create'])) {
+            $catAspEva= pdg_asp_aspectos_evaluativosModel::pluck("nombre_pdg_asp","id_pdg_asp");
+            return view('catCriterios.create',compact('catAspEva'));
         }else{
             Session::flash('message-error', 'No tiene permisos para acceder a esta opción');
             return  view('template');
@@ -55,36 +52,26 @@ class cat_mat_materiaController extends Controller
     public function store(Request $request)
     {
         $validatedData = $request->validate([
-            'codigo_mat' => 'required|max:6',
-            'nombre_mat' => 'required|max:100',
-            'anio_pensum'=> 'required|max:4',
-            'ciclo' => 'required|max:1'
+            'nombre_cat_cri_eva' => 'required|max:45',
+            'ponderacion_cat_cri_eva' => 'required|max:6'
         ],
             [
-                'codigo_mat.required' => 'El código de materia es necesario',
-                'codigo_mat.max' => 'El código de materia contener como maximo 6 caracteres',
-                'nombre_mat.required'=> 'El nombre de la materia es necesario',
-                'nombre_mat.max'=> 'El nombre de la materia máximo 100 caracteres',
-                'anio_pensum.required' => 'El año de pensum es necesario',
-                'anio_pensum.max' => 'El año de pensum debe contener 4 carácteres como máximo',
-                'ciclo.required' => 'Debe ingresar ciclo',
-                'ciclo.max' => 'El ciclo debe contener como maximo 1 caracter'
+                'nombre_cat_cri_eva.required' => 'El nombre del criterio es necesario',
+                'nombre_cat_cri_eva.max' => 'El nombre del criterio debe contener como maximo 45 caracteres',
+                'ponderacion_cat_cri_eva.required'=> 'La ponderación del criterio es necesario',
+                'ponderacion_cat_cri_eva.max'=> 'La ponderación del criterio debe contener como maximo 6 caracteres',
             ]
-
         );
 
-
-
-        cat_mat_materiaModel::create
+//        return var_dump($request);
+        cat_cri_eva_criterio_evaluacionModel::create
         ([
-            'codigo_mat'       	 => $request['codigo_mat'],
-            'nombre_mat'       	 => $request['nombre_mat'],
-            'anio_pensum'       	 => $request['anio_pensum'],
-            'ciclo'       	 => $request['ciclo']
-
+            'nombre_cat_cri_eva'       	 => $request['nombre_cat_cri_eva'],
+            'ponderacion_cat_cri_eva'       	 => $request['ponderacion_cat_cri_eva'],
+            'id_pdg_asp'        => $request['id_pdg_asp']
         ]);
 
-        Return redirect('catMateria')->with('message','Materia Registrada correctamente!') ;
+        Return redirect('catCriterios')->with('message','Criterio Registrado correctamente!') ;
 
     }
 
@@ -108,10 +95,11 @@ class cat_mat_materiaController extends Controller
     public function edit($id)
     {
         $userLogin=Auth::user();
-        if ($userLogin->can(['catMateria.edit'])) {
-            $catMateria= cat_mat_materiaModel::find($id);
+        if ($userLogin->can(['catCriterios.edit'])) {
+            $catCriterios= cat_cri_eva_criterio_evaluacionModel::find($id);
+            $catAspEva= pdg_asp_aspectos_evaluativosModel::pluck("nombre_pdg_asp","id_pdg_asp");
 
-            return view('catMateria.edit',compact(['catMateria']));
+            return view('catCriterios.edit',compact(['catCriterios'],'catAspEva'));
         }else{
             Session::flash('message-error', 'No tiene permisos para acceder a esta opción');
             return  view('template');
@@ -127,12 +115,12 @@ class cat_mat_materiaController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $catMateria=cat_mat_materiaModel::find($id);
+        $catCriterios=cat_cri_eva_criterio_evaluacionModel::find($id);
 
-        $catMateria->fill($request->all());
-        $catMateria->save();
+        $catCriterios->fill($request->all());
+        $catCriterios->save();
         // Session::flash('message','Tipo Documento Modificado correctamente!');
-        return Redirect::to('catMateria');
+        return Redirect::to('catCriterios');
 
     }
 
@@ -145,24 +133,21 @@ class cat_mat_materiaController extends Controller
     public function destroy($id)
     {
         $userLogin=Auth::user();
-    if ($userLogin->can(['catMateria.destroy']))
-    {
+        if ($userLogin->can(['catCriterios.destroy']))
+        {
             try {
-                cat_mat_materiaModel::destroy($id);
-
+                cat_cri_eva_criterio_evaluacionModel::destroy($id);
             } catch (\PDOException $e)
             {
                 Session::flash('message-error', 'No es posible eliminar este registro, está siendo usado.');
-                return Redirect::to('catMateria');
+                return Redirect::to('catCriterios');
             }
-        Session::flash('message','Materia Eliminada Correctamente!');
-        return Redirect::to('catMateria');
+            Session::flash('message','Criterio Eliminado Correctamente!');
+            return Redirect::to('catCriterios');
 
-    }else{
+        }else{
             Session::flash('message-error', 'No tiene permisos para acceder a esta opción');
             return  view('template');
         }
-
-    }
+   }
 }
-

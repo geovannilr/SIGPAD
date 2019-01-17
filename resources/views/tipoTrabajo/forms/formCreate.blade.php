@@ -5,6 +5,6 @@
 					</div>
 					<div class="form-group col-sm-6">
 						{!! Form::label('Año de Tipo Trabajo de Graduación') !!}
-						{!!Form::text('anio_cat_tpo_tra_gra',null,['class'=>'form-control ','placeholder'=>'Año TDG'])  !!}
+						{!!Form::number('anio_cat_tpo_tra_gra',null,['class'=>'form-control ','min'=>2017,'max'=>2040,'placeholder'=>'Año TDG'])  !!}
 					</div>
 				</div>

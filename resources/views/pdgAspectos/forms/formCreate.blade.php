@@ -9,6 +9,6 @@
 					</div>
 					<div class="form-group col-sm-4">
 						{!! Form::label('Etapa Evaluativa') !!}
-						{{ Form::select('id_cat_eta_eva', $catEtaEva, null, ['class' => 'form-control']) }}
+						{{ Form::select('id_cat_eta_eva',$catEtaEva, null, ['class' => 'form-control']) }}
 					</div>
 				</div>

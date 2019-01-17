@@ -53,13 +53,13 @@ class pdg_asp_aspectos_evaluativosController extends Controller
     {
         $validatedData = $request->validate([
             'nombre_pdg_asp' => 'required|max:45',
-            'ponderacion_pdg_asp' => 'required|numeric'
+            'ponderacion_pdg_asp' => 'required|max:6'
         ],
             [
                 'nombre_pdg_asp.required' => 'El nombre del aspecto es necesario',
                 'nombre_pdg_asp.max' => 'El nombre del aspecto debe contener como maximo 45 caracteres',
                 'ponderacion_pdg_asp.required'=> 'La ponderación del aspecto es necesario',
-                'ponderacion_pdg_asp.max'=> 'La ponderación del aspecto debe contener como maximo 5 caracteres',
+                'ponderacion_pdg_asp.max'=> 'La ponderación del aspecto debe contener como maximo 6 caracteres',
             ]
         );
 
@@ -96,8 +96,7 @@ class pdg_asp_aspectos_evaluativosController extends Controller
         $userLogin=Auth::user();
         if ($userLogin->can(['pdgAspectos.edit'])) {
             $pdgAspectos= pdg_asp_aspectos_evaluativosModel::find($id);
-            $catEtaEva= cat_eta_eva_etapa_evalutativaModel::pluck("nombre_cat_eta_eva","id_cat_eta_eva");
-
+            $catEtaEva= cat_eta_eva_etapa_evalutativaModel::all()->pluck("full_name","id_cat_eta_eva");
             return view('pdgAspectos.edit',compact(['pdgAspectos'],'catEtaEva'));
         }else{
             Session::flash('message-error', 'No tiene permisos para acceder a esta opción');
@@ -114,6 +113,7 @@ class pdg_asp_aspectos_evaluativosController extends Controller
      */
     public function update(Request $request, $id)
     {
+
         $pdgAspectos=pdg_asp_aspectos_evaluativosModel::find($id);
 
         $pdgAspectos->fill($request->all());

@@ -1,7 +1,7 @@
 				<div class="row">
 					<div class="form-group col-sm-4">
-						{!! Form::label('Descripción') !!}
-						{!!Form::textarea('nombre_cat_ski',null,['class'=>'form-control ','placeholder'=>'Ingrese descripción del estado'])  !!}
+						{!! Form::label('Nombre Skill') !!}
+						{!!Form::text('nombre_cat_ski',null,['class'=>'form-control ','placeholder'=>'Escriba nombre de Skill'])  !!}
 					</div>
 					<div class="form-group col-sm-4">
 						{!! Form::label('Tipo Skill') !!}

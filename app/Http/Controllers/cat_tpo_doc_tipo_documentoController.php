@@ -57,7 +57,6 @@ class cat_tpo_doc_tipo_documentoController extends Controller
         $validatedData = $request->validate([
             'nombre_pdg_tpo_doc' => 'required|max:45',
             'descripcion_pdg_tpo_doc' => 'required|max:100',
-            'puede_observar_cat_pdg_tpo_doc'=> 'required|max:1',
             'anio_cat_pdg_tpo_doc' => 'required|max:4'
         ],
             [
@@ -79,7 +78,6 @@ class cat_tpo_doc_tipo_documentoController extends Controller
         ([
             'nombre_pdg_tpo_doc'       	 => $request['nombre_pdg_tpo_doc'],
             'descripcion_pdg_tpo_doc'       	 => $request['descripcion_pdg_tpo_doc'],
-            'puede_observar_cat_pdg_tpo_doc'       	 => $request['puede_observar_cat_pdg_tpo_doc'],
             'anio_cat_pdg_tpo_doc'       	 => $request['anio_cat_pdg_tpo_doc']
 
         ]);

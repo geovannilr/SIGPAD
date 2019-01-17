@@ -57,16 +57,14 @@ class cat_eta_eva_etapa_evalutativaController extends Controller
     {
         $validatedData = $request->validate([
             'nombre_cat_eta_eva' => 'required|max:45',
-            'ponderacion_cat_eta_eva' => 'numeric|required',
-            'anio_cat_eta_eva' => 'required|max:4',
-            'tiene_defensas_cat_eta_eva'=> 'required|max:11',
-            'puede_observar_cat_eta_eva'=> 'required|max:11'
+            'ponderacion_cat_eta_eva' => 'required|max:6',
+            'anio_cat_eta_eva' => 'required|max:4'
         ],
             [
                 'nombre_cat_eta_eva.required' => 'El nombre de la etapa evaluativa es necesario',
                 'nombre_cat_eta_eva.max' => 'El nombre de la etapa evaluativa debe contener como maximo 45 caracteres',
                 'ponderacion_cat_eta_eva.required'=> 'La ponderacion de la etapa evaluativa es necesario',
-                'ponderacion_cat_eta_eva.max'=> 'La ponderacion de la etapa evaluativa debe contener como maximo 5 caracteres',
+                'ponderacion_cat_eta_eva.max'=> 'La ponderacion de la etapa evaluativa debe contener como maximo 6 caracteres',
                 'anio_cat_eta_eva.required' => 'El anio de  la etapa evaluativa es necesario',
                 'anio_cat_eta_eva.max' => 'El anio de la etapa evaluativa debe contener como maximo 4 caracteres',
                 'tiene_defensas_cat_eta_eva.required' => 'Si tiene defensas es necesario saberlo',
@@ -84,8 +82,6 @@ class cat_eta_eva_etapa_evalutativaController extends Controller
             'nombre_cat_eta_eva'       	 => $request['nombre_cat_eta_eva'],
             'ponderacion_cat_eta_eva'       	 => $request['ponderacion_cat_eta_eva'],
             'anio_cat_eta_eva'       	 => $request['anio_cat_eta_eva'],
-            'tiene_defensas_cat_eta_eva'       	 => $request['tiene_defensas_cat_eta_eva'],
-            'puede_observar_cat_eta_eva'       	 => $request['puede_observar_cat_eta_eva'],
 
         ]);
 
