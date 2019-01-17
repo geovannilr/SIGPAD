@@ -87,7 +87,7 @@ class PrePerfilController extends Controller
                     $contador++;
                 }   
             }
-            if ($contador==0) {
+            if ($contador==0 && !$userLogin->isRole('administrador_tdg')) {
                  return redirect('prePerfil');
             }
                 //VERIFICAMOS EL ROL

@@ -59,7 +59,13 @@ class TrabajoDeGraduacionController extends Controller{
                         	$etapas="NA";
                         }
                         $traGra = pdg_tra_gra_trabajo_graduacionModel::where('id_pdg_gru', '=',$idGrupo)->first();
-                        $tema = $traGra->tema_pdg_tra_gra;
+                        if (empty($traGra->tema_pdg_tra_gra)) {
+                            Session::flash('message-error', 'tu grupo no tiene un perfil aprobado de trabajo de graduacion');
+                            return redirect("/");
+                        }else{
+                           $tema = $traGra->tema_pdg_tra_gra; 
+                        }
+                        
 
                         $avance = self::getAvanceGrupo($traGra->id_pdg_tra_gra);
                         $actual = self::getIdEtapaActual($traGra->id_pdg_tra_gra);

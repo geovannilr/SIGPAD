@@ -146,12 +146,23 @@ class gen_UsuarioController extends Controller {
 	 * @return \Illuminate\Http\Response
 	 */
 	public function update(Request $request, $id) {
-		$validatedData = $request->validate([
+		if ($request['password'] != "") {
+			$validatedData = $request->validate([
+			'name' => 'required|max:50',
+			'user' => 'required|max:30',
+			'email' => 'required|max:250|email',
+			'password' => 'required|confirmed|min:6',
+			'rol' => 'required',
+			]);
+		}else{
+			$validatedData = $request->validate([
 			'name' => 'required|max:50',
 			'user' => 'required|max:30',
 			'email' => 'required|max:250|email',
 			'rol' => 'required',
-		]);
+			]);
+		}
+		
 		$usuario = gen_UsuarioModel::find($id);
 		$user = User::find($id);
 		$usuario->fill($request->all());

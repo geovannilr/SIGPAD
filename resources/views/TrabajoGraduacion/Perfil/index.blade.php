@@ -215,7 +215,7 @@
 							
 						</td>
 						<td>{{ $perfil->tipoTrabajo->nombre_cat_tpo_tra_gra}}</td>
-						@can('prePerfil.edit')
+						@can('perfil.edit')
 								<td>
 										<a class="btn btn-info" href="{{route('perfil.edit',$perfil->id_pdg_per)}}"><i class="fa fa-pencil"></i></a>
 								

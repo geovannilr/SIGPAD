@@ -314,11 +314,13 @@ class ConformarGrupoController extends Controller
                 Session::flash('message','Se aprobó el grupo de trabajo de graduación ');
                 return redirect()->route('grupo.index');
             }else{
+                Session::flash('tipo','error');
                 Session::flash('message','Ocurrió un problema al momento de aprobar el grupo de trabajo de graduación!');
                 return redirect()->route('grupo.index');
             }
             
         } catch (Exception $e) {
+           Session::flash('tipo','error');
            Session::flash('message','Ocurrió un problema al momento de aprobar el grupo de trabajo de graduación!');
             return redirect()->route('grupo.index');
         }
@@ -335,8 +337,9 @@ class ConformarGrupoController extends Controller
 
             return view('TrabajoGraduacion.ConformarGrupo.view',compact(['relaciones']));
         }else{
+
             Session::flash('message-error', 'No tiene permisos para acceder a esta opción');
-            return  view('template');
+            return  redirect('/');
         }
     }
     public function deleteRelacion(Request $request){

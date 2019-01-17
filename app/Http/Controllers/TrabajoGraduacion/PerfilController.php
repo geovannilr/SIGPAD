@@ -83,6 +83,9 @@ class PerfilController extends Controller
                     return  view('template');
                 }
             }
+        }else{
+            Session::flash('message-error', 'No tienes permiso para acceder a esta opción');
+                    return  redirect('/');
         }
        
     }
@@ -91,8 +94,10 @@ class PerfilController extends Controller
         $userLogin=Auth::user();
         if ($userLogin->can(['prePerfil.index'])) {
                 //VERIFICAMOS EL ROL
+            $miGrupo = pdg_gru_grupoModel::find($id);
+            $numero=$miGrupo->numero_pdg_gru;
                 $perfiles =pdg_per_perfilModel::where('id_pdg_gru', '=',$id)->get();
-                return view('TrabajoGraduacion.Perfil.index',compact('perfiles'));
+                return view('TrabajoGraduacion.Perfil.index',compact('perfiles','numero'));
         }else{
             Session::flash('message-error', 'No tiene permisos para acceder a esta opción');
             return  view('template');
