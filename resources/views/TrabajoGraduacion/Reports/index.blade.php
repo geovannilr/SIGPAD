@@ -86,6 +86,14 @@
 						Presenta el listado de Estudiante Activos en Trabajo de Graduación.
 					</td>
 				</tr>
+				<tr>
+					<td>
+						<a href="{{route('reportes/createConsolidadoNotas')}}">Consolidado de Notas</a>
+					</td>
+					<td>
+						Presenta el consolidado de notas para un Grupo de Trabajo de Graduación seleccionado.
+					</td>
+				</tr>
 				</tbody>
 			</table>
 	   </div>

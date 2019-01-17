@@ -96,11 +96,13 @@ Route::post('reportes/asignacionesPorDocente', 'TrabajoGraduacion\ReportesContro
 Route::post('reportes/estadoGruposEtapa', 'TrabajoGraduacion\ReportesController@estadoGruposEtapa')->name('reportes/estadoGruposEtapa');
 Route::post('reportes/detalleGruposTdg', 'TrabajoGraduacion\ReportesController@detalleGruposTdg')->name('reportes/detalleGruposTdg');
 Route::post('reportes/estudiantesTdg', 'TrabajoGraduacion\ReportesController@estudiantesTdg')->name('reportes/estudiantesTdg');
+Route::post('reportes/consolidadoNotas', 'TrabajoGraduacion\ReportesController@consolidadoNotas')->name('reportes/consolidadoNotas');
 Route::get('reportes/createTribunalPorGrupo', 'TrabajoGraduacion\ReportesController@createTribunalPorGrupo')->name('reportes/createTribunalPorGrupo');
 Route::get('reportes/createAsignacionesPorDocente', 'TrabajoGraduacion\ReportesController@createAsignacionesPorDocente')->name('reportes/createAsignacionesPorDocente');
 Route::get('reportes/createEstadoGruposEtapa', 'TrabajoGraduacion\ReportesController@createEstadoGruposEtapa')->name('reportes/createEstadoGruposEtapa');
 Route::get('reportes/createDetalleGruposTdg', 'TrabajoGraduacion\ReportesController@createDetalleGruposTdg')->name('reportes/createDetalleGruposTdg');
 Route::get('reportes/createEstudiantesTdg', 'TrabajoGraduacion\ReportesController@createEstudiantesTdg')->name('reportes/createEstudiantesTdg');
+Route::get('reportes/createConsolidadoNotas', 'TrabajoGraduacion\ReportesController@createConsolidadoNotas')->name('reportes/createConsolidadoNotas');
 
 
 

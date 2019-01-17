@@ -203,7 +203,8 @@ class TrabajoDeGraduacionController extends Controller{
 
     public function storeCierreGrupo(Request $request){
         if (!Auth::user()->isRole('estudiante')) {
-               return view('error');
+            Session::flash('message-error', 'No puede acceder a esta opción.');
+            return redirect('/');
         }
         $validatedData = $request->validate([
             'resumen' => 'required',

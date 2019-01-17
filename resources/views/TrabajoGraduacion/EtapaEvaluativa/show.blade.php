@@ -120,8 +120,13 @@
     
   });
 </script>
+<br>
     <ol class="breadcrumb">
-      <h5><a href="{{ redirect()->getUrlGenerator()->previous() }}" style="margin-left: 0em"><i class="fa fa-arrow-left fa-lg" style="z-index: 1;margin-top: 0em;margin-right: 0.5em; color: black"></i></a> </h5>
+        @if (Auth::user()->isRole('docente_asesor'))
+            <h5><a href="{{route('dashboardGrupo',$idGrupo)}}" style="margin-left: 0em"><i class="fa fa-arrow-left fa-lg" style="z-index: 1;margin-top: 0em;margin-right: 0.5em; color: black"></i></a> </h5>
+        @else
+            <h5><a href="{{route('dashboard')}}" style="margin-left: 0em"><i class="fa fa-arrow-left fa-lg" style="z-index: 1;margin-top: 0em;margin-right: 0.5em; color: black"></i></a> </h5>
+        @endif
           <li class="breadcrumb-item">
             @if($nombreEtapa == "" )
               SIN DOCUMENTOS

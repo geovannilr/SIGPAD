@@ -241,6 +241,7 @@
             &nbsp;&nbsp;<span>No es posible calificar esta etapa, verifique que se han cumplido los requerimientos de etapas anteriores.</span>
         </div>
     @else
+        {!!Html::script('js/TrabajoGraduacion/etapaEvaluativa.js')!!}
         <div class="row">
             <div class="col-sm-3">
                 <div class="btn-group btn-group-toggle" data-toggle="buttons" id="divToggleBtn">
@@ -263,10 +264,10 @@
                         SUBIR&nbsp;<i class="fa fa-file"></i>
                     </button>
                 @endif
-                <button id="btnGuardarNotas" class="btn btn-danger" title="Calificar manualmente" onclick="confirmGuardarNotas();">
+                <button id="btnGuardarNotas" class="btn btn-danger" title="Guardar" onclick="confirmGuardarNotas();">
                     GUARDAR&nbsp;<i class="fa fa-pencil"></i>
                 </button>
-                <button id="btnCancelar" class="btn btn-secondary" title="Subir consolidado" onclick="cancelarGuardarNotas();">
+                <button id="btnCancelar" class="btn btn-secondary" title="Cancelar" onclick="cancelarGuardarNotas();">
                     CANCELAR&nbsp;<i class="fa fa-times"></i>
                 </button>
             </div>
