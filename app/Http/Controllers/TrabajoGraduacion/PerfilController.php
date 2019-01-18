@@ -492,7 +492,8 @@ class PerfilController extends Controller
             return Redirect::back();
         }
         Session::flash($msgType,$msg);
-        return Redirect::to('/indexPerfil/'.$perfil->id_pdg_gru);
+        //return Redirect::to('/indexPerfil/'.$perfil->id_pdg_gru);
+        return Redirect::to('/perfil');
     }
     private function saveTDG($perfil){
         $tragra = pdg_tra_gra_trabajo_graduacionModel::createOrUpdateTDG($perfil);
