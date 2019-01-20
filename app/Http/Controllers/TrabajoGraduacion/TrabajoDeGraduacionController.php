@@ -85,7 +85,7 @@ class TrabajoDeGraduacionController extends Controller{
                 return "DOCENTE ASESOR";
             }
         }
-        return view("error");
+        return redirect("/");
     }
     /*Listado de grupos filtrados por docente asesor*/
     public function dashboardIndex(){
@@ -110,7 +110,7 @@ class TrabajoDeGraduacionController extends Controller{
         $grupo = pdg_gru_grupoModel::find($idGrupo);
         //return var_dump($grupo);
         if (empty($grupo->id_pdg_gru)) {
-           return view("error");
+            return redirect("/");
         }
         $numero=$grupo->numero_pdg_gru;
         $tribunal = pdg_tri_gru_tribunal_grupoModel::getTribunalData($idGrupo);
@@ -132,7 +132,7 @@ class TrabajoDeGraduacionController extends Controller{
         }else{
             //Session::flash('message-error', 'El grupo seleccionado aún no ha empezado su proceso de trabajo de graduación');
             //return redirect()->route('listadoGrupos');
-            return view("error");
+            return redirect("/");
         }
 
 
@@ -170,18 +170,18 @@ class TrabajoDeGraduacionController extends Controller{
                 $estudiante = new gen_EstudianteModel();
                 $idGrupo = $estudiante->getIdGrupo($userLogin->user);
         }else{
-            return view("error");
+            return redirect("/");
         }
         $grupo = pdg_gru_grupoModel::find($idGrupo);
         $trabajoGraduacion = pdg_tra_gra_trabajo_graduacionModel::where('id_pdg_gru', '=',$idGrupo)->first();
 
         if(empty($trabajoGraduacion->id_pdg_tra_gra)){
-                return view("error");
+            return redirect("/");
         }
         //VERIFICAMOS QUE PUEDE QUE LAS ETAPAS YA ESTAN CERRADAS Y PUEDE HACER EL CIERRE DE TRABAJO DE GRADUACION
         $verificar=pdg_apr_eta_tra_aprobador_etapa_trabajoModel::where("id_pdg_tra_gra","=",$trabajoGraduacion->id_pdg_tra_gra)->where("inicio","=","1")->where("aprobo","=","0")->first();
         if (empty($verificar->id_pdg_apr_eta_tra)) {
-             Session::flash('message-warning', 'No pueces realizar el cierre de trabajo de graduación hasta que hayas aprobado todas las etapas evaluativas, consulta con tu docente asesor.');
+             Session::flash('message-warning', 'No puedes realizar el cierre de trabajo de graduación hasta que hayas aprobado todas las etapas evaluativas, consulta con tu docente asesor.');
              return redirect("/dashboard");
         }
          if(empty($trabajoGraduacion->tema_pdg_tra_gra)){
@@ -191,7 +191,7 @@ class TrabajoDeGraduacionController extends Controller{
         }
 
         if (empty($grupo->id_pdg_gru)) {
-           return view("error");
+            return redirect("/");
         }else{
             $numero=$grupo->numero_pdg_gru;
             $grupo= new pdg_gru_grupoModel();
@@ -221,7 +221,7 @@ class TrabajoDeGraduacionController extends Controller{
         $trabajoGraduacion = pdg_tra_gra_trabajo_graduacionModel::where('id_pdg_gru', '=',$idGrupo)->first();
 
         if(empty($trabajoGraduacion->id_pdg_tra_gra)){
-                return view("error");
+            return redirect("/");
         }
         //VERIFICAMOS QUE PUEDE QUE LAS ETAPAS YA ESTAN CERRADAS Y PUEDE HACER EL CIERRE DE TRABAJO DE GRADUACION
         $verificar=pdg_apr_eta_tra_aprobador_etapa_trabajoModel::where("id_pdg_tra_gra","=",$trabajoGraduacion->id_pdg_tra_gra)->where("inicio","=","1")->where("aprobo","=","0")->first();
@@ -232,7 +232,7 @@ class TrabajoDeGraduacionController extends Controller{
         $grupo = pdg_gru_grupoModel::find($idGrupo);
         $tema = pdg_tra_gra_trabajo_graduacionModel::where('id_pdg_gru', '=',$idGrupo)->select('tema_pdg_tra_gra')->first();
         if (empty($grupo->id_pdg_gru)) {
-           return view("error");
+           return redirect("/");
         }else{
             $numero=$grupo->numero_pdg_gru;
             $grupo= new pdg_gru_grupoModel();

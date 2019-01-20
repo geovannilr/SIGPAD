@@ -164,7 +164,7 @@ class EtapaEvaluativaController extends Controller {
 			return view('TrabajoGraduacion.EtapaEvaluativa.show', compact('bodyHtml', 'nombreEtapa', 'ponderacion', 'id'));
 			//return $bodyHtml;
 		} else {
-			return view("error");
+            return redirect("/");
 		}
 
 	}
@@ -310,7 +310,7 @@ class EtapaEvaluativaController extends Controller {
 		//VERIFICAMOS SI EXISTEN EN LA BASE DE DATOS ESOS ID
 		$etapa = cat_eta_eva_etapa_evalutativaModel::find($idEtapa);
 		if (empty($etapa)) {
-			return view("error");
+            return redirect("/");
 		} else {
 			//LOS PARAMETROS VIENEN CORRECTAMENTE
 			return view('TrabajoGraduacion.NotaEtapaEvaluativa.create', compact('etapa'));
