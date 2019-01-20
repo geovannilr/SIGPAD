@@ -197,4 +197,21 @@ class pdg_gru_grupoModel extends Model{
         $grupos = DB::select('CALL sp_pdg_gru_select_gruposPendientesDeAprobacion();');
         return  $grupos;
     }
+
+    public static function getIdsGruposFinalizados(){
+        $grupos = DB::select('  SELECT 
+                                    id_pdg_gru
+                                FROM
+                                (SELECT
+                                    gru.id_pdg_gru,
+                                    (select aprobo from pdg_apr_eta_tra_aprobador_etapa_Trabajo where id_cat_eta_eva = 999 AND id_pdg_tra_gra = 
+                                                                    (SELECT id_pdg_tra_gra from pdg_tra_gra_trabajo_graduacion where id_pdg_gru = gru.id_pdg_gru )) as finalizo
+                                FROM
+                                    pdg_gru_grupo gru
+                                    LEFT JOIN pdg_tra_gra_trabajo_graduacion tragra ON (gru.id_pdg_gru=tragra.id_pdg_gru)
+                                ) x
+                                WHERE
+                                    IFNULL(x.finalizo,0) != 1');
+        return $grupos;
+    }
 }
