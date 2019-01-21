@@ -69,8 +69,9 @@ class TrabajoDeGraduacionController extends Controller{
 
                         $avance = self::getAvanceGrupo($traGra->id_pdg_tra_gra);
                         $actual = self::getIdEtapaActual($traGra->id_pdg_tra_gra);
+                        $idPublicacion = pub_publicacionModel::getIdPublicacion($idGrupo);
 
-                        return view('TrabajoGraduacion.TrabajoDeGraduacion.index',compact('numero','estudiantes','tribunal','etapas','tema','idGrupo','avance','actual'));
+                        return view('TrabajoGraduacion.TrabajoDeGraduacion.index',compact('numero','estudiantes','tribunal','etapas','tema','idGrupo','avance','actual','idPublicacion'));
                     }else{
                         //EL GRUPO AUN NO HA SIDO APROBADO
                     Session::flash('message-error', 'Tu grupo de trabajo de graduación aún no ha sido aprobado');
@@ -128,7 +129,8 @@ class TrabajoDeGraduacionController extends Controller{
         $actual = self::getIdEtapaActual($traGra->id_pdg_tra_gra);
 
         if(!empty($tema)){
-            return view('TrabajoGraduacion.TrabajoDeGraduacion.index',compact('numero','estudiantesGrupo','tribunal','etapas','tema','idGrupo','avance','actual'));
+            $idPublicacion = pub_publicacionModel::getIdPublicacion($idGrupo);
+            return view('TrabajoGraduacion.TrabajoDeGraduacion.index',compact('numero','estudiantesGrupo','tribunal','etapas','tema','idGrupo','avance','actual','idPublicacion'));
         }else{
             //Session::flash('message-error', 'El grupo seleccionado aún no ha empezado su proceso de trabajo de graduación');
             //return redirect()->route('listadoGrupos');
@@ -270,7 +272,8 @@ class TrabajoDeGraduacionController extends Controller{
                     'anio_pub' => date('Y'),
                     'correlativo_pub' => $correlativo,
                     'codigo_pub' => $codigo,
-                    'resumen_pub' => $request['resumen']
+                    'resumen_pub' => $request['resumen'],
+                    'es_visible_pub' => 0
                 ]);
 
             //INGRESAMOS LOS COLABORADORES JUNTO CON SU LLAVE DE INTEGRACION
@@ -380,4 +383,76 @@ class TrabajoDeGraduacionController extends Controller{
        return redirect("/publicacion/".$lastIdPublicacion->id_pub);
     }
 
+    public function aprobarCierreGrupo(Request $request){
+        if (Auth::user()->isRole('estudiante')) {
+            Session::flash('message-error', 'Permisos insuficientes!!');
+            return redirect('/');
+        }
+        $opcion = $request['opc'];
+        $idpub = $request['pub'];
+        $idGrupo = pub_publicacionModel::getIdGrupo($idpub);
+        $groupId = empty($idGrupo[0]->id_pdg_gru) ? null : $idGrupo[0]->id_pdg_gru;
+        $esMiGrupo = $this->checkMiGrupo($groupId);
+        $resultado = false;
+        if($esMiGrupo){
+            if($opcion==1){
+                $resultado = $this->aprobarCierre($idpub,$groupId);
+            }else if($opcion==2){
+                $resultado = $this->rechazarCierre($idpub);
+            }
+            $msg = $resultado?($opcion==1?'Trabajo de Graduación aprobado correctamente!':'Publicación rechazada, notifique al grupo para volver a cargar la información'):'Ocurrió una falla al realizar la operación solicitada, intente más tarde o notifique al administrador.';
+        } else {
+            Session::flash('message-error', 'No puede realizar la acción, no ha sido asignado como asesor del grupo.');
+            return redirect("/");
+        }
+        return redirect()->route('dashboardGrupo',["idGrupo"=>$idGrupo[0]->id_pdg_gru])->with(['message-error'=>$msg]);
+    }
+
+    public function checkMiGrupo($idGrupo){
+        if($idGrupo==null){
+            return false;
+        }else{
+            $grupos = session('misGrupos');
+            $pertenece = 0;
+            $misGrupos = explode(",", $grupos);
+            foreach ($misGrupos as $grupo) {
+                if ($grupo == $idGrupo) {
+                    $pertenece = 1;
+                }
+            }
+            return $pertenece>0;
+        }
+    }
+
+    public function aprobarCierre($idpub,$idGrupo){
+        $exito = true;
+        try{
+            $trabajoGraduacion = pdg_tra_gra_trabajo_graduacionModel::where('id_pdg_gru', '=',$idGrupo)->first();
+            $resultadoAvance = pdg_tra_gra_trabajo_graduacionModel::avanzarProceso($trabajoGraduacion->id_pdg_tra_gra);
+            if($resultadoAvance->p_result == 0){
+                $publicacion = pub_publicacionModel::find($idpub);
+                $publicacion->es_visible_pub = 1;
+                $publicacion->save();
+            }else{
+                $exito = false;
+            }
+        }catch (\Exception $e){
+            $exito = false;
+        }
+        return $exito;
+    }
+
+    public function rechazarCierre($idpub){
+        $exito = true;
+        try{
+            $archivo = pub_arc_publicacion_archivoModel::where('id_pub','=',$idpub)->get();
+            $name = $archivo[0]->ubicacion_pub_arc;
+            if( Storage::disk('publicaciones')->exists($name))
+                Storage::disk('publicaciones')->delete($name);
+            $exito = pub_publicacionModel::deletePublicacionAndRelations($idpub);
+        }catch (\Exception $e){
+            $exito = $e;
+        }
+        return $exito;
+    }
 }

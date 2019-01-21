@@ -158,19 +158,37 @@
         </div>
 
           <div class="col-sm-4">
-            <div class="card text-gray  o-hidden h-100">
+            <div class="card text-gray  o-hidden h-100" style="{{!isset($idPublicacion[0]->id_pub)?'background-color: #DF1D20':''}}" >
                     <div class="card-body">
                       <div class="card-body-icon">
                         <i class="fa fa-flag-checkered"></i>
                       </div>
-                      <div class="mr-5">Cierre de Trabajo de graduación</div>
+                      <div class="mr-5 {{!isset($idPublicacion[0]->id_pub)?'text-white':''}}">Cierre de Trabajo de graduación</div>
                     </div>
-                    <a class="card-footer text-gray clearfix small z-1" href="{{url("/")."/cierreTDG"}}">
-                      <span class="float-left">Realizar</span>
-                      <span class="float-right">
-                        <i class="fa fa-angle-right"></i>
-                      </span>
+                @if(isset($idPublicacion[0]->id_pub))
+                    <a class="card-footer text-gray clearfix small z-1" href="{{url("/").'/publicacion/'.$idPublicacion[0]->id_pub}}">
+                        <span class="float-left">Ver Detalles</span>
+                        <span class="float-right">
+                            <i class="fa fa-angle-right"></i>
+                            </span>
                     </a>
+                @else
+                    @if(Auth::user()->isRole('estudiante'))
+                        <a class="card-footer text-gray clearfix small z-1" href="{{url("/")."/cierreTDG"}}">
+                            <span class="float-left">Realizar</span>
+                            <span class="float-right">
+                                <i class="fa fa-angle-right"></i>
+                                </span>
+                        </a>
+                    @else
+                        <a class="card-footer text-gray clearfix small z-1"  data-toggle="modal" data-target="#modalDetalleCierre">
+                            <span class="float-left">Ver Detalles</span>
+                            <span class="float-right">
+                            <i class="fa fa-angle-right"></i>
+                            </span>
+                        </a>
+                    @endif
+                @endif
                   </div>
           </div>
           <div class="col-sm-4">
@@ -178,4 +196,23 @@
       </div>
     @endif
     </div>
+<div class="modal fade" id="modalDetalleCierre" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Cierre Trabajo de Graduación</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                El grupo todavía no realiza acciones para el Cierre de Trabajo de Graduación, deben subir su tomo para la aprobación y publicación correspondiente.
+                <p class="text-danger">Esta acción es obligatoria para dar por finalizado el proceso de Trabajo de Graduación</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">Continuar</button>
+            </div>
+        </div>
+    </div>
+</div>
 @stop

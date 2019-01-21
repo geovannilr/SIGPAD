@@ -5,8 +5,8 @@ $( document ).ready(function() {
      var nombre = $(this).val();
      var extension = nombre.substring(nombre.lastIndexOf('.') + 1).toLowerCase();
      console.log("Extension "+nombre.substring(nombre.lastIndexOf('.') + 1).toLowerCase());
-     if(siezekiloByte > 3094){
-           swal("", "El tamaño documento no debe ser mayor a 3 MB", "error");
+     if(siezekiloByte > 25600){
+           swal("", "El tamaño documento no debe ser mayor a 25 MB", "error");
            $(this).val('');
      }else {
           if(!(extension =='docx' || extension =='pdf' || extension =='doc')){
@@ -39,8 +39,8 @@ $( document ).ready(function() {
      var nombre = $(this).val();
      var extension = nombre.substring(nombre.lastIndexOf('.') + 1).toLowerCase();
      console.log("Extension "+nombre.substring(nombre.lastIndexOf('.') + 1).toLowerCase());
-     if(siezekiloByte > 10240){
-           swal("", "El tamaño documento no debe ser mayor a 10 MB", "error");
+     if(siezekiloByte > 25600){
+           swal("", "El tamaño documento no debe ser mayor a 25 MB", "error");
            $(this).val('');
      }else {
           if(!(extension =='docx' || extension =='pdf' || extension =='doc')){

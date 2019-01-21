@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Publicaciones;
 
+use App\gen_EstudianteModel;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Session;
@@ -28,10 +29,20 @@ class publicacionController extends Controller{
             Session::flash('message-error', 'No tiene permisos para acceder a esta opción');
             return  view('template');
         }*/
-        $publicaciones = pub_publicacionModel::all();
+        $publicaciones = pub_publicacionModel::where('es_visible_pub',1)->get();
         return view('publicacion.index',compact('publicaciones'));
     }
     public function show($id){
+        if(Auth::user()->isRole('estudiante')){
+            if(!Auth::user()->can(['publicacion.show'])){
+                $objEst = new gen_EstudianteModel();
+                $idGrupo = $objEst->getIdGrupo(Auth::user()->user);
+                $idPub = pub_publicacionModel::getIdPublicacion($idGrupo);
+                if(empty($idPub)||$idPub[0]->id_pub != $id){
+                    return redirect("/dashboard");
+                }
+            }
+        }
     	$publicacion = pub_publicacionModel::find($id);
     	if (empty($publicacion)) {
     		$titulo = "Datos Incorrectos" ;
