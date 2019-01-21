@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Controllers\TrabajoGraduacion;
 
 use App\pdg_tra_gra_trabajo_graduacionModel;
@@ -171,6 +170,18 @@ class TrabajoDeGraduacionController extends Controller{
         if (Auth::user()->isRole('estudiante')) {
                 $estudiante = new gen_EstudianteModel();
                 $idGrupo = $estudiante->getIdGrupo($userLogin->user);
+                $idPub=pub_publicacionModel::getIdPublicacion($idGrupo);
+                if (!sizeof($idPub) == 0) {
+                    $publicacion = pub_publicacionModel::find($idPub[0]->id_pub);
+                    if (!empty($publicacion->id_pub)) {
+                        if ($publicacion->es_visible_pub == 0) {
+                             $msg = "Ya estas esperando una aprobación de cierre de trabajo de graduación";
+                        }else{
+                             $msg = "Ya has realizado el cierre de tu trabajo de graduación";
+                        }
+                        return redirect('/dashboard')->with(['error'])->with(['message-error'=>$msg]);
+                    }
+                }
         }else{
             return redirect("/");
         }
@@ -394,6 +405,7 @@ class TrabajoDeGraduacionController extends Controller{
         $groupId = empty($idGrupo[0]->id_pdg_gru) ? null : $idGrupo[0]->id_pdg_gru;
         $esMiGrupo = $this->checkMiGrupo($groupId);
         $resultado = false;
+        $messageType = 'message-error';
         if($esMiGrupo){
             if($opcion==1){
                 $resultado = $this->aprobarCierre($idpub,$groupId);
@@ -401,11 +413,12 @@ class TrabajoDeGraduacionController extends Controller{
                 $resultado = $this->rechazarCierre($idpub);
             }
             $msg = $resultado?($opcion==1?'Trabajo de Graduación aprobado correctamente!':'Publicación rechazada, notifique al grupo para volver a cargar la información'):'Ocurrió una falla al realizar la operación solicitada, intente más tarde o notifique al administrador.';
+            $messageType =  $resultado?($opcion==1?'message':'message-error'):'message-error';
         } else {
             Session::flash('message-error', 'No puede realizar la acción, no ha sido asignado como asesor del grupo.');
             return redirect("/");
         }
-        return redirect()->route('dashboardGrupo',["idGrupo"=>$idGrupo[0]->id_pdg_gru])->with(['message-error'=>$msg]);
+        return redirect()->route('dashboardGrupo',["idGrupo"=>$idGrupo[0]->id_pdg_gru])->with([$messageType=>$msg]);
     }
 
     public function checkMiGrupo($idGrupo){

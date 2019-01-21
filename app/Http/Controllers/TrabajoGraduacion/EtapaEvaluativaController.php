@@ -196,6 +196,14 @@ class EtapaEvaluativaController extends Controller {
 			$trabajoGraduacion = pdg_tra_gra_trabajo_graduacionModel::where('id_pdg_gru', '=',$idGrupo)->first();
             $actual =  self::getIdEtapaActual($trabajoGraduacion->id_pdg_tra_gra);
             $statusEtapa = pdg_apr_eta_tra_aprobador_etapa_trabajoModel::where('id_cat_eta_eva','=',$idEtapa)->where('id_pdg_tra_gra','=',$trabajoGraduacion->id_pdg_tra_gra)->first();
+            $statusFinal = pdg_apr_eta_tra_aprobador_etapa_trabajoModel::where('id_cat_eta_eva','=','999')->where('id_pdg_tra_gra','=',$trabajoGraduacion->id_pdg_tra_gra)->first();
+            if (empty($statusFinal->aprobo)) {
+            	$banderaFinal = false;
+            }else  {
+            	$banderaFinal = ($statusFinal->inicio==1 && $statusFinal->aprobo==1);
+            }
+            //$banderaFinal = empty($statusFinal->aprobo)?false:($statusFinal->inicio==1 && $statusFinal->aprobo==1); 
+            
             if(!Auth::user()->isRole('docente_asesor') && $statusEtapa->inicio == 0){
                 Session::flash('message-error', 'La etapa seleccionada aún no se encuentra disponible.');
                 return redirect('/dashboard');
@@ -216,7 +224,7 @@ class EtapaEvaluativaController extends Controller {
 				$ponderacion = $documentos[0]->ponderacion_cat_eta_eva . '%';
 				foreach ($documentos as $doc) {
 					$tipoDocumento = $doc->id_cat_tpo_doc;
-					if(Auth::user()->can(['documentoEtapa.create'])){
+					if(Auth::user()->can(['documentoEtapa.create']) && !$banderaFinal){
                         $bodyHtml .= '
 		    					<div class="col-sm-3">
 		    						<p>Nuevo <a class="btn btn-primary" href="' . url("/") . '/nuevoDocumento/' . $id . '/' . $doc->id_cat_tpo_doc . '"><i class="fa fa-plus"></i></a></p>
@@ -228,8 +236,8 @@ class EtapaEvaluativaController extends Controller {
 					$bodyHtml .= '<thead>
                                     <th>Nombre Archivo</th>
 		        				    <th>Fecha Subida</th>';
-                    $bodyHtml .= Auth::user()->can(['documentoEtapa.edit'])?'<th>Modificar</th>':'';
-                    $bodyHtml .= Auth::user()->can(['documentoEtapa.destroy'])?'<th>Eliminar</th>':'';
+                    $bodyHtml .= (Auth::user()->can(['documentoEtapa.edit']) && !$banderaFinal)?'<th>Modificar</th>':'';
+                    $bodyHtml .= (Auth::user()->can(['documentoEtapa.destroy']) && !$banderaFinal)?'<th>Eliminar</th>':'';
                     $bodyHtml .= '<th>Descargar</th>
 		        				</thead>
 		        				<tbody>';
@@ -243,8 +251,8 @@ class EtapaEvaluativaController extends Controller {
 												<td>' . ($counter==0?'<b>':'') . $archivo->nombreArchivo . ($counter==0?'<b>':''). '</td>
 												<td>' . ($counter==0?'<b>':'') . $fecha->format('d/m/Y h:m:s A') . ($counter==0?'</b>':'') . '</td>';
 								if ($archivo->esArchivoActico == 1) {
-								    $bodyHtml .= Auth::user()->can(['documentoEtapa.edit'])?'<td><a class="btn btn-primary" href="' . url("/") . '/editDocumento/' . $id . '/' . $archivo->id_pdg_doc . '/' . $doc->id_cat_tpo_doc . '"><i class="fa fa-pencil"></i></a></td>':'';
-								    $bodyHtml .= Auth::user()->can(['documentoEtapa.destroy'])?
+								    $bodyHtml .= (Auth::user()->can(['documentoEtapa.edit'])&& !$banderaFinal)?'<td><a class="btn btn-primary" href="' . url("/") . '/editDocumento/' . $id . '/' . $archivo->id_pdg_doc . '/' . $doc->id_cat_tpo_doc . '"><i class="fa fa-pencil"></i></a></td>':'';
+								    $bodyHtml .= (Auth::user()->can(['documentoEtapa.destroy'])&& !$banderaFinal)?
                                                 '<td>
                                                     <form method="POST" action="' . url("/") . '/documento/' . $archivo->id_pdg_doc . '" class="deleteButton formPost">
                                                         <input name="_method" value="DELETE" type="hidden">
@@ -265,8 +273,8 @@ class EtapaEvaluativaController extends Controller {
                                                   </td>
                                                 </tr>';
 								} else {
-									$bodyHtml .= Auth::user()->can(['documentoEtapa.edit'])?'<td></td>':'';
-                                    $bodyHtml .= Auth::user()->can(['documentoEtapa.destroy'])?'<td></td>':'';
+									$bodyHtml .= (Auth::user()->can(['documentoEtapa.edit'])&& !$banderaFinal)?'<td></td>':'';
+                                    $bodyHtml .= (Auth::user()->can(['documentoEtapa.destroy'])&& !$banderaFinal)?'<td></td>':'';
                                     $bodyHtml .= '
                                                     <td>
                                                         <form method="POST" action="' . url("/") . '/downloadDocumento" accept-charset="UTF-8" class ="formPost">

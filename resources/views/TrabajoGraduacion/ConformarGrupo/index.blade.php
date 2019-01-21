@@ -212,7 +212,6 @@
           <thead>
           <th>Grupo</th>
           <th>Líder</th>
-          <th>Estado</th>
           <th>Cantidad de Estudiantes</th>
           <th>Detalle</th>
           </thead>
@@ -228,13 +227,6 @@
               @endif
              
             <td>{{ $grupo->Lider }}</td>
-            <td>
-              @if($grupo->idEstado == 7)
-               <p class="badge badge-info card-text">{{ $grupo->Estado }}</p>
-               @else
-                {{ $grupo->Estado }}
-              @endif
-            </td>
             <td>{{$grupo->Cant}}</td>
             <td style="text-align: center;">
                 <a class="btn btn-dark" href="#" onclick="getGrupo({{ $grupo->ID }});"><i class="fa fa-eye"></i></a>
