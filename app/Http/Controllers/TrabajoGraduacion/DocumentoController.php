@@ -18,6 +18,8 @@ use \App\cat_eta_eva_etapa_evalutativaModel;
 use \App\cat_tpo_doc_tipo_documentoModel;
 use \App\pdg_doc_documentoModel;
 use \App\pdg_arc_doc_archivo_documentoModel;
+use \App\pdg_tra_gra_trabajo_graduacionModel;
+use \App\pdg_apr_eta_tra_aprobador_etapa_trabajoModel;
 
 
 class DocumentoController extends Controller{
@@ -25,25 +27,81 @@ class DocumentoController extends Controller{
         $this->middleware('auth');
     }
     public function createDocumento($idEtapa,$idTipoDoc){
-    	//VERIFICAMOS SI EXISTEN EN LA BASE DE DATOS ESOS ID
-    	$etapa = cat_eta_eva_etapa_evalutativaModel::find($idEtapa);
-    	$tipoDocumento = cat_tpo_doc_tipo_documentoModel::find($idTipoDoc);
-    	if(empty($tipoDocumento) || empty($etapa) ){
-    		//return "LOS PARAMETROS RECIBIDOS NO SON CORRECTOS";
-            return redirect("/");
-    	}else{ //LOS PARAMETROS VIENEN CORRECTAMENTE
-    		return view('TrabajoGraduacion.DocumentoEtapaEvaluativa.create',compact('etapa','tipoDocumento','idEtapa','idTipoDoc'));
-    	}
-    }
-    public function editDocumento($idEtapa,$idDocumento,$idTipoDoc){
+       $userLogin=Auth::user();
+       $estudiante = new gen_EstudianteModel();
+       $idGrupo = $estudiante->getIdGrupo($userLogin->user);
+       $trabajoGraduacion = pdg_tra_gra_trabajo_graduacionModel::where('id_pdg_gru', '=',$idGrupo)->first();
+       $statusFinal = pdg_apr_eta_tra_aprobador_etapa_trabajoModel::where('id_cat_eta_eva','=','999')->where('id_pdg_tra_gra','=',$trabajoGraduacion->id_pdg_tra_gra)->first();
+       if (empty($statusFinal->aprobo)) {
+              $banderaFinal = false;
+        }else  {
+              $banderaFinal = ($statusFinal->inicio==1 && $statusFinal->aprobo==1);
+        }
+       if ($userLogin->can(['documentoEtapa.create'])) {
+        if (!$banderaFinal) {
+          //VERIFICAMOS SI EXISTEN EN LA BASE DE DATOS ESOS ID
           $etapa = cat_eta_eva_etapa_evalutativaModel::find($idEtapa);
           $tipoDocumento = cat_tpo_doc_tipo_documentoModel::find($idTipoDoc);
-          $documento = pdg_doc_documentoModel::find($idDocumento);
-          if(empty($tipoDocumento) || empty($etapa)){
-              return redirect("/");
-    	}else{ //LOS PARAMETROS VIENEN CORRECTAMENTE
-    		return view('TrabajoGraduacion.DocumentoEtapaEvaluativa.edit',compact('etapa','tipoDocumento','idEtapa','idTipoDoc','documento'));
-    	}
+          if(empty($tipoDocumento) || empty($etapa) ){
+            //return "LOS PARAMETROS RECIBIDOS NO SON CORRECTOS";
+                return redirect("/");
+          }else{ //LOS PARAMETROS VIENEN CORRECTAMENTE
+            return view('TrabajoGraduacion.DocumentoEtapaEvaluativa.create',compact('etapa','tipoDocumento','idEtapa','idTipoDoc'));
+          }
+        }else{
+          //YA LE APROBARON EL CIERRE DE TRABAJO DE GRADUACION
+              Session::flash('message-error','Ya has realizado el cierre de tu trabajo de graduación');
+              return Redirect::to('detalleEtapa/'.$idEtapa.'/'.$idGrupo);
+        }
+       }else{
+        //NO TIENE PERMISO
+        Session::flash('message-error','No tinenes permiso para realizar esta acción');
+        return Redirect::to('detalleEtapa/'.$idEtapa.'/'.$idGrupo);
+
+       }
+       
+    }
+    public function editDocumento($idEtapa,$idDocumento,$idTipoDoc){
+          $userLogin=Auth::user();
+          $estudiante = new gen_EstudianteModel();
+          $idGrupo = $estudiante->getIdGrupo($userLogin->user);
+          $trabajoGraduacion = pdg_tra_gra_trabajo_graduacionModel::where('id_pdg_gru', '=',$idGrupo)->first();
+          $statusFinal = pdg_apr_eta_tra_aprobador_etapa_trabajoModel::where('id_cat_eta_eva','=','999')->where('id_pdg_tra_gra','=',$trabajoGraduacion->id_pdg_tra_gra)->first();
+          if (empty($statusFinal->aprobo)) {
+              $banderaFinal = false;
+          }else  {
+              $banderaFinal = ($statusFinal->inicio==1 && $statusFinal->aprobo==1);
+          }
+          if ($userLogin->can(['documentoEtapa.edit'])) {
+            if (!$banderaFinal) {
+              
+              $etapa = cat_eta_eva_etapa_evalutativaModel::find($idEtapa);
+              $tipoDocumento = cat_tpo_doc_tipo_documentoModel::find($idTipoDoc);
+              $documento = pdg_doc_documentoModel::find($idDocumento);
+              if(empty($tipoDocumento) || empty($etapa) || empty($documento)){
+                  return redirect("/");
+              }else{ //LOS PARAMETROS VIENEN CORRECTAMENTE
+                if ($documento->id_pdg_gru != $idGrupo) {
+                    //QUIERE EDITAR UN DOCUMENTO QUE NO LE CORRESPONDE AL GRUPO
+                    return redirect("/");
+                }
+                  return view('TrabajoGraduacion.DocumentoEtapaEvaluativa.edit',compact('etapa','tipoDocumento','idEtapa','idTipoDoc','documento'));
+              }
+
+
+            }else{
+              //YA LE APROBARON EL CIERRE DE TRABAJO DE GRADUACION
+              Session::flash('message-error','Ya has realizado el cierre de tu trabajo de graduación');
+              return Redirect::to('detalleEtapa/'.$idEtapa.'/'.$idGrupo);
+              
+            }
+
+          }else{
+            //NO TIENE PERMISOS PARA REALIZAR ESTA ACCION
+            Session::flash('message-error','No tinenes permiso para realizar esta acción');
+            return Redirect::to('detalleEtapa/'.$idEtapa.'/'.$idGrupo);
+          }
+          
     }
 
     public function store(Request $request){
@@ -100,7 +158,7 @@ class DocumentoController extends Controller{
                 'activo'                         => 1
             ]);
            
-            Session::flash('message','Documento Envíado correctamente!');
+          Session::flash('message','Documento Envíado correctamente!');
         	return Redirect::to('detalleEtapa/'.$request['etapa'].'/'.$idGrupo);
 	    }else{
 	    	return "EL ESTUDIANTE NO HA CONFORMADO UN GRUPO DE  TRABAJO DE GRADUACIÓN";
