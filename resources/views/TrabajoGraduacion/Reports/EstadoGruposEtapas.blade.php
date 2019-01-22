@@ -29,7 +29,7 @@
                     @if($dato->CantAprobadas <= 0)
                         <b>Porcentaje de Avance :</b> 0%
                     @else
-                        <b>Porcentaje de Avance :</b> {{($dato->CantAprobadas/$dato->CantAprobadastotalEtapas)*100}}%     
+                        <b>Porcentaje de Avance :</b> {{number_format(($dato->CantAprobadas/$dato->totalEtapas)*100,2)}}%
                     @endif
                     
                 </p>
