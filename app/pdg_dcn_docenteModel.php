@@ -90,7 +90,7 @@ class pdg_dcn_docenteModel extends Model
             est.nombre_gen_est as Lider, 
             triR.nombre_tri_rol as TribunalRol,
             usr.name  as Docente,
-			(select aprobo from pdg_apr_eta_tra_aprobador_etapa_Trabajo where id_cat_eta_eva = 999 AND id_pdg_tra_gra = 
+			(select aprobo from pdg_apr_eta_tra_aprobador_etapa_trabajo where id_cat_eta_eva = 999 AND id_pdg_tra_gra = 
             (SELECT id_pdg_tra_gra from pdg_tra_gra_trabajo_graduacion where id_pdg_gru = gru.id_pdg_gru )) as finalizo
             from pdg_tri_gru_tribunal_grupo triG
              join pdg_gru_est_grupo_estudiante gruE on triG.id_pdg_gru=gruE.id_pdg_gru and gruE.eslider_pdg_gru_est=1
@@ -122,7 +122,7 @@ class pdg_dcn_docenteModel extends Model
             est.nombre_gen_est as Lider,
             triR.nombre_tri_rol as TribunalRol,
             usr.name  as Docente,
-            (select aprobo from pdg_apr_eta_tra_aprobador_etapa_Trabajo where id_cat_eta_eva = 999 AND id_pdg_tra_gra = 
+            (select aprobo from pdg_apr_eta_tra_aprobador_etapa_trabajo where id_cat_eta_eva = 999 AND id_pdg_tra_gra = 
             (SELECT id_pdg_tra_gra from pdg_tra_gra_trabajo_graduacion where id_pdg_gru = gru.id_pdg_gru )) as finalizo
             from pdg_tri_gru_tribunal_grupo triG
              join pdg_gru_est_grupo_estudiante gruE on triG.id_pdg_gru=gruE.id_pdg_gru and gruE.eslider_pdg_gru_est=1
@@ -156,7 +156,7 @@ class pdg_dcn_docenteModel extends Model
             triR.nombre_tri_rol as TribunalRol,
             usr.name  as Docente,
             usr.user as CarnetDoc,
-            (select aprobo from pdg_apr_eta_tra_aprobador_etapa_Trabajo where id_cat_eta_eva = 999 AND id_pdg_tra_gra = 
+            (select aprobo from pdg_apr_eta_tra_aprobador_etapa_trabajo where id_cat_eta_eva = 999 AND id_pdg_tra_gra = 
             (SELECT id_pdg_tra_gra from pdg_tra_gra_trabajo_graduacion where id_pdg_gru = gru.id_pdg_gru )) as finalizo
             from pdg_tri_gru_tribunal_grupo triG
              join pdg_gru_est_grupo_estudiante gruE on triG.id_pdg_gru=gruE.id_pdg_gru and gruE.eslider_pdg_gru_est=1
@@ -188,7 +188,7 @@ class pdg_dcn_docenteModel extends Model
             triR.nombre_tri_rol as TribunalRol,
             usr.name  as Docente,
             usr.user as CarnetDoc,
-            (select aprobo from pdg_apr_eta_tra_aprobador_etapa_Trabajo where id_cat_eta_eva = 999 AND id_pdg_tra_gra = 
+            (select aprobo from pdg_apr_eta_tra_aprobador_etapa_trabajo where id_cat_eta_eva = 999 AND id_pdg_tra_gra = 
             (SELECT id_pdg_tra_gra from pdg_tra_gra_trabajo_graduacion where id_pdg_gru = gru.id_pdg_gru )) as finalizo
             from pdg_tri_gru_tribunal_grupo triG
              join pdg_gru_est_grupo_estudiante gruE on triG.id_pdg_gru=gruE.id_pdg_gru and gruE.eslider_pdg_gru_est=1

@@ -98,7 +98,7 @@ class gen_EstudianteModel extends Model
                 FROM
                 (SELECT
                     est.carnet_gen_est, est.nombre_gen_est, gru.numero_pdg_gru
-                    ,(select aprobo from pdg_apr_eta_tra_aprobador_etapa_Trabajo where id_cat_eta_eva = 999 AND id_pdg_tra_gra = 
+                    ,(select aprobo from pdg_apr_eta_tra_aprobador_etapa_trabajo where id_cat_eta_eva = 999 AND id_pdg_tra_gra = 
                     (SELECT id_pdg_tra_gra from pdg_tra_gra_trabajo_graduacion where id_pdg_gru = gru.id_pdg_gru )) as finalizo
                 FROM
                     gen_est_estudiante est

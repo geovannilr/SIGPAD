@@ -49,7 +49,7 @@ class pdg_per_perfilModel extends Model
 				per.id_pdg_gru,
 				gru.numero_pdg_gru,
 				count(*) as cantidadPerfiles,
-				(select aprobo from pdg_apr_eta_tra_aprobador_etapa_Trabajo where id_cat_eta_eva = 999 AND id_pdg_tra_gra = 
+				(select aprobo from pdg_apr_eta_tra_aprobador_etapa_trabajo where id_cat_eta_eva = 999 AND id_pdg_tra_gra = 
 				(SELECT id_pdg_tra_gra from pdg_tra_gra_trabajo_graduacion where id_pdg_gru = gru.id_pdg_gru )) as finalizo
 				 from pdg_per_perfil per
 				inner join  pdg_gru_grupo  gru on per.id_pdg_gru = gru.id_pdg_gru
@@ -85,7 +85,7 @@ class pdg_per_perfilModel extends Model
 	        $perfiles = DB::select("
         				select 
 						per.*,gru.numero_pdg_gru,sta.nombre_cat_sta,tpotragra.nombre_cat_tpo_tra_gra,
-						(SELECT aprobo from pdg_apr_eta_tra_aprobador_etapa_Trabajo where id_cat_eta_eva = 999 AND id_pdg_tra_gra = 
+						(SELECT aprobo from pdg_apr_eta_tra_aprobador_etapa_trabajo where id_cat_eta_eva = 999 AND id_pdg_tra_gra = 
 							(SELECT id_pdg_tra_gra from pdg_tra_gra_trabajo_graduacion where id_pdg_gru = per.id_pdg_gru )) as finalizo
 						 from pdg_per_perfil  per
 						 INNER JOIN pdg_gru_grupo gru ON (gru.id_pdg_gru=per.id_pdg_gru)

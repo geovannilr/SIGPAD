@@ -45,7 +45,7 @@ class pdg_ppe_pre_perfilModel extends Model
                  ->get();*/
        /* $grupos = pdg_ppe_pre_perfilModel::with('grupo')
         ->select('id_pdg_gru', DB::raw('count(*) as cantidadPrePerfiles'))
-        ->join('pdg_apr_eta_tra_aprobador_etapa_Trabajo','gen_usuario.id','=','pdg_dcn_docente.id_gen_usuario')
+        ->join('pdg_apr_eta_tra_aprobador_etapa_trabajo','gen_usuario.id','=','pdg_dcn_docente.id_gen_usuario')
         ->orderBy('id_pdg_ppe','desc')
         ->groupBy('id_pdg_gru')
         ->get();*/
@@ -54,7 +54,7 @@ class pdg_ppe_pre_perfilModel extends Model
 						prep.id_pdg_gru,
 						gru.numero_pdg_gru,
 						count(*) as cantidadPrePerfiles,
-						(select aprobo from pdg_apr_eta_tra_aprobador_etapa_Trabajo where id_cat_eta_eva = 999 AND id_pdg_tra_gra = 
+						(select aprobo from pdg_apr_eta_tra_aprobador_etapa_trabajo where id_cat_eta_eva = 999 AND id_pdg_tra_gra = 
 							(SELECT id_pdg_tra_gra from pdg_tra_gra_trabajo_graduacion where id_pdg_gru = gru.id_pdg_gru )) as finalizo
 						 from pdg_ppe_pre_perfil prep
 						inner join  pdg_gru_grupo  gru on prep.id_pdg_gru = gru.id_pdg_gru
@@ -94,7 +94,7 @@ class pdg_ppe_pre_perfilModel extends Model
 						prep.id_pdg_gru,
 						gru.numero_pdg_gru,
 						count(*) as cantidadPrePerfiles,
-						(select aprobo from pdg_apr_eta_tra_aprobador_etapa_Trabajo where id_cat_eta_eva = 999 AND id_pdg_tra_gra = 
+						(select aprobo from pdg_apr_eta_tra_aprobador_etapa_trabajo where id_cat_eta_eva = 999 AND id_pdg_tra_gra = 
 							(SELECT id_pdg_tra_gra from pdg_tra_gra_trabajo_graduacion where id_pdg_gru = gru.id_pdg_gru )) as finalizo
 						 from pdg_ppe_pre_perfil prep
 						inner join  pdg_gru_grupo  gru on prep.id_pdg_gru = gru.id_pdg_gru
