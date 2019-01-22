@@ -349,7 +349,14 @@ class gen_UsuarioController extends Controller {
 
 	}
 	public function createUsuariosUesPlay() {
-		return view('uesplay.create');
+		$userLogin = Auth::user();
+		if ($userLogin->can(['uesplay.cargar'])) {
+			return view('uesplay.create');
+		}else{
+			Session::flash('message-error','No tiene permisos para acceder a esta opción.');
+            return redirect('/');
+		}
+		
 	}
     function downloadPlantillaUesplay(Request $request){
         $path= public_path().$_ENV['PATH_RECURSOS'].'temp-usuarios-uesplay.xlsx';
@@ -360,6 +367,105 @@ class gen_UsuarioController extends Controller {
             return view('PerfilDocente.create');
         }
     }
+
+    public function storeUsuariosCatUesplay(Request $request) {
+
+		$validatedData = $request->validate([
+			'documentoUsuarios' => 'required',
+		]);
+		$bodyHtml = '';
+		$data = Excel::load($request->file('documentoUsuarios'), function ($reader) {
+			$reader->setSelectedSheetIndices(array(0));
+		})->get();
+		$usuarios = $data->toArray();
+		if (sizeof($usuarios) != 0) {
+			include app_path() . '/Exceptions/conexionMysqli.php';
+			foreach ($usuarios as $usuario) {
+				if (!is_null($usuario["usuario"]) && !is_null($usuario["categoria"])) {
+					//Verificamos si usuario existe
+					$query = 'SELECT * FROM usuario where alias="' . $usuario["usuario"] . '"';
+					$resultado = $mysqli->query($query);
+					$countUsuario = $resultado->num_rows;
+					$resultadoUsuario = $resultado->fetch_assoc();
+					//Verificamos si la categoía ingresada se encuentra en el catalogo
+					$query = 'SELECT * FROM categoria where nombre ="' . $usuario["categoria"] . '"';
+					$resultado = $mysqli->query($query);
+					$countCategoria = $resultado->num_rows;
+					$categoria = $resultado->fetch_assoc();
+
+					if ($countCategoria > 0 && $countUsuario > 0 ) {
+						//Verificamos si ya se encuentra el usuario asociado a la categoria
+						$query = 'SELECT * FROM usuario_categoria where idUsuario ="' . $resultadoUsuario["idUsuario"] . '" AND idCategoria ="' . $categoria["idCategoria"] . '" ';
+						$resultado = $mysqli->query($query);
+						$countUsuarioCategoria = $resultado->num_rows;
+					}
+					
+					if ($countUsuario ==  0) {
+						//Usuario no ha sido ingresado previamente
+						$bodyHtml .= '<tr>';
+						$bodyHtml .= '<td>' . $usuario["usuario"] . '</td>';
+						$bodyHtml .= '<td>N/A</td>';
+						$bodyHtml .= '<td>' . $usuario["categoria"] . '</td>';
+						$bodyHtml .= '<td><span class="badge badge-danger">Error</span></td>';
+						$bodyHtml .= '<td>El usuario que esta intentando ingresar <b>NO</b> se encuentra registrado.</td>';
+						$bodyHtml .= '</tr>';
+					} else if ($countCategoria == 0) {
+						//la categoría ingresada es incorrecta y no esta registrada
+						$bodyHtml .= '<tr>';
+						$bodyHtml .= '<td>' . $usuario["usuario"] . '</td>';
+						$bodyHtml .= '<td>' . $resultadoUsuario["nombre"] . ' ' . $resultadoUsuario["apellido"] . '</td>';
+						$bodyHtml .= '<td>N/A</td>';
+						$bodyHtml .= '<td><span class="badge badge-danger">Error</span></td>';
+						$bodyHtml .= '<td>La Categoría  ingresada es incorrecta o no existe</td>';
+						$bodyHtml .= '</tr>';
+					}elseif ($countUsuarioCategoria > 0) {
+						//registro repetido 
+						$bodyHtml .= '<tr>';
+						$bodyHtml .= '<td>' . $usuario["usuario"] . '</td>';
+						$bodyHtml .= '<td>' . $resultadoUsuario["nombre"] . ' ' . $resultadoUsuario["apellido"] . '</td>';
+						$bodyHtml .= '<td>' . $categoria["nombre"] . '</td>';
+						$bodyHtml .= '<td><span class="badge badge-danger">Error</span></td>';
+						$bodyHtml .= '<td>Este usuario ya se encuentra asociada a la categoría seleccionada.</td>';
+						$bodyHtml .= '</tr>';
+					} else {
+						//Insertamos el usuario
+						$query = 'INSERT INTO usuario_categoria values(
+							0,
+							"' . $resultadoUsuario["idUsuario"] . '",
+							"' . $categoria["idCategoria"] . '"
+						);';
+						$mysqli->query($query);
+
+
+						$bodyHtml .= '<tr>';
+						$bodyHtml .= '<td>' . $usuario["usuario"] . '</td>';
+						$bodyHtml .= '<td>' . $resultadoUsuario["nombre"] . ' ' . $resultadoUsuario["apellido"] . '</td>';
+						$bodyHtml .= '<td>' . $categoria["nombre"] . '</td>';
+						$bodyHtml .= '<td><span class="badge badge-success">OK</span></td>';
+						$bodyHtml .= '<td>Usuario asociado a categoría exitosamente</td>';
+						$bodyHtml .= '</tr>';
+					}
+
+				}
+
+			}
+			$mysqli->close();
+
+		}
+
+		return view('uesplay.indexUsuarioCategoria', compact('bodyHtml'));
+
+	}
+	public function createUsuariosCatUesPlay() {
+		$userLogin = Auth::user();
+		if ($userLogin->can(['uesplay.cargar'])) {
+			return view('uesplay.createUsuarioCategoria');
+		}else{
+			Session::flash('message-error','No tiene permisos para acceder a esta opción.');
+            return redirect('/');
+		}
+	}
+
     public function downloadPlantillaSigpad(){
         $path= public_path().$_ENV['PATH_RECURSOS'].'temp-usuarios-sigpad.xlsx';
         if (File::exists($path)){
