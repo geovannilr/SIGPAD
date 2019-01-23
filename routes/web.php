@@ -161,6 +161,8 @@ Route::post('plantillaAdministraDocente','GestionDocenteController@downloadPlant
 Route::post('storeUsersUplay', 'gen_UsuarioController@storeUsuariosUesplay')->name('storeUsersUplay');
 Route::get('cargarUsuariosUesplay', 'gen_UsuarioController@createUsuariosUesPlay')->name('cargarUsuariosUesplay');
 Route::post('plantillaUsuarioUesplay','gen_UsuarioController@downloadPlantillaUesplay')->name('plantillaUsuarioUesplay');
+Route::post('storeUsersCatUesplay', 'gen_UsuarioController@storeUsuariosCatUesplay')->name('storeUsersCatUesplay');
+Route::get('cargarUsuariosCatUesplay', 'gen_UsuarioController@createUsuariosCatUesPlay')->name('cargarUsuariosCatUesplay');
 //------------------------------------------------------------------------------------------------------------------------
 
 //------------------------------------CATÁLOGOS-------------------------------------------------------------------

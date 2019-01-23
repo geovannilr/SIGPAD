@@ -222,14 +222,31 @@
         </li>
         @endcan
 
-        @can('uesplay.cargar')
-                  <li>
-                    <a class="nav-link" href="{{route('cargarUsuariosUesplay')}}" style="color: #ffffff">
-                      <i class="fa fa-users"></i>
-                      <span class="nav-link-text">Cargar Usuarios UESPLAY</span>
-                    </a>
-                  </li>
+       @can('uesplay.cargar')
+          <li class="nav-item" data-toggle="tooltip" data-placement="right" title="publicaciones">
+                <a class="nav-link nav-link-collapse collapsed"  data-toggle="collapse" href="#collapseUesplay" data-parent="#exampleAccordion" style="color: #ffffff; font-weight: bold; background-color: #DF1D20; margin-top: 20px"  >
+                  <i class="fa fa-users"></i>
+                  <span class="nav-link-text">UESPLAY</span>
+                </a>
+
+                 <ul class="sidenav-second-level collapse" id="collapseUesplay">
+                        <li>
+                          <a class="nav-link" href="{{route('cargarUsuariosUesplay')}}" style="color: #ffffff">
+                            <i class="fa fa-users"></i>
+                            <span class="nav-link-text">Cargar Usuarios UESPLAY</span>
+                          </a>
+                      </li>
+                       <li>
+                          <a class="nav-link" href="{{route('cargarUsuariosCatUesplay')}}" style="color: #ffffff">
+                            <i class="fa fa-users"></i>
+                            <span class="nav-link-text">Asociar Usuarios con Categorías</span>
+                          </a>
+                      </li>
+                </ul>
+                     
+          </li>
         @endcan
+        
       </ul>
       <ul class="navbar-nav sidenav-toggler" >
         <li class="nav-item">
