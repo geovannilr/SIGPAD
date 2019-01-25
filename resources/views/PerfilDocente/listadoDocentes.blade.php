@@ -83,10 +83,11 @@
           <th>Tipo Jornada</th>
           <th>Cargo Principal</th>
           <th>Cargo Secundario</th>
-          @can('gestionDocente.edit')
-          <th>Modificar</th>
-          @endcan
           <th>Disponibilidad</th>
+          <th title="Propiedad que muestra/oculta al docente en el sitio de la Escuela">Estado</th>
+          @can('gestionDocente.edit')
+              <th>Modificar</th>
+          @endcan
   				</thead>
   				<tbody>
   				@foreach($docentes as $docente)
@@ -109,18 +110,25 @@
             @else
                <td><span class="badge badge-info">{{ $docente->cargoSecundario->nombre_cargo }}</span></td>
             @endif
-                        @can('gestionDocente.edit')
-            <td style="text-align: center;">
-                <a class="btn " style="background-color:  #102359;color: white" href="{{route('docenteEdit',$docente->id_pdg_dcn)}}"><i class="fa fa-pencil"></i></a>
-              </td>
-                        @endcan
           <td>
             @if($docente->activo == 1)
               <span class="badge badge-success">Activo</span>
             @else
               <span class="badge badge-danger">Inactivo</span>
             @endif
-          </td>              
+          </td>
+                        <td>
+                            @if($docente->es_visible_pdg_dcn==1)
+                                <span class="badge badge-success" title="Este docente aparecerá listado en el sitio de la EISI">Visible</span>
+                            @else
+                                <span class="badge badge-secondary" title="Este docente no aparecerá listado en el sitio de la EISI">Oculto</span>
+                            @endif
+                        </td>
+                        @can('gestionDocente.edit')
+                            <td style="text-align: center;">
+                                <a class="btn " style="background-color:  #102359;color: white" href="{{route('docenteEdit',$docente->id_pdg_dcn)}}"><i class="fa fa-pencil"></i></a>
+                            </td>
+                        @endcan
 					</tr>
 				@endforeach 
 				</tbody>

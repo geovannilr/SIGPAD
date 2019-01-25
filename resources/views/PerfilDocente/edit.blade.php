@@ -65,6 +65,18 @@
                    </select>
               </div>
             </div>
+                <hr>
+                <div class="row">
+                    <div class="col-sm-3 col-md-2 col-5">
+                        <label style="font-weight:bold;">Estado</label>
+                    </div>
+                    <div class="col-md-8 col-6">
+                        <select name="es_visible" class="form-control" id="es_visible">
+                            <option value="1" {{$docente->es_visible_pdg_dcn==1?'selected=selected':''}} >Visible</option>
+                            <option value="0" {{$docente->es_visible_pdg_dcn!=1?'selected=selected':''}} >Oculto</option>
+                        </select>
+                    </div>
+                </div>
               <br>
                 @can('gestionDocente.edit')
             <div class="row">
