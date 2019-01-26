@@ -112,6 +112,11 @@ Route::get('nuevoDocumento/{idEtapa}/{idTipoDoc?}', 'TrabajoGraduacion\Documento
 Route::get('editDocumento/{idEtapa}/{idDocumento}/{idTipoDoc?}', 'TrabajoGraduacion\DocumentoController@editDocumento')->name('editDocumento');
 Route::resource('documento', 'TrabajoGraduacion\DocumentoController');
 Route::post('downloadDocumento', 'TrabajoGraduacion\DocumentoController@downloadDocumento')->name('downloadDocumento');
+
+//Formatos de trabajo de graduación
+Route::get('formatos', 'TrabajoGraduacion\FormatoController@index')->name('formatos');
+Route::post('descargaFormatos', 'TrabajoGraduacion\FormatoController@descargaFormato')->name('descargaFormato');
+
 //------------------------------------------------------------------------------------------------------------------------
 
 //------------------PUBLICACIONES DE TRABAJOS DE GRADUACIÓN----------------------------------------------------------------
