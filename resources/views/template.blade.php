@@ -122,6 +122,14 @@
                     </a>
                   </li>
               @endcan
+              @can('formatos.download')
+                  <li>
+                      <a class="nav-link" href="{{route('formatos')}}" style="color: #ffffff">
+                          <i class="fa fa-files-o"></i>
+                          <span class="nav-link-text">Formatos</span>
+                      </a>
+                  </li>
+              @endcan
             </ul>
           
           </li>

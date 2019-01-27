@@ -15,13 +15,14 @@
 	<script type="text/javascript">
         $( document ).ready(function() {
             $("#listTable").DataTable({
+					language: {
+					    url: 'es-ar.json'
+					},
                 responsive: {
                     details: {
                         type: 'column'
                     }
                 },
-                info : false,
-                bLengthChange: false,
             });
         });
         function downloadFormato(id){
