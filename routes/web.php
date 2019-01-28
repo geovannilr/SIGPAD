@@ -89,6 +89,7 @@ Route::post('aprobarCierreGrupo','TrabajoGraduacion\TrabajoDeGraduacionControlle
 
 //Reportes
 Route::get('reportesTDG', 'TrabajoGraduacion\ReportesController@index')->name('reportesTDG');
+Route::get('reportesTDGWord', 'TrabajoGraduacion\ReportesWordController@index')->name('reportesTDGWord');
 //Route::get('reportesTDG/R1', 'TrabajoGraduacion\ReportesController@r1')->name('R1');
 //Route::get('reportesTDG/R2', 'TrabajoGraduacion\ReportesController@r2')->name('R2');
 Route::get('testReporte', 'TrabajoGraduacion\ReportesController@test')->name('testReporte');
