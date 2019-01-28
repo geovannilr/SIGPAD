@@ -24,7 +24,7 @@ class FormatoController extends Controller {
         'AUTGRU'=>'frmt-autoriza-grupos-cuatro-cinco.docx',
         'LEGTRIB'=>'frmt-legaliza-tribunal-evaluador.docx',
         'ACTAPR'=>'frmt-acta-aprobacion.docx',
-        'RATRES'=>'frmt-ratifica-resultados.docx',
+        'RATRES'=>'frmt-ratifica-notas.docx',
         'REMEJE'=>'frmt-remision-ejemplares.docx',
     ];
 

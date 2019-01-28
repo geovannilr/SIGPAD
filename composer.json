@@ -14,7 +14,8 @@
         "laravelcollective/html": "^5.4.0",
         "laraveles/spanish": "^1.0",
         "zendframework/zend-ldap": "^2.10",
-        "barryvdh/laravel-dompdf": "0.8.2"
+        "barryvdh/laravel-dompdf": "0.8.2",
+        "phpoffice/phpword": "dev-master"
     },
     "require-dev": {
         "filp/whoops": "~2.0",
