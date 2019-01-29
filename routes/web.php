@@ -130,7 +130,9 @@ Route::get('editDocumentoPublicacion/{idPublicacion}/{idArchivo?}', 'Publicacion
 Route::post('downloadDocumentoPublicacion', 'Publicaciones\publicacionController@downloadDocumento')->name('downloadDocumentoPublicacion');
 Route::post('buscarPublicaciones', 'Publicaciones\publicacionController@buscarPublicaciones')->name('buscarPublicaciones');
 Route::get('BuscarPublicaciones', 'Publicaciones\publicacionController@searchView')->name('BuscarPublicaciones');
-
+Route::get('cargaPublicaciones', 'Publicaciones\publicacionController@createPublicaciones')->name('createPublicaciones');
+Route::post('plantillaPublicaciones','Publicaciones\publicacionController@downloadPlantillaPublicaciones')->name('plantillaPublicaciones');
+Route::post('storePublicaciones','Publicaciones\publicacionController@storePublicaciones')->name('storePublicaciones');
 
 //------------------------------------------------------------------------------------------------------------------------
 

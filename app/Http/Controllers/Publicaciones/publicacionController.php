@@ -11,6 +11,7 @@ use Exception;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Auth;
+use Maatwebsite\Excel\Facades\Excel;
 use \App\pub_publicacionModel;
 use \App\pub_arc_publicacion_archivoModel;
 use \App\pub_aut_publicacion_autorModel;
@@ -263,5 +264,100 @@ class publicacionController extends Controller{
                         </table>
                         </div><br><br>';
         return $bodyHtml;
+    }
+
+    public function createPublicaciones(){
+        return view('publicacion.upload');
+    }
+
+    public function downloadPlantillaPublicaciones(Request $request){
+        $path= public_path().$_ENV['PATH_RECURSOS'].'temp-subida-publicaciones.xlsx';
+        if (File::exists($path)){
+            return response()->download($path);
+        }else{
+            return redirect('cargaPublicaciones')->with(['message-error'=>'El documento no se encuentra disponible , es posible que haya sido  borrado']);
+        }
+    }
+
+    public function storePublicaciones(Request $request) {
+	    $validatedData = $request->validate(['documentoPublicaciones' => 'required']);
+        $archivo = $request->file('documentoPublicaciones');
+        $temas = $this->getArrayFromSheet($archivo,0);
+	    $grupos = $this->getArrayFromSheet($archivo,1);
+        $jurados = $this->getArrayFromSheet($archivo,2);
+        $isValid = $this->validateSheets($temas,$grupos,$jurados);
+        if(!$isValid[0])
+            return redirect('cargaPublicaciones')->with(['message-error'=>$isValid[1]]);
+        $salida = "";
+        $publicaciones = array();
+        foreach ($temas as $tema) {
+            $identifier = $tema["grupo"];
+
+            if($identifier==null)
+                break;
+
+            $autores = array();
+            foreach ($grupos as $grupo){
+                if($grupo["grupo"]==$identifier)
+                    $autores[] = $grupo;
+            }
+            $colaboradores = array();
+            foreach ($jurados as $jurado){
+                if($jurado["grupo"]==$identifier)
+                    $colaboradores[] = $jurado;
+            }
+
+            if(!empty($autores)&&!empty($colaboradores)){
+                $resultado = pub_publicacionModel::nuevaPublicacion($tema, $autores, $colaboradores);
+                $exito = $resultado[0];
+                $msg = $resultado[1];
+            }else{
+                $exito = false;
+                $msg = 'Datos suficientes para realizar la publicación.';
+            }
+
+            $publicaciones[] = array($identifier,$exito,$msg);
+        }
+        $salida = $publicaciones;
+        return $salida;
+	}
+
+	public function getArrayFromSheet($archivo, $hoja){
+	    try{
+            $array = Excel::load($archivo, function ($reader) use ($hoja) {
+                $reader->setSelectedSheetIndices(array($hoja));
+            })->get()->toArray();
+        }catch (\Exception $e){
+	        $array = array();
+        }
+        return $array;
+    }
+
+    public function validateSheets($temas,$grupos,$jurados){
+	    $message = '';
+	    $result = false;
+        if(empty($temas)||empty($grupos)||empty($jurados)){
+            $message = 'El archivo cargado no es válido';
+        }else if (!$this->firstRowExists($temas)){
+            $message = 'El archivo debe contener al menos un tema de trabajo de graduación.';
+        }else if (!$this->firstRowExists($grupos)){
+            $message = 'El archivo debe contener al menos un alumno dentro del grupo de trabajo de graduación.';
+        }else if (!$this->firstRowExists($grupos)){
+            $message = 'El archivo debe contener al menos un jurado para el grupo de trabajo de graduación.';
+        }else{
+            $result = true;
+        }
+        return array($result,$message);
+    }
+
+    public function firstRowExists($array){
+	    try{
+	        $firstRow = $array[1];
+	        $exist = true;
+        }catch (\Exception $e){
+            $exist = false;
+        }
+        return $exist;
+
     }
 }

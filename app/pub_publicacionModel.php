@@ -21,7 +21,7 @@ class pub_publicacionModel extends Model{
 			'resumen_pub',
             'es_visible_pub'
 		];
-	public function getColaboradores($idPub){ 
+	public function getColaboradores($idPub){
 	 	$resultado=DB::select('
 					select 
 					rel.id_pub,
@@ -119,4 +119,144 @@ class pub_publicacionModel extends Model{
         }
         return $idsIntegracionAutores;
     }
+
+    public static function nuevaPublicacion($tema, $autores, $colaboradores){
+	    $success = true;
+	    $msg = 'Publicación creada con éxito.';
+        try{
+            DB::transaction(function() use ($tema, $autores, $colaboradores, &$msg) {
+                $id = $tema['grupo'];
+                $integracionPub = self::getValidIntegracionPub($id);
+                $codigoPub = self::getCodigoPubAvailable($id);
+                $newPublicacion = new pub_publicacionModel([
+                    'id_cat_tpo_pub' => 1,
+                    'id_gen_int' => empty($integracionPub) ? null : $integracionPub->id_gen_int,
+                    'titulo_pub' => $tema['tema'],
+                    'anio_pub' => substr($codigoPub,0,4),
+                    'correlativo_pub' => substr($codigoPub,4,2),
+                    'codigo_pub' => $codigoPub,
+                    'resumen_pub' => $tema['resumen'],
+                    'es_visible_pub' => 1
+                ]);
+                $newPublicacion->save();
+                foreach ($colaboradores as $colaborador){
+                    $integracionColab = self::getValidIntegracionColab($colaborador['carnet']);
+                    $newColaborador = self::getValidColaborador($integracionColab, $colaborador['nombre']);
+                    $tipoColaborador = self::getValidTipoColabId($colaborador['role']);
+                    $newRelationColPub = new rel_col_pub_colaborador_publicacionModel([
+                        'id_pub' => $newPublicacion->id_pub,
+                        'id_pub_col' => $newColaborador->id_pub_col,
+                        'id_cat_tpo_col_pub' => $tipoColaborador
+                    ]);
+                    $newRelationColPub->save();
+                }
+
+                foreach ($autores as $autor){
+                    $integracionAut =  self::getValidIntegracionAut($autor['carnet']);
+                    $newAutor = new pub_aut_publicacion_autorModel([
+                        'id_pub' => $newPublicacion->id_pub,
+                        'id_gen_int' => empty($integracionAut) ? null : $integracionAut->id_gen_int,
+                        'nombres_pub_aut' => $autor['nombre'],
+                        'apellidos_pub_aut' => ""
+                    ]);
+                    $newAutor->save();
+                }
+                $msg .= 'Código generado: '.$codigoPub;
+            });
+        }catch(\Exception $e){
+            $success = false;
+            $msg = $e->getCode() == 9 ? $e->getMessage() : 'Ocurrió un error de escritura al ingresar los datos.'.$e->getMessage();
+        }
+        return array($success,$msg);
+    }
+
+    private static function getValidIntegracionPub($identifier){
+	    $integracion = array();
+        $grupo = pdg_gru_grupoModel::where('numero_pdg_gru','=',$identifier)->first();
+        if(!empty($grupo)){
+            $integracion = gen_int_integracionModel::where("llave_gen_int","=",$grupo->id_pdg_gru)->where('id_gen_tpo_int','=',1)->first();
+            if(empty($integracion)){
+                $integracion = new gen_int_integracionModel();
+                $integracion->llave_gen_int = $grupo->id_pdg_gru;
+                $integracion->id_gen_tpo_int = 1;
+                $integracion->save();
+            }else{
+                $existingPub = pub_publicacionModel::where("id_gen_int","=",$identifier)->first();
+                if(empty($existingPub))
+                    throw new \Exception("Grupo ya posee Publicación de Trabajo de Graduación",9);
+            }
+        }
+        return $integracion;
+    }
+
+    private static function getCodigoPubAvailable($identifier){
+	    try{
+            $texto = strval($identifier);
+            $anio = substr($texto,0,4);
+            $correlativo = pub_publicacionModel::where("anio_pub","=",$anio)->max('correlativo_pub');
+            if($correlativo==null)
+                $correlativo = 1;
+            $correlativo++;
+            if($correlativo>=1&&$correlativo<=9)
+                $correlativoStr = '0'.$correlativo;
+            else
+                $correlativoStr = strval($correlativo);
+            $codPub = $anio.trim($correlativoStr);
+        }catch (\Exception $e){
+            throw new \Exception("El formato del código de grupo no es válido",9);
+        }
+        return $codPub;
+    }
+
+    private static function getValidIntegracionColab($identifier){
+        $integracion = array();
+        $docente = pdg_dcn_docenteModel::where('carnet_pdg_dcn','=',$identifier)->first();
+        if(!empty($docente)){
+            $integracion = gen_int_integracionModel::where("llave_gen_int","=",$docente->id_pdg_dcn)->where('id_gen_tpo_int','=',2)->first();
+            if(empty($integracion)){
+                $integracion = new gen_int_integracionModel();
+                $integracion->llave_gen_int = $docente->id_pdg_dcn;
+                $integracion->id_gen_tpo_int = 2;
+                $integracion->save();
+            }
+        }
+        return $integracion;
+    }
+
+    private static function getValidColaborador($integracion, $colaborador){
+	    if(!empty($integracion))
+	        $validColaborador = pub_col_colaboradorModel::where("id_gen_int","=",$integracion->id_gen_int)->first();
+        if(empty($validColaborador)){
+            $validColaborador = new pub_col_colaboradorModel([
+                'id_gen_int' => empty($integracion) ? null : $integracion->id_gen_int,
+                'nombres_pub_col' => $colaborador,
+                'apellidos_pub_col' => ""
+            ]);
+            $validColaborador->save();
+        }
+        return $validColaborador;
+    }
+
+    private static function getValidTipoColabId($role){
+	    $tipoColab = cat_tpo_col_pub_tipo_colaboradorModel::where('id_cat_tpo_col_pub','=',$role)->first();
+	    if(empty($tipoColab))
+            throw new \Exception("Rol para el jurado no es válido.",9);
+	    return $role;
+    }
+
+    private static function getValidIntegracionAut($identifier){
+        $integracion = array();
+        $estudiante = gen_EstudianteModel::where('carnet_gen_est','=',$identifier)->first();
+        if(!empty($estudiante)){
+            $integracion = gen_int_integracionModel::where("llave_gen_int","=",$estudiante->id_gen_est)->where("id_gen_tpo_int","=",3)->first();
+            if(empty($integracion)){
+                $integracion = new gen_int_integracionModel();
+                $integracion->llave_gen_int = $estudiante->id_gen_est;
+                $integracion->id_gen_tpo_int = 3;
+                $integracion->save();
+            }
+        }
+        return $integracion;
+    }
+
 }
