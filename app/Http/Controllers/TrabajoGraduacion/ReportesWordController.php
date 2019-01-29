@@ -9,20 +9,57 @@ class ReportesWordController extends Controller{
 
 
         $section = $phpWord->addSection();
+        $section->addImage(public_path('img\header.jpg'),array(
+        'width'            => 430,
+        'wrappingStyle'    => 'square',
+        'marginTop'        => 180,
+        'positioning'      => 'relative',
+        'posHorizontalRel' => 'margin',
+        'posVerticalRel'   => 'line',
+        ));
 
+        $titulo = "ACTA DE APROBACIÓN DE TRABAJO DE GRADUACIÓN";
+        $section->addText($titulo,array('name' => 'Times New Roman', 'size' => 14, 'bold' => true),array('align'=>'center')); //  FONT /PARRAFO
 
-        $description = "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-proident, sunt in culpa qui officia deserunt mollit anim id est laborum.";
+        $tituloDatosGenerales = "DATOS GENERALES";
+        $section->addText($tituloDatosGenerales,array('name' => 'Times New Roman', 'size' => 10, 'bold' => true),array('align'=>'center'));
 
+       $tableStyle = array('borderSize' => 6, 'borderColor' => '999999'); 
+       $phpWord->addTableStyle('Datos Generales', $tableStyle);
 
-        $section->addImage("http://itsolutionstuff.com/frontTheme/images/logo.png");
-        $section->addText($description);
+       $table = $section->addTable('Datos Generales');
+       $table->addRow();
+       $cell = $table->addCell(10000);
+       $cell->addText("CARRERA:",array('name' => 'Arial', 'size' => 10, 'bold' => true));
+       $cell->addText("\n");
+       $cell->addText("Ingeniería de Sistemas Informáticos",array('name' => 'Calibri', 'size' => 14, 'bold' => true),array('align'=>'center'));
+       $table->addRow();
+       $cell = $table->addCell(10000);
+       $cell->addText("CICLO DE INSCRIPCION DEL TRABAJO: Ciclo I - 2019",array('name' => 'Calibri', 'size' => 11, 'bold' => true));
+       $section->addText(" ");
 
+       $tituloTrabajo = "NOMBRE DEL TRABAJO DE GRADUACION:";
+       $section->addText($tituloTrabajo,array('name' => 'Times New Roman', 'size' => 10, 'bold' => true),array('align'=>'center'));
 
+       $phpWord->addTableStyle('Nombre TDG', $tableStyle);
+       $table = $section->addTable('Nombre TDG', $tableStyle);
+       $table->addRow();
+       $cell = $table->addCell(10000);
+       $cell->addText("NOMBRE DE TRABAJO DE GRADUACION",array('name' => 'Arial', 'size' => 10, 'bold' => true));
+       $section->addText(" ");
+
+       $phpWord->addTableStyle('Datos Grupo', $tableStyle);
+       $table = $section->addTable('Datos Grupo');
+       $table->addRow();
+       $cell = $table->addCell(10000);
+       $cell->addText("DOCENTE ASESOR",array('name' => 'Arial', 'size' => 10, 'bold' => true));
+       $table->addRow();
+       $cell = $table->addCell(10000);
+       $cell->addText("ESTUDIANTES",array('name' => 'Arial', 'size' => 10, 'bold' => true));
+
+       $section->addText(" ");
+       $section->addText(" Habiendo sido subsanadas las observaciones se otorgar la nota de aprobación del trabajo de graduación de:",array('name' => 'Times New Roman', 'size' => 12, 'bold' => false),array('align'=>'left'));
+      
         $objWriter = \PhpOffice\PhpWord\IOFactory::createWriter($phpWord, 'Word2007');
         try {
             $objWriter->save(storage_path('helloWorld.docx'));
