@@ -175,9 +175,9 @@
                 @else
                     @if(Auth::user()->isRole('estudiante'))
                         <a class="card-footer text-gray clearfix small z-1" href="{{url("/")."/cierreTDG"}}">
-                            <span class="float-left">Realizar</span>
+                            <span class="float-left text-white">Realizar</span>
                             <span class="float-right">
-                                <i class="fa fa-angle-right"></i>
+                                <i class="fa fa-angle-right text-white"></i>
                                 </span>
                         </a>
                     @else
