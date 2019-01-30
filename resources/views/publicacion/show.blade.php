@@ -219,7 +219,7 @@
 					</button>
 				</div>
 				<div class="modal-body">
-					Esto publicará el tomo en la Biblioteca de Tesis y dará por finalizado el proceso de Trabajo de Graduación.
+					Esto publicará el tomo en la Biblioteca de Trabajos de Graduación y dará por finalizado el proceso de Trabajo de Graduación.
 					<p class="text-danger">Tenga en cuenta que esta acción no puede deshacerse.</p>
 				</div>
 				{!! Form:: open(['route'=>'aprobarCierreGrupo','method'=>'POST', 'id'=>'formCierre']) !!}
