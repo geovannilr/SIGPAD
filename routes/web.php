@@ -108,6 +108,7 @@ Route::get('reportes/createConsolidadoNotas', 'TrabajoGraduacion\ReportesControl
 //Reportes WORD
 Route::get('reportesTDGWord', 'TrabajoGraduacion\ReportesWordController@index')->name('reportesTDGWord');
 Route::get('reporteActaAprobacion', 'TrabajoGraduacion\ReportesWordController@actaAprobacion')->name('reporteActaAprobacion');
+Route::get('autorizacionGrupos', 'TrabajoGraduacion\ReportesWordController@autorizacionGrupos')->name('autorizacionGrupos');
 
 
 //Documentos de trabajo de graduación
