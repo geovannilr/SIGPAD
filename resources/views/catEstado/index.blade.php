@@ -104,21 +104,25 @@
 						<td>{{ $catEstad->nombre_cat_sta}}</td>
                         <td>{{ $catEstad->descripcion_cat_sta}}</td>
                         <td>{{ $catEstad->tipoEstado->nombre_cat_tpo_sta}}</td>
-                    @can('catEstado.edit')
-                            @can('catEstado.destroy')
-                          <td style="text-align: center;">
-                             <div class="d-inline-block">
-                              <a class="btn " style="background-color: #102359;color: white" href="{{route('catEstado.edit',$catEstad->id_cat_sta)}}"><i class="fa fa-pencil"></i></a>
-                             </div>
-                              {!! Form::open(['route'=>['catEstado.destroy',$catEstad->id_cat_sta],'method'=>'DELETE','class' => 'deleteButton']) !!}
-                              <div class="d-inline-block">
-                                  <button type="submit" class="btn btn-danger"><i class="fa fa-trash"></i></button>
-                              </div>
-                              {!! Form:: close() !!}
+                        <td style="width: 160px">
+                            <div class="row">
+                                @can('catEstado.edit')
+                                    <div class="col-6">
+                                        <a class="btn " style="background-color: #102359;color: white" href="{{route('catEstado.edit',$catEstad->id_cat_sta)}}"><i class="fa fa-pencil"></i></a>
+                                    </div>
+                                @endcan
+                                    @can('catEstado.destroy')
+                                    <div class="col-6">
+                                        {!! Form::open(['route'=>['catEstado.destroy',$catEstad->id_cat_sta],'method'=>'DELETE','class' => 'deleteButton']) !!}
+                                        <div class="btn-group">
+                                            <button type="submit" class="btn btn-danger"><i class="fa fa-trash"></i></button>
+                                        </div>
+                                        {!! Form:: close() !!}
+                                    </div>
+                                @endcan
+                            </div>
+                        </td>
 
-                          </td>
-                         @endcan
-                            @endcan
 					</tr>
 				@endforeach 
 				</tbody>

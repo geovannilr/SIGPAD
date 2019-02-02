@@ -1,6 +1,6 @@
 				<div class="row">
 					<div class="form-group col-sm-4">
-						{!! Form::label('Nombre de Aspecto') !!}
+						{!! Form::label('Nombre Aspecto') !!}
 						{!!Form::text('nombre_pdg_asp',null,['class'=>'form-control ','placeholder'=>'Ingrese nombre del aspecto'])  !!}
 					</div>
 					<div class="form-group col-sm-4">

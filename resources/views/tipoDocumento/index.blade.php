@@ -101,18 +101,24 @@
 						<td>{{ $tipoDocument->nombre_pdg_tpo_doc }}</td>
                         <td>{{ $tipoDocument->descripcion_pdg_tpo_doc }}</td>
 						<td>{{ $tipoDocument->anio_cat_pdg_tpo_doc }}</td>
-                         @can('tipoDocumento.edit')
-                            @can('tipoDocumento.destroy')
-                          <td style="text-align: center;">
-  			            	<a class="btn " style="background-color:  #102359;color: white" href="{{route('tipoDocumento.edit',$tipoDocument->id_cat_tpo_doc)}}"><i class="fa fa-pencil"></i></a>
-  							{!! Form::open(['route'=>['tipoDocumento.destroy',$tipoDocument->id_cat_tpo_doc],'method'=>'DELETE','class' => 'deleteButton']) !!}
-  						 		<div class="btn-group">
-  									<button type="submit" class="btn btn-danger"><i class="fa fa-trash"></i></button>
-  								</div>
-  							{!! Form:: close() !!}
-  						</td>
-                            @endcan
-                        @endcan
+                        <td style="width: 160px">
+                            <div class="row">
+                                @can('tipoDocumento.edit')
+                                    <div class="col-6">
+                                        <a class="btn " style="background-color:  #102359;color: white" href="{{route('tipoDocumento.edit',$tipoDocument->id_cat_tpo_doc)}}"><i class="fa fa-pencil"></i></a>
+                                    </div>
+                                @endcan
+                                    @can('tipoDocumento.destroy')
+                                    <div class="col-6">
+                                        {!! Form::open(['route'=>['tipoDocumento.destroy',$tipoDocument->id_cat_tpo_doc],'method'=>'DELETE','class' => 'deleteButton']) !!}
+                                        <div class="btn-group">
+                                            <button type="submit" class="btn btn-danger"><i class="fa fa-trash"></i></button>
+                                        </div>
+                                        {!! Form:: close() !!}
+                                    </div>
+                                @endcan
+                            </div>
+                        </td>
 					</tr>
 				@endforeach 
 				</tbody>

@@ -104,21 +104,24 @@
 						<td>{{ $pdgAspecto->nombre_pdg_asp}}</td>
                         <td>{{ $pdgAspecto->ponderacion_pdg_asp}}</td>
                         <td>{{ $pdgAspecto->catEtaEva->nombre_cat_eta_eva}}</td>
-                    @can('pdgAspectos.edit')
-                            @can('pdgAspectos.destroy')
-                          <td style="text-align: center;">
-                             <div class="d-inline-block">
-                              <a class="btn " style="background-color: #102359;color: white" href="{{route('pdgAspectos.edit',$pdgAspecto->id_pdg_asp)}}"><i class="fa fa-pencil"></i></a>
-                             </div>
-                              {!! Form::open(['route'=>['pdgAspectos.destroy',$pdgAspecto->id_pdg_asp],'method'=>'DELETE','class' => 'deleteButton']) !!}
-                              <div class="d-inline-block">
-                                  <button type="submit" class="btn btn-danger"><i class="fa fa-trash"></i></button>
-                              </div>
-                              {!! Form:: close() !!}
-
-                          </td>
-                         @endcan
-                            @endcan
+                        <td style="width: 160px">
+                            <div class="row">
+                                @can('pdgAspectos.edit')
+                                    <div class="col-6">
+                                        <a class="btn " style="background-color: #102359;color: white" href="{{route('pdgAspectos.edit',$pdgAspecto->id_pdg_asp)}}"><i class="fa fa-pencil"></i></a>
+                                    </div>
+                                @endcan
+                                    @can('pdgAspectos.destroy')
+                                    <div class="col-6">
+                                        {!! Form::open(['route'=>['pdgAspectos.destroy',$pdgAspecto->id_pdg_asp],'method'=>'DELETE','class' => 'deleteButton']) !!}
+                                        <div class="d-inline-block">
+                                            <button type="submit" class="btn btn-danger"><i class="fa fa-trash"></i></button>
+                                        </div>
+                                        {!! Form:: close() !!}
+                                    </div>
+                                @endcan
+                            </div>
+                        </td>
 					</tr>
 				@endforeach 
 				</tbody>

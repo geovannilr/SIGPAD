@@ -103,19 +103,24 @@
                         <td>{{ $catMateri->nombre_mat }}</td>
 						<td>{{ $catMateri->anio_pensum }}</td>
                         <td>{{ $catMateri->ciclo }}</td>
-                         @can('catMateria.edit')
-                            @can('catMateria.destroy')
-
-                            <td style="text-align: center;">
-  			            	<a class="btn " style="background-color:  #102359;color: white" href="{{route('catMateria.edit',$catMateri->id_cat_mat)}}"><i class="fa fa-pencil"></i></a>
-                                {!! Form::open(['route'=>['catMateria.destroy',$catMateri->id_cat_mat],'method'=>'DELETE','class' => 'deleteButton']) !!}
-  						 		<div class="btn-group">
-  									<button type="submit" class="btn btn-danger"><i class="fa fa-trash"></i></button>
-  								</div>
-  						    	{!! Form:: close() !!}
-  					    	</td>
-                            @endcan
-                        @endcan
+                        <td style="width: 160px">
+                            <div class="row">
+                                @can('catMateria.edit')
+                                    <div class="col-6">
+                                        <a class="btn " style="background-color:  #102359;color: white" href="{{route('catMateria.edit',$catMateri->id_cat_mat)}}"><i class="fa fa-pencil"></i></a>
+                                    </div>
+                                @endcan
+                                @can('cargoEisi.destroy')
+                                    <div class="col-6">
+                                        {!! Form::open(['route'=>['catMateria.destroy',$catMateri->id_cat_mat],'method'=>'DELETE','class' => 'deleteButton']) !!}
+                                        <div class="btn-group">
+                                            <button type="submit" class="btn btn-danger"><i class="fa fa-trash"></i></button>
+                                        </div>
+                                        {!! Form:: close() !!}
+                                    </div>
+                                @endcan
+                            </div>
+                        </td>
 					</tr>
 				@endforeach 
 				</tbody>

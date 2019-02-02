@@ -68,7 +68,7 @@
 	        <li class="breadcrumb-item">
 	          <h5><a href="{{ redirect()->getUrlGenerator()->previous() }}" style="margin-left: 0em"><i class="fa fa-arrow-left fa-lg" style="z-index: 1;margin-top: 0em;margin-right: 0.5em; color: black"></i></a>     Tipos Skills</h5>
 	        </li>
-	        <li class="breadcrumb-item active">Listado de Tipo Skill</li>
+	        <li class="breadcrumb-item active">Listado de tipo Skill</li>
 		</ol>
 		 <div class="row">
   <div class="col-sm-3"></div>
@@ -97,18 +97,24 @@
   				@foreach($tipoSki as $tipoSk)
 					<tr>
 						<td>{{ $tipoSk->descripcion_tpo_ski}}</td>
-                    @can('tipoSki.edit')
-                            @can('tipoSki.destroy')
-                            <td style="text-align: center;">
-  							<a class="btn " style="background-color:  #102359;color: white" href="{{route('tipoSki.edit',$tipoSk->id_tpo_ski)}}"><i class="fa fa-pencil"></i></a>
-  							{!! Form::open(['route'=>['tipoSki.destroy',$tipoSk->id_tpo_ski],'method'=>'DELETE','class' => 'deleteButton']) !!}
-  						 		<div class="btn-group">
-  									<button type="submit" class="btn btn-danger"><i class="fa fa-trash"></i></button>
-  								</div>
-  							{!! Form:: close() !!}
-  						</td>
-                           @endcan
-                     @endcan
+                        <td style="width: 160px">
+                            <div class="row">
+                                @can('tipoSki.edit')
+                                    <div class="col-6">
+                                        <a class="btn " style="background-color:  #102359;color: white" href="{{route('tipoSki.edit',$tipoSk->id_tpo_ski)}}"><i class="fa fa-pencil"></i></a>
+                                    </div>
+                                @endcan
+                                    @can('tipoSki.destroy')
+                                    <div class="col-6">
+                                        {!! Form::open(['route'=>['tipoSki.destroy',$tipoSk->id_tpo_ski],'method'=>'DELETE','class' => 'deleteButton']) !!}
+                                        <div class="btn-group">
+                                            <button type="submit" class="btn btn-danger"><i class="fa fa-trash"></i></button>
+                                        </div>
+                                        {!! Form:: close() !!}
+                                    </div>
+                                @endcan
+                            </div>
+                        </td>
 					</tr>
 				@endforeach 
 				</tbody>

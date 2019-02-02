@@ -97,21 +97,28 @@
   				@foreach($cargoEisi as $cargoEis)
 					<tr>
 						<td>{{ $cargoEis->nombre_cargo}}</td>
-           				@can('cargoEisi.edit')
-                            @can('cargoEisi.destroy')
-                        <td style="text-align: center;">
-  							<a class="btn " style="background-color:  #102359;color: white" href="{{route('cargoEisi.edit',$cargoEis->id_cat_car)}}"><i class="fa fa-pencil"></i></a>
-                            {!! Form::open(['route'=>['cargoEisi.destroy',$cargoEis->id_cat_car],'method'=>'DELETE','class' => 'deleteButton']) !!}
-  						 		<div class="btn-group">
-  									<button type="submit" class="btn btn-danger"><i class="fa fa-trash"></i></button>
-  								</div>
-  							{!! Form:: close() !!}
-  						</td>
+                        <td style="width: 160px">
+                           <div class="row">
+                            @can('cargoEisi.edit')
+                                   <div class="col-6">
+                                       <a class="btn " style="background-color:  #102359;color: white" href="{{route('cargoEisi.edit',$cargoEis->id_cat_car)}}"><i class="fa fa-pencil"></i></a>
+                                   </div>
                             @endcan
-                        @endcan
+                                @can('cargoEisi.destroy')
+                                    <div class="col-6">
+                                        {!! Form::open(['route'=>['cargoEisi.destroy',$cargoEis->id_cat_car],'method'=>'DELETE','class' => 'deleteButton']) !!}
+                                        <div class="btn-group">
+                                            <button type="submit" class="btn btn-danger"><i class="fa fa-trash"></i></button>
+                                        </div>
+                                        {!! Form:: close() !!}
+                                    </div>
+                                @endcan
+                           </div>
+                        </td>
 					</tr>
 				@endforeach 
 				</tbody>
 			</table>
 	   </div>
 @stop
+

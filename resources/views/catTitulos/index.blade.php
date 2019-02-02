@@ -97,19 +97,24 @@
   				@foreach($catTitulos as $catTitulo)
 					<tr>
 						<td>{{ $catTitulo->nombre_titulo_cat_tit}}</td>
-           				@can('catTitulos.edit')
-                            @can('catTitulos.destroy')
-
-                            <td style="text-align: center;">
-  							<a class="btn " style="background-color:  #102359;color: white" href="{{route('catTitulos.edit',$catTitulo->id_cat_tit)}}"><i class="fa fa-pencil"></i></a>
-  						    {!! Form::open(['route'=>['catTitulos.destroy',$catTitulo->id_cat_tit],'method'=>'DELETE','class' => 'deleteButton']) !!}
-  						 		<div class="btn-group">
-  									<button type="submit" class="btn btn-danger"><i class="fa fa-trash"></i></button>
-  								</div>
-  							{!! Form:: close() !!}
-  						</td>
-                            @endcan
-                        @endcan
+                        <td style="width: 160px">
+                            <div class="row">
+                                @can('catTitulos.edit')
+                                    <div class="col-6">
+                                        <a class="btn " style="background-color:  #102359;color: white" href="{{route('catTitulos.edit',$catTitulo->id_cat_tit)}}"><i class="fa fa-pencil"></i></a>
+                                    </div>
+                                @endcan
+                                    @can('catTitulos.destroy')
+                                    <div class="col-6">
+                                        {!! Form::open(['route'=>['catTitulos.destroy',$catTitulo->id_cat_tit],'method'=>'DELETE','class' => 'deleteButton']) !!}
+                                        <div class="btn-group">
+                                            <button type="submit" class="btn btn-danger"><i class="fa fa-trash"></i></button>
+                                        </div>
+                                        {!! Form:: close() !!}
+                                    </div>
+                                @endcan
+                            </div>
+                        </td>
 					</tr>
 				@endforeach 
 				</tbody>
