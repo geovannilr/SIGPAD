@@ -4,6 +4,8 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
+use \App\pub_arc_publicacion_archivoModel;
 
 class pub_publicacionModel extends Model{
 
@@ -122,10 +124,10 @@ class pub_publicacionModel extends Model{
 
     public static function nuevaPublicacion($tema, $autores, $colaboradores){
 	    $success = true;
-	    $msg = 'Publicación creada con éxito.';
+	    $msg = 'Publicación creada con éxito,';
         try{
             DB::transaction(function() use ($tema, $autores, $colaboradores, &$msg) {
-                $id = $tema['grupo'];
+                $id = self::formatId($tema['grupo']);
                 $integracionPub = self::getValidIntegracionPub($id);
                 $codigoPub = self::getCodigoPubAvailable($id);
                 $newPublicacion = new pub_publicacionModel([
@@ -161,7 +163,7 @@ class pub_publicacionModel extends Model{
                     ]);
                     $newAutor->save();
                 }
-                $msg .= 'Código generado: '.$codigoPub;
+                $msg .= ' código generado: '.$codigoPub;
             });
         }catch(\Exception $e){
             $success = false;
@@ -170,6 +172,18 @@ class pub_publicacionModel extends Model{
         return array($success,$msg);
     }
 
+    private static function formatId($idStr){
+        $texto = trim(strval($idStr));
+        $largo = strlen($texto);
+        if ($largo == 6) {
+            $anio = substr($texto,0,4);
+            $correlativo = substr($texto,4,2);
+            $validId = $correlativo.'-'.$anio;
+        }else{
+            throw new \Exception("Formato del identificador del grupo no es válido.:",9);
+        }
+        return $validId;
+    }
     private static function getValidIntegracionPub($identifier){
 	    $integracion = array();
         $grupo = pdg_gru_grupoModel::where('numero_pdg_gru','=',$identifier)->first();
@@ -192,7 +206,7 @@ class pub_publicacionModel extends Model{
     private static function getCodigoPubAvailable($identifier){
 	    try{
             $texto = strval($identifier);
-            $anio = substr($texto,0,4);
+            $anio = substr($texto,3,4);
             $correlativo = pub_publicacionModel::where("anio_pub","=",$anio)->max('correlativo_pub');
             if($correlativo==null)
                 $correlativo = 1;
@@ -259,4 +273,14 @@ class pub_publicacionModel extends Model{
         return $integracion;
     }
 
+    public static function eliminarPublicacion($idpub){
+        $archivo = pub_arc_publicacion_archivoModel::where('id_pub','=',$idpub)->get();
+        if(!empty($name)){
+            $name = $archivo[0]->ubicacion_pub_arc;
+            if( Storage::disk('publicaciones')->exists($name))
+                Storage::disk('publicaciones')->delete($name);
+        }
+        $exito = pub_publicacionModel::deletePublicacionAndRelations($idpub);
+        return $exito;
+    }
 }
