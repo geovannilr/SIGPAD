@@ -28,13 +28,7 @@
                 @endcan
                 <th>Documento</th>
                 <th>Resumen</th>
-                @can('perfil.aprobar')
-                    <th>Aprobar</th>
-                @endcan
-                @can('perfil.rechazar')
-                    <th>Rechazar</th>
-                @endcan
-
+                <th>Acciones</th>
                 </thead>
                 <tbody>
 
@@ -93,32 +87,38 @@
                             </div>
                             {!! Form:: close() !!}
                         </td>
-                        @can('perfil.aprobar')
-                            <td style="text-align: center;">
-                                @if($perfil->id_cat_sta != "9"  &&  $perfil->id_cat_sta != "11" )
-                                    {!! Form::open(['route'=>['aprobarPerfil'],'method'=>'POST','class'=>'aprobar']) !!}
+                        <td>
+                            <div class="row">
+                                @can('perfil.aprobar')
+                                    <div class="col-6">
+                                        @if($perfil->id_cat_sta != "9"  &&  $perfil->id_cat_sta != "11" )
+                                            {!! Form::open(['route'=>['aprobarPerfil'],'method'=>'POST','class'=>'aprobar']) !!}
 
-                                    <div class="btn-group">
-                                        {!!Form::hidden('idPerfil',$perfil->id_pdg_per,['class'=>'form-control'])!!}
-                                        <button type="submit" class="btn btn-success"><i class="fa fa-check"></i></button>
+                                            <div class="btn-group">
+                                                {!!Form::hidden('idPerfil',$perfil->id_pdg_per,['class'=>'form-control'])!!}
+                                                <button type="submit" class="btn btn-success"><i class="fa fa-check"></i></button>
+                                            </div>
+                                            {!! Form:: close() !!}
+                                        @endif
                                     </div>
-                                    {!! Form:: close() !!}
-                                @endif
-                            </td>
-                        @endcan
-                        @can('perfil.rechazar')
+                                @endcan
+                                @can('perfil.rechazar')
 
-                            <td style="text-align: center;">
-                                @if($perfil->id_cat_sta != "9"  &&  $perfil->id_cat_sta != "11" )
-                                    {!! Form::open(['route'=>['rechazarPerfil'],'method'=>'POST','class'=>'rechazar']) !!}
-                                    <div class="btn-group">
-                                        {!!Form::hidden('idPerfil',$perfil->id_pdg_per,['class'=>'form-control'])!!}
-                                        <button type="submit" class="btn btn-danger"><i class="fa fa-remove"></i></button>
-                                    </div>
-                                    {!! Form:: close() !!}
-                                @endif
-                            </td>
-                        @endcan
+                                <div class="col-6">
+                                    @if($perfil->id_cat_sta != "9"  &&  $perfil->id_cat_sta != "11" )
+                                        {!! Form::open(['route'=>['rechazarPerfil'],'method'=>'POST','class'=>'rechazar']) !!}
+                                        <div class="btn-group">
+                                            {!!Form::hidden('idPerfil',$perfil->id_pdg_per,['class'=>'form-control'])!!}
+                                            <button type="submit" class="btn btn-danger"><i class="fa fa-remove"></i></button>
+                                        </div>
+                                        {!! Form:: close() !!}
+                                    @endif
+                                </div>
+                                @endcan
+                            </div>
+                        </td>
+                        
+                        
                     </tr>
                     @endif
                 @endforeach
