@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Publicaciones;
 
 use App\gen_EstudianteModel;
+use App\Http\Controllers\TrabajoGraduacion\TrabajoDeGraduacionController;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Session;
@@ -85,11 +86,24 @@ class publicacionController extends Controller{
             
     }
     public function destroy($id){
-
-          	$publicaciones = pub_publicacionModel::all();
-          	Session::flash('message-error', 'Funcionalidad no disponible en estos momentos');
-       		 return view('publicacion.index',compact('publicaciones'));
-            
+        if(Auth::user()->can(['publicacion.destroy'])){
+            try{
+                $resultado = pub_publicacionModel::eliminarPublicacion($id);
+            }catch (\Exception $e){
+                $resultado = false;
+            }
+            if($resultado){
+                $msgType = "message";
+                $msg = "Publicación eliminada con éxito!";
+            } else {
+                $msgType = "message-error";
+                $msg = "No se pudo eliminar la publicación.";
+            }
+        }else{
+            $msgType = "message-error";
+            $msg = "No tiene permisos suficientes";
+        }
+       	return redirect('publicacion')->with([$msgType=>$msg]);
     }
      public function editDocumento($idPublicacion,$idArchivo){
     	//VERIFICAMOS SI EXISTEN EN LA BASE DE DATOS ESOS ID
@@ -319,7 +333,8 @@ class publicacionController extends Controller{
             $publicaciones[] = array($identifier,$exito,$msg);
         }
         $salida = $publicaciones;
-        return $salida;
+//        return $salida;
+        return view("publicacion.resultUpload",compact('salida'));
 	}
 
 	public function getArrayFromSheet($archivo, $hoja){
