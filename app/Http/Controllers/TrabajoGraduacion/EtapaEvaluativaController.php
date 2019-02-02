@@ -251,9 +251,9 @@ class EtapaEvaluativaController extends Controller {
 												<td>' . ($counter==0?'<b>':'') . $archivo->nombreArchivo . ($counter==0?'<b>':''). '</td>
 												<td>' . ($counter==0?'<b>':'') . $fecha->format('d/m/Y h:m:s A') . ($counter==0?'</b>':'') . '</td>';
 								if ($archivo->esArchivoActico == 1) {
-								    $bodyHtml .= (Auth::user()->can(['documentoEtapa.edit'])&& !$banderaFinal)?'<td><a class="btn btn-primary" href="' . url("/") . '/editDocumento/' . $id . '/' . $archivo->id_pdg_doc . '/' . $doc->id_cat_tpo_doc . '"><i class="fa fa-pencil"></i></a></td>':'';
+								    $bodyHtml .= (Auth::user()->can(['documentoEtapa.edit'])&& !$banderaFinal)?'<div class="col-4"><a class="btn btn-primary" href="' . url("/") . '/editDocumento/' . $id . '/' . $archivo->id_pdg_doc . '/' . $doc->id_cat_tpo_doc . '"><i class="fa fa-pencil"></i></a></div>':'';
 								    $bodyHtml .= (Auth::user()->can(['documentoEtapa.destroy'])&& !$banderaFinal)?
-                                                '<td>
+                                                '<div class = "col-4">
                                                     <form method="POST" action="' . url("/") . '/documento/' . $archivo->id_pdg_doc . '" class="deleteButton formPost">
                                                         <input name="_method" value="DELETE" type="hidden">
                                                         <input class="form-control" name="etapa" value="' . $id . '" type="hidden">
@@ -261,8 +261,8 @@ class EtapaEvaluativaController extends Controller {
                                                             <button type="submit" class="btn btn-danger"><i class="fa fa-trash"></i></button>
                                                         </div>
                                                     </form>
-                                                </td>':'';
-                                    $bodyHtml .=' <td>
+                                                </div>':'';
+                                    $bodyHtml .=' <div class = "col-4">
                                                     <form method="POST" action="' . url("/") . '/downloadDocumento" accept-charset="UTF-8" class ="formPost">
                                                         <div class="btn-group">
                                                             <input class="form-control" name="documento" value="' . $archivo->id_pdg_arc_doc . '" type="hidden">
@@ -270,13 +270,13 @@ class EtapaEvaluativaController extends Controller {
                                                             <button type="submit" class="btn btn-dark"><i class="fa fa-download"></i></button>
                                                         </div>
                                                     </form>
-                                                  </td>
+                                                  </div>
                                                 </tr>';
 								} else {
-									$bodyHtml .= (Auth::user()->can(['documentoEtapa.edit'])&& !$banderaFinal)?'<td></td>':'';
-                                    $bodyHtml .= (Auth::user()->can(['documentoEtapa.destroy'])&& !$banderaFinal)?'<td></td>':'';
+									$bodyHtml .= (Auth::user()->can(['documentoEtapa.edit'])&& !$banderaFinal)?'<div></div>':'';
+                                    $bodyHtml .= (Auth::user()->can(['documentoEtapa.destroy'])&& !$banderaFinal)?'<div></div>':'';
                                     $bodyHtml .= '
-                                                    <td>
+                                                    <div class = "col-4">
                                                         <form method="POST" action="' . url("/") . '/downloadDocumento" accept-charset="UTF-8" class ="formPost">
                                                             <div class="btn-group">
                                                                 <input class="form-control" name="documento" value="' . $archivo->id_pdg_arc_doc . '" type="hidden">
@@ -284,7 +284,7 @@ class EtapaEvaluativaController extends Controller {
                                                                 <button type="submit" class="btn btn-dark"><i class="fa fa-download"></i></button>
                                                             </div>
                                                         </form>
-                                                    </td>
+                                                    </div>
                                                 </tr>';
 								}
 								$counter++;

@@ -177,12 +177,7 @@
 					<th>Fecha Creación</th>
 					<th>Estado</th>
 					<th>Tipo</th>
-					@can('perfil.edit')
-						<th>Modificar</th>
-					@endcan
-					@can('perfil.destroy')
-						<th>Eliminar</th>
-					@endcan
+					<th>Acciones</th>
 						<th>Documento</th>
 						<th>Resumen</th>
 					@can('perfil.aprobar')
@@ -200,7 +195,7 @@
   							@if(!isset($numero))
   								<td>{{ $perfil->grupo->numero_pdg_gru }}</td>
   							@endif
-						<td>{{ $perfil->tema_pdg_per }}</td>
+						<th>{{ $perfil->tema_pdg_per }}</td>
 						<td>{{ date_format(date_create($perfil->fecha_creacion_per), 'd/m/Y H:i:s')}}</td>
 						<td>
 							@if($perfil->id_cat_sta == "9" )
@@ -215,22 +210,53 @@
 							
 						</td>
 						<td>{{ $perfil->tipoTrabajo->nombre_cat_tpo_tra_gra}}</td>
-						@can('perfil.edit')
-								<td>
+						<td style="width: 120px;">
+							<div class="row">
+								@can('perfil.edit')
+								<div class="col-6">
 										<a class="btn btn-info" href="{{route('perfil.edit',$perfil->id_pdg_per)}}"><i class="fa fa-pencil"></i></a>
 								
-								</td>
-						@endcan
-						@can('perfil.destroy')
-							<td style="text-align: center;">
-								{!! Form::open(['route'=>['perfil.destroy',$perfil->id_pdg_per],'method'=>'DELETE','class' => 'deleteButton']) !!}
-							 		<div class="btn-group">
-										<button type="submit" class="btn btn-danger"><i class="fa fa-trash"></i></button>
-									</div>
-								{!! Form:: close() !!}
-							</td>
-						@endcan
+								</div>
+								@endcan
 
+								@can('perfil.destroy')
+									<div class="col-6">
+										{!! Form::open(['route'=>['perfil.destroy',$perfil->id_pdg_per],'method'=>'DELETE','class' => 'deleteButton']) !!}
+									 		<div class="btn-group">
+												<button type="submit" class="btn btn-danger"><i class="fa fa-trash"></i></button>
+											</div>
+										{!! Form:: close() !!}
+									</div>
+								@endcan
+								@can('perfil.aprobar')
+									<div class="col-6">
+										@if($perfil->id_cat_sta != "9"  &&  $perfil->id_cat_sta != "11" )
+											{!! Form::open(['route'=>['aprobarPerfil'],'method'=>'POST','class'=>'aprobar']) !!}
+
+										 		<div class="btn-group">
+										 			{!!Form::hidden('idPerfil',$perfil->id_pdg_per,['class'=>'form-control'])!!}
+													<button type="submit" class="btn btn-success"><i class="fa fa-check"></i></button>
+												</div>
+											{!! Form:: close() !!}
+										@endif
+									</div>
+								@endcan
+								@can('perfil.rechazar')
+									<div class="col-6">
+										@if($perfil->id_cat_sta != "9"  &&  $perfil->id_cat_sta != "11" )
+											{!! Form::open(['route'=>['rechazarPerfil'],'method'=>'POST','class'=>'rechazar']) !!}
+										 		<div class="btn-group">
+										 			{!!Form::hidden('idPerfil',$perfil->id_pdg_per,['class'=>'form-control'])!!}
+													<button type="submit" class="btn btn-danger"><i class="fa fa-remove"></i></button>
+												</div>
+											{!! Form:: close() !!}
+										@endif
+									</div>
+								@endcan
+							</div>
+						</td>
+						
+						
 							<td style="text-align: center;">
 								{!! Form::open(['route'=>['downloadPerfil'],'method'=>'POST']) !!}
 							 		<div class="btn-group">
@@ -249,32 +275,7 @@
 									</div>
 								{!! Form:: close() !!}
 							</td>
-							@can('perfil.aprobar')
-								<td style="text-align: center;">
-									@if($perfil->id_cat_sta != "9"  &&  $perfil->id_cat_sta != "11" )
-										{!! Form::open(['route'=>['aprobarPerfil'],'method'=>'POST','class'=>'aprobar']) !!}
-
-									 		<div class="btn-group">
-									 			{!!Form::hidden('idPerfil',$perfil->id_pdg_per,['class'=>'form-control'])!!}
-												<button type="submit" class="btn btn-success"><i class="fa fa-check"></i></button>
-											</div>
-										{!! Form:: close() !!}
-									@endif
-								</td>
-							@endcan
-							@can('perfil.rechazar')
-
-								<td style="text-align: center;">
-									@if($perfil->id_cat_sta != "9"  &&  $perfil->id_cat_sta != "11" )
-										{!! Form::open(['route'=>['rechazarPerfil'],'method'=>'POST','class'=>'rechazar']) !!}
-									 		<div class="btn-group">
-									 			{!!Form::hidden('idPerfil',$perfil->id_pdg_per,['class'=>'form-control'])!!}
-												<button type="submit" class="btn btn-danger"><i class="fa fa-remove"></i></button>
-											</div>
-										{!! Form:: close() !!}
-									@endif
-								</td>
-							@endcan
+							
 					</tr>				
 				@endforeach 
 				</tbody>

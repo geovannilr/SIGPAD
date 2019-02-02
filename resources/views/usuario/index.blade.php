@@ -95,12 +95,7 @@
 					<th>Nombre</th>
 					<th>Roles</th>
 					<th>Fecha de Registro</th>
-					@can('usuario.edit')
-						<th>Modificar</th>
-					@endcan
-					@can('usuario.destroy')
-						<th>Eliminar</th>
-					@endcan
+					<th>Acciones</th>
   				</thead>
   				<tbody>
 
@@ -119,20 +114,31 @@
 						?>
 						</td>
 						<td>{{$usuario->created_at->format('d/m/Y H:i:s')}}</td>
-						@can('usuario.edit')
-							<td style="text-align: center;">
-								<a class="btn " style="background-color:  #102359;color: white" href="{{route('usuario.edit',$usuario->id)}}"><i class="fa fa-pencil"></i></a>
-							</td>
-						@endcan
-						@can('usuario.destroy')
-							<td style="text-align: center;">
-								{!! Form::open(['route'=>['usuario.destroy',$usuario->id],'method'=>'DELETE','class' => 'deleteButton']) !!}
-							 		<div class="btn-group">
-										<button type="submit" class="btn btn-danger"><i class="fa fa-trash"></i></button>
+
+						<td style="text-align: center;">
+							<div class="row">
+								@can('usuario.edit')
+									<div class="col-6">
+										<a class="btn " style="background-color:  #102359;color: white" href="{{route('usuario.edit',$usuario->id)}}"><i class="fa fa-pencil"></i></a>
 									</div>
-								{!! Form:: close() !!}
-							</td>
-						@endcan
+								@endcan
+							@can('usuario.destroy')
+									<div class="col-6">
+										{!! Form::open(['route'=>['usuario.destroy',$usuario->id],'method'=>'DELETE','class' => 'deleteButton']) !!}
+								 		<div class="btn-group">
+											<button type="submit" class="btn btn-danger"><i class="fa fa-trash"></i></button>
+										</div>
+										{!! Form:: close() !!}
+									</div>
+								@endcan
+							</div>
+							
+								
+									
+								
+
+						</td>
+						
 					</tr>
   				@endif
 				

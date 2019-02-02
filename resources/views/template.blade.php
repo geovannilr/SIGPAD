@@ -151,12 +151,20 @@
                         </li>
                         <li>
                           <a class="nav-link" href="{{route('BuscarPublicaciones')}}" style="color: #ffffff">
-                            <i class="fa fa-file-text"></i>
+                            <i class="fa fa-search"></i>
                             <span class="nav-link-text">Búsqueda de Publicaciones</span>
                           </a>  
                         </li>
 
                        @endcan
+                      @can('publicacion.upload')
+                          <li>
+                              <a class="nav-link" href="{{route('createPublicaciones')}}" style="color: #ffffff">
+                                  <i class="fa fa-cloud-upload"></i>
+                                  <span class="nav-link-text">Carga de Publicaciones</span>
+                              </a>
+                          </li>
+                      @endcan
             </ul>
                      
           </li>

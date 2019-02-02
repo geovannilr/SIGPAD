@@ -183,19 +183,7 @@
 					<th>Fecha Creación</th>
 					<th>Estado</th>
 					<th>Tipo</th>
-					@can('prePerfil.edit')
-						<th>Modificar</th>
-					@endcan
-					@can('prePerfil.destroy')
-						<th>Eliminar</th>
-					@endcan
-						<th>Descargar</th>
-					@can('prePerfil.aprobar')
-						<th>Aprobar</th>
-					@endcan
-					@can('prePerfil.rechazar')
-						<th>Rechazar</th>
-					@endcan
+					<th>Acciones</th>
 
   				</thead>
   				<tbody>
@@ -221,54 +209,64 @@
 
 						</td>
 						<td>{{ $prePerfil->tipoTrabajo->nombre_cat_tpo_tra_gra}}</td>
-						@can('prePerfil.edit')
-							<td style="text-align: center;">
-								<a class="btn" style="background-color:  #102359;color: white" href="{{route('prePerfil.edit',$prePerfil->id_pdg_ppe)}}"><i class="fa fa-pencil"></i></a>
-							</td>
-						@endcan
-						@can('prePerfil.destroy')
-							<td style="text-align: center;">
-								{!! Form::open(['route'=>['prePerfil.destroy',$prePerfil->id_pdg_ppe],'method'=>'DELETE','class' => 'deleteButton']) !!}
-							 		<div class="btn-group">
-										<button type="submit" class="btn btn-danger"><i class="fa fa-trash"></i></button>
+						<td style="width: 170px">
+							<div class="row">
+								@can('prePerfil.edit')
+									<div class="col-4">
+										<a class="btn" style="background-color:  #102359;color: white" href="{{route('prePerfil.edit',$prePerfil->id_pdg_ppe)}}"><i class="fa fa-pencil"></i></a>
 									</div>
-								{!! Form:: close() !!}
-							</td>
-						@endcan
+								@endcan
+								@can('prePerfil.destroy')
+									<div class="col-4">
+										{!! Form::open(['route'=>['prePerfil.destroy',$prePerfil->id_pdg_ppe],'method'=>'DELETE','class' => 'deleteButton']) !!}
+								 		<div class="btn-group">
+											<button type="submit" class="btn btn-danger"><i class="fa fa-trash"></i></button>
+										</div>
+										{!! Form:: close() !!}
+									</div>
+								@endcan
+								<div class="col-4">
+									{!! Form::open(['route'=>['downloadPrePerfil'],'method'=>'POST']) !!}
+								 		<div class="btn-group">
+								 			{!!Form::hidden('archivo',$prePerfil->id_pdg_ppe,['class'=>'form-control'])!!}
+								 			{!!Form::hidden('grupo',$prePerfil->grupo->id_pdg_gru,['class'=>'form-control'])!!}
+											<button type="submit" class="btn btn-dark"><i class="fa fa-download"></i></button>
+										</div>
+								 	{!! Form:: close() !!}
+								</div>
+								
+								@can('prePerfil.aprobar')
+									<div class="col-4">
+										@if($prePerfil->id_cat_sta != "10"  &&  $prePerfil->id_cat_sta != "12" )
+											{!! Form::open(['route'=>['aprobarPreperfil'],'method'=>'POST','class'=>'aprobar']) !!}
+										 		<div class="btn-group">
+										 			{!!Form::hidden('idPrePerfil',$prePerfil->id_pdg_ppe,['class'=>'form-control'])!!}
+													<button type="submit" class="btn btn-success"><i class="fa fa-check"></i></button>
+												</div>
+											{!! Form:: close() !!}
+										@endif
+									</div>
+								@endcan
+								
+								@can('prePerfil.rechazar')
+									<div class="col-4">
+										@if($prePerfil->id_cat_sta != "10"  &&  $prePerfil->id_cat_sta != "12" )
+											{!! Form::open(['route'=>['rechazarPrePerfil'],'method'=>'POST','class'=>'rechazar']) !!}
+										 		<div class="btn-group">
+										 			{!!Form::hidden('idPrePerfil',$prePerfil->id_pdg_ppe,['class'=>'form-control'])!!}
+													<button type="submit" class="btn btn-danger"><i class="fa fa-remove"></i></button>
+												</div>
+											{!! Form:: close() !!}
+										@endif
+									</div>
+									
+								@endcan
 
-							<td style="text-align: center;">
-								{!! Form::open(['route'=>['downloadPrePerfil'],'method'=>'POST']) !!}
-							 		<div class="btn-group">
-							 			{!!Form::hidden('archivo',$prePerfil->id_pdg_ppe,['class'=>'form-control'])!!}
-							 			{!!Form::hidden('grupo',$prePerfil->grupo->id_pdg_gru,['class'=>'form-control'])!!}
-										<button type="submit" class="btn btn-dark"><i class="fa fa-download"></i></button>
-									</div>
-								 {!! Form:: close() !!}
-							</td >
-							@can('prePerfil.aprobar')
-								<td style="text-align: center;">
-									@if($prePerfil->id_cat_sta != "10"  &&  $prePerfil->id_cat_sta != "12" )
-										{!! Form::open(['route'=>['aprobarPreperfil'],'method'=>'POST','class'=>'aprobar']) !!}
-									 		<div class="btn-group">
-									 			{!!Form::hidden('idPrePerfil',$prePerfil->id_pdg_ppe,['class'=>'form-control'])!!}
-												<button type="submit" class="btn btn-success"><i class="fa fa-check"></i></button>
-											</div>
-										{!! Form:: close() !!}
-									@endif
-								</td>
-							@endcan
-							@can('prePerfil.rechazar')
-								<td style="text-align: center;">
-									@if($prePerfil->id_cat_sta != "10"  &&  $prePerfil->id_cat_sta != "12" )
-										{!! Form::open(['route'=>['rechazarPrePerfil'],'method'=>'POST','class'=>'rechazar']) !!}
-									 		<div class="btn-group">
-									 			{!!Form::hidden('idPrePerfil',$prePerfil->id_pdg_ppe,['class'=>'form-control'])!!}
-												<button type="submit" class="btn btn-danger"><i class="fa fa-remove"></i></button>
-											</div>
-										{!! Form:: close() !!}
-									@endif
-								</td>
-							@endcan
+								
+							</div>	
+
+						</td>
+						
 
 					</tr>
 				@endforeach

@@ -458,13 +458,9 @@ class TrabajoDeGraduacionController extends Controller{
     public function rechazarCierre($idpub){
         $exito = true;
         try{
-            $archivo = pub_arc_publicacion_archivoModel::where('id_pub','=',$idpub)->get();
-            $name = $archivo[0]->ubicacion_pub_arc;
-            if( Storage::disk('publicaciones')->exists($name))
-                Storage::disk('publicaciones')->delete($name);
-            $exito = pub_publicacionModel::deletePublicacionAndRelations($idpub);
+            $exito = pub_publicacionModel::eliminarPublicacion($idpub);
         }catch (\Exception $e){
-            $exito = $e;
+            $exito = false;
         }
         return $exito;
     }

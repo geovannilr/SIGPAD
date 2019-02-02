@@ -89,13 +89,7 @@
 					<th>Nombre</th>
 					<th>Descipción</th>
 					<th>Fecha de Registro</th>
-          <th>Permisos </th>
-					@can('rol.edit')
-            <th>Modificar</th>
-          @endcan
-          @can('rol.destroy')
-					 <th>Eliminar</th>
-          @endcan
+          <th style="width: 140px">Acciones </th>
   				</thead>
   				<tbody>
   				@foreach($roles as $rol)
@@ -107,22 +101,29 @@
 						<td>{{ $rol->description }}</td>
 						<td>{{$rol->created_at->format('d/m/Y H:i:s')}}</td>
             <td style="text-align: center;">
+              <div class="row">
+                <div class="col-4">
                   <a class="btn btn-info"  href="{{route('rol.show',$rol->id)}}"><i class="fa fa-eye"></i></a>
-            </td>
-						@can('rol.edit')
-                <td style="text-align: center;">
-    							<a class="btn " style="background-color:  #102359;color: white" href="{{route('rol.edit',$rol->id)}}"><i class="fa fa-pencil"></i></a>
-    						</td>
-            @endcan
-            @can('rol.destroy')
-						<td style="text-align: center;">
-							{!! Form::open(['route'=>['rol.destroy',$rol->id],'method'=>'DELETE','class' => 'deleteButton']) !!}
-						 		<div class="btn-group">
-									<button type="submit" class="btn btn-danger"><i class="fa fa-trash"></i></button>
-								</div>
-							{!! Form:: close() !!}
-						</td>
-            @endcan
+                </div>
+                @can('rol.edit')
+                <div class="col-4">
+                   <a class="btn " style="background-color:  #102359;color: white" href="{{route('rol.edit',$rol->id)}}"><i class="fa fa-pencil"></i></a>
+                </div>
+                @endcan
+                @can('rol.destroy')
+                  <div class="col-4">
+                    {!! Form::open(['route'=>['rol.destroy',$rol->id],'method'=>'DELETE','class' => 'deleteButton']) !!}
+                      <div class="btn-group">
+                        <button type="submit" class="btn btn-danger"><i class="fa fa-trash"></i></button>
+                      </div>
+                    {!! Form:: close() !!}
+                  </div>
+           
+                @endcan
+              </div>
+                  
+            </td>	
+            
 					</tr>
 				@endforeach 
 				</tbody>

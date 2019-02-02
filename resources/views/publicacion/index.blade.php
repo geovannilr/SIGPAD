@@ -80,16 +80,11 @@
 	        </li>
 				 <li class="breadcrumb-item active">Listado Histórico </li>
 		</ol>
-		 <div class="row">
+<div class="row">
   <div class="col-sm-3"></div>
   <div class="col-sm-3"></div>
    <div class="col-sm-3"></div>
-  @can('prePerfil.create')
-	  <div class="col-sm-3">
-	  	 <a class="btn " href="{{route('publicacion.create')}}" style="background-color: #DF1D20; color: white"><i class="fa fa-plus"></i> Nueva Pubicación</a>
-	  </div>
-  @endcan
-</div> 
+</div>
 
 		<br>
   		<div class="table-responsive">
@@ -99,43 +94,38 @@
   					<th>Cod. Pubicación</th>
 					<th>Año</th>
 					<th>Título</th>
-					@can('publicacion.show')
-						<th>Detalle</th>
-					@endcan
-					@can('publicacion.edit')
-						<th>Modificar</th>
-					@endcan
-					@can('publicacion.destroy')
-						<th>Eliminar</th>
-					@endcan	
+					@if(Auth::user()->can(['publicacion.show'])||Auth::user()->can(['publicacion.destroy']))
+						<th>Acciones</th>
+					@endif
   				</thead>
   				<tbody>
   				@foreach($publicaciones as $publicacion)
-  						<tr>
+					<tr>
   						<td>{{ $publicacion->codigo_pub }}</td>	
 						<td>{{ $publicacion->anio_pub }}</td>
 						<td>{{ $publicacion->titulo_pub}}</td>
-						@can('publicacion.show')
-							<td style="text-align: center;">
-								<a class="btn btn-dark" href="{{route('publicacion.show',$publicacion->id_pub)}}"><i class="fa fa-eye"></i></a>
-							</td style="text-align: center;">
-						@endcan	
-						@can('publicacion.edit')
-							<td style="text-align: center;">
-								<a class="btn " style="background-color:  #102359;color: white" href="{{route('publicacion.edit',$publicacion->id_pub)}}"><i class="fa fa-pencil"></i></a>
-							</td>
-						@endcan
-						@can('publicacion.destroy')
-							<td>
-								{!! Form::open(['route'=>['publicacion.destroy',$publicacion->id_pub],'method'=>'DELETE','class' => 'deleteButton']) !!}
-							 		<div class="btn-group">
-										<button type="submit" class="btn btn-danger" ><i class="fa fa-trash"></i></button>
+						@if(Auth::user()->can(['publicacion.show'])||Auth::user()->can(['publicacion.destroy']))
+							<td style="width: 100px;">
+								<div class="row">
+								@can('publicacion.show')
+									<div class="col-6">
+										<a class="btn btn-dark" href="{{route('publicacion.show',$publicacion->id_pub)}}"><i class="fa fa-eye"></i></a>
 									</div>
-								{!! Form:: close() !!}
+								@endcan
+								@can('publicacion.destroy')
+									<div class="col-6">
+									{!! Form::open(['route'=>['publicacion.destroy',$publicacion->id_pub],'method'=>'DELETE','class' => 'deleteButton']) !!}
+										<div class="btn-group">
+											<button type="submit" class="btn btn-danger" ><i class="fa fa-trash"></i></button>
+										</div>
+									{!! Form:: close() !!}
+									</div>
+								@endcan
+								<div>
 							</td>
-						@endcan
-					</tr>				
-				@endforeach 
+						@endif
+					</tr>
+				@endforeach
 				</tbody>
 			</table>
 	   </div>
