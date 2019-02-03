@@ -146,16 +146,16 @@
 			  <div class="col-sm-3"></div>
 			   <div class="col-sm-3">
 			   	 	 @can('prePerfil.create')
-					  <div class="d-inline col-sm-3">
+
 					  	 <a class="btn " href="{{route('prePerfil.create')}}" style="background-color: #DF1D20; color: white"><i class="fa fa-plus"></i> Nuevo Pre-perfil </a>
-					  </div>
+
 				  @endcan
 						 @if ($tribunal!="NA")
-							 <div class="d-inline">
+
 							 <button id="btnTribunalEvaluador" type="button" onclick="verTribunal();" class="btn btn-secondary" title="Ver Tribunal Evaluador">
-								 <i class="fa fa-balance-scale" ></i>
+								 <i class="fa fa-balance-scale" > Tribunal </i>
 							 </button>
-							 </div>
+
 						 @endif
 			   </div>
 
