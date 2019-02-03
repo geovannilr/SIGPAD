@@ -59,7 +59,8 @@ class RolController extends Controller
     {
             $validatedData = $request->validate([
                 'name' => 'required|max:50',
-                'description' => 'required|max:250'
+                'description' => 'required|max:250',
+                'permiso'   => 'required'
             ]);
             $slug=strtolower($request['name']);
             $newSlg=str_replace(' ','_',$slug);

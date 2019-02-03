@@ -49,7 +49,7 @@ class pdg_ppe_pre_perfilModel extends Model
         ->orderBy('id_pdg_ppe','desc')
         ->groupBy('id_pdg_gru')
         ->get();*/
-        $grupos = DB::select("
+       /* ULTIMO FUNCIONAL ANTES DE LIDER$grupos = DB::select("
         				select 
 						prep.id_pdg_gru,
 						gru.numero_pdg_gru,
@@ -60,8 +60,25 @@ class pdg_ppe_pre_perfilModel extends Model
 						inner join  pdg_gru_grupo  gru on prep.id_pdg_gru = gru.id_pdg_gru
 						group by prep.id_pdg_gru,gru.numero_pdg_gru
 						order by prep.id_pdg_ppe desc"
+						);*/
+						$grupos = DB::select("
+        				select 
+						prep.id_pdg_gru,
+						gru.numero_pdg_gru,
+						count(*) as cantidadPrePerfiles,
+                        estu.carnet_gen_est as carnetLider,
+                        estu.nombre_gen_est as nombreLider,
+						(select aprobo from pdg_apr_eta_tra_aprobador_etapa_trabajo where id_cat_eta_eva = 999 AND id_pdg_tra_gra = 
+							(SELECT id_pdg_tra_gra from pdg_tra_gra_trabajo_graduacion where id_pdg_gru = gru.id_pdg_gru )) as finalizo
+						 from pdg_ppe_pre_perfil prep
+						inner join  pdg_gru_grupo  gru on prep.id_pdg_gru = gru.id_pdg_gru
+                        inner join pdg_gru_est_grupo_estudiante est on est.id_pdg_gru = gru.id_pdg_gru
+                        inner join gen_est_estudiante estu on estu.id_gen_est = est.id_gen_est
+                        where est.eslider_pdg_gru_est = 1
+						group by prep.id_pdg_gru,gru.numero_pdg_gru
+						order by prep.id_pdg_ppe desc"
 						);
-
+		
         return $grupos;
 
 	 }

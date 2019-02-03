@@ -504,7 +504,8 @@ class PerfilController extends Controller
 	    $perfil->id_cat_sta = 11 ;//RECHAZADO
 	    $perfil->save();
 	    Session::flash('message','Perfil Rechazado Correctamente!');
-            return Redirect::to('/indexPerfil/'.$perfil->id_pdg_gru); 
+        return Redirect::to('/perfil');
+            //return Redirect::to('/indexPerfil/'.$perfil->id_pdg_gru); 
     }
     function downloadPerfil(Request $request){
         //$userLogin=Auth::user();
