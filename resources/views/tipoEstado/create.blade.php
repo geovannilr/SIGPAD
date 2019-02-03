@@ -4,7 +4,7 @@
  
 <ol class="breadcrumb"  style="text-align: center; margin-top: 1em;z-index: 0" >
         <li class="breadcrumb-item">
-          <h5> <a href="{{ redirect()->getUrlGenerator()->previous() }}" style="margin-left: 0em"><i class="fa fa-arrow-left fa-lg" style="z-index: 1;margin-top: 0em;margin-right: 0.5em; color: black"></i></a>      Categoría Tipo Estado </h5>
+          <h5> <a href="{{ route('tipoEstado.index') }}" style="margin-left: 0em"><i class="fa fa-arrow-left fa-lg" style="z-index: 1;margin-top: 0em;margin-right: 0.5em; color: black"></i></a>      Categoría Tipo Estado </h5>
         </li>
         <li class="breadcrumb-item active">Nuevo Tipo Estado </li>
 </ol>
