@@ -236,8 +236,8 @@ class EtapaEvaluativaController extends Controller {
 					$bodyHtml .= '<thead>
                                     <th>Nombre Archivo</th>
 		        				    <th>Fecha Subida</th>';
-                    $bodyHtml .= (Auth::user()->can(['documentoEtapa.edit']) && !$banderaFinal)?'<th>Modificar</th>':'';
-                    $bodyHtml .= (Auth::user()->can(['documentoEtapa.destroy']) && !$banderaFinal)?'<th>Eliminar</th>':'';
+                    $bodyHtml .= (Auth::user()->can(['documentoEtapa.edit','documentoEtapa.destroy'])&& !$banderaFinal)?'<th>Acciones</th>':'';
+                    //$bodyHtml .= (Auth::user()->can(['documentoEtapa.destroy']) && !$banderaFinal)?'<th>Eliminar</th>':'';
                     $bodyHtml .= '<th>Descargar</th>
 		        				</thead>
 		        				<tbody>';
@@ -251,9 +251,10 @@ class EtapaEvaluativaController extends Controller {
 												<td>' . ($counter==0?'<b>':'') . $archivo->nombreArchivo . ($counter==0?'<b>':''). '</td>
 												<td>' . ($counter==0?'<b>':'') . $fecha->format('d/m/Y h:m:s A') . ($counter==0?'</b>':'') . '</td>';
 								if ($archivo->esArchivoActico == 1) {
-								    $bodyHtml .= (Auth::user()->can(['documentoEtapa.edit'])&& !$banderaFinal)?'<div class="col-4"><a class="btn btn-primary" href="' . url("/") . '/editDocumento/' . $id . '/' . $archivo->id_pdg_doc . '/' . $doc->id_cat_tpo_doc . '"><i class="fa fa-pencil"></i></a></div>':'';
+									$bodyHtml .= (Auth::user()->can(['documentoEtapa.edit','documentoEtapa.destroy'])&& !$banderaFinal)?'<td><div class = "row">':'';
+								    $bodyHtml .= (Auth::user()->can(['documentoEtapa.edit'])&& !$banderaFinal)?'<div class = "col-6"><a class="btn btn-primary" href="' . url("/") . '/editDocumento/' . $id . '/' . $archivo->id_pdg_doc . '/' . $doc->id_cat_tpo_doc . '"><i class="fa fa-pencil"></i></a></div>':'';
 								    $bodyHtml .= (Auth::user()->can(['documentoEtapa.destroy'])&& !$banderaFinal)?
-                                                '<div class = "col-4">
+                                                '<div class = "col-6">
                                                     <form method="POST" action="' . url("/") . '/documento/' . $archivo->id_pdg_doc . '" class="deleteButton formPost">
                                                         <input name="_method" value="DELETE" type="hidden">
                                                         <input class="form-control" name="etapa" value="' . $id . '" type="hidden">
@@ -262,7 +263,8 @@ class EtapaEvaluativaController extends Controller {
                                                         </div>
                                                     </form>
                                                 </div>':'';
-                                    $bodyHtml .=' <div class = "col-4">
+                                     $bodyHtml .= (Auth::user()->can(['documentoEtapa.edit','documentoEtapa.destroy'])&& !$banderaFinal)?'</div></td>':'';              
+                                    $bodyHtml .=' <td>
                                                     <form method="POST" action="' . url("/") . '/downloadDocumento" accept-charset="UTF-8" class ="formPost">
                                                         <div class="btn-group">
                                                             <input class="form-control" name="documento" value="' . $archivo->id_pdg_arc_doc . '" type="hidden">
@@ -270,13 +272,13 @@ class EtapaEvaluativaController extends Controller {
                                                             <button type="submit" class="btn btn-dark"><i class="fa fa-download"></i></button>
                                                         </div>
                                                     </form>
-                                                  </div>
-                                                </tr>';
+                                                  </td>';            
+                                    $bodyHtml .= '</tr>';
 								} else {
-									$bodyHtml .= (Auth::user()->can(['documentoEtapa.edit'])&& !$banderaFinal)?'<div></div>':'';
-                                    $bodyHtml .= (Auth::user()->can(['documentoEtapa.destroy'])&& !$banderaFinal)?'<div></div>':'';
+									$bodyHtml .= (Auth::user()->can(['documentoEtapa.edit'])&& !$banderaFinal)?'<td></td>':'';
+                                    $bodyHtml .= (Auth::user()->can(['documentoEtapa.destroy'])&& !$banderaFinal)?'<td></td>':'';
                                     $bodyHtml .= '
-                                                    <div class = "col-4">
+                                                    <td>
                                                         <form method="POST" action="' . url("/") . '/downloadDocumento" accept-charset="UTF-8" class ="formPost">
                                                             <div class="btn-group">
                                                                 <input class="form-control" name="documento" value="' . $archivo->id_pdg_arc_doc . '" type="hidden">
@@ -284,7 +286,7 @@ class EtapaEvaluativaController extends Controller {
                                                                 <button type="submit" class="btn btn-dark"><i class="fa fa-download"></i></button>
                                                             </div>
                                                         </form>
-                                                    </div>
+                                                    </td>
                                                 </tr>';
 								}
 								$counter++;
