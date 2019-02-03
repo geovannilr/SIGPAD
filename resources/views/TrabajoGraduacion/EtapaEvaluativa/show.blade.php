@@ -4,7 +4,7 @@
 @if(Session::has('message'))
       <script type="text/javascript">
         $( document ).ready(function() {
-          swal("", "{{Session::get('message')}}}", "success");
+          swal("", "{{Session::get('message')}}", "success");
       });
       </script>   
 @endif
