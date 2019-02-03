@@ -66,7 +66,7 @@
 </script>
 		<ol class="breadcrumb"  style="text-align: center; margin-top: 1em">
 	        <li class="breadcrumb-item">
-	          <h5><a href="{{ redirect()->getUrlGenerator()->previous() }}" style="margin-left: 0em"><i class="fa fa-arrow-left fa-lg" style="z-index: 1;margin-top: 0em;margin-right: 0.5em; color: black"></i></a>     CATEGORIAS DE TDG</h5>
+	          <h5><a href="{{ route('catCatalogo.index') }}" style="margin-left: 0em"><i class="fa fa-arrow-left fa-lg" style="z-index: 1;margin-top: 0em;margin-right: 0.5em; color: black"></i></a>     CATEGORIAS DE TDG</h5>
 	        </li>
 	        <li class="breadcrumb-item active">Listado de Categorías de Trabajo de Graduación</li>
 		</ol>
@@ -97,19 +97,24 @@
   				@foreach($categoriasTDG as $categoria)
 					<tr>
 						<td>{{ $categoria->nombre_cat_ctg_tra}}</td>
-           				@can('categoriaTDG.edit')
-                            @can('categoriaTDG.destroy')
-                        <td style="text-align: center;">
-  							<a class="btn " style="background-color:  #102359;color: white" href="{{route('categoriaTDG.edit',$categoria->id_cat_ctg_tra)}}"><i class="fa fa-pencil"></i></a>
+                        <td style="width: 160px">
+                            <div class="row">
+                                @can('categoriaTDG.edit')
+                                    <div class="col-6">
+                                        <a class="btn " style="background-color:  #102359;color: white" href="{{route('categoriaTDG.edit',$categoria->id_cat_ctg_tra)}}"><i class="fa fa-pencil"></i></a>
+                                    </div>
+                                @endcan
+                                    @can('categoriaTDG.destroy')
+                                    <div class="col-6">
+                                        {!! Form::open(['route'=>['categoriaTDG.destroy',$categoria->id_cat_ctg_tra],'method'=>'DELETE','class' => 'deleteButton']) !!}
+                                        <div class="btn-group">
+                                            <button type="submit" class="btn btn-danger"><i class="fa fa-trash"></i></button>
+                                        </div>
+                                        {!! Form:: close() !!}
+                                    </div>
+                                @endcan
+                            </div>
 
-  							{!! Form::open(['route'=>['categoriaTDG.destroy',$categoria->id_cat_ctg_tra],'method'=>'DELETE','class' => 'deleteButton']) !!}
-  						 		<div class="btn-group">
-  									<button type="submit" class="btn btn-danger"><i class="fa fa-trash"></i></button>
-  								</div>
-  							{!! Form:: close() !!}
-  						</td>
-                            @endcan
-                        @endcan
 					</tr>
 				@endforeach 
 				</tbody>

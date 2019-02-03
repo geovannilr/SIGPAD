@@ -184,7 +184,7 @@ class pdg_gru_grupoModel extends Model{
                                 gru.anio_pdg_gru = :anio
                         ) x
                     ".$where."
-                    ORDER BY x.numGrupo ASC, x.bLider DESC";
+                    ORDER BY x.idGru ASC, x.bLider DESC";
         if ($estado == 0 || $estado == 1 ) {
             $grupos = DB::select($query, array($anio,$estado));
         }elseif ($estado == 2) {

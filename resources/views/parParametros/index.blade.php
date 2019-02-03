@@ -11,7 +11,7 @@
 <script type="text/javascript">
 	$( document ).ready(function() {
 		 $('.deleteButton').on('submit',function(e){
-        if(!confirm('Estas seguro que deseas eliminar este aspecto?')){
+        if(!confirm('Estas seguro que deseas eliminar este Estado?')){
 
               e.preventDefault();
         	}
@@ -24,32 +24,32 @@
         dom: '<"top"l>frt<"bottom"Bip><"clear">',
         buttons: [
            {
-                extend: 'excelHtml5',
-                exportOptions: {
-                    columns: [ 0, 1]
-                },
-                title: 'Listado de aspectos'
-            },
+               extend: 'excelHtml5',
+               exportOptions: {
+                   columns: [ 0, 1,2]
+               },
+               title: 'Listado de parametros'
+           },
             {
                 extend: 'pdfHtml5',
                 exportOptions: {
-                    columns: [ 0, 1]
+                    columns: [ 0, 1,2]
                 },
-                title: 'Listado de aspectos'
+                title: 'Listado de parametros'
             },
-             {
+            {
                 extend: 'csvHtml5',
                 exportOptions: {
-                    columns: [ 0, 1]
+                    columns: [ 0, 1,2]
                 },
-                title: 'Listado de aspectos'
+                title: 'Listado de parametros'
             },
             {
                 extend: 'print',
                 exportOptions: {
-                    columns: [ 0, 1]
+                    columns: [ 0, 1,2]
                 },
-                title: 'Listado de aspectos'
+                title: 'Listado de parametros'
             }
 
 
@@ -66,7 +66,7 @@
 </script>
 		<ol class="breadcrumb"  style="text-align: center; margin-top: 1em">
 	        <li class="breadcrumb-item">
-	          <h5><a href="{{ route('catCatalogo.index') }}" style="margin-left: 0em"><i class="fa fa-arrow-left fa-lg" style="z-index: 1;margin-top: 0em;margin-right: 0.5em; color: black"></i></a>     Aspectos</h5>
+	          <h5><a href="{{ route('catCatalogo.index') }}" style="margin-left: 0em"><i class="fa fa-arrow-left fa-lg" style="z-index: 1;margin-top: 0em;margin-right: 0.5em; color: black"></i></a>     Parámetros</h5>
 	        </li>
 	        <li class="breadcrumb-item active">Listado</li>
 		</ol>
@@ -74,9 +74,9 @@
   <div class="col-sm-3"></div>
   <div class="col-sm-3"></div>
    <div class="col-sm-3"></div>
-  @can('pdgAspectos.create')
+  @can('parParametros.create')
     <div class="col-sm-3">
-      <a class="btn " href="{{route('pdgAspectos.create')}}" style="background-color: #DF1D20; color: white"><i class="fa fa-plus"></i> Nuevo aspecto</a>
+        <a class="btn " href="{{route('parParametros.create')}}" style="background-color: #DF1D20; color: white"><i class="fa fa-plus"></i> Nuevo Parámetro</a>
     </div>
   @endcan
   </div> 
@@ -86,35 +86,34 @@
   			<table class="table table-hover table-striped  display" id="listTable">
 
   				<thead>
-					<th>Nombre de aspecto</th>
-                    <th>Ponderación</th>
-                    <th>Etapa Evaluativa</th>
+                <th>Nombre parámetro</th>
+                <th>Valor</th>
+                <th>Tipo Parámetro</th>
 
-                    @can('pdgAspectos.destroy')
+                @can('parParametros.destroy')
                     <th style="text-align: center;">Acciones</th>
-                    @can('pdgAspectos.edit')
-
+                    @can('parParametros.edit')
                     @endcan
                     @endcan
 
                 </thead>
                 <tbody>
-                @foreach($pdgAspectos as $pdgAspecto)
-					<tr>
-						<td>{{ $pdgAspecto->nombre_pdg_asp}}</td>
-                        <td>{{ $pdgAspecto->ponderacion_pdg_asp}}</td>
-                        <td>{{ $pdgAspecto->catEtaEva->nombre_cat_eta_eva}}</td>
+                @foreach($parParametros as $parParametro)
+                    <tr>
+                        <td>{{ $parParametro->nombre_gen_par}}</td>
+                        <td>{{ $parParametro->valor_gen_par}}</td>
+                        <td>{{ $parParametro->tpoParametro->tipo_gen_tpo_par}}</td>
                         <td style="width: 160px">
                             <div class="row">
-                                @can('pdgAspectos.edit')
+                                @can('parParametros.edit')
                                     <div class="col-6">
-                                        <a class="btn " style="background-color: #102359;color: white" href="{{route('pdgAspectos.edit',$pdgAspecto->id_pdg_asp)}}"><i class="fa fa-pencil"></i></a>
+                                        <a class="btn " style="background-color: #102359;color: white" href="{{route('parParametros.edit',$parParametro->id_gen_par)}}"><i class="fa fa-pencil"></i></a>
                                     </div>
                                 @endcan
-                                    @can('pdgAspectos.destroy')
+                                    @can('parParametros.destroy')
                                     <div class="col-6">
-                                        {!! Form::open(['route'=>['pdgAspectos.destroy',$pdgAspecto->id_pdg_asp],'method'=>'DELETE','class' => 'deleteButton']) !!}
-                                        <div class="d-inline-block">
+                                        {!! Form::open(['route'=>['parParametros.destroy',$parParametro->id_gen_par],'method'=>'DELETE','class' => 'deleteButton']) !!}
+                                        <div class="btn-group">
                                             <button type="submit" class="btn btn-danger"><i class="fa fa-trash"></i></button>
                                         </div>
                                         {!! Form:: close() !!}
@@ -122,6 +121,7 @@
                                 @endcan
                             </div>
                         </td>
+
 					</tr>
 				@endforeach 
 				</tbody>

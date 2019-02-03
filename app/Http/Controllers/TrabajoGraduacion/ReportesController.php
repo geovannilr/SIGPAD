@@ -157,6 +157,7 @@ class ReportesController extends Controller{
         $title = self::REPORTES[3]." ".$anio;
         $title = str_replace("XYZ"," ".$nombre,$title);
         $datos = pdg_gru_grupoModel::getDetalleGrupos($anio,$estado);
+        //return view('TrabajoGraduacion.Reports.detalleGruposTdg',compact('datos', 'title'));
         $pdf = PDF::loadView('TrabajoGraduacion.Reports.detalleGruposTdg',compact('datos', 'title'));
         if ($tipo == 1) {
             return $pdf->stream($title.'.pdf');
