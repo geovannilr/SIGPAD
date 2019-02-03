@@ -359,26 +359,37 @@ class GestionDocenteController extends Controller
                   <option value="">Seleccione una Jornada</option>
                   <option value="1" selected="selected">Tiempo Completo</option>
                   <option value="2">Tiempo Parcial</option>
-                  <option value="3">Servicio Profesional</option>';
+                  <option value="3">Servicio Profesional</option>
+                  <option value="4">Asistente Técnico</option>';
        }else if($docente->tipoJornada == 2){
           $bodySelectJornada ='
                   <option value="">Seleccione una Jornada</option>
                   <option value="1">Tiempo Completo</option>
                   <option value="2" selected="selected">Tiempo Parcial</option>
-                  <option value="3">Servicio Profesional</option>';
+                  <option value="3">Servicio Profesional</option>
+                  <option value="4">Asistente Técnico</option>';
        }
        else if($docente->tipoJornada == 3){
           $bodySelectJornada ='
                   <option value="">Seleccione una Jornada</option>
                   <option value="1">Tiempo Completo</option>
                   <option value="2">Tiempo Parcial</option>
-                  <option value="3" selected="selected">Servicio Profesional</option>';
+                  <option value="3" selected="selected">Servicio Profesional</option>
+                   <option value="4">Asistente Técnico</option>';
+       }else if($docente->tipoJornada == 4){
+          $bodySelectJornada ='
+                  <option value="">Seleccione una Jornada</option>
+                  <option value="1">Tiempo Completo</option>
+                  <option value="2">Tiempo Parcial</option>
+                  <option value="3" selected="selected">Servicio Profesional</option>
+                   <option value="4" selected="selected">Asistente Técnico</option>';
        }else{
           $bodySelectJornada ='
                   <option value="">Seleccione una Jornada</option>
                   <option value="1">Tiempo Completo</option>
                   <option value="2">Tiempo Parcial</option>
-                  <option value="3">Servicio Profesional</option>';
+                  <option value="3">Servicio Profesional</option>
+                  <option value="4">Asistente Técnico</option>';
        }
 
        if ($docente->activo == 1) {
