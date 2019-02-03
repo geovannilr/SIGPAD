@@ -65,7 +65,7 @@ return [
     |
     */
 
-    'timezone' => 'America/El_Salvador',
+    'timezone' => 'America/Guatemala',
 
     /*
     |--------------------------------------------------------------------------

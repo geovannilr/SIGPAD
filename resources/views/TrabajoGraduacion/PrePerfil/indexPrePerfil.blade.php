@@ -120,6 +120,7 @@
 
           <thead>
           <th>Grupo</th>
+          <th>Líder</th>
           <th>Cant. de Pre-Perfiles Enviados</th>
           <th>Detalle de Grupo</th>
           <th>Detalle de Pre-Perfiles</th>
@@ -131,6 +132,7 @@
             @if($grupo->finalizo != 1)
               <tr>
                 <td>{{ $grupo->numero_pdg_gru }}</td>
+                <td>{{ $grupo->carnetLider }} - {{ $grupo->nombreLider }} </td>
                 <td>{{ $grupo->cantidadPrePerfiles }}</td>
                 <td style="text-align: center;">
                     <a class="btn btn-dark" href="#" onclick="getGrupo({{ $grupo->id_pdg_gru }});"><i class="fa fa-eye"></i></a>
