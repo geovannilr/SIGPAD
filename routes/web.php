@@ -195,3 +195,5 @@ Route::resource ('catTcolaborador','cat_tpo_col_pub_tipo_colaboradorController')
 Route::resource ('catCatalogo','gen_cat_catalogoController');
 Route::resource ('pdgAspectos','pdg_asp_aspectos_evaluativosController');
 Route::resource ('catCriterios','cat_cri_eva_criterio_evaluacionController');
+Route::resource ('parParametros','gen_par_parametrosController');
+

@@ -2,7 +2,7 @@
 @section('content')
 <ol class="breadcrumb" style="text-align: center; margin-top: 1em">
         <li class="breadcrumb-item">
-          <h5><a href="{{ redirect()->getUrlGenerator()->previous() }}" style="margin-left: 0em"><i class="fa fa-arrow-left fa-lg" style="z-index: 1;margin-top: 0em;margin-right: 0.5em; color: black"></i></a>     Nuevo Documento </h5>
+          <h5><a href="{{ route('publicacion.show',$publicacion->id_pub)}}" style="margin-left: 0em"><i class="fa fa-arrow-left fa-lg" style="z-index: 1;margin-top: 0em;margin-right: 0.5em; color: black"></i></a>     Nuevo Documento </h5>
         </li>
         <li class="breadcrumb-item active"><b>Publicación:</b> &nbsp;{{ $publicacion->codigo_pub }}&nbsp; - {{ $publicacion->titulo_pub }}</li>
 </ol>
@@ -12,7 +12,6 @@
             <img src="{!!asset('img/loading.gif')!!}" class="img-responsive" id="imgLoading">
           </div>
         </div>
-        
         @if ($errors->any())
           <div class="alert alert-danger">
               <ul>
