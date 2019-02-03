@@ -225,10 +225,13 @@ class EtapaEvaluativaController extends Controller {
 				foreach ($documentos as $doc) {
 					$tipoDocumento = $doc->id_cat_tpo_doc;
 					if(Auth::user()->can(['documentoEtapa.create']) && !$banderaFinal){
-                        $bodyHtml .= '
+                        $bodyHtml .= '<div class="row">
+			  						 <div class="col-sm-3"> </div>
+			  						 <div class="col-sm-3"></div>
+			  						 <div class="col-sm-3"></div>
 		    					<div class="col-sm-3">
-		    						<p>Nuevo <a class="btn btn-primary" href="' . url("/") . '/nuevoDocumento/' . $id . '/' . $doc->id_cat_tpo_doc . '"><i class="fa fa-plus"></i></a></p>
-	    						</div>';
+		    						<p><a class="btn" href="' . url("/") . '/nuevoDocumento/' . $id . '/' . $doc->id_cat_tpo_doc . '" style="background-color: #DF1D20; color: white"><i class="fa fa-plus"></i> Nuevo</a></p>
+	    						</div></div>';
                     }
 					$bodyHtml .= '<h2 class="text-center">Entregables de ' . $doc->nombre_pdg_tpo_doc . '</h2>';
 					$bodyHtml .= '<div class="table-responsive">';
