@@ -115,7 +115,7 @@ class DocumentoController extends Controller{
 	    	//obtenemos el campo file definido en el formulario
 	      	$file = $request->file('documento');
 	       //obtenemos el nombre del archivo
-	      	$nombre = "Grupo".$idGrupo."_".$anioGrupo."_".date('hms').$file->getClientOriginalName();
+	      	$nombre = "Grupo".$idGrupo."_".$anioGrupo."_".date('his').$file->getClientOriginalName();
 	       //indicamos que queremos guardar un nuevo archivo en el disco local
 	        Storage::disk('Uploads')->put($nombre, File::get($file));
 	        //movemos el archivo a la ubicación correspondiente segun grupo y años
@@ -125,7 +125,7 @@ class DocumentoController extends Controller{
 	        	$nuevaUbicacion=$anioGrupo.'/Grupo'.$correlativo.'/Etapas/'.$nombre;
 	        }
 	        Storage::disk('Uploads')->move($nombre, trim($nuevaUbicacion));
-	        $fecha=date('Y-m-d H:m:s');
+	        $fecha=date('Y-m-d H:i:s');
 	        $path= public_path().$_ENV['PATH_UPLOADS'];
 	        //cambiamos a 0 el documento que esta activo actualmente de ese tipo
            $ultimoDocumentoInsertado = pdg_doc_documentoModel::where('id_cat_tpo_doc', $request['tipoDocumento'])
@@ -177,7 +177,7 @@ class DocumentoController extends Controller{
 	    	//obtenemos el campo file definido en el formulario
 	      	$file = $request->file('documento');
 	       //obtenemos el nombre del archivo
-	      	$nombre = "Grupo".$idGrupo."_".$anioGrupo."_".date('hms').$file->getClientOriginalName();
+	      	$nombre = "Grupo".$idGrupo."_".$anioGrupo."_".date('his').$file->getClientOriginalName();
 	       //indicamos que queremos guardar un nuevo archivo en el disco local
 	        Storage::disk('Uploads')->put($nombre, File::get($file));
 	        //movemos el archivo a la ubicación correspondiente segun grupo y años
@@ -187,7 +187,7 @@ class DocumentoController extends Controller{
 	        	$nuevaUbicacion=$anioGrupo.'/Grupo'.$correlativo.'/Etapas/'.$nombre;
 	        }
 	        Storage::disk('Uploads')->move($nombre, trim($nuevaUbicacion));
-	        $fecha=date('Y-m-d H:m:s');
+	        $fecha=date('Y-m-d H:I:s');
 	        $path= public_path().$_ENV['PATH_UPLOADS'];
            	//traemos el documento a modificar
            	$documento = pdg_doc_documentoModel::find($id);

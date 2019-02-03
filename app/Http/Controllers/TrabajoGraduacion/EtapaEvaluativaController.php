@@ -249,7 +249,7 @@ class EtapaEvaluativaController extends Controller {
 							if ($tipoDocumento == $archivo->id_cat_tpo_doc) {
 								$bodyHtml .= '<tr>
 												<td>' . ($counter==0?'<b>':'') . $archivo->nombreArchivo . ($counter==0?'<b>':''). '</td>
-												<td>' . ($counter==0?'<b>':'') . $fecha->format('d/m/Y h:m:s A') . ($counter==0?'</b>':'') . '</td>';
+												<td>' . ($counter==0?'<b>':'') . $fecha->format('d/m/Y h:i:s A') . ($counter==0?'</b>':'') . '</td>';
 								if ($archivo->esArchivoActico == 1) {
 									$bodyHtml .= (Auth::user()->can(['documentoEtapa.edit','documentoEtapa.destroy'])&& !$banderaFinal)?'<td><div class = "row">':'';
 								    $bodyHtml .= (Auth::user()->can(['documentoEtapa.edit'])&& !$banderaFinal)?'<div class = "col-6"><a class="btn btn-primary" href="' . url("/") . '/editDocumento/' . $id . '/' . $archivo->id_pdg_doc . '/' . $doc->id_cat_tpo_doc . '"><i class="fa fa-pencil"></i></a></div>':'';
@@ -275,8 +275,9 @@ class EtapaEvaluativaController extends Controller {
                                                   </td>';            
                                     $bodyHtml .= '</tr>';
 								} else {
-									$bodyHtml .= (Auth::user()->can(['documentoEtapa.edit'])&& !$banderaFinal)?'<td></td>':'';
-                                    $bodyHtml .= (Auth::user()->can(['documentoEtapa.destroy'])&& !$banderaFinal)?'<td></td>':'';
+									//$bodyHtml .= (Auth::user()->can(['documentoEtapa.edit'])&& !$banderaFinal)?'<div class = "col-6"></div>':'';
+                                    //$bodyHtml .= (Auth::user()->can(['documentoEtapa.destroy'])&& !$banderaFinal)?'<div class="col-6"></div>':'';
+                                     $bodyHtml .= (Auth::user()->can(['documentoEtapa.edit','documentoEtapa.destroy'])&& !$banderaFinal)?'<td></td>':''; 
                                     $bodyHtml .= '
                                                     <td>
                                                         <form method="POST" action="' . url("/") . '/downloadDocumento" accept-charset="UTF-8" class ="formPost">
