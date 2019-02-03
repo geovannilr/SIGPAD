@@ -129,6 +129,7 @@ class DocumentoController extends Controller{
 	        $path= public_path().$_ENV['PATH_UPLOADS'];
 	        //cambiamos a 0 el documento que esta activo actualmente de ese tipo
            $ultimoDocumentoInsertado = pdg_doc_documentoModel::where('id_cat_tpo_doc', $request['tipoDocumento'])
+                                ->where('id_cat_eta_eva_pdg_doc',$request['etapa'])
           						->where('id_pdg_gru', $idGrupo)
           						->orderBy('id_pdg_doc', 'desc')
           						->first();
@@ -147,6 +148,7 @@ class DocumentoController extends Controller{
                 'id_pdg_gru'   				     => $idGrupo,
                 'id_cat_tpo_doc'       			 => $request['tipoDocumento'],
                 'fecha_creacion_pdg_doc'       	 => $fecha
+                ,'id_cat_eta_eva_pdg_doc'        => $request['etapa']
             ]); 
 
             $lastIdArchivo = pdg_arc_doc_archivo_documentoModel::create

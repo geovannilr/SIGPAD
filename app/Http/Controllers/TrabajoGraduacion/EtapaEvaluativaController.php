@@ -216,9 +216,10 @@ class EtapaEvaluativaController extends Controller {
 			if (sizeof($documentos) == 0) {
 				// NO CONFIGURADOS LOS DOCUMENTOS QUE SE VAN A REQUERIR EN UNA ETAPA EN ESPECIFICO
 				$documentos = "NA";
-				$bodyHtml = '<p class="text-center">NO SE HAN REGISTRADO DOCUMENTOS ASOCIADOS A ESTA ETAPA EVALUATIVA, CONSULTE AL ADMINISTRADOR<p>';
-				$nombreEtapa = "";
-				$ponderacion = "";
+                $justificacionDocumentos = ($trabajoGraduacion->id_cat_tpo_tra_gra!=1)?"ASESOR DEBE CONFIGURAR DOCUMENTOS REQUERIDOS PARA LA ETAPA":"NO SE HAN REGISTRADO DOCUMENTOS ASOCIADOS A ESTA ETAPA EVALUATIVA, CONSULTE AL ADMINISTRADOR";
+                $bodyHtml = '<p class="text-center text-danger">'.$justificacionDocumentos.'<p>';
+                $nombreEtapa = $etaparecibida->nombre_cat_eta_eva;
+                $ponderacion = $etaparecibida->ponderacion_cat_eta_eva;
 			} else {
 				$nombreEtapa = $documentos[0]->nombre_cat_eta_eva;
 				$ponderacion = $documentos[0]->ponderacion_cat_eta_eva . '%';
@@ -303,7 +304,7 @@ class EtapaEvaluativaController extends Controller {
 				}
 			}
 
-			$configura = ($trabajoGraduacion->id_cat_tpo_tra_gra!=1)&&(sizeof($documentos) != 0);
+            $configura = ($trabajoGraduacion->id_cat_tpo_tra_gra!=1)&&($documentos == "NA");
 			return view('TrabajoGraduacion.EtapaEvaluativa.show', compact('bodyHtml', 'nombreEtapa', 'ponderacion', 'id','idGrupo','actual','configura'));
 			//return $bodyHtml;
 		
@@ -527,8 +528,8 @@ class EtapaEvaluativaController extends Controller {
         }else{
             $msg = "No puede aprobar esta etapa, no es la etapa actual.";
         }
-        Session::flash($msgType,$msg);
-        return Redirect::to('detalleEtapa/'.$idEtapa.'/'.$idGrupo);
+//        Session::flash($msgType,$msg);
+        return Redirect::to('detalleEtapa/'.$idEtapa.'/'.$idGrupo)->with([$msgType=>$msg]);
     }
 
     public function dataAprbEta($idGrupo,$idEtapa){
@@ -541,15 +542,15 @@ class EtapaEvaluativaController extends Controller {
 
         if(!empty($etapa->id_cat_eta_eva)){
             if($etapa->id_cat_eta_eva!=999){//Valor etapa de cierre
-                $cantArch = pdg_eta_eva_tra_etapa_trabajoModel::contarArchivos($traGra->id_pdg_tra_gra,$idEtapa);
+                $cantArchValid = self::validarArchivosSubidos($traGra->id_pdg_tra_gra,$idEtapa);
                 if($etapaSig!=null){
                     $coinciden = (intval($idEtapa) === $etapa->id_cat_eta_eva);
                     $message = !$coinciden ? "No puede aprobar esta etapa.<br>El proceso se encuentra en <b>".$etapa->nombre_cat_eta_eva."</b>, verifique el estado de dicha etapa primero.":
-                        ($cantArch>0 ? "Aprobar esta etapa, habilitará la subida de archivos, calficaciones y configuraciones de la siguiente etapa: <b>".$etapaSig->nombre_cat_eta_eva.".</b><br>¿Desea continuar?"
-                                : "<i>Para poder aprobar la etapa, el grupo debe subir al menos un documento.</i>");
-                    $coinciden = $coinciden&&$cantArch>0;
+                        ($cantArchValid ? "Aprobar esta etapa, habilitará la subida de archivos, calficaciones y configuraciones de la siguiente etapa: <b>".$etapaSig->nombre_cat_eta_eva.".</b><br>¿Desea continuar?"
+                                : "<i>Para poder aprobar la etapa, el grupo debe subir al menos un archivo por tipo de documento.</i>");
+                    $coinciden = $coinciden&&$cantArchValid;
                 }else{
-                    $coinciden = $cantArch>0;
+                    $coinciden = (intval($idEtapa) === $etapa->id_cat_eta_eva)&&$cantArchValid;
                     $message = $coinciden?"Aprobar esta etapa habilitará la etapa de <b>Cierre de Trabajo de Graduación</b>, los estudiantes podrán cargar los documentos requeridos para la Biblioteca de Trabajos de Graduación<br>".
                         "<i>Tenga en cuenta que tiene que revisar y aprobar esos documentos para dar por finalizado el Proceso de Trabajo de Graduación.</i>":"<i>Para poder aprobar la etapa, el grupo debe subir al menos un documento.</i>";
                 }
@@ -576,5 +577,25 @@ class EtapaEvaluativaController extends Controller {
             Session::flash('error','El documento no se encuentra disponible , es posible que haya sido  borrado');
             return view('PerfilDocente.create');
         }
+    }
+
+    public static function validarArchivosSubidos($idTraGra,$idEtapa){
+	    $isValid = true;
+	    try{
+            $archivos = pdg_eta_eva_tra_etapa_trabajoModel::contarArchivosPorEtapa($idTraGra,$idEtapa);
+            if(!empty($archivos)){
+                foreach ($archivos as $archivo){
+                    if($archivo->total==0){
+                        $isValid = false;
+                        break;
+                    }
+                }
+            }else{
+                $isValid = false;
+            }
+        }catch (\Exception $e){
+            $isValid = false;
+        }
+        return $isValid;
     }
 }

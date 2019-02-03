@@ -41,4 +41,21 @@ class pdg_eta_eva_tra_etapa_trabajoModel extends Model
         );
         return $cantidad[0]->cantidad;
     }
+
+    public static function contarArchivosPorEtapa($idTraGra,$idEtapa){
+        $query = "  select 
+                        eta.id_tpo_doc, count(docs.id_pdg_doc) as total
+                    from
+                        pdg_eta_eva_tra_etapa_trabajo eta
+                        inner join pdg_tra_gra_trabajo_graduacion tragra on tragra.id_pdg_tra_gra = eta.id_pdg_tra_gra
+                        inner join cat_tpo_doc_tipo_documento tpd on eta.id_tpo_doc=tpd.id_cat_tpo_doc
+                        left join pdg_doc_documento docs on docs.id_cat_tpo_doc=tpd.id_cat_tpo_doc 
+                            and docs.id_pdg_gru = tragra.id_pdg_gru and docs.id_cat_eta_eva_pdg_doc = eta.id_cat_eta_eva
+                    where
+                        eta.id_cat_eta_eva = :idEtapa
+                        and eta.id_pdg_tra_gra = :idTraGra
+                    group by eta.id_tpo_doc";
+        $archivos = DB::select($query,array($idEtapa,$idTraGra));
+        return $archivos;
+    }
 }

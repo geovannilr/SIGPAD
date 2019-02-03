@@ -14,5 +14,6 @@ class pdg_doc_documentoModel extends Model{
 			'id_pdg_gru',
 			'id_cat_tpo_doc',
 			'fecha_creacion_pdg_doc'
+            ,'id_cat_eta_eva_pdg_doc'
 		];
 }

@@ -1,7 +1,6 @@
 function calificarEtapa(idGrupo,idEtapa){
     var tkn = getCurrentTkn();
     var url = getCurrentUrl()+'/calificaEtapa';
-    console.log(idGrupo+' etapa:'+idEtapa+' tkn:'+tkn);
     post_to_url(url,{grupo:idGrupo,etapa:idEtapa,_token:tkn},'POST');
 }
 function aprobarEtapaFrm(idGrupo, idEtapa) {
@@ -14,7 +13,6 @@ function getDataDialogoAprobar(idGrupo,idEtapa) {
         type:'GET',
         url: url,
         success:function(data){
-            console.log(data);
             setDialogoAprobar(data);
         },
         error : function(xhr, status) {
