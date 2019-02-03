@@ -97,19 +97,24 @@
   				@foreach($categoriasTDG as $categoria)
 					<tr>
 						<td>{{ $categoria->nombre_cat_ctg_tra}}</td>
-           				@can('categoriaTDG.edit')
-                            @can('categoriaTDG.destroy')
-                        <td style="text-align: center;">
-  							<a class="btn " style="background-color:  #102359;color: white" href="{{route('categoriaTDG.edit',$categoria->id_cat_ctg_tra)}}"><i class="fa fa-pencil"></i></a>
+                        <td style="width: 160px">
+                            <div class="row">
+                                @can('categoriaTDG.edit')
+                                    <div class="col-6">
+                                        <a class="btn " style="background-color:  #102359;color: white" href="{{route('categoriaTDG.edit',$categoria->id_cat_ctg_tra)}}"><i class="fa fa-pencil"></i></a>
+                                    </div>
+                                @endcan
+                                    @can('categoriaTDG.destroy')
+                                    <div class="col-6">
+                                        {!! Form::open(['route'=>['categoriaTDG.destroy',$categoria->id_cat_ctg_tra],'method'=>'DELETE','class' => 'deleteButton']) !!}
+                                        <div class="btn-group">
+                                            <button type="submit" class="btn btn-danger"><i class="fa fa-trash"></i></button>
+                                        </div>
+                                        {!! Form:: close() !!}
+                                    </div>
+                                @endcan
+                            </div>
 
-  							{!! Form::open(['route'=>['categoriaTDG.destroy',$categoria->id_cat_ctg_tra],'method'=>'DELETE','class' => 'deleteButton']) !!}
-  						 		<div class="btn-group">
-  									<button type="submit" class="btn btn-danger"><i class="fa fa-trash"></i></button>
-  								</div>
-  							{!! Form:: close() !!}
-  						</td>
-                            @endcan
-                        @endcan
 					</tr>
 				@endforeach 
 				</tbody>
