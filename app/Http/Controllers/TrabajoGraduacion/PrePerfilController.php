@@ -58,7 +58,7 @@ class PrePerfilController extends Controller
                         $prePerfiles =pdg_ppe_pre_perfilModel::where('id_pdg_gru', '=',$idGrupo)->get();
                         $numero=$miGrupo->numero_pdg_gru;
                         $tribunal = pdg_tri_gru_tribunal_grupoModel::getTribunalData($idGrupo);
-                        if(empty($tribunal)){
+                        if(empty($tribunal[0])){
                             $tribunal="NA";
                         }
                         return view('TrabajoGraduacion.PrePerfil.index',compact('prePerfiles','numero','tribunal'));
@@ -93,7 +93,7 @@ class PrePerfilController extends Controller
             }
                 //VERIFICAMOS EL ROL
             $tribunal = pdg_tri_gru_tribunal_grupoModel::getTribunalData($id);
-            if(empty($tribunal)){
+            if(empty($tribunal[0])){
                 $tribunal="NA";
             }
                 $prePerfiles =pdg_ppe_pre_perfilModel::where('id_pdg_gru', '=',$id)->get();

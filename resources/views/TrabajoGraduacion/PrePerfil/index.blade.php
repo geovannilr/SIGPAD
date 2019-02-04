@@ -287,6 +287,7 @@
 				<table class='table table-hover table-striped  display' id='tblTribunal'>
 					<thead><th>Nombre</th><th>Rol</th><th>Contacto</th></thead>
 					<tbody>
+                    @if($tribunal!="NA")
 					@foreach($tribunal as $trib)
 						<tr>
 							<td>{{$trib->name}}</td>
@@ -294,6 +295,9 @@
 							<td>{{$trib->email}}</td>
 						</tr>
 					@endforeach
+                    @else
+                        <tr><td colspan="3">No se ha configurado tribunal evaluador</td></tr>
+                    @endif
 					</tbody>
 				</table>
 			</div>
