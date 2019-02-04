@@ -73,6 +73,15 @@ class ReportesController extends Controller{
     }
 
     public function asignacionesPorDocente(Request $request){
+        $validatedData = $request->validate([
+            'anio' => 'required',
+            'estado' => 'required',
+            'tipo'   => 'required'
+        ], [
+            'anio.required' => 'Debe seleccionar una año',
+            'estado.required' => 'Debe seleccionar un estado de la lista.',
+            'tipo.required' => 'Debe seleccionar un tipo de reporte.'
+        ]);
         $anio = $request['anio'];
         $estado = $request['estado'];
         $tipo = $request['tipo'];
@@ -107,6 +116,13 @@ class ReportesController extends Controller{
     }
 
     public function estadoGruposEtapa(Request $request){
+        $validatedData = $request->validate([
+            'estado' => 'required',
+            'tipo'   => 'required'
+        ], [
+            'estado.required' => 'Debe seleccionar un estado de la lista.',
+            'tipo.required' => 'Debe seleccionar un tipo de reporte.'
+        ]);
         $anio = $request['anio'];
         $estado = $request['estado'];
         $tipo = $request['tipo'];
@@ -140,6 +156,15 @@ class ReportesController extends Controller{
     }
 
     public function detalleGruposTdg(Request $request){
+        $validatedData = $request->validate([
+            'anio' => 'required',
+            'estado' => 'required',
+            'tipo'   => 'required'
+        ], [
+            'anio.required' => 'Debe seleccionar una año',
+            'estado.required' => 'Debe seleccionar un estado de la lista.',
+            'tipo.required' => 'Debe seleccionar un tipo de reporte.'
+        ]);
         $anio = $request['anio'];
         $estado = $request['estado'];
         $tipo = $request['tipo'];
@@ -194,6 +219,13 @@ class ReportesController extends Controller{
     }
 
     public function consolidadoNotas(Request $request){
+        $validatedData = $request->validate([
+            'grupo' => 'required',
+            'tipo'   => 'required'
+        ], [
+            'grupo.required' => 'Debe seleccionar un grupo de la lista',
+            'tipo.required' => 'Debe seleccionar un tipo de reporte.'
+        ]);
         $tipo = $request['tipo'];
         $grupo = $request['grupo'];
         $title = self::REPORTES[5];
