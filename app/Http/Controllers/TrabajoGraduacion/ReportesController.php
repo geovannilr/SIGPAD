@@ -38,6 +38,15 @@ class ReportesController extends Controller{
         return view('TrabajoGraduacion.Reports.Create.createTribunalPorGrupo',compact('title'));
     }
     public function tribunalPorGrupo(Request $request){
+        $validatedData = $request->validate([
+            'anio' => 'required',
+            'estado' => 'required',
+            'tipo'   => 'required'
+        ], [
+            'anio.required' => 'Debe seleccionar una año',
+            'estado.required' => 'Debe seleccionar un estado de la lista.',
+            'tipo.required' => 'Debe seleccionar un tipo de reporte.'
+        ]);
         $anio = $request['anio'];
         $estado = $request['estado'];
         $tipo = $request['tipo'];
