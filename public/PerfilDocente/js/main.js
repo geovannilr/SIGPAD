@@ -7,7 +7,7 @@ function getHistorialAcademico(idDcn){
            data:{'docente':idDcn},
            success:function(data){
             //console.log(data.length);
-            if (data.length == 1 && data[0]['id_dcn_his'] == '') {
+            if (data.length == 0 ) {
                 $("#seccionHistorial").append("<b>NO SE HAN REGISTRADO DATOS DE EXPERIENCIA ACADEMICA</b>");
              }else{
                 var html = '<table class="table table-striped"><thead><tr><th scope="col">#</th><th scope="col">Cargo</th><th scope="col">Código</th><th scope="col">Materia</th><th scope="col">Ciclo</th><th scope="col">Año</th> </tr></thead><tbody>';
