@@ -7,21 +7,26 @@ function getHistorialAcademico(idDcn){
            data:{'docente':idDcn},
            success:function(data){
             //console.log(data.length);
-             var html = '<table class="table table-striped"><thead><tr><th scope="col">#</th><th scope="col">Cargo</th><th scope="col">Código</th><th scope="col">Materia</th><th scope="col">Ciclo</th><th scope="col">Año</th> </tr></thead><tbody>';
+            if (data.length == 1 && data[0]['id_dcn_his'] == '') {
+                $("#seccionHistorial").append("<b>NO SE HAN REGISTRADO DATOS DE EXPERIENCIA ACADEMICA</b>");
+             }else{
+                var html = '<table class="table table-striped"><thead><tr><th scope="col">#</th><th scope="col">Cargo</th><th scope="col">Código</th><th scope="col">Materia</th><th scope="col">Ciclo</th><th scope="col">Año</th> </tr></thead><tbody>';
  
-             for (var i = 0;i<data.length;i++) {
-              body="";
-              body+='<tr><th scope="row">'+(i+1)+'</th>';
-              body+='<td>'+data[i]['Cargo']+'</td>';
-              body+='<td>'+data[i]['Codigo']+'</td>';
-              body+='<td>'+data[i]['Materia']+'</td>';
-              body+='<td>'+data[i]['Ciclo']+'</td>';
-              body+='<td>'+data[i]['anio']+'</td></tr>';
-              html+=body;
-             }
+               for (var i = 0;i<data.length;i++) {
+                body="";
+                body+='<tr><th scope="row">'+(i+1)+'</th>';
+                body+='<td>'+data[i]['Cargo']+'</td>';
+                body+='<td>'+data[i]['Codigo']+'</td>';
+                body+='<td>'+data[i]['Materia']+'</td>';
+                body+='<td>'+data[i]['Ciclo']+'</td>';
+                body+='<td>'+data[i]['anio']+'</td></tr>';
+                html+=body;
+               }
 
-             html+=' </tbody></table>';
-             $("#seccionHistorial").append(html)
+               html+=' </tbody></table>';
+               $("#seccionHistorial").append(html)
+             }
+             
 
            },
         error : function(xhr, status) {
@@ -39,18 +44,23 @@ function getExperienciaDocente(idDcn){
            success:function(data){
             //console.log(data.length);
              var html = "";
-             for (var i = 0;i<data.length;i++) {
-              html="";
-              html+='<div class="resume-item d-flex flex-column flex-md-row mb-5">';
-              html+='<div class="resume-content mr-auto">';
-              html+='<h3 class="mb-0">'+data[i]['lugar_trabajo_dcn_exp']+'</h3>';
-              html+='<div class="subheading mb-3">'+data[i]['idiomaExper']+'</div>';
-              html+='<div>'+data[i]['descripcionExperiencia']+'</div>';
-              //html+='<p>GPA: 3.23</p>';
-              html+='</div><div class="resume-date text-md-right">';
-              html+='<span class="text-primary">Período '+data[i]['anio_inicio_dcn_exp']+' - '+data[i]['anio_fin_dcn_exp']+'</span> </div></div>';
-              $("#seccionExperiencia").append(html);
+             if (data.length == 1 && data[0]['id_dcn_exp'] == '') {
+                $("#seccionExperiencia").append("<b>NO SE HAN REGISTRADO DATOS DE EXPERIENCIA LABORAL</b>");
+             }else{
+                for (var i = 0;i<data.length;i++) {
+                html="";
+                html+='<div class="resume-item d-flex flex-column flex-md-row mb-5">';
+                html+='<div class="resume-content mr-auto">';
+                html+='<h3 class="mb-0">'+data[i]['lugar_trabajo_dcn_exp']+'</h3>';
+                html+='<div class="subheading mb-3">'+data[i]['idiomaExper']+'</div>';
+                html+='<div>'+data[i]['descripcionExperiencia']+'</div>';
+                //html+='<p>GPA: 3.23</p>';
+                html+='</div><div class="resume-date text-md-right">';
+                html+='<span class="text-primary">Período '+data[i]['anio_inicio_dcn_exp']+' - '+data[i]['anio_fin_dcn_exp']+'</span> </div></div>';
+                $("#seccionExperiencia").append(html);
+               }
              }
+             
 
            },
         error : function(xhr, status) {
@@ -67,20 +77,25 @@ function getCertificacionesDocente(idDcn){
            data:{'docente':idDcn},
            success:function(data){
             //console.log(data.length);
-             var html = '<table class="table table-striped"><thead><tr><th scope="col">#</th><th scope="col">Nombre</th><th scope="col">Año</th><th scope="col">Institución</th><th scope="col">Idioma</th></tr></thead><tbody>';
+            if (data.length == 1 && data[0]['id_dcn_cer'] == '') {
+                $("#seccionCertificaciones").append("<b>NO SE HAN REGISTRADO  CERTIFICACIONES</b>");
+             }else{
+                var html = '<table class="table table-striped"><thead><tr><th scope="col">#</th><th scope="col">Nombre</th><th scope="col">Año</th><th scope="col">Institución</th><th scope="col">Idioma</th></tr></thead><tbody>';
  
-             for (var i = 0;i<data.length;i++) {
-              body="";
-              body+='<tr><th scope="row">'+(i+1)+'</th>';
-              body+='<td>'+data[i]['nombre_dcn_cer']+'</td>';
-              body+='<td>'+data[i]['anio_expedicion_dcn_cer']+'</td>';
-              body+='<td>'+data[i]['institucion_dcn_cer']+'</td>';
-              body+='<td>'+data[i]['idiomaCert']+'</td>';
-              html+=body;
-             }
+               for (var i = 0;i<data.length;i++) {
+                body="";
+                body+='<tr><th scope="row">'+(i+1)+'</th>';
+                body+='<td>'+data[i]['nombre_dcn_cer']+'</td>';
+                body+='<td>'+data[i]['anio_expedicion_dcn_cer']+'</td>';
+                body+='<td>'+data[i]['institucion_dcn_cer']+'</td>';
+                body+='<td>'+data[i]['idiomaCert']+'</td>';
+                html+=body;
+               }
 
              html+=' </tbody></table>';
              $("#seccionCertificaciones").append(html)
+             }
+             
 
            },
         error : function(xhr, status) {
@@ -97,15 +112,20 @@ function getSkillsDocente(idDcn){
            data:{'docente':idDcn},
            success:function(data){
             //console.log(data.length);
-             var html = '<ul class="fa-ul mb-0">';
-             for (var i = 0;i<data.length;i++) {
-              body="";
-              body+='<li><i class="fa-li fa fa-check"></i>'+data[i]['nombre_cat_ski']+' - '+data[i]['Nivel']+'</li>';
-              html+=body;
-             }
+            if (data.length == 1 && data[0]['id_cat_ski'] == '') {
+                $("#seccionSkills").append("<b>NO SE HAN REGISTRADO HABILIDADES</b>");
+             }else{
+                var html = '<ul class="fa-ul mb-0">';
+               for (var i = 0;i<data.length;i++) {
+                body="";
+                body+='<li><i class="fa-li fa fa-check"></i>'+data[i]['nombre_cat_ski']+' - '+data[i]['Nivel']+'</li>';
+                html+=body;
+               }
 
-             html+='</ul>';
-             $("#seccionSkills").append(html)
+               html+='</ul>';
+               $("#seccionSkills").append(html)
+             }
+             
 
            },
         error : function(xhr, status) {

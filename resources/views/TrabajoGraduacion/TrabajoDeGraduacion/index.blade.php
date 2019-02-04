@@ -36,12 +36,16 @@
           <li class="breadcrumb-item active">Grupo {{$numero}} </li>
     </ol>
     <h3 class="text-center">{{strtoupper($tema)}}</h3>
+    @if($estadoFinalizado == 1)
+            <h5 class="text-center"><a href="#" class="badge badge-success">TRABAJO DE GRADUACION FINALIZADO</a></h5> 
+        
+    @endif
       <br>
       <br>
       Progreso
       <div class="progress">
         <div id="progressBarDiv" class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: {{$avance}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
-            {{$avance>100.00?100.00:$avance}}%
+          {{$avance>100.00?100.00:$avance}}%
         </div>
       </div>
       <hr>

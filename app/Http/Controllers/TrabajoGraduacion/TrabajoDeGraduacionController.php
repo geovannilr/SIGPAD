@@ -42,6 +42,7 @@ class TrabajoDeGraduacionController extends Controller{
             }elseif (Auth::user()->isRole('estudiante')) {
                 $estudiante = new gen_EstudianteModel();
                 $idGrupo = $estudiante->getIdGrupo($userLogin->user);
+                $estadoFinalizado = pdg_gru_grupoModel::getEstadoFinalizadoiGrupo($idGrupo);
                 if ($idGrupo != 'NA'){
                     $grupo=self::verificarGrupo($userLogin->user)->getData();
                     $estudiantes=json_decode($grupo->msg->estudiantes);
@@ -70,7 +71,7 @@ class TrabajoDeGraduacionController extends Controller{
                         $actual = self::getIdEtapaActual($traGra->id_pdg_tra_gra);
                         $idPublicacion = pub_publicacionModel::getIdPublicacion($idGrupo);
 
-                        return view('TrabajoGraduacion.TrabajoDeGraduacion.index',compact('numero','estudiantes','tribunal','etapas','tema','idGrupo','avance','actual','idPublicacion'));
+                        return view('TrabajoGraduacion.TrabajoDeGraduacion.index',compact('numero','estudiantes','tribunal','etapas','tema','idGrupo','avance','actual','idPublicacion','estadoFinalizado'));
                     }else{
                         //EL GRUPO AUN NO HA SIDO APROBADO
                     Session::flash('message-error', 'Tu grupo de trabajo de graduación aún no ha sido aprobado');
@@ -112,6 +113,7 @@ class TrabajoDeGraduacionController extends Controller{
         if (empty($grupo->id_pdg_gru)) {
             return redirect("/");
         }
+        $estadoFinalizado = pdg_gru_grupoModel::getEstadoFinalizadoiGrupo($idGrupo);
         $numero=$grupo->numero_pdg_gru;
         $tribunal = pdg_tri_gru_tribunal_grupoModel::getTribunalData($idGrupo);
         if(empty($tribunal)){
@@ -129,7 +131,7 @@ class TrabajoDeGraduacionController extends Controller{
 
         if(!empty($tema)){
             $idPublicacion = pub_publicacionModel::getIdPublicacion($idGrupo);
-            return view('TrabajoGraduacion.TrabajoDeGraduacion.index',compact('numero','estudiantesGrupo','tribunal','etapas','tema','idGrupo','avance','actual','idPublicacion'));
+            return view('TrabajoGraduacion.TrabajoDeGraduacion.index',compact('numero','estudiantesGrupo','tribunal','etapas','tema','idGrupo','avance','actual','idPublicacion','estadoFinalizado'));
         }else{
             //Session::flash('message-error', 'El grupo seleccionado aún no ha empezado su proceso de trabajo de graduación');
             //return redirect()->route('listadoGrupos');
