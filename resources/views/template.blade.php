@@ -138,7 +138,7 @@
           <li class="nav-item" data-toggle="tooltip" data-placement="right" title="publicaciones">
                 <a class="nav-link nav-link-collapse collapsed"  data-toggle="collapse" href="#collapsePublicaciones" data-parent="#exampleAccordion" style="color: #ffffff; font-weight: bold; background-color: #DF1D20; margin-top: 20px"  >
                   <i class="fa fa-book"></i>
-                  <span class="nav-link-text">Biblioteca de Tesis</span>
+                  <span class="nav-link-text">Biblioteca de Trabajos de Graduación</span>
                 </a>
 
                  <ul class="sidenav-second-level collapse" id="collapsePublicaciones">
@@ -146,7 +146,7 @@
                         <li>
                           <a class="nav-link" href="{{route('publicacion.index')}}" style="color: #ffffff">
                             <i class="fa fa-file-text"></i>
-                            <span class="nav-link-text">Historico de Tesis</span>
+                            <span class="nav-link-text">Histórico de Publicaciones</span>
                           </a>  
                         </li>
                         <li>
