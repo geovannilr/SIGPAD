@@ -39,6 +39,13 @@ class pdg_dcn_docenteModel extends Model
      * Retorna: Lista de docentes que no han sido asignados al tribunal de un grupo
     */
     public static function getDocentesDisponibles($id){
+        $coordinadores = self::getDocentesCoordinadores();
+        $arrayCoordinadores = array();
+        if(sizeof($coordinadores)!=0){
+            foreach ($coordinadores as $coordinador){
+                $arrayCoordinadores [] = $coordinador -> id_pdg_dcn;
+            }
+        }
         $tribunal = pdg_tri_gru_tribunal_grupoModel::getTribunalData($id);
         $array=array();
         if (sizeof($tribunal) != 0) {
@@ -60,6 +67,7 @@ class pdg_dcn_docenteModel extends Model
         ->leftJoin('pdg_tri_gru_tribunal_grupo','pdg_tri_gru_tribunal_grupo.id_pdg_dcn','=','pdg_dcn_docente.id_pdg_dcn')
         ->where('pdg_dcn_docente.activo','=',1)
         ->whereNotIn('pdg_dcn_docente.id_pdg_dcn',$array)
+        ->whereNotIn('pdg_dcn_docente.id_pdg_dcn',$arrayCoordinadores)
         //->whereNotIn('pdg_tri_gru_tribunal_grupo.id_pdg_gru',)
         ->select('gen_usuario.name','gen_usuario.email','pdg_dcn_docente.id_pdg_dcn',
             DB::raw('count(
@@ -345,5 +353,15 @@ class pdg_dcn_docenteModel extends Model
         return $docentes;
     }
   
-
+    private static function getDocentesCoordinadores(){
+        $query = "SELECT 
+                        dcn.id_pdg_dcn 
+                    FROM pdg_dcn_docente dcn
+                        INNER JOIN role_user rlusr 	ON rlusr.user_id = dcn.id_gen_usuario
+                        INNER JOIN roles	rl		ON rl.id = rlusr.role_id
+                    WHERE
+                        rl.slug like '%administrador_tdg%'";
+        $coordinadores = DB::select($query);
+        return $coordinadores;
+    }
 }
