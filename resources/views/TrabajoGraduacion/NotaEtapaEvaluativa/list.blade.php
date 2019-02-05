@@ -125,6 +125,7 @@
              */
             function calculaTotalRow(row){
                 var nota = 0;
+
                 for (var j = 2, col; col = row.cells[j]; j++) {
                     if(j===(row.cells.length-1)) break;
                     var factor = col.firstChild.value;
@@ -132,7 +133,7 @@
                     col.lastChild.value = notaCr;
                     nota += factor*notaCr;
                 }
-                row.cells[8].lastChild.value = customRound(nota);
+                row.cells[row.cells.length-1].lastChild.value = customRound(nota);
             }
 
             function habilitarToggleCalificacion(){
