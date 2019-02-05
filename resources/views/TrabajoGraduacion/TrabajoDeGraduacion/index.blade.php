@@ -35,7 +35,7 @@
           </li>
           <li class="breadcrumb-item active">Grupo {{$numero}} </li>
     </ol>
-    <h3 class="text-center">{{strtoupper($tema)}}</h3>
+    <h3 class="text-center">{{mb_strtoupper($tema,'UTF-8')}}</h3>
     @if($estadoFinalizado == 1)
             <h5 class="text-center"><a href="#" class="badge badge-success">TRABAJO DE GRADUACION FINALIZADO</a></h5> 
         
