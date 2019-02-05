@@ -214,4 +214,10 @@ class pdg_gru_grupoModel extends Model{
                                     IFNULL(x.finalizo,0) != 1');
         return $grupos;
     }
+
+    public static function getEstadoFinalizadoiGrupo($idGrupo){
+        $finalizado = DB::select(' SELECT (select aprobo from pdg_apr_eta_tra_aprobador_etapa_trabajo where id_cat_eta_eva = 999 AND id_pdg_tra_gra = (SELECT id_pdg_tra_gra from pdg_tra_gra_trabajo_graduacion where id_pdg_gru = '.$idGrupo.' )) as finalizo
+                            FROM dual');
+        return  $finalizado[0]->finalizo;
+    }
 }
