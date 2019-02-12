@@ -409,4 +409,25 @@ class ConformarGrupoController extends Controller
         return response()->json(['errorCode'=>$errorCode,'errorMessage'=>$errorMessage]);
     }
 /*EJRG end*/
+    public function editRolGrupo($idGrupo){
+        $grupoNombre = pdg_gru_grupoModel::find($idGrupo);
+        if (empty($grupoNombre->id_pdg_gru)) {
+            return redirect('/');
+        }
+        $grupo= new pdg_gru_grupoModel();
+        $resultado = $grupo->getDetalleGrupo($idGrupo);
+        $nombre = $grupoNombre->numero_pdg_gru;
+        
+        //return var_dump($resultado);
+        return view('TrabajoGraduacion.ConformarGrupo.editMiembro',compact('resultado','nombre'));
+
+    }
+
+    public function updateRolMiembro(Request $request){
+        return var_dump($request['carnets']);
+        foreach ($request['carnets'] as $carnet) {
+            echo $request[$carnet];
+        }
+    }
+
 }

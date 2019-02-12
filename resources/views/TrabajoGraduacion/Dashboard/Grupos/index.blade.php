@@ -128,7 +128,7 @@
           <th>Líder</th>
           <th>Cantidad de Estudiantes</th>
           <th>Estado</th>
-          <th>Dashboard</th>
+          <th>Acciones</th>
           </thead>
           <tbody>
 
@@ -146,9 +146,10 @@
                    <td><span class="badge badge-info">Proceso TDG Sin Iniciar</span></td>
               @endif
               <td style="text-align: center;">
-                @if( $grupo->estado == 1)
-                  <a class="btn btn-dark" href="{{route('dashboardGrupo',$grupo->ID)}}" ><i class="fa fa-eye"></i></a>  
+              @if( $grupo->estado == 1)
+                  <a title = "Dashboard" class="btn btn-dark" href="{{route('dashboardGrupo',$grupo->ID)}}" ><i class="fa fa-eye"></i></a>  
               @endif
+               <a title = "Cambiar Estado de Miembros" class="btn btn-dark" href="{{route('editRolGrupo',$grupo->ID)}}" ><i class="fa fa-cog"></i></a>  
               </td>
             </tr>
           @endif
