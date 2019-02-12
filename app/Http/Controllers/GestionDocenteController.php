@@ -358,7 +358,7 @@ class GestionDocenteController extends Controller
            
        }
 
-       foreach ($tiposJornadas as $jornada) {
+       foreach ($tipoJornadas as $jornada) {
             if ($jornada->id_cat_tpo_jrn_dcn == $docente->tipoJornada) {
                  $bodySelectJornada.='<option value="'.$jornada->id_cat_tpo_jrn_dcn.'" selected="selected">
                 '.$jornada->cat_tpo_jrn_dcn_tipo_jornada_docente.'
