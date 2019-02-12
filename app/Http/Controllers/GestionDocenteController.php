@@ -14,7 +14,9 @@ use \App\cat_mat_materiaModel;
 use \App\dcn_cer_certificacionesModel;
 use \App\cat_car_cargo_eisiModel;
 use \App\gen_UsuarioModel;
+use \App\cat_tpo_jrn_dcn_tipo_jornada_docenteModel;
 use \App\cat_ski_skillModel;
+use \App\cat_tpo_doc_tipo_documentoModel;
 use \App\User;
 use File;;
 use Illuminate\Support\Facades\Storage;
@@ -325,6 +327,7 @@ class GestionDocenteController extends Controller
         return Redirect::to('/'); 
       }
       $cargos = cat_car_cargo_eisiModel::all();
+      $tipoJornadas = cat_tpo_jrn_dcn_tipo_jornada_docenteModel::all();
       $bodySelectPrincipal="";
       $bodySelectSecundario="";
       $bodySelectJornada="";
@@ -354,7 +357,20 @@ class GestionDocenteController extends Controller
             }
            
        }
-       if ($docente->tipoJornada == 1) {
+
+       foreach ($tiposJornadas as $jornada) {
+            if ($jornada->id_cat_tpo_jrn_dcn == $docente->tipoJornada) {
+                 $bodySelectJornada.='<option value="'.$jornada->id_cat_tpo_jrn_dcn.'" selected="selected">
+                '.$jornada->cat_tpo_jrn_dcn_tipo_jornada_docente.'
+                </option>';
+            }else{
+                    $bodySelectJornada.='<option value="'.$jornada->id_cat_tpo_jrn_dcn.'">
+                    '.$jornada->cat_tpo_jrn_dcn_tipo_jornada_docente.'
+                    </option>';
+            }
+           
+       }
+       /*if ($docente->tipoJornada == 1) {
          $bodySelectJornada ='
                   <option value="">Seleccione una Jornada</option>
                   <option value="1" selected="selected">Tiempo Completo</option>
@@ -400,7 +416,8 @@ class GestionDocenteController extends Controller
         $bodySelectDisponibilidad ='
                   <option value="1">Activo</option>
                   <option value="0" selected="selected">Inactivo</option>';
-       }
+       }*/
+      
       return view('PerfilDocente.edit',compact('docente','bodySelectPrincipal','bodySelectSecundario','bodySelectJornada','bodySelectDisponibilidad'));
     }
     public function updateDocente(Request $request){
