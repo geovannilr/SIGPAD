@@ -94,7 +94,7 @@
 					<tr>
 						<td>{{ $docente->display_name }}</td>
             <td>{{ $docente->carnet_pdg_dcn }}</td>
-            <td>{{ $docente->catTpoJornada->descripcion_cat_tpo_jrn_dcn }}</td>
+            <td>{{ $docente->catTpoJornada['descripcion_cat_tpo_jrn_dcn'] }}</td>
 						
             <td><span class="badge badge-danger">{{ $docente->cargoPrincipal->nombre_cargo }}</span></td>
             @if(empty($docente->cargoSecundario->nombre_cargo))
