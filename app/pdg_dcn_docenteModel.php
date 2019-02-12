@@ -32,7 +32,9 @@ class pdg_dcn_docenteModel extends Model
      public function cargoSecundario(){
         return $this->hasOne('App\cat_car_cargo_eisiModel','id_cat_car','id_segundo_cargo');
     }
-
+    public function catTpoJornada(){
+        return $this->hasOne('App\cat_tpo_jrn_dcn_tipo_jornada_docenteModel','id_cat_tpo_jrn_dcn','tipoJornada');
+    }
     /***
      * Función: getDocentesDisponibles($id)
      * Params: $id-> Id del grupo de TDG
