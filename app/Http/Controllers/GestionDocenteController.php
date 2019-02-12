@@ -361,11 +361,11 @@ class GestionDocenteController extends Controller
        foreach ($tipoJornadas as $jornada) {
             if ($jornada->id_cat_tpo_jrn_dcn == $docente->tipoJornada) {
                  $bodySelectJornada.='<option value="'.$jornada->id_cat_tpo_jrn_dcn.'" selected="selected">
-                '.$jornada->cat_tpo_jrn_dcn_tipo_jornada_docente.'
+                '.$jornada->descripcion_cat_tpo_jrn_dcn.'
                 </option>';
             }else{
                     $bodySelectJornada.='<option value="'.$jornada->id_cat_tpo_jrn_dcn.'">
-                    '.$jornada->cat_tpo_jrn_dcn_tipo_jornada_docente.'
+                    '.$jornada->descripcion_cat_tpo_jrn_dcn.'
                     </option>';
             }
            
@@ -408,6 +408,7 @@ class GestionDocenteController extends Controller
                   <option value="4">Asistente Técnico</option>';
        }
 
+      */
        if ($docente->activo == 1) {
           $bodySelectDisponibilidad ='
                   <option value="1" selected="selected">Activo</option>
@@ -416,8 +417,7 @@ class GestionDocenteController extends Controller
         $bodySelectDisponibilidad ='
                   <option value="1">Activo</option>
                   <option value="0" selected="selected">Inactivo</option>';
-       }*/
-      
+       }
       return view('PerfilDocente.edit',compact('docente','bodySelectPrincipal','bodySelectSecundario','bodySelectJornada','bodySelectDisponibilidad'));
     }
     public function updateDocente(Request $request){

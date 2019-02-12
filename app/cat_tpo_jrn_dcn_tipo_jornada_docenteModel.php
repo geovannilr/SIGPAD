@@ -10,6 +10,6 @@ class cat_tpo_jrn_dcn_tipo_jornada_docenteModel extends Model{
 	public $timestamps=false;
 		protected $fillable=
 		[
-                'cat_tpo_jrn_dcn_tipo_jornada_docente'
+                'descripcion_cat_tpo_jrn_dcn'
 		];
 }
