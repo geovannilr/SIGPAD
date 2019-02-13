@@ -9,6 +9,7 @@
   		</script>		
 @endif
 <script type="text/javascript">
+  var valorActual = -1;
 	$( document ).ready(function() {
 		 $('.deleteButton').on('submit',function(e){
         if(!confirm('Estas seguro que deseas eliminar este Permiso?')){
@@ -16,6 +17,46 @@
               e.preventDefault();
         	}
       	});
+     $( ".roles" ).click(function() {
+        //console.log($(this).val());
+        valorActual = $(this).val();
+
+      });
+     $( ".roles" ).change(function() {
+      var contador = 0;
+        $('.roles').each(function(){
+          if (parseInt($(this).val()) == 1 ){
+            contador++;
+          }
+
+          //console.log($(this).val());
+        });
+        if (contador>1){
+          swal("", "No puede seleccionar más de un líder", "error");
+          
+          $(this).val(valorActual);
+          return;
+        }
+
+      });
+     $( "#formEditMiembro" ).submit(function( event ) {
+      var contador = 0;
+        $('.roles').each(function(){
+          if (parseInt($(this).val()) == 1 ){
+            contador++;
+          }
+
+          //console.log($(this).val());
+        });
+        if (contador == 0){
+
+          swal("", "Debe seleccionar al menos un líder", "error");
+          event.preventDefault();
+          
+        }
+        
+
+      });
 	});
 	
 </script>
@@ -44,7 +85,7 @@
             <td>{{$estudiante->carnet}}</td>
             <td>{{$estudiante->Nombre}}</td>
             <td>
-              <select class="form-control" name="{{$estudiante->carnet}}">
+              <select class="form-control roles" name="{{$estudiante->carnet}}">
                @if($estudiante->Cargo == 'Lider')
                  <option value="1" selected="selected">Líder</option>
                  <option value="0"> Miembro</option>

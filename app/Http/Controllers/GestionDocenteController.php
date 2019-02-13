@@ -89,9 +89,13 @@ class GestionDocenteController extends Controller
         $dataCertificaciones = Excel::load($request->file('documentoPerfil'), function ($reader) {
             $reader->setSelectedSheetIndices(array(6)); 
         })->get();
+        $dataHabilidades = Excel::load($request->file('documentoPerfil'), function ($reader) {
+            $reader->setSelectedSheetIndices(array(6)); 
+        })->get();
         $experienciaLaboral = $dataLaboral->toArray();
         $experienciaAcademica = $dataAcademica->toArray();
         $certificaciones = $dataCertificaciones->toArray();
+        $habilidades = $dataCertificaciones->toArray();
         //return var_dump($certificaciones[0]);
         //INSERTANDO LA EXPERIENCIA LABORAL
         try {
@@ -183,9 +187,9 @@ class GestionDocenteController extends Controller
                         $bodyHtml .= '</tr>';
         } catch (Exception $e) {
            $bodyHtml .= '<tr>';
-                        $bodyHtml .= '<td>EXPERIENCIA LABORAL</td>';
+                        $bodyHtml .= '<td>CERTIFICACIONES</td>';
                         $bodyHtml .= '<td><span class="badge badge-danger">Error</span></td>';
-                        $bodyHtml .= '<td>Ocurrió un problema en alguno de los registros de la experiencia Laboral</td>';
+                        $bodyHtml .= '<td>Ocurrió un problema en alguno de los registros de las certificaciones</td>';
                         $bodyHtml .= '</tr>';
         }
         $docenteObjeto = pdg_dcn_docenteModel::find($idDocente);

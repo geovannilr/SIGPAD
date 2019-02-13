@@ -424,10 +424,16 @@ class ConformarGrupoController extends Controller
     }
 
     public function updateRolMiembro(Request $request){
-        return var_dump($request['carnets']);
-        foreach ($request['carnets'] as $carnet) {
-            echo $request[$carnet];
+        foreach ($request['carnets'] as $carnet) { 
+            $alumno = gen_EstudianteModel::where('carnet_gen_est', '=',$carnet)->first();
+            $estudiante  =pdg_gru_est_grupo_estudianteModel::where('id_gen_est', '=',$alumno->id_gen_est)->first();
+            $objEstudiante = pdg_gru_est_grupo_estudianteModel::find($estudiante->id_pdg_gru_est);
+            $objEstudiante->eslider_pdg_gru_est = $request[$carnet];
+            $objEstudiante->save();
+
         }
+        Session::flash('message','Se actualizaron los roles de los integrantes del Grupo xx-xxxx');
+        return redirect('listadoGrupos');
     }
 
 }
