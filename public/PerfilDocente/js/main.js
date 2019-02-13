@@ -228,7 +228,7 @@ function distribuirData(data) {
             '<div class=""><div class="text-center">'+
             '<img class="img-circle" id="imgPerfil" src="'+ip+'/Uploads/PerfilDocente/'+data[i]['dcn_profileFoto']+' " style="object-fit: cover;" > '+
             '</div><div class=" text-center">'+
-            '<p style="color:#DFC15E;">'+data[i]['display_name']+'</p>'+
+            '<p style="color:#7c0000;">'+data[i]['display_name']+'</p>'+
             '<small>'+data[i]['nombre_cargo']+ (cargo2===''?'':'&nbsp;&sol;&nbsp;<i>'+cargo2+'</i>')+'</small>'+
             '</div></div>'+
             (tpoPriv===1?'':'</a>')+
