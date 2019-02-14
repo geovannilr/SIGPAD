@@ -335,8 +335,8 @@ class gen_UsuarioController extends Controller {
 						$mysqli->query($query);
 
 						$extraInfo="";
-						if(!is_null($usuario["esAutor"])){
-						    $check = $usuario["esAutor"];
+						if(!is_null($usuario["esautor"])){
+						    $check = $usuario["esautor"];
 						    if(strtolower($check)=='x'){
                                 //Verificando que no exista como autor anteriormente
                                 $query = 'SELECT * FROM autor WHERE carnet="'.$usrAct.'"';
