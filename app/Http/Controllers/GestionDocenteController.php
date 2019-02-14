@@ -123,7 +123,7 @@ class GestionDocenteController extends Controller
                         $bodyHtml .= '<td><span class="badge badge-success">OK</span></td>';
                         $bodyHtml .= '<td>Todos los registros se realizaron exitosamente.</td>';
                         $bodyHtml .= '</tr>';
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
            $bodyHtml .= '<tr>';
                         $bodyHtml .= '<td>EXPERIENCIA LABORAL</td>';
                         $bodyHtml .= '<td><span class="badge badge-danger">Error</span></td>';
@@ -157,7 +157,7 @@ class GestionDocenteController extends Controller
                         $bodyHtml .= '<td><span class="badge badge-success">OK</span></td>';
                         $bodyHtml .= '<td>Todos los registros se realizaron exitosamente.</td>';
                         $bodyHtml .= '</tr>';
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
            $bodyHtml .= '<tr>';
                         $bodyHtml .= '<td>EXPERIENCIA ACADEMICA</td>';
                         $bodyHtml .= '<td><span class="badge badge-danger">Error</span></td>';
@@ -186,7 +186,7 @@ class GestionDocenteController extends Controller
                         $bodyHtml .= '<td><span class="badge badge-success">OK</span></td>';
                         $bodyHtml .= '<td>Todos los registros se realizaron exitosamente.</td>';
                         $bodyHtml .= '</tr>';
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
            $bodyHtml .= '<tr>';
                         $bodyHtml .= '<td>CERTIFICACIONES</td>';
                         $bodyHtml .= '<td><span class="badge badge-danger">Error</span></td>';
@@ -222,7 +222,7 @@ class GestionDocenteController extends Controller
                         $bodyHtml .= '<td><span class="badge badge-success">OK</span></td>';
                         $bodyHtml .= '<td>Todos los registros se realizaron exitosamente.</td>';
                         $bodyHtml .= '</tr>';
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
            $bodyHtml .= '<tr>';
                         $bodyHtml .= '<td>HABILIDADES</td>';
                         $bodyHtml .= '<td><span class="badge badge-danger">Error</span></td>';
