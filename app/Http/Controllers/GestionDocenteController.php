@@ -17,6 +17,7 @@ use \App\gen_UsuarioModel;
 use \App\cat_tpo_jrn_dcn_tipo_jornada_docenteModel;
 use \App\cat_ski_skillModel;
 use \App\cat_tpo_doc_tipo_documentoModel;
+use \App\rel_ski_dcn_skill_docenteModel;
 use \App\User;
 use File;;
 use Illuminate\Support\Facades\Storage;
@@ -81,22 +82,22 @@ class GestionDocenteController extends Controller
         $idDocente = $docente->id_pdg_dcn;
         $bodyHtml = '';
         $dataLaboral = Excel::load($request->file('documentoPerfil'), function ($reader) {
-            $reader->setSelectedSheetIndices(array(4)); //4-6
+            $reader->setSelectedSheetIndices(array(6)); //5-8
         })->get();
         $dataAcademica = Excel::load($request->file('documentoPerfil'), function ($reader) {
-            $reader->setSelectedSheetIndices(array(5)); 
+            $reader->setSelectedSheetIndices(array(7)); 
         })->get();
         $dataCertificaciones = Excel::load($request->file('documentoPerfil'), function ($reader) {
-            $reader->setSelectedSheetIndices(array(6)); 
+            $reader->setSelectedSheetIndices(array(8)); 
         })->get();
         $dataHabilidades = Excel::load($request->file('documentoPerfil'), function ($reader) {
-            $reader->setSelectedSheetIndices(array(6)); 
+            $reader->setSelectedSheetIndices(array(5)); 
         })->get();
         $experienciaLaboral = $dataLaboral->toArray();
         $experienciaAcademica = $dataAcademica->toArray();
         $certificaciones = $dataCertificaciones->toArray();
-        $habilidades = $dataCertificaciones->toArray();
-        //return var_dump($certificaciones[0]);
+        $habilidades = $dataHabilidades->toArray();
+        //return var_dump($habilidades[0]);
         //INSERTANDO LA EXPERIENCIA LABORAL
         try {
             foreach ($experienciaLaboral as $laboral) {
@@ -192,6 +193,43 @@ class GestionDocenteController extends Controller
                         $bodyHtml .= '<td>Ocurrió un problema en alguno de los registros de las certificaciones</td>';
                         $bodyHtml .= '</tr>';
         }
+
+        //INSERTANDO HABILIDADES
+         
+        try {
+            foreach ($habilidades as $habilidad) {
+                if (!is_null($habilidad["idhabilidad"]) && !is_null($habilidad["idnivel"])) {
+
+                  $objHabilidad = rel_ski_dcn_skill_docenteModel::where('id_cat_ski', '=' , $habilidad["idhabilidad"])->
+                  where('id_pdg_dcn', '=' , $idDocente)->first();
+
+                  if (empty($objHabilidad->id_rel_ski_dcn)) {
+
+                    $lastId = rel_ski_dcn_skill_docenteModel::create
+                    ([
+                        'id_cat_ski' => $habilidad["idhabilidad"],
+                        'nivel_ski_dcn'   => $habilidad["idnivel"],
+                        'id_pdg_dcn'      => $idDocente  
+                                
+                    ]);
+                  }
+                    
+                   
+                }
+            }
+            $bodyHtml .= '<tr>';
+                        $bodyHtml .= '<td>HABILIDADES</td>';
+                        $bodyHtml .= '<td><span class="badge badge-success">OK</span></td>';
+                        $bodyHtml .= '<td>Todos los registros se realizaron exitosamente.</td>';
+                        $bodyHtml .= '</tr>';
+        } catch (Exception $e) {
+           $bodyHtml .= '<tr>';
+                        $bodyHtml .= '<td>HABILIDADES</td>';
+                        $bodyHtml .= '<td><span class="badge badge-danger">Error</span></td>';
+                        $bodyHtml .= '<td>Ocurrió un problema en alguno de los registros de las habilidades</td>';
+                        $bodyHtml .= '</tr>';
+        }
+
         $docenteObjeto = pdg_dcn_docenteModel::find($idDocente);
         if (isset($request["perfilPrivado"])) {
             $docenteObjeto->perfilPrivado='0'; //PERFIL DEBE SER PUBLICO
