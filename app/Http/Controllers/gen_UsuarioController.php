@@ -475,4 +475,14 @@ class gen_UsuarioController extends Controller {
             return view('PerfilDocente.create');
         }
     }
+
+    function downloadPlantillaUesplayCategoria(Request $request){
+        $path = public_path() . $_ENV['PATH_RECURSOS'] . 'temp-usuarios-categorias-uesplay.xlsx';
+        if (File::exists($path)) {
+            return response()->download($path);
+        } else {
+            Session::flash('error', 'El documento no se encuentra disponible , es posible que haya sido  borrado');
+            return view('uesplay.createUsuarioCategoria');
+        }
+    }
 }

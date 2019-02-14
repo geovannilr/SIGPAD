@@ -176,6 +176,7 @@ Route::get('cargarUsuariosUesplay', 'gen_UsuarioController@createUsuariosUesPlay
 Route::post('plantillaUsuarioUesplay','gen_UsuarioController@downloadPlantillaUesplay')->name('plantillaUsuarioUesplay');
 Route::post('storeUsersCatUesplay', 'gen_UsuarioController@storeUsuariosCatUesplay')->name('storeUsersCatUesplay');
 Route::get('cargarUsuariosCatUesplay', 'gen_UsuarioController@createUsuariosCatUesPlay')->name('cargarUsuariosCatUesplay');
+Route::post('plantillaUsuarioCategoriaUesplay','gen_UsuarioController@downloadPlantillaUesplayCategoria')->name('plantillaUsuarioCategoriaUesplay');
 //------------------------------------------------------------------------------------------------------------------------
 
 //------------------------------------CATÁLOGOS-------------------------------------------------------------------
