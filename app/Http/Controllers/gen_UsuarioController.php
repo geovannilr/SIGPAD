@@ -282,21 +282,26 @@ class gen_UsuarioController extends Controller {
 		if (sizeof($usuarios) != 0) {
 			include app_path() . '/Exceptions/conexionMysqli.php';
 			foreach ($usuarios as $usuario) {
-				if (!is_null($usuario["usuario"]) && !is_null($usuario["nombres"]) && !is_null($usuario["apellidos"]) && !is_null($usuario["rol"])) {
+				if (!is_null($usuario["usuario"]) && !is_null($usuario["nombres"]) && !is_null($usuario["apellidos"]) && !is_null($usuario["role"])) {
+				    //variables actuales del loop
+				    $usrAct = $usuario["usuario"];
+				    $nomAct = $usuario["nombres"];
+				    $apeAct = $usuario["apellidos"];
+				    $rolAct = $usuario["role"];
 					//Verificamos si esta repetido
-					$query = 'SELECT alias FROM usuario where alias="' . $usuario["usuario"] . '"';
+					$query = 'SELECT alias FROM usuario where alias="' . $usrAct . '"';
 					$resultado = $mysqli->query($query);
 					$countUsuario = $resultado->num_rows;
 					//Verificamos si el rol ingresado se encuentra en el catalogo
-					$query = 'SELECT * FROM rol where idRol="' . $usuario["rol"] . '"';
+					$query = 'SELECT * FROM rol where idRol="' . $rolAct . '"';
 					$resultado = $mysqli->query($query);
 					$countRol = $resultado->num_rows;
 					$rol = $resultado->fetch_assoc();
 					if ($countUsuario > 0) {
 						//Usuario repetido
 						$bodyHtml .= '<tr>';
-						$bodyHtml .= '<td>' . $usuario["usuario"] . '</td>';
-						$bodyHtml .= '<td>' . $usuario["nombres"] . ' ' . $usuario["apellidos"] . '</td>';
+						$bodyHtml .= '<td>' . $usrAct . '</td>';
+						$bodyHtml .= '<td>' . $nomAct . ' ' . $apeAct . '</td>';
 						$bodyHtml .= '<td>' . $rol["nombre"] . '</td>';
 						$bodyHtml .= '<td><span class="badge badge-danger">Error</span></td>';
 						$bodyHtml .= '<td>El usuario que esta intentando ingresar ya se encuentra registrado.</td>';
@@ -304,8 +309,8 @@ class gen_UsuarioController extends Controller {
 					} else if ($countRol == 0) {
 						//el rol ingresado es incorrecto y no esta registrado
 						$bodyHtml .= '<tr>';
-						$bodyHtml .= '<td>' . $usuario["usuario"] . '</td>';
-						$bodyHtml .= '<td>' . $usuario["nombres"] . ' ' . $usuario["apellidos"] . '</td>';
+						$bodyHtml .= '<td>' . $usrAct . '</td>';
+						$bodyHtml .= '<td>' . $nomAct . ' ' . $apeAct . '</td>';
 						$bodyHtml .= '<td>' . $rol["nombre"] . '</td>';
 						$bodyHtml .= '<td><span class="badge badge-danger">Error</span></td>';
 						$bodyHtml .= '<td>El rol ingresado es incorrecto o no existe</td>';
@@ -314,10 +319,10 @@ class gen_UsuarioController extends Controller {
 						//Insertamos el usuario
 						$query = 'INSERT INTO usuario values(
 							0,
-							"' . $usuario["usuario"] . '",
+							"' . $usrAct . '",
 							"password",
-							"' . $usuario["nombres"] . '",
-							"' . $usuario["apellidos"] . '"
+							"' . $nomAct . '",
+							"' . $apeAct . '"
 						);';
 						$mysqli->query($query);
 						$idUsuario = $mysqli->insert_id; //último id de usuario ingresado
@@ -325,16 +330,36 @@ class gen_UsuarioController extends Controller {
 						//Le asociamos el rol corespondiente al usuario creado
 						$query = 'INSERT INTO usuario_rol values(
 							"' . $idUsuario . '",
-							"' . $usuario["rol"] . '"
+							"' . $rolAct . '"
 						);';
 						$mysqli->query($query);
 
+						$extraInfo="";
+						if(!is_null($usuario["esAutor"])){
+						    $check = $usuario["esAutor"];
+						    if(strtolower($check)=='x'){
+                                //Verificando que no exista como autor anteriormente
+                                $query = 'SELECT * FROM autor WHERE carnet="'.$usrAct.'"';
+                                $resultado = $mysqli->query($query);
+                                $countAutor = $resultado->num_rows;
+                                if($countAutor>0){
+                                    //Ya existía como autor
+                                    $extraInfo = ". <i>No pudo registrarse como autor</i>>";
+                                }else{
+                                    //Insertamos como autor
+                                    $query = 'INSERT INTO autor VALUES(NULL,"'.$usrAct.'","'.$nomAct.' '.$apeAct.'");';
+                                    $mysqli->query($query);
+                                    $idAutor = $mysqli->insert_id;
+                                    $extraInfo = ", también fue registrado como autor. Código generado: <b>".$idAutor."</b>";
+                                }
+                            }
+                        }
 						$bodyHtml .= '<tr>';
-						$bodyHtml .= '<td>' . $usuario["usuario"] . '</td>';
-						$bodyHtml .= '<td>' . $usuario["nombres"] . ' ' . $usuario["apellidos"] . '</td>';
+						$bodyHtml .= '<td>' . $usrAct . '</td>';
+						$bodyHtml .= '<td>' . $nomAct . ' ' . $apeAct . '</td>';
 						$bodyHtml .= '<td>' . $rol["nombre"] . '</td>';
 						$bodyHtml .= '<td><span class="badge badge-success">OK</span></td>';
-						$bodyHtml .= '<td>Usuario ingresado exitosamente</td>';
+						$bodyHtml .= '<td>Usuario ingresado exitosamente'.$extraInfo.'</td>';
 						$bodyHtml .= '</tr>';
 					}
 
