@@ -75,6 +75,10 @@
                             {{$estudiante->Nombre}}
                             @if($estudiante->Cargo == "Lider" )
                               <span class="badge badge-info">LIDER</span>
+                            @else
+                              @if($estudiante->Cargo == "RETIRADO" )
+                                      <span class="badge badge-danger">RETIRADO</span>
+                              @endif
                             @endif
                           </td> 
                         </tr>
