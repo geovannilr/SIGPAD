@@ -17,6 +17,11 @@
                             <div class="panel-body"> <!-- style="background-color: rgba(0, 6, 200, 0.50);border: none;padding: 0px" > <!-- " style=" border:none; background-color: rgba(232, 6, 6, 0.40);"  >-->                                
                                 <div class="row-fluid user-row">
                                     @include('alerts.errors')
+                                        @if ($errors->any())
+                                          <div class="alert alert-danger">
+                                            Usuario o Contraseña Incorrecta, intente nuevamente.
+                                          </div>
+                                        @endif
                                     <img style="width: 250px; height: 250px" src="img/sigpad-logo.png" class="img-responsive" alt="Conxole Admin"/>
                                 </div>
                             </div>
