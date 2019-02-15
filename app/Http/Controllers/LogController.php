@@ -50,6 +50,10 @@ class LogController extends Controller
      */
     public function store(Request $request)
     {
+	$validatedData = $request->validate([
+        	'usuario' => 'required',
+	        'password' => 'required',
+	]);
         $usuario = $request->usuario;
         $contrasena = $request->password;
 
