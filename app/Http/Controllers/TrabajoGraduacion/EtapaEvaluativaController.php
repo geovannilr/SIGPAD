@@ -208,7 +208,7 @@ class EtapaEvaluativaController extends Controller {
                 Session::flash('message-error', 'La etapa seleccionada aún no se encuentra disponible.');
                 return redirect('/dashboard');
             }
-			$documentos = $etapa->getDocumentos($id, $trabajoGraduacion->id_pdg_tra_gra); //ID ETAPA, ID TRABAJO DE GRADUACIÓN QUEMADO, CAMBIAR!!
+			$documentos = $etapa->getDocumentos($id, $trabajoGraduacion->id_pdg_tra_gra); //ID ETAPA, ID TRABAJO DE GRADUACIÓN 
 			$bodyHtml = "";
 			$userLogin = Auth::user();
 			$estudiante = new gen_EstudianteModel();

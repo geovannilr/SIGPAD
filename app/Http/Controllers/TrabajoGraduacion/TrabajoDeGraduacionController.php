@@ -41,7 +41,8 @@ class TrabajoDeGraduacionController extends Controller{
                 return view('TrabajoGraduacion.PrePerfil.indexPrePerfil',compact('gruposPrePerfil'));
             }elseif (Auth::user()->isRole('estudiante')) {
                 $estudiante = new gen_EstudianteModel();
-                $idGrupo = $estudiante->getIdGrupo($userLogin->user);
+                //$idGrupo = $estudiante->getIdGrupo($userLogin->user);
+                $idGrupo = session('idGrupo');
                 $estadoFinalizado = pdg_gru_grupoModel::getEstadoFinalizadoiGrupo($idGrupo);
                 if ($idGrupo != 'NA'){
                     $grupo=self::verificarGrupo($userLogin->user)->getData();
@@ -171,7 +172,8 @@ class TrabajoDeGraduacionController extends Controller{
         $userLogin=Auth::user();
         if (Auth::user()->isRole('estudiante')) {
                 $estudiante = new gen_EstudianteModel();
-                $idGrupo = $estudiante->getIdGrupo($userLogin->user);
+                //$idGrupo = $estudiante->getIdGrupo($userLogin->user);
+                $idGrupo = session('idGrupo');
                 $idPub=pub_publicacionModel::getIdPublicacion($idGrupo);
                 if (!sizeof($idPub) == 0) {
                     $publicacion = pub_publicacionModel::find($idPub[0]->id_pub);
@@ -377,7 +379,7 @@ class TrabajoDeGraduacionController extends Controller{
             $nombre = "Codigo".$codigo.date('hms').$file->getClientOriginalName();
            //indicamos que queremos guardar un nuevo archivo en el disco local
             Storage::disk('publicaciones')->put($nombre, File::get($file));
-            $fecha=date('Y-m-d H:m:s');
+            $fecha=date('Y-m-d H:i:s');
             $path= public_path().$_ENV['PATH_PUBLICACIONES'];
              $lastIdDocumento = pub_arc_publicacion_archivoModel::create
             ([

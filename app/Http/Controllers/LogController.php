@@ -262,6 +262,9 @@ class LogController extends Controller
                 // GUARDAMOS EN UNA VARIABLE DE SESION LOS ID DE LOS GRUPOS QUE LE CORRESPONDEN COMO DOCENTE
                 session(['misGrupos' => $misGrupos]);
             }
+        }else if (Auth::user()->isRole('estudiante')) {
+             $miGrupo = pdg_gru_grupoModel::getIdGrupo(Auth::user()->user);
+            session(['idGrupo' => $miGrupo]);
         }
     }
 }

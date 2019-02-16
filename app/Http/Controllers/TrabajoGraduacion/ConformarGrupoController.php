@@ -52,9 +52,15 @@ class ConformarGrupoController extends Controller
      if (Auth::user()->isRole('administrador_tdg')){
         return redirect('grupo');
      }else{
-        $cards="";
+       $cards="";
        $enviado =0;
        $cantidadMinima = 4;
+
+       $idMiGrupo = session('idGrupo');
+       if ($idMiGrupo <= 0) {  //NO TIENE GRUPO U OCURRIO UNA EXCEPCION
+            return view('TrabajoGraduacion.ConformarGrupo.create',compact(['cantidadMinima']));
+       } 
+
        $estudiante = new gen_EstudianteModel();
        $miCarnet=Auth::user()->user;
        $respuesta =$estudiante->getGrupoCarnet($miCarnet)->getData();  //getdata PARA CAMBIAR LOS VALORES DEL JSON DE PUBLICOS A PRIVADOS

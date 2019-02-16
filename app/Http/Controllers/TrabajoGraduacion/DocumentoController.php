@@ -29,7 +29,8 @@ class DocumentoController extends Controller{
     public function createDocumento($idEtapa,$idTipoDoc){
        $userLogin=Auth::user();
        $estudiante = new gen_EstudianteModel();
-       $idGrupo = $estudiante->getIdGrupo($userLogin->user);
+       //$idGrupo = $estudiante->getIdGrupo($userLogin->user);
+       $idGrupo = session('idGrupo');
        $trabajoGraduacion = pdg_tra_gra_trabajo_graduacionModel::where('id_pdg_gru', '=',$idGrupo)->first();
        $statusFinal = pdg_apr_eta_tra_aprobador_etapa_trabajoModel::where('id_cat_eta_eva','=','999')->where('id_pdg_tra_gra','=',$trabajoGraduacion->id_pdg_tra_gra)->first();
        if (empty($statusFinal->aprobo)) {
@@ -64,7 +65,8 @@ class DocumentoController extends Controller{
     public function editDocumento($idEtapa,$idDocumento,$idTipoDoc){
           $userLogin=Auth::user();
           $estudiante = new gen_EstudianteModel();
-          $idGrupo = $estudiante->getIdGrupo($userLogin->user);
+          //$idGrupo = $estudiante->getIdGrupo($userLogin->user);
+          $idGrupo = session('idGrupo');
           $trabajoGraduacion = pdg_tra_gra_trabajo_graduacionModel::where('id_pdg_gru', '=',$idGrupo)->first();
           $statusFinal = pdg_apr_eta_tra_aprobador_etapa_trabajoModel::where('id_cat_eta_eva','=','999')->where('id_pdg_tra_gra','=',$trabajoGraduacion->id_pdg_tra_gra)->first();
           if (empty($statusFinal->aprobo)) {
@@ -107,8 +109,9 @@ class DocumentoController extends Controller{
     public function store(Request $request){
     	$userLogin=Auth::user();
     	$estudiante = new gen_EstudianteModel();
-	    $idGrupo = $estudiante->getIdGrupo($userLogin->user);
-	    if ($idGrupo !="NA") {
+	    //$idGrupo = $estudiante->getIdGrupo($userLogin->user);
+      $idGrupo = session('idGrupo');
+	    if ($idGrupo > 0) {
 	    	$grupo = pdg_gru_grupoModel::find($idGrupo);
 	    	$anioGrupo = $grupo->anio_pdg_gru;
 	    	$correlativo = $grupo->correlativo_pdg_gru_gru;
@@ -171,8 +174,9 @@ class DocumentoController extends Controller{
     public function update(Request $request,$id){
     	$userLogin=Auth::user();
     	$estudiante = new gen_EstudianteModel();
-	    $idGrupo = $estudiante->getIdGrupo($userLogin->user);
-	    if ($idGrupo !="NA") {
+	    //$idGrupo = $estudiante->getIdGrupo($userLogin->user);
+      $idGrupo = session('idGrupo');
+	    if ($idGrupo > 0) {
 	    	$grupo = pdg_gru_grupoModel::find($idGrupo);
 	    	$anioGrupo = $grupo->anio_pdg_gru;
 	    	$correlativo = $grupo->correlativo_pdg_gru_gru;
