@@ -414,7 +414,7 @@ class PerfilController extends Controller
                      }
                     
                     Storage::disk('Uploads')->move($nombreResumen, $nuevaUbicacionResumen);
-                    $fecha=date('Y-m-d H:m:s');
+                    $fecha=date('Y-m-d H:i:s');
                     $archivo->nombre_arc_doc = $resumen->getClientOriginalName();
                     $archivo->ubicacion_arc_doc = $nombreResumen; //SOLO SE GUARDA NOMBRE AHORA
                     $archivo->fecha_subida_arc_doc = $fecha;

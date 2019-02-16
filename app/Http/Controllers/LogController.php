@@ -264,7 +264,7 @@ class LogController extends Controller
             }
         }else if (Auth::user()->isRole('estudiante')) {
              $miGrupo = pdg_gru_grupoModel::getIdGrupo(Auth::user()->user);
-            session(['idGrupo' => $miGrupo]);
+            session(['idGrupo' => $miGrupo ]);
         }
     }
 }

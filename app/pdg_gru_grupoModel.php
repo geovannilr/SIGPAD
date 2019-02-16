@@ -232,6 +232,6 @@ class pdg_gru_grupoModel extends Model{
                 $carnet,
             )
         );
-        return  $idGrupo;
+        return  $idGrupo[0]->id_grupo;
     }
 }

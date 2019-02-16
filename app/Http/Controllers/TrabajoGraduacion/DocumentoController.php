@@ -193,7 +193,7 @@ class DocumentoController extends Controller{
 	        	$nuevaUbicacion=$anioGrupo.'/Grupo'.$correlativo.'/Etapas/'.$nombre;
 	        }
 	        Storage::disk('Uploads')->move($nombre, trim($nuevaUbicacion));
-	        $fecha=date('Y-m-d H:I:s');
+	        $fecha=date('Y-m-d H:i:s');
 	        $path= public_path().$_ENV['PATH_UPLOADS'];
            	//traemos el documento a modificar
            	$documento = pdg_doc_documentoModel::find($id);

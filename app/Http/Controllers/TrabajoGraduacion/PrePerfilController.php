@@ -53,7 +53,7 @@ class PrePerfilController extends Controller
                 $estudiante = new gen_EstudianteModel();
                 //$idGrupo = $estudiante->getIdGrupo($userLogin->user);
                 $idGrupo = session('idGrupo');
-                if ($idGrupo != 'NA'){
+                if ($idGrupo > 0){
                     $miGrupo = pdg_gru_grupoModel::find($idGrupo);
                     if ($miGrupo->id_cat_sta == 3 ) {//APROBADO
                         $prePerfiles =pdg_ppe_pre_perfilModel::where('id_pdg_gru', '=',$idGrupo)->get();

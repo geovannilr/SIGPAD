@@ -376,7 +376,7 @@ class TrabajoDeGraduacionController extends Controller{
             $file = $request->file('tomoFinal');
             $publicacion = pub_publicacionModel::find($request['publicacion']);
            //obtenemos el nombre del archivo
-            $nombre = "Codigo".$codigo.date('hms').$file->getClientOriginalName();
+            $nombre = "Codigo".$codigo.date('his').$file->getClientOriginalName();
            //indicamos que queremos guardar un nuevo archivo en el disco local
             Storage::disk('publicaciones')->put($nombre, File::get($file));
             $fecha=date('Y-m-d H:i:s');
