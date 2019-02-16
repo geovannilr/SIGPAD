@@ -220,4 +220,18 @@ class pdg_gru_grupoModel extends Model{
                             FROM dual');
         return  $finalizado[0]->finalizo;
     }
+
+    /**
+     * Función que devuelve el id del grupo para un carnet dado.
+     * @param $carnet string carnet del usuario
+     * @return integer 0: sin grupo, -1: no disponible para formar nuevo grupo, n>0: id del grupo
+    */
+    public static function getIdGrupo($carnet){
+        $idGrupo = DB::select('CALL sp_pdg_est_gru_getIdGrupo(:carnet, @result);',
+            array(
+                $carnet,
+            )
+        );
+        return  $idGrupo;
+    }
 }
