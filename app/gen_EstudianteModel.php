@@ -112,4 +112,22 @@ class gen_EstudianteModel extends Model
         $datos = DB::select($query);
         return $datos;
      }
+    public function getGrupoById($idGrupo){
+        $valor=0;
+        DB::statement('call sp_pdg_gru_find_ByIdGrupo(:idGrupo,@resultado,@jsonR);',
+            array(
+                $idGrupo,
+            )
+        );
+        $errorCode = DB::select('select @resultado as resultado');
+        $resultado="";
+        $estudiantes = '';
+        if ($errorCode[0]->resultado == '0'){
+            $estudiantes = DB::select('select @jsonR as estudiantes');
+            $resultado=response()->json(["errorCode"=>$errorCode[0]->resultado,"errorMessage"=>"El alumno ya pertenece a un grupo de trabajo de graduación","msg"=>$estudiantes[0]]);
+        }else if ($errorCode[0]->resultado == '1'){
+            $resultado=response()->json(["errorCode"=>$errorCode[0]->resultado,"errorMessage"=>"El alumno no pertenece a un  grupo de trabajo de graduación","msg"=>$estudiantes]);
+        }
+        return $resultado;
+    }
 }

@@ -63,7 +63,7 @@ class ConformarGrupoController extends Controller
 
        $estudiante = new gen_EstudianteModel();
        $miCarnet=Auth::user()->user;
-       $respuesta =$estudiante->getGrupoCarnet($miCarnet)->getData();  //getdata PARA CAMBIAR LOS VALORES DEL JSON DE PUBLICOS A PRIVADOS
+       $respuesta =$estudiante->getGrupoById($idMiGrupo)->getData();  //getdata PARA CAMBIAR LOS VALORES DEL JSON DE PUBLICOS A PRIVADOS
        if ($respuesta->errorCode == '0') {
             $estudiantes=json_decode($respuesta->msg->estudiantes);//decode string to json
             $cantidadEstudiantes = sizeof($estudiantes);
