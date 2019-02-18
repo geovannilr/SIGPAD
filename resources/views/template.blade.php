@@ -130,6 +130,15 @@
                       </a>
                   </li>
               @endcan
+              @can('formatos.download')
+              {{--TODO: Debe crearse el permiso respectivo de incidencias.index--}}
+                  <li>
+                      <a class="nav-link" href="{{route('incidencias')}}" style="color: #ffffff">
+                          <i class="fa fa-exclamation-triangle"></i>
+                          <span class="nav-link-text">Incidencias</span>
+                      </a>
+                  </li>
+              @endcan
             </ul>
           
           </li>

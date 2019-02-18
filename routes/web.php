@@ -180,7 +180,8 @@ Route::get('cargarUsuariosCatUesplay', 'gen_UsuarioController@createUsuariosCatU
 Route::post('plantillaUsuarioCategoriaUesplay','gen_UsuarioController@downloadPlantillaUesplayCategoria')->name('plantillaUsuarioCategoriaUesplay');
 //------------------------------------------------------------------------------------------------------------------------
 //---------------------------------------------------------INCIDENCIAS---------------------------------------------------
-Route::get('alumnosRetirados', 'TrabajoGraduacion\IncidenciasController@getAlumnosRetirados')->name('alumnosRetirados');
+Route::get('incidencias','TrabajoGraduacion\IncidenciasController@indexIncidencias')->name('incidencias');
+Route::get('incidencias/alumnosRetirados', 'TrabajoGraduacion\IncidenciasController@getAlumnosRetirados')->name('incidencias/alumnosRetirados');
 //------------------------------------CATÁLOGOS-------------------------------------------------------------------
 // Catálogo Categoría Trabajo de Graduación
 Route::resource ('categoriaTDG','cat_ctg_tra_categoria_trabajo_graduacionController');
