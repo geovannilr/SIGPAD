@@ -52,13 +52,18 @@ class ConformarGrupoController extends Controller
      if (Auth::user()->isRole('administrador_tdg')){
         return redirect('grupo');
      }else{
+        $miGrupo = pdg_gru_grupoModel::getIdGrupo(Auth::user()->user);
+        session(['idGrupo' => $miGrupo ]); 
        $cards="";
        $enviado =0;
        $cantidadMinima = 4;
 
        $idMiGrupo = session('idGrupo');
-       if ($idMiGrupo <= 0) {  //NO TIENE GRUPO U OCURRIO UNA EXCEPCION
+       if ($idMiGrupo == 0) {  //NO TIENE GRUPO U OCURRIO UNA EXCEPCION
             return view('TrabajoGraduacion.ConformarGrupo.create',compact(['cantidadMinima']));
+       }elseif ($idMiGrupo == -1) {
+           Session::flash('message-error','No te encuentras disponible para conformar un grupo de trabajo de graduación, consulta a la Coordinación.');
+           return redirect('/');
        } 
 
        $estudiante = new gen_EstudianteModel();
@@ -99,11 +104,21 @@ class ConformarGrupoController extends Controller
                            ';
                 }else if($estudiante->estado == "6"){ //ACEPTO
                     $contadorAceptado+=1;
-                    $card.='<td>
+                    if ($estudiante->lider == 2) {
+                        $card.='<td>
+                                    <h5 class="card-title">Estado</h5>
+                                    <p class="badge badge-danger card-text">RETIRADO</p><br>
+                                </td>
+                                <td>';
+                    }else{
+                        $card.='<td>
                                     <h5 class="card-title">Estado</h5>
                                     <p class="badge badge-success card-text">Confirmado</p><br>
                                 </td>
                                 <td>';
+                    }
+                    
+                    
                 }else{
                     $card.='<td>
                                     <h5 class="card-title">Estado</h5>
@@ -282,13 +297,14 @@ class ConformarGrupoController extends Controller
                   if ($resultado == "0"){
                          return response()->json(['errorCode'=>0,'errorMessage'=>'Has confirmado que perteceneces a este grupo de trabajo de graduación','msg'=>$resultado]);
                   }else
-                  {
+                  {  
+                     session(['idGrupo' => 0 ]);
                      return response()->json(['errorCode'=>2,'errorMessage'=>'Error al modificar tipoDocumento de alumno en el grupo de trabajo de graduación','msg'=>$resultado]);
 
                   }
                   
                 }
-            catch(Exception $e){
+            catch(\Exception $e){
                return response()->json(['errorCode'=>1,'errorMessage'=>'Ha ocurrido un error al procesar su petición de grupo de trabajo de graduación','msg'=>$e]);
             }
        } 
@@ -305,7 +321,7 @@ class ConformarGrupoController extends Controller
                 Session::flash('message-error','Ocurrió un problema al momento de enviar el grupo de trabajo de graduación!');
                 return redirect()->route('grupo.create');
             }
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
            Session::flash('message-error','Ocurrió un problema al momento de enviar el grupo de trabajo de graduación!');
             return redirect()->route('grupo.create');
         }
@@ -325,7 +341,7 @@ class ConformarGrupoController extends Controller
                 return redirect()->route('grupo.index');
             }
             
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
            Session::flash('tipo','error');
            Session::flash('message','Ocurrió un problema al momento de aprobar el grupo de trabajo de graduación!');
             return redirect()->route('grupo.index');
@@ -375,7 +391,7 @@ class ConformarGrupoController extends Controller
                     //return Redirect::to('TrabajoGraduacion\ConformarGrupo.view',compact(['relaciones']));
                     return view('TrabajoGraduacion.ConformarGrupo.view',compact(['relaciones']));
                 }
-            } catch (Exception $e) {
+            } catch (\Exception $e) {
                 Session::flash('message-error','Ocurrió un problema al momento de borrar el alumno!');
                 return redirect()->route('grupo.index');
             }
@@ -406,7 +422,7 @@ class ConformarGrupoController extends Controller
                     $errorCode = 0;
                     $errorMessage = "Grupo modificado satisfactoriamente!";
                 }
-            }catch (Exception $e){
+            }catch (\Exception $e){
                 $errorCode = 1;
                 $errorMessage = "Su solicitud no pudo ser procesada";
                 //$errorMessage = $e->getMessage();
@@ -436,7 +452,6 @@ class ConformarGrupoController extends Controller
             $objEstudiante = pdg_gru_est_grupo_estudianteModel::find($estudiante->id_pdg_gru_est);
             $objEstudiante->eslider_pdg_gru_est = $request[$carnet];
             $objEstudiante->save();
-
         }
         Session::flash('message','Se actualizaron los roles de los integrantes del Grupo xx-xxxx');
         return redirect('listadoGrupos');

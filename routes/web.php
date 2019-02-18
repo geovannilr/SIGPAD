@@ -10,6 +10,7 @@ date_default_timezone_set('America/Guatemala');
 | contains the "web" middleware group. Now create something great!
 |
  */
+
 //HOME
 Route::get('/', 'FrontController@index')->name('inicio');
 
@@ -178,7 +179,8 @@ Route::post('storeUsersCatUesplay', 'gen_UsuarioController@storeUsuariosCatUespl
 Route::get('cargarUsuariosCatUesplay', 'gen_UsuarioController@createUsuariosCatUesPlay')->name('cargarUsuariosCatUesplay');
 Route::post('plantillaUsuarioCategoriaUesplay','gen_UsuarioController@downloadPlantillaUesplayCategoria')->name('plantillaUsuarioCategoriaUesplay');
 //------------------------------------------------------------------------------------------------------------------------
-
+//---------------------------------------------------------INCIDENCIAS---------------------------------------------------
+Route::get('alumnosRetirados', 'TrabajoGraduacion\IncidenciasController@getAlumnosRetirados')->name('alumnosRetirados');
 //------------------------------------CATÁLOGOS-------------------------------------------------------------------
 // Catálogo Categoría Trabajo de Graduación
 Route::resource ('categoriaTDG','cat_ctg_tra_categoria_trabajo_graduacionController');

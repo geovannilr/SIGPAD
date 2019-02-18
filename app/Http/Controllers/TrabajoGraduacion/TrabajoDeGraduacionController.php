@@ -44,7 +44,7 @@ class TrabajoDeGraduacionController extends Controller{
                 //$idGrupo = $estudiante->getIdGrupo($userLogin->user);
                 $idGrupo = session('idGrupo');
                 $estadoFinalizado = pdg_gru_grupoModel::getEstadoFinalizadoiGrupo($idGrupo);
-                if ($idGrupo != 'NA'){
+                if ($idGrupo > 0){
                     $grupo=self::verificarGrupo($userLogin->user)->getData();
                     $estudiantes=json_decode($grupo->msg->estudiantes);
                     $miGrupo = pdg_gru_grupoModel::find($idGrupo);

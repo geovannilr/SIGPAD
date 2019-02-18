@@ -112,7 +112,8 @@ class gen_EstudianteModel extends Model
         $datos = DB::select($query);
         return $datos;
      }
-    public function getGrupoById($idGrupo){
+
+     public function getGrupoById($idGrupo){
         $valor=0;
         DB::statement('call sp_pdg_gru_find_ByIdGrupo(:idGrupo,@resultado,@jsonR);',
             array(
@@ -129,5 +130,19 @@ class gen_EstudianteModel extends Model
             $resultado=response()->json(["errorCode"=>$errorCode[0]->resultado,"errorMessage"=>"El alumno no pertenece a un  grupo de trabajo de graduación","msg"=>$estudiantes]);
         }
         return $resultado;
+    }
+
+    public static function getAlumnosRetirados(){
+    	$query = "SELECT
+				  DISTINCT
+				  est.*
+				  FROM gen_est_estudiante est
+				  INNER JOIN pdg_gru_est_grupo_estudiante gru ON gru.id_gen_est = est.id_gen_est
+				  WHERE
+				  est.disponible_gen_est = 0
+				  AND gru.eslider_pdg_gru_est = 2";		  
+    	$resultado  = DB::select($query);
+    	return $resultado;
+
     }
 }
