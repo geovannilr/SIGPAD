@@ -15,6 +15,9 @@
 <script type="text/javascript">
 	$( document ).ready(function() {
     	$("#listTable").DataTable({
+    		language: {
+                url: 'es-ar.json' //Ubicacion del archivo con el json del idioma.
+        },
          responsive: {
             details: {
                 type: 'column'
@@ -48,11 +51,11 @@
   				<tbody>
   				<tr>
   					<td>
-						<a href="{{route('incidencias/alumnosRetirados')}}">Estudiantes para Trabajo de Graduación</a>
+						<a href="{{route('incidencias/alumnosRetirados')}}">Estudiantes Retirados </a>
 					</td>
   					<td>
   						Permite gestionar el estado de los estudiantes disponibles para realizar trabajo de graduación.
-						Habilitando a los que hayan sido retirados de un grupo y pudiendo deshabilitar a algún alumno específico.
+						Habilitando a los que hayan sido retirados de un grupo.
   					</td>
 				</tr>
 				</tbody>

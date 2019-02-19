@@ -182,6 +182,7 @@ Route::post('plantillaUsuarioCategoriaUesplay','gen_UsuarioController@downloadPl
 //---------------------------------------------------------INCIDENCIAS---------------------------------------------------
 Route::get('incidencias','TrabajoGraduacion\IncidenciasController@indexIncidencias')->name('incidencias');
 Route::get('incidencias/alumnosRetirados', 'TrabajoGraduacion\IncidenciasController@getAlumnosRetirados')->name('incidencias/alumnosRetirados');
+Route::post('incidencias/cambiarRetirado', 'TrabajoGraduacion\IncidenciasController@cambiarEstadoRetirado')->name('incidencias/cambiarRetirado');
 //------------------------------------CATÁLOGOS-------------------------------------------------------------------
 // Catálogo Categoría Trabajo de Graduación
 Route::resource ('categoriaTDG','cat_ctg_tra_categoria_trabajo_graduacionController');
