@@ -168,7 +168,7 @@ class ConformarGrupoController extends Controller
         $respuesta = $estudiante->conformarGrupoSp($xmlRequest);
         if ($respuesta[0]->resultado == '0' ) {
             $usuarioLider = Auth::user()->user;
-            $estObj = gen_EstudianteModel::where('carnet','=',$usuarioLider)->first();
+            $estObj = gen_EstudianteModel::where('carnet_gen_est','=',$usuarioLider)->first();
             $estObj->disponible_gen_est = 0;
             $estObj->save();
             Session::flash('message','Grupo conformado correctamente!');
