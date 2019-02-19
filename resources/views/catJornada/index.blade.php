@@ -74,7 +74,7 @@
   <div class="col-sm-3"></div>
   <div class="col-sm-3"></div>
    <div class="col-sm-3"></div>
-  @can('catIdioma.create')
+  @can('catJornada.create')
     <div class="col-sm-3">
       <a class="btn " href="{{route('catJornada.create')}}" style="background-color: #DF1D20; color: white"><i class="fa fa-plus"></i> Nueva Jornada </a>
     </div>
@@ -105,7 +105,7 @@
                                     <a class="btn " style="background-color:  #102359;color: white" href="{{route('catJornada.edit',$catJornad->id_cat_tpo_jrn_dcn)}}"><i class="fa fa-pencil"></i></a>
                                 </div>
                                 @endcan
-                                @can('cargoEisi.destroy')
+                                @can('catJornada.destroy')
                                     <div class="col-6">
                                         {!! Form::open(['route'=>['catJornada.destroy',$catJornad->id_cat_tpo_jrn_dcn],'method'=>'DELETE','class' => 'deleteButton']) !!}
                                         <div class="btn-group">
