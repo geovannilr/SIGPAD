@@ -219,8 +219,7 @@ function confirmarGrupo(idAlumno,flag){ // FUNCION PARA QUE EL ALUMNO ACEPTE PER
            url:getCurrentUrl()+'/confirmarGrupo',
            data:{'id':idAlumno,'aceptar':aceptar},
            success:function(data){
-              console.log(data);
-              if (data.errorCode == 0) {
+              if (data.errorCode == 0 || data.errorCode == 2) {
 	            swal({
 		            title: "",
 		            text: data.errorMessage, 
@@ -231,15 +230,10 @@ function confirmarGrupo(idAlumno,flag){ // FUNCION PARA QUE EL ALUMNO ACEPTE PER
 	        	.then((aceptar) => {
 		          if (aceptar) {
 		           	location.reload();
-		          } else {
-		            
 		          }
 	        	});
-		           //	swal("", data.errorMessage, "success");
-		           //	location.reload();
               }else if (data.errorCode == 1){
               	swal("", data.errorMessage, "error");
-              	console.log(data.msg);
               }
               
            },
