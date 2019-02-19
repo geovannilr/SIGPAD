@@ -299,7 +299,7 @@ class ConformarGrupoController extends Controller
                   }else
                   {  
                      session(['idGrupo' => 0 ]);
-                     return response()->json(['errorCode'=>2,'errorMessage'=>'Error al modificar tipoDocumento de alumno en el grupo de trabajo de graduación','msg'=>$resultado]);
+                     return response()->json(['errorCode'=>1,'errorMessage'=>'Error al modificar tipoDocumento de alumno en el grupo de trabajo de graduación','msg'=>$resultado]);
 
                   }
                   
