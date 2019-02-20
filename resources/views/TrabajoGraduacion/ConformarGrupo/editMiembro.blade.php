@@ -41,9 +41,12 @@
       });
      $( "#formEditMiembro" ).submit(function( event ) {
       var contador = 0;
+      var contadorRetirados = 0 ;
         $('.roles').each(function(){
           if (parseInt($(this).val()) == 1 ){
             contador++;
+          }else if (parseInt($(this).val()) == 2 ){
+            contadorRetirados++;
           }
 
           //console.log($(this).val());
@@ -53,6 +56,28 @@
           swal("", "Debe seleccionar al menos un líder", "error");
           event.preventDefault();
           
+        }else if (contadorRetirados > 0) {
+          var textMsj = "";
+          if (contadorRetirados == 1) {
+            textMsj = "Se hará el retiro de  "+contadorRetirados + " Estudiante del grupo , Está seguro que desea guardar los cambios?,tenga en cuenta que ESTA ACCION NO PODRA DESHACERCE";
+          }else {
+            textMsj = "Se hará el retiro de  "+contadorRetirados + " Estudiantes del grupo , Está seguro que desea guardar los cambios?, tenga en cuenta que ESTA ACCION NO PODRA DESHACERCE";
+          }
+          event.preventDefault();
+          swal({
+              title: "Actualización de Roles",
+              text: textMsj , 
+              icon: "warning",
+              buttons: true,
+              successMode: true,
+          })
+          .then((aceptar) => {
+            if (aceptar) {
+              this.submit();
+            } else {
+              return;
+            }
+          });   
         }
         
 
@@ -81,28 +106,29 @@
   				<tbody>
   				@foreach($resultado as $estudiante)
           <tr>
-            <input type="hidden" name="carnets[]" value="{{$estudiante->carnet}}">
             <td>{{$estudiante->carnet}}</td>
             <td>{{$estudiante->Nombre}}</td>
             <td>
-              <select class="form-control roles" name="{{$estudiante->carnet}}">
-               @if($estudiante->Cargo == 'Lider')
-                 <option value="1" selected="selected">Líder</option>
-                 <option value="0"> Miembro</option>
-                 <option value="2">Retirado</option>
-               @else
-                 @if($estudiante->Cargo == 'Miembro')
-                   <option value="1">Lider</option>
-                   <option value="0" selected="selected"> Miembro</option>
+              
+              @if($estudiante->Cargo == 'RETIRADO')
+                <p class="text-danger"><b>{{$estudiante->Cargo}}</b></p>
+              @else
+                  <input type="hidden" name="carnets[]" value="{{$estudiante->carnet}}">
+                  <select class="form-control roles" name="{{$estudiante->carnet}}">
+                 @if($estudiante->Cargo == 'Lider')
+                   <option value="1" selected="selected">Líder</option>
+                   <option value="0"> Miembro</option>
                    <option value="2">Retirado</option>
                  @else
-                   <option value="1">Lider</option>
-                   <option value="0" > Miembro</option>
-                   <option value="2" selected="selected">Retirado</option>  
+                   @if($estudiante->Cargo == 'Miembro')
+                     <option value="1">Lider</option>
+                     <option value="0" selected="selected"> Miembro</option>
+                     <option value="2">Retirado</option>
+                   @endif
                  @endif
-               
-               @endif
-              </select>
+                </select>
+              @endif
+              
             </td>
           </tr>  
           @endforeach
