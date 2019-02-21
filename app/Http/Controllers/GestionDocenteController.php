@@ -66,7 +66,8 @@ class GestionDocenteController extends Controller
             }
            
        }
-       return view('PerfilDocente.index', compact('info','academica','laboral','certificaciones','habilidades','bodySelectPrincipal','bodySelectSecundario','habilidadesSelect'));
+       $niveles = cat_ski_skillModel::getNivelesSkills();
+       return view('PerfilDocente.index', compact('info','academica','laboral','certificaciones','habilidades','bodySelectPrincipal','bodySelectSecundario','habilidadesSelect','niveles'));
     }
     function create(){
         return view('PerfilDocente.create');
