@@ -61,6 +61,15 @@
         },
         order: [ 0, 'asc' ],
     	});
+
+        $(".btnUp,.btnDwn").click(function(){
+            var row = $(this).parents("tr:first");
+            if ($(this).is(".btnUp")) {
+                row.insertBefore(row.prev());
+            } else {
+                row.insertAfter(row.next());
+            }
+        });
 	});
 	
 </script>
@@ -89,7 +98,7 @@
 					<th>Jornada</th>
                      @can('catJornada.edit')
                     <th style="text-align: center;">Acciones</th>
-
+                         <th>Orden</th>
                     @endcan
                     @can('catJornada.destroy')
                     @endcan
@@ -115,6 +124,18 @@
                                     </div>
                                 @endcan
                             </div>
+                        </td>
+                        <td style="width: 160px">
+                            <div class="row">
+                                    <div class="col-6">
+                                        <button type="button" class="btn btn-success btnUp"><i class="fa fa-arrow-up"></i></button>
+                                    </div>
+                                    <div class="col-6">
+                                        <button type="button" class="btn btn-danger btnDwn"><i class="fa fa-arrow-down"></i></button>
+                                    </div>
+                            </div>
+                            <input type="hidden" value="{{$catJornad->orden_cat_tpo_jrn_dcn}}" id="ordini"/>
+                            <input type="hidden" value="{{$catJornad->orden_cat_tpo_jrn_dcn}}" id="ordfin"/>
                         </td>
                     </tr>
 				@endforeach 
