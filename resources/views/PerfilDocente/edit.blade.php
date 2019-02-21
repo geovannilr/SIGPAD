@@ -77,6 +77,15 @@
                         </select>
                     </div>
                 </div>
+                <hr>
+                <div class="row">
+                    <div class="col-sm-3 col-md-2 col-5">
+                        <label style="font-weight:bold;">Orden</label>
+                    </div>
+                    <div class="col-md-8 col-6">
+                        <input type="number" class="form-control" name="orden" value="{{$docente->pdg_dcn_prioridad}}">
+                    </div>
+                </div>
               <br>
                 @can('gestionDocente.edit')
             <div class="row">

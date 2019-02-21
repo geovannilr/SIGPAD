@@ -478,14 +478,17 @@ class GestionDocenteController extends Controller
                 'cargoPrincipal' => 'required',
                 'jornada' => 'required',
                 'disponibilidad' => 'required'
-                ,'es_visible'    =>  'required'
+                ,'es_visible'    =>  'required',
+                'orden'    =>  'required|numeric'
             ],
             [
                 'docente.required' => 'El docente es obligatorio',
                 'cargoPrincipal.required' => 'Debe seleccionar un cargo principal.',
                 'jornada.required' => 'Debe seleccionar una jornada',
                 'disponibilidad.required' => 'Debe seleccionar la disponibilidad'
-                ,'es_visible.required' => 'Es necesario seleccionar el estado'
+                ,'es_visible.required' => 'Es necesario seleccionar el estado',
+                'orden.required' => 'Es necesario que ingrese un orden',
+                'orden.numeric' => 'Al ingresar el orden solo se permiten números enteros.'
             ]
         );
        $docente = pdg_dcn_docenteModel::find($request['docente']);
@@ -501,6 +504,7 @@ class GestionDocenteController extends Controller
        $docente->tipoJornada        = $request['jornada'];
        $docente->activo             = $request['disponibilidad'];
        $docente->es_visible_pdg_dcn = $request['es_visible'];
+       $docente->pdg_dcn_prioridad  = $request['orden'];
        $docente->save();
       Session::flash('message','Actualización  de información de Docente realizada con éxito.');
       return Redirect::to('listadoDocentes'); 
