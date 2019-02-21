@@ -204,3 +204,4 @@ Route::resource ('pdgAspectos','pdg_asp_aspectos_evaluativosController');
 Route::resource ('catCriterios','cat_cri_eva_criterio_evaluacionController');
 Route::resource ('parParametros','gen_par_parametrosController');
 Route::resource ('catJornada','cat_tpo_jrn_dcn_tipo_jornada_docenteController');
+Route::post('sortCatJornada','cat_tpo_jrn_dcn_tipo_jornada_docenteController@sort')->name('sortCatJornada');
