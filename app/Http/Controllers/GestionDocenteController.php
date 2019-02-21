@@ -141,21 +141,25 @@ class GestionDocenteController extends Controller
                     if (is_null($academica["descripcion"])) {
                         $descripcion = "N/A";
                     }
-                   $lastId = dcn_his_historial_academicoModel::create
-                    ([
-                        'id_pdg_dcn'                => $idDocente,
-                        'id_cat_mat'                => $idMateria,
-                        'id_cat_car'                => $academica["cargo"],
-                        'anio'                      => $academica["anho"],
-                        'descripcion_adicional'     => $academica["descripcion"] 
-                        
-                    ]);
+                  $historial = dcn_his_historial_academicoModel::where('id_cat_mat','=', $materia->id_cat_mat )->where('anio','=',$academica["anho"])->first();
+                  if (empty($historial->id_dcn_his)) {
+                      $lastId = dcn_his_historial_academicoModel::create
+                      ([
+                          'id_pdg_dcn'                => $idDocente,
+                          'id_cat_mat'                => $idMateria,
+                          'id_cat_car'                => $academica["cargo"],
+                          'anio'                      => $academica["anho"],
+                          'descripcion_adicional'     => $academica["descripcion"] 
+                          
+                      ]);
+                  }
+                   
                 }
             }
             $bodyHtml .= '<tr>';
                         $bodyHtml .= '<td>EXPERIENCIA ACADEMICA</td>';
                         $bodyHtml .= '<td><span class="badge badge-success">OK</span></td>';
-                        $bodyHtml .= '<td>Todos los registros se realizaron exitosamente.</td>';
+                        $bodyHtml .= '<td>Todos los registros válidos  se realizaron exitosamente.</td>';
                         $bodyHtml .= '</tr>';
         } catch (\Exception $e) {
            $bodyHtml .= '<tr>';
@@ -184,7 +188,7 @@ class GestionDocenteController extends Controller
             $bodyHtml .= '<tr>';
                         $bodyHtml .= '<td>CERTIFICACIONES</td>';
                         $bodyHtml .= '<td><span class="badge badge-success">OK</span></td>';
-                        $bodyHtml .= '<td>Todos los registros se realizaron exitosamente.</td>';
+                        $bodyHtml .= '<td>Todos los registros válidos se realizaron exitosamente.</td>';
                         $bodyHtml .= '</tr>';
         } catch (\Exception $e) {
            $bodyHtml .= '<tr>';
@@ -220,7 +224,7 @@ class GestionDocenteController extends Controller
             $bodyHtml .= '<tr>';
                         $bodyHtml .= '<td>HABILIDADES</td>';
                         $bodyHtml .= '<td><span class="badge badge-success">OK</span></td>';
-                        $bodyHtml .= '<td>Todos los registros se realizaron exitosamente.</td>';
+                        $bodyHtml .= '<td>Todos los registros válidos se realizaron exitosamente.</td>';
                         $bodyHtml .= '</tr>';
         } catch (\Exception $e) {
            $bodyHtml .= '<tr>';
