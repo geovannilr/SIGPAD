@@ -122,7 +122,7 @@ class GestionDocenteController extends Controller
             $bodyHtml .= '<tr>';
                         $bodyHtml .= '<td>EXPERIENCIA LABORAL</td>';
                         $bodyHtml .= '<td><span class="badge badge-success">OK</span></td>';
-                        $bodyHtml .= '<td>Todos los registros se realizaron exitosamente.</td>';
+                        $bodyHtml .= '<td>Todos los registros válidos se realizaron exitosamente.</td>';
                         $bodyHtml .= '</tr>';
         } catch (\Exception $e) {
            $bodyHtml .= '<tr>';

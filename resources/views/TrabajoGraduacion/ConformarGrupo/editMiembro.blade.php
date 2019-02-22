@@ -58,11 +58,10 @@
           
         }else if (contadorRetirados > 0) {
           var textMsj = "";
-          if (contadorRetirados == 1) {
-            textMsj = "Se hará el retiro de  "+contadorRetirados + " Estudiante del grupo , Está seguro que desea guardar los cambios?,tenga en cuenta que ESTA ACCION NO PODRA DESHACERCE";
-          }else {
-            textMsj = "Se hará el retiro de  "+contadorRetirados + " Estudiantes del grupo , Está seguro que desea guardar los cambios?, tenga en cuenta que ESTA ACCION NO PODRA DESHACERCE";
-          }
+          var num = "";
+          if (contadorRetirados != 1)
+              num = "s";
+          textMsj = "Se hará el retiro de  " + contadorRetirados + " Estudiante" + num + " del grupo, ¿Está seguro que desea guardar los cambios? Tenga en cuenta que ESTA ACCION NO PODRA DESHACERSE";
           event.preventDefault();
           swal({
               title: "Actualización de Roles",
