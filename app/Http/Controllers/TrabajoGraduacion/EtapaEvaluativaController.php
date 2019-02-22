@@ -11,6 +11,7 @@ use Redirect;
 use Session;
 use \App\cat_eta_eva_etapa_evalutativaModel;
 use \App\gen_EstudianteModel;
+use \App\gen_par_parametrosModel;
 use \App\pdg_gru_est_grupo_estudianteModel;
 use \App\pdg_gru_grupoModel;
 use \App\pdg_not_cri_tra_nota_criterio_trabajoModel;
@@ -308,7 +309,8 @@ class EtapaEvaluativaController extends Controller {
 			}
 
             $configura = ($trabajoGraduacion->id_cat_tpo_tra_gra!=1)&&($documentos == "NA");
-			return view('TrabajoGraduacion.EtapaEvaluativa.show', compact('bodyHtml', 'nombreEtapa', 'ponderacion', 'id','idGrupo','actual','configura'));
+			$infoAprb = "Para aprobar la etapa no es obligatorio haber añadido notas, únicamente es OBLIGATORIO que el grupo haya cargado, por lo menos, un archivo.".(self::areNotasRequired()?"\n Tenga en cuenta que al llegar a la última etapa se le solicitarán las notas para finalizar el Trabajo de Graduación. ":"");
+			return view('TrabajoGraduacion.EtapaEvaluativa.show', compact('bodyHtml', 'nombreEtapa', 'ponderacion', 'id','idGrupo','actual','configura','infoAprb'));
 			//return $bodyHtml;
 		
 
@@ -521,12 +523,17 @@ class EtapaEvaluativaController extends Controller {
         $idEtaActual = self::getIdEtapaActual($trabajoGraduacion->id_pdg_tra_gra);
 
         if (intval($idEtapa)==$idEtaActual){
-            $resultadoAvance = pdg_tra_gra_trabajo_graduacionModel::avanzarProceso($trabajoGraduacion->id_pdg_tra_gra);
-            if($resultadoAvance->p_result == 0){
-                $msgType = "success";
-                $msg = "Etapa aprobada éxitosamente!";
-            }else{
-                $msg = "Error al intentar aprobar la etapa";
+            $dataAprobacion = self::validarAprobacionEtapa($trabajoGraduacion->id_pdg_gru,$idEtaActual);
+            if($dataAprobacion['success']){
+                $resultadoAvance = pdg_tra_gra_trabajo_graduacionModel::avanzarProceso($trabajoGraduacion->id_pdg_tra_gra);
+                if($resultadoAvance->p_result == 0){
+                    $msgType = "success";
+                    $msg = "Etapa aprobada éxitosamente!";
+                }else{
+                    $msg = "Error al intentar aprobar la etapa";
+                }
+            } else {
+                $msg = "No se puede aprobar esta etapa, valide requisitos de notas y de documentos.";
             }
         }else{
             $msg = "No puede aprobar esta etapa, no es la etapa actual.";
@@ -536,34 +543,8 @@ class EtapaEvaluativaController extends Controller {
     }
 
     public function dataAprbEta($idGrupo,$idEtapa){
-        $traGra = pdg_tra_gra_trabajo_graduacionModel::where('id_pdg_gru', '=',$idGrupo)->first();
-
-        $etapa = pdg_apr_eta_tra_aprobador_etapa_trabajoModel::getEtapa($traGra->id_pdg_tra_gra,pdg_apr_eta_tra_aprobador_etapa_trabajoModel::T_BUSQ_ACTUAL);
-        $etapaSig = pdg_apr_eta_tra_aprobador_etapa_trabajoModel::getEtapa($traGra->id_pdg_tra_gra,pdg_apr_eta_tra_aprobador_etapa_trabajoModel::T_BUSQ_SIGUIENTE);
-
-        $coinciden = false;
-
-        if(!empty($etapa->id_cat_eta_eva)){
-            if($etapa->id_cat_eta_eva!=999){//Valor etapa de cierre
-                $cantArchValid = self::validarArchivosSubidos($traGra->id_pdg_tra_gra,$idEtapa);
-                if($etapaSig!=null){
-                    $coinciden = (intval($idEtapa) === $etapa->id_cat_eta_eva);
-                    $message = !$coinciden ? "No puede aprobar esta etapa.<br>El proceso se encuentra en <b>".$etapa->nombre_cat_eta_eva."</b>, verifique el estado de dicha etapa primero.":
-                        ($cantArchValid ? "Aprobar esta etapa, habilitará la subida de archivos, calficaciones y configuraciones de la siguiente etapa: <b>".$etapaSig->nombre_cat_eta_eva.".</b><br>¿Desea continuar?"
-                                : "<i>Para poder aprobar la etapa, el grupo debe subir al menos un archivo por tipo de documento.</i>");
-                    $coinciden = $coinciden&&$cantArchValid;
-                }else{
-                    $coinciden = (intval($idEtapa) === $etapa->id_cat_eta_eva)&&$cantArchValid;
-                    $message = $coinciden?"Aprobar esta etapa habilitará la etapa de <b>Cierre de Trabajo de Graduación</b>, los estudiantes podrán cargar los documentos requeridos para la Biblioteca de Trabajos de Graduación<br>".
-                        "<i>Tenga en cuenta que tiene que revisar y aprobar esos documentos para dar por finalizado el Proceso de Trabajo de Graduación.</i>":"<i>Para poder aprobar la etapa, el grupo debe subir al menos un documento.</i>";
-                }
-            }else{
-                $message = "El proceso se encuentra en etapa de <b>Cierre de Trabajo de Graduación</b>, consulte la opción en el Dashboard";
-            }
-        }else{
-            $message = "Esta acción está deshabilitada debido el avance actual del Trabajo de Graduación.";
-        }
-	    return response()->json(['success'=>$coinciden,'msg'=>$message]);
+        $aprobacionValid = self::validarAprobacionEtapa($idGrupo,$idEtapa);
+        return response()->json($aprobacionValid);
     }
 
     public function getIdEtapaActual($idTraGra){
@@ -600,5 +581,67 @@ class EtapaEvaluativaController extends Controller {
             $isValid = false;
         }
         return $isValid;
+    }
+
+    public static function validarNotasRequeridas($idGrupo){
+	    $valid = false;
+	    try{
+            if (self::areNotasRequired()){
+                $conteoNotas = pdg_not_cri_tra_nota_criterio_trabajoModel::verificarGrupoNotas($idGrupo);
+                if ($conteoNotas->evaluaciones == $conteoNotas->evaluadas) {
+                    $valid = true;
+                }
+            } else {
+                $valid = true;
+            }
+        }catch (\Exception $e){
+            $valid = false;
+        }
+        return $valid;
+    }
+
+    public static function validarAprobacionEtapa($idGrupo, $idEtapa){
+        $traGra = pdg_tra_gra_trabajo_graduacionModel::where('id_pdg_gru', '=',$idGrupo)->first();
+
+        $etapa = pdg_apr_eta_tra_aprobador_etapa_trabajoModel::getEtapa($traGra->id_pdg_tra_gra,pdg_apr_eta_tra_aprobador_etapa_trabajoModel::T_BUSQ_ACTUAL);
+        $etapaSig = pdg_apr_eta_tra_aprobador_etapa_trabajoModel::getEtapa($traGra->id_pdg_tra_gra,pdg_apr_eta_tra_aprobador_etapa_trabajoModel::T_BUSQ_SIGUIENTE);
+
+        $coinciden = false;
+
+        if(!empty($etapa->id_cat_eta_eva)){
+            if($etapa->id_cat_eta_eva!=999){//Valor etapa de cierre
+                $cantArchValid = self::validarArchivosSubidos($traGra->id_pdg_tra_gra,$idEtapa);
+                if($etapaSig!=null){
+                    $coinciden = (intval($idEtapa) === $etapa->id_cat_eta_eva);
+                    $message = !$coinciden ? "No puede aprobar esta etapa.<br>El proceso se encuentra en <b>".$etapa->nombre_cat_eta_eva."</b>, verifique el estado de dicha etapa primero.":
+                        ($cantArchValid ? "Aprobar esta etapa, habilitará la subida de archivos, calficaciones y configuraciones de la siguiente etapa: <b>".$etapaSig->nombre_cat_eta_eva.".</b><br>¿Desea continuar?"
+                            : "<i>Para poder aprobar la etapa, el grupo debe subir al menos un archivo por tipo de documento.</i>");
+                    $coinciden = $coinciden&&$cantArchValid;
+                }else{
+                    $coinciden = (intval($idEtapa) === $etapa->id_cat_eta_eva)&&$cantArchValid;
+                    $message = $coinciden?"Aprobar esta etapa habilitará la etapa de <b>Cierre de Trabajo de Graduación</b>, los estudiantes podrán cargar los documentos requeridos para la Biblioteca de Trabajos de Graduación<br>".
+                        "<i>Tenga en cuenta que tiene que revisar y aprobar esos documentos para dar por finalizado el Proceso de Trabajo de Graduación.</i>":"<i>Para poder aprobar la etapa, el grupo debe subir al menos un documento.</i>";
+                    $notasRegistradas = self::validarNotasRequeridas($traGra->id_pdg_gru);
+                    $notasMsg = $notasRegistradas ? "" : "<br/><br/><b>ADVERTENCIA: El ingreso de notas es obligatorio para dar por cerrado el trabajo de graduación, existen etapas pendientes de calificar.</b>";
+                    $coinciden = $coinciden&&$notasRegistradas;
+                    $message .= $notasMsg;
+                }
+            }else{
+                $message = "El proceso se encuentra en etapa de <b>Cierre de Trabajo de Graduación</b>, consulte la opción en el Dashboard";
+            }
+        }else{
+            $message = "Esta acción está deshabilitada debido el avance actual del Trabajo de Graduación.";
+        }
+        return ['success'=>$coinciden,'msg'=>$message];
+    }
+
+    public static function areNotasRequired(){
+	    try{
+            $result = gen_par_parametrosModel::where('nombre_gen_par','like','NOTASREQUIRED')->first();
+            $required = ($result->valor_gen_par == 1);
+        }catch (\Exception $exception){
+            $required = false;
+        }
+        return $required;
     }
 }
