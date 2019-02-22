@@ -142,7 +142,7 @@ class GestionDocenteController extends Controller
                     if (is_null($academica["descripcion"])) {
                         $descripcion = "N/A";
                     }
-                  $historial = dcn_his_historial_academicoModel::where('id_cat_mat','=', $materia->id_cat_mat )->where('anio','=',$academica["anho"])->first();
+                  $historial = dcn_his_historial_academicoModel::where('id_cat_mat','=', $materia->id_cat_mat )->where('anio','=',$academica["anho"])->where('id_pdg_dcn','=',$idDocente)->first();
                   if (empty($historial->id_dcn_his)) {
                       $lastId = dcn_his_historial_academicoModel::create
                       ([
