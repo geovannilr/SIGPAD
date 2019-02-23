@@ -146,6 +146,19 @@ class cat_ctg_tra_categoria_trabajo_graduacionController extends Controller
 
         $categoriaTDG->fill($request->all());
         $categoriaTDG->save();
+        $tiposSkill=$request['tiposSkill'];
+        //BORRAMOS Y LUEGO VOLVEMOS A HACER LOS INSERT DE LOS TIPOS DE SKILL ASOCIADOS
+        $tiposSkillCat = rel_cat_tpo_ski_cat_ctg_traModel::where('id_cat_ctg_tra','=',$id)->get();
+        foreach ($tiposSkillCat as $tipo ) {
+            rel_cat_tpo_ski_cat_ctg_traModel::destroy($tipo->id_rel_cat_tpo_ski_cat_ctg_tra);
+        }
+        foreach ($tiposSkill as $tipoSkill ) {
+        rel_cat_tpo_ski_cat_ctg_traModel::create
+            ([
+                'id_tpo_ski'=> $tipoSkill ,
+                'id_cat_ctg_tra'=> $id
+            ]);
+        }
         Session::flash('message','Categoría de TDG Modificada correctamente!');
         return Redirect::to('categoriaTDG');
     }
