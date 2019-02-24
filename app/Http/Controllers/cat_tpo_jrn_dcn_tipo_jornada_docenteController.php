@@ -17,7 +17,7 @@ class cat_tpo_jrn_dcn_tipo_jornada_docenteController extends Controller
     {
         $userLogin=Auth::user();
         if ($userLogin->can(['catJornada.index'])) {
-            $catJornada= cat_tpo_jrn_dcn_tipo_jornada_docenteModel::all();
+            $catJornada= cat_tpo_jrn_dcn_tipo_jornada_docenteModel::orderBy('orden_cat_tpo_jrn_dcn','asc')->get();
             return view('catJornada.index',compact('catJornada'));
 
         }else{
@@ -139,5 +139,21 @@ class cat_tpo_jrn_dcn_tipo_jornada_docenteController extends Controller
             Session::flash('message-error', 'No tiene permisos para acceder a esta opción');
             return  view('template');
         }
+    }
+
+    public function sort(Request $request){
+        $data = $request['data'];
+        $errorCode = -1;
+        $errorMessage = "No se procesaron los datos";
+        try{
+            $errorMessage = "¡Orden actualizado satisfactoriamente!";
+            $errorCode = cat_tpo_jrn_dcn_tipo_jornada_docenteModel::bulkUpdateOrder($data);
+            $info = "nothing to show";
+        }catch (Exception $exception){
+            $info = $exception->getMessage();
+            $errorCode = 1;
+            $errorMessage = "Su solicitud no pudo ser procesada, intente más tarde.";
+        }
+        return response()->json(['errorCode'=>$errorCode,'errorMessage'=>$errorMessage,'info'=>$info]);
     }
 }

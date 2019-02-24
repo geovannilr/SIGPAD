@@ -66,7 +66,8 @@ class GestionDocenteController extends Controller
             }
            
        }
-       return view('PerfilDocente.index', compact('info','academica','laboral','certificaciones','habilidades','bodySelectPrincipal','bodySelectSecundario','habilidadesSelect'));
+       $niveles = cat_ski_skillModel::getNivelesSkills();
+       return view('PerfilDocente.index', compact('info','academica','laboral','certificaciones','habilidades','bodySelectPrincipal','bodySelectSecundario','habilidadesSelect','niveles'));
     }
     function create(){
         return view('PerfilDocente.create');
@@ -121,7 +122,7 @@ class GestionDocenteController extends Controller
             $bodyHtml .= '<tr>';
                         $bodyHtml .= '<td>EXPERIENCIA LABORAL</td>';
                         $bodyHtml .= '<td><span class="badge badge-success">OK</span></td>';
-                        $bodyHtml .= '<td>Todos los registros se realizaron exitosamente.</td>';
+                        $bodyHtml .= '<td>Todos los registros válidos se realizaron exitosamente.</td>';
                         $bodyHtml .= '</tr>';
         } catch (\Exception $e) {
            $bodyHtml .= '<tr>';
@@ -141,21 +142,25 @@ class GestionDocenteController extends Controller
                     if (is_null($academica["descripcion"])) {
                         $descripcion = "N/A";
                     }
-                   $lastId = dcn_his_historial_academicoModel::create
-                    ([
-                        'id_pdg_dcn'                => $idDocente,
-                        'id_cat_mat'                => $idMateria,
-                        'id_cat_car'                => $academica["cargo"],
-                        'anio'                      => $academica["anho"],
-                        'descripcion_adicional'     => $academica["descripcion"] 
-                        
-                    ]);
+                  $historial = dcn_his_historial_academicoModel::where('id_cat_mat','=', $materia->id_cat_mat )->where('anio','=',$academica["anho"])->where('id_pdg_dcn','=',$idDocente)->first();
+                  if (empty($historial->id_dcn_his)) {
+                      $lastId = dcn_his_historial_academicoModel::create
+                      ([
+                          'id_pdg_dcn'                => $idDocente,
+                          'id_cat_mat'                => $idMateria,
+                          'id_cat_car'                => $academica["cargo"],
+                          'anio'                      => $academica["anho"],
+                          'descripcion_adicional'     => $academica["descripcion"] 
+                          
+                      ]);
+                  }
+                   
                 }
             }
             $bodyHtml .= '<tr>';
                         $bodyHtml .= '<td>EXPERIENCIA ACADEMICA</td>';
                         $bodyHtml .= '<td><span class="badge badge-success">OK</span></td>';
-                        $bodyHtml .= '<td>Todos los registros se realizaron exitosamente.</td>';
+                        $bodyHtml .= '<td>Todos los registros válidos  se realizaron exitosamente.</td>';
                         $bodyHtml .= '</tr>';
         } catch (\Exception $e) {
            $bodyHtml .= '<tr>';
@@ -184,7 +189,7 @@ class GestionDocenteController extends Controller
             $bodyHtml .= '<tr>';
                         $bodyHtml .= '<td>CERTIFICACIONES</td>';
                         $bodyHtml .= '<td><span class="badge badge-success">OK</span></td>';
-                        $bodyHtml .= '<td>Todos los registros se realizaron exitosamente.</td>';
+                        $bodyHtml .= '<td>Todos los registros válidos se realizaron exitosamente.</td>';
                         $bodyHtml .= '</tr>';
         } catch (\Exception $e) {
            $bodyHtml .= '<tr>';
@@ -220,7 +225,7 @@ class GestionDocenteController extends Controller
             $bodyHtml .= '<tr>';
                         $bodyHtml .= '<td>HABILIDADES</td>';
                         $bodyHtml .= '<td><span class="badge badge-success">OK</span></td>';
-                        $bodyHtml .= '<td>Todos los registros se realizaron exitosamente.</td>';
+                        $bodyHtml .= '<td>Todos los registros válidos se realizaron exitosamente.</td>';
                         $bodyHtml .= '</tr>';
         } catch (\Exception $e) {
            $bodyHtml .= '<tr>';
@@ -473,14 +478,17 @@ class GestionDocenteController extends Controller
                 'cargoPrincipal' => 'required',
                 'jornada' => 'required',
                 'disponibilidad' => 'required'
-                ,'es_visible'    =>  'required'
+                ,'es_visible'    =>  'required',
+                'orden'    =>  'required|numeric'
             ],
             [
                 'docente.required' => 'El docente es obligatorio',
                 'cargoPrincipal.required' => 'Debe seleccionar un cargo principal.',
                 'jornada.required' => 'Debe seleccionar una jornada',
                 'disponibilidad.required' => 'Debe seleccionar la disponibilidad'
-                ,'es_visible.required' => 'Es necesario seleccionar el estado'
+                ,'es_visible.required' => 'Es necesario seleccionar el estado',
+                'orden.required' => 'Es necesario que ingrese un orden',
+                'orden.numeric' => 'Al ingresar el orden solo se permiten números enteros.'
             ]
         );
        $docente = pdg_dcn_docenteModel::find($request['docente']);
@@ -496,6 +504,7 @@ class GestionDocenteController extends Controller
        $docente->tipoJornada        = $request['jornada'];
        $docente->activo             = $request['disponibilidad'];
        $docente->es_visible_pdg_dcn = $request['es_visible'];
+       $docente->pdg_dcn_prioridad  = $request['orden'];
        $docente->save();
       Session::flash('message','Actualización  de información de Docente realizada con éxito.');
       return Redirect::to('listadoDocentes'); 

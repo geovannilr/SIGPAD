@@ -168,7 +168,7 @@ class ConformarGrupoController extends Controller
         $respuesta = $estudiante->conformarGrupoSp($xmlRequest);
         if ($respuesta[0]->resultado == '0' ) {
             $usuarioLider = Auth::user()->user;
-            $estObj = gen_EstudianteModel::where('carnet','=',$usuarioLider)->first();
+            $estObj = gen_EstudianteModel::where('carnet_gen_est','=',$usuarioLider)->first();
             $estObj->disponible_gen_est = 0;
             $estObj->save();
             Session::flash('message','Grupo conformado correctamente!');
@@ -450,15 +450,24 @@ class ConformarGrupoController extends Controller
     }
 
     public function updateRolMiembro(Request $request){
-        foreach ($request['carnets'] as $carnet) { 
-            $alumno = gen_EstudianteModel::where('carnet_gen_est', '=',$carnet)->first();
-            $estudiante  =pdg_gru_est_grupo_estudianteModel::where('id_gen_est', '=',$alumno->id_gen_est)->first();
-            $objEstudiante = pdg_gru_est_grupo_estudianteModel::find($estudiante->id_pdg_gru_est);
-            $objEstudiante->eslider_pdg_gru_est = $request[$carnet];
-            $objEstudiante->save();
+        try {
+            $idGrupo = "";
+            foreach ($request['carnets'] as $carnet) { 
+                $alumno = gen_EstudianteModel::where('carnet_gen_est', '=',$carnet)->first();
+                $estudiante  =pdg_gru_est_grupo_estudianteModel::where('id_gen_est', '=',$alumno->id_gen_est)->first();
+                $idGrupo = $estudiante->id_pdg_gru;
+                $objEstudiante = pdg_gru_est_grupo_estudianteModel::find($estudiante->id_pdg_gru_est);
+                $objEstudiante->eslider_pdg_gru_est = $request[$carnet];
+                $objEstudiante->save();
+            }
+            $grupo = pdg_gru_grupoModel::find($idGrupo);
+            Session::flash('message','Se actualizaron los roles de los integrantes del Grupo '.$grupo->numero_pdg_gru);
+            return redirect('listadoGrupos');
+        } catch (\Exception $e) {
+            Session::flash('message-error','Ocurrió un error al actualizar los roles de los miembros del grupo de trabajo de graduación, por favor intente mas tarde');
+            return redirect('listadoGrupos');
         }
-        Session::flash('message','Se actualizaron los roles de los integrantes del Grupo xx-xxxx');
-        return redirect('listadoGrupos');
+        
     }
 
 }

@@ -106,4 +106,17 @@ class pdg_not_cri_tra_nota_criterio_trabajoModel extends Model
         $notas = DB::select($query,array($grupo));
         return $notas;
     }
+
+    public static function verificarGrupoNotas($idGrupo){
+        $query = "  SELECT 
+                        SUM(CASE WHEN idNota>0 THEN 1 ELSE 0 END) AS evaluaciones
+                        ,SUM(vwn.yaEvaluado) AS evaluadas
+                    FROM 
+                        view_pdg_notas vwn
+                    WHERE  
+                        vwn.idGru = :idGrupo
+                    ";
+        $result = DB::select($query,array($idGrupo));
+        return $result;
+    }
 }

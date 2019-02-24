@@ -616,9 +616,9 @@
 					<div class="form-group col-sm-4">
 						{!! Form::label('Nivel') !!}
 						<select class="form-control" name="nivel">
-							<option value="1">Principiante</option>
-							<option value="2">Intermedio</option>
-							<option value="1">Avanzado</option>
+							@foreach($niveles as $key => $nivel)
+								<option value="{{$key}}">{{$nivel}}</option>
+							@endforeach
 						</select>
 					</div>
 				</div>

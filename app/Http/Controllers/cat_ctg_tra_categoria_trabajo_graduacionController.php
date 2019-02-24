@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\cat_ctg_tra_categoria_trabajo_graduacionModel;
+use App\cat_tpo_ski_tipo_skillModel;
+use App\rel_cat_tpo_ski_cat_ctg_traModel;
 use Illuminate\Http\Request;
 use Session;
 use Redirect;
@@ -43,7 +45,8 @@ class cat_ctg_tra_categoria_trabajo_graduacionController extends Controller
     {
         $userLogin=Auth::user();
         if ($userLogin->can(['categoriaTDG.create'])) {
-            return view('categoriaTDG.create');
+            $tiposSkill =  cat_tpo_ski_tipo_skillModel::pluck('descripcion_tpo_ski', 'id_tpo_ski')->toArray();
+            return view('categoriaTDG.create',compact(['tiposSkill']));
         }else{
             Session::flash('message-error', 'No tiene permisos para acceder a esta opción');
             return  view('template');
@@ -61,18 +64,30 @@ class cat_ctg_tra_categoria_trabajo_graduacionController extends Controller
     public function store(Request $request)
     {
         $validatedData = $request->validate([
-            'nombre_cat_ctg_tra' => 'required|max:45'
+            'nombre_cat_ctg_tra' => 'required|max:45',
+            'tipoSkill'=>'required'
         ],
             [
                 'nombre_cat_ctg_tra.required' => 'El nombre de la categoria de trabajo de graduación es necesario',
-                'nombre_cat_ctg_tra.max' => 'El nombre de la categoria de trabajo de graduación debe contener como maximo 45 caracteres'
+                'nombre_cat_ctg_tra.max' => 'El nombre de la categoria de trabajo de graduación debe contener como maximo 45 caracteres',
+                'tipoSkill.required' => 'Debe seleccionar al menos un tipo de habilidad'
             ]
             );
+        $tiposSkill = $request['tipoSkill'];
 
-        cat_ctg_tra_categoria_trabajo_graduacionModel::create
+        $lastId = cat_ctg_tra_categoria_trabajo_graduacionModel::create
         ([
             'nombre_cat_ctg_tra'=> $request['nombre_cat_ctg_tra']
         ]);
+
+        foreach ($tiposSkill as $tipoSkill ) {
+        rel_cat_tpo_ski_cat_ctg_traModel::create
+            ([
+                'id_tpo_ski'=> $tipoSkill ,
+                'id_cat_ctg_tra'=> $lastId->id_cat_ctg_tra
+            ]);
+        }
+
 
         Return redirect('categoriaTDG')->with('message','Categoría Registrada correctamente!') ;
     }
@@ -99,8 +114,24 @@ class cat_ctg_tra_categoria_trabajo_graduacionController extends Controller
         $userLogin=Auth::user();
         if ($userLogin->can(['categoriaTDG.edit'])) {
             $categoriaTDG=cat_ctg_tra_categoria_trabajo_graduacionModel::find($id);
-
-            return view('categoriaTDG.edit',compact(['categoriaTDG']));
+            $tiposSkillBd =  cat_tpo_ski_tipo_skillModel::all();
+            $tiposSkill=rel_cat_tpo_ski_cat_ctg_traModel::where('id_cat_ctg_tra','=',$categoriaTDG->id_cat_ctg_tra)->get();
+            $select = "<select name='tiposSkill[]' multiple ='multiple' class='form-control' id='tiposSkill'>"; 
+            foreach ($tiposSkillBd as $tipoSkillBd ) {
+               $flag=0;
+               foreach ($tiposSkill as $tipoSkill ) {
+                   if ($tipoSkillBd->id_tpo_ski == $tipoSkill->id_tpo_ski ){
+                       $flag=1;
+                   }
+               }
+               if ($flag == 1) {
+                   $select .= "<option value='".$tipoSkillBd->id_tpo_ski."' selected>".$tipoSkillBd->descripcion_tpo_ski."</option>"; 
+               }else{
+                    $select .= "<option value='".$tipoSkillBd->id_tpo_ski."'>".$tipoSkillBd->descripcion_tpo_ski."</option>"; 
+               }
+            }
+            $select .= "</select>";
+            return view('categoriaTDG.edit',compact(['categoriaTDG','select']));
         }else{
             Session::flash('message-error', 'No tiene permisos para acceder a esta opción');
             return  view('template');
@@ -115,6 +146,19 @@ class cat_ctg_tra_categoria_trabajo_graduacionController extends Controller
 
         $categoriaTDG->fill($request->all());
         $categoriaTDG->save();
+        $tiposSkill=$request['tiposSkill'];
+        //BORRAMOS Y LUEGO VOLVEMOS A HACER LOS INSERT DE LOS TIPOS DE SKILL ASOCIADOS
+        $tiposSkillCat = rel_cat_tpo_ski_cat_ctg_traModel::where('id_cat_ctg_tra','=',$id)->get();
+        foreach ($tiposSkillCat as $tipo ) {
+            rel_cat_tpo_ski_cat_ctg_traModel::destroy($tipo->id_rel_cat_tpo_ski_cat_ctg_tra);
+        }
+        foreach ($tiposSkill as $tipoSkill ) {
+        rel_cat_tpo_ski_cat_ctg_traModel::create
+            ([
+                'id_tpo_ski'=> $tipoSkill ,
+                'id_cat_ctg_tra'=> $id
+            ]);
+        }
         Session::flash('message','Categoría de TDG Modificada correctamente!');
         return Redirect::to('categoriaTDG');
     }

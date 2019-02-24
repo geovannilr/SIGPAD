@@ -104,7 +104,7 @@
               {!! Form:: open(['route'=>'incidencias/cambiarRetirado','method'=>'POST' ,'id'=>'formCambiarRetirado']) !!}
                     <div class="btn-group">
                       <input type="hidden" name="carnet" value="{{ $estudiante->carnet_gen_est }}">
-                      <button type="submit" class="btn" style="background-color:  #102359;color: white"><i class="fa fa-pencil"></i></button>
+                      <button type="submit" class="btn" style="background-color:  #102359;color: white"><i class="fa fa-refresh"></i></button>
                     </div>
               {!! Form:: close() !!}
             </td>

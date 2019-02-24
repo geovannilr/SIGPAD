@@ -278,7 +278,7 @@
   </div>
 </div>
 <div id="infoAprb" style="display: none;">
-    Tenga en cuenta que para aprobar la etapa no es obligatorio haber añadido notas, únicamente es OBLIGATORIO que el grupo haya cargado, por lo menos, un archivo.
+    {{$infoAprb}}
 </div>
 @endcan
 <input type="hidden" id="nomEtapa" value="{{$nombreEtapa}}" />

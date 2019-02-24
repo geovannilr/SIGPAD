@@ -9,7 +9,11 @@
   		</script>		
 @endif
 <script type="text/javascript">
+    const iconOrder = "<i class='fa fa-sort-amount-asc'></i>";
+    const iconCancel = "<i class='fa fa-times'></i>";
 	$( document ).ready(function() {
+	    global = true;
+	    editOrder();
 		 $('.deleteButton').on('submit',function(e){
         if(!confirm('Estas seguro que deseas eliminar jornada')){
 
@@ -59,10 +63,95 @@
                 type: 'column'
             }
         },
-        order: [ 0, 'asc' ],
+            ordering: false,
     	});
+
+        $(".btnUp,.btnDwn").click(function(){
+            var row = $(this).parents("tr:first");
+            if ($(this).is(".btnUp")) {
+                row.insertBefore(row.prev());
+            } else {
+                row.insertAfter(row.next());
+            }
+        });
 	});
-	
+
+	function editOrder(){
+	    global = !(global);
+        var mode = global ? 1 : 0;
+	    toggleButtons(mode);
+	    toggleColumnButtons(mode);
+    }
+
+    function toggleButtons(mode){
+        if(mode==0){
+            $("#btnNewOrder").show();
+            $("#btnSaveOrder").hide();
+            $("#btnEditOrder").html(iconOrder + " Ordenar");
+            $("#btnEditOrder").removeClass("btn-secondary").addClass("btn-primary");
+        }else{
+            $("#btnNewOrder").hide();
+            $("#btnSaveOrder").show();
+            $("#btnEditOrder").html(iconCancel + " Cancelar");
+            $("#btnEditOrder").removeClass("btn-primary").addClass("btn-secondary");
+        }
+    }
+
+    function toggleColumnButtons(mode) {
+        var crudBtns = $(".primaryBtns");
+        var orderBtns = $(".secondaryBtns");
+        $.each(crudBtns, function (indx) {
+            if (mode == 0)
+                $(this).show();
+            else
+                $(this).hide();
+        });
+        $.each(orderBtns, function (indx) {
+            if (mode == 0)
+                $(this).hide();
+            else
+                $(this).show();
+        });
+    }
+
+	function saveOrder() {
+	    var url = "{{route('sortCatJornada')}}";
+	    var data = getSortedRowsData();
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN':  getCurrentTkn()
+            }
+        });
+        $.ajax({
+            type: 'POST',
+            url : url,
+            data : {data: data},
+            success: function (data) {
+                swal({
+                    title:data.errorCode == 0 ? "¡Éxito!" : "¡Aviso!",
+                    text: data.errorMessage,
+                    icon: data.errorCode == 0 ? "success" : "warning",
+                    button: "Aceptar",
+                }).then((respuesta)=>{
+                    location.reload();
+                });
+            },
+            error: function (xhr, status) {
+                swal("", "Su solicitud no pudo ser procesada!", "error");
+            }
+        });
+    }
+
+    function getSortedRowsData() {
+        var rows = $('#listTable > tbody > tr');
+        var elements = [];
+        rows.each(function (i) {
+            var inputs = $(this).find("td > input");
+            var element = {id: inputs[0].value, ordini: inputs[1].value, ordfin: (i + 1)};
+            elements.push(element);
+        });
+        return elements;
+    }
 </script>
 		<ol class="breadcrumb"  style="text-align: center; margin-top: 1em">
 	        <li class="breadcrumb-item">
@@ -70,16 +159,18 @@
 	        </li>
 	        <li class="breadcrumb-item active">Listado Jornadas</li>
 		</ol>
-		 <div class="row">
-  <div class="col-sm-3"></div>
-  <div class="col-sm-3"></div>
-   <div class="col-sm-3"></div>
-  @can('catJornada.create')
-    <div class="col-sm-3">
-      <a class="btn " href="{{route('catJornada.create')}}" style="background-color: #DF1D20; color: white"><i class="fa fa-plus"></i> Nueva Jornada </a>
-    </div>
-  @endcan
-  </div> 
+<div class="row">
+    <div class="col-sm-3"></div>
+    <div class="col-sm-3"></div>
+    <div class="col-sm-3"></div>
+    @can('catJornada.create')
+        <div class="col-sm-3">
+            <a class="btn" id="btnNewOrder" href="{{route('catJornada.create')}}" style="background-color: #DF1D20; color: white"><i class="fa fa-plus"></i> Nueva Jornada </a>
+            <button type="button" class="btn btn-primary" id="btnSaveOrder" onclick="saveOrder();"><i class="fa fa-save"></i> Guardar</button>
+            <button type="button" class="btn btn-primary" id="btnEditOrder" onclick="editOrder();"><i class="fa fa-sort-amount-asc"></i> Ordenar</button>
+        </div>
+    @endcan
+</div>
 
 		<br>
   		<div class="table-responsive">
@@ -89,7 +180,6 @@
 					<th>Jornada</th>
                      @can('catJornada.edit')
                     <th style="text-align: center;">Acciones</th>
-
                     @endcan
                     @can('catJornada.destroy')
                     @endcan
@@ -97,9 +187,13 @@
   				<tbody>
   				@foreach($catJornada as $catJornad)
 					<tr>
-						<td>{{ $catJornad->descripcion_cat_tpo_jrn_dcn}}</td>
+						<td>
+                            {{ $catJornad->descripcion_cat_tpo_jrn_dcn}}
+                            <input type="hidden" value="{{$catJornad->id_cat_tpo_jrn_dcn}}" name="id"/>
+                            <input type="hidden" value="{{$catJornad->orden_cat_tpo_jrn_dcn}}" name="ordini"/>
+                        </td>
                         <td style="width: 160px">
-                            <div class="row">
+                            <div class="row primaryBtns" >
                                 @can('catJornada.edit')
                                 <div class="col-6">
                                     <a class="btn " style="background-color:  #102359;color: white" href="{{route('catJornada.edit',$catJornad->id_cat_tpo_jrn_dcn)}}"><i class="fa fa-pencil"></i></a>
@@ -114,6 +208,14 @@
                                         {!! Form:: close() !!}
                                     </div>
                                 @endcan
+                            </div>
+                            <div class="row secondaryBtns" >
+                                <div class="col-6">
+                                    <button type="button" class="btn btn-success btnUp"><i class="fa fa-arrow-up"></i></button>
+                                </div>
+                                <div class="col-6">
+                                    <button type="button" class="btn btn-danger btnDwn"><i class="fa fa-arrow-down"></i></button>
+                                </div>
                             </div>
                         </td>
                     </tr>

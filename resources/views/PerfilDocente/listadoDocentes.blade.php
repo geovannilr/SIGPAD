@@ -52,7 +52,7 @@
                 type: 'column'
             }
         },
-        order: [ 0, 'asc' ],
+        order: [ 7, 'desc' ],
     	});
 	});
 	
@@ -85,6 +85,7 @@
           <th>Cargo Secundario</th>
           <th>Disponibilidad</th>
           <th title="Propiedad que muestra/oculta al docente en el sitio de la Escuela">Estado</th>
+          <th>Orden</th>
           @can('gestionDocente.edit')
               <th>Modificar</th>
           @endcan
@@ -115,6 +116,9 @@
                             @else
                                 <span class="badge badge-secondary" title="Este docente no aparecerá listado en el sitio de la EISI">Oculto</span>
                             @endif
+                        </td>
+                        <td>
+                          {{$docente->pdg_dcn_prioridad}}
                         </td>
                         @can('gestionDocente.edit')
                             <td style="text-align: center;">
