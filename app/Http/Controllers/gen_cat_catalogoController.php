@@ -32,7 +32,14 @@ class gen_cat_catalogoController extends Controller
      */
     public function create()
     {
-        //
+
+        $userLogin=Auth::user();
+        if ($userLogin->can(['catMateria.create'])) {
+            return view('catMateria.create');
+        }else{
+            Session::flash('message-error', 'No tiene permisos para acceder a esta opción');
+            return  view('template');
+        }
     }
 
     /**
@@ -43,7 +50,39 @@ class gen_cat_catalogoController extends Controller
      */
     public function store(Request $request)
     {
-        //
+
+        $validatedData = $request->validate([
+            'codigo_mat' => 'required|max:6',
+            'nombre_mat' => 'required|max:100',
+            'anio_pensum'=> 'required|max:4',
+            'ciclo' => 'required|max:1'
+        ],
+            [
+                'codigo_mat.required' => 'El código de materia es necesario',
+                'codigo_mat.max' => 'El código de materia contener como maximo 6 caracteres',
+                'nombre_mat.required'=> 'El nombre de la materia es necesario',
+                'nombre_mat.max'=> 'El nombre de la materia máximo 100 caracteres',
+                'anio_pensum.required' => 'El año de pensum es necesario',
+                'anio_pensum.max' => 'El año de pensum debe contener 4 carácteres como máximo',
+                'ciclo.required' => 'Debe ingresar ciclo',
+                'ciclo.max' => 'El ciclo debe contener como maximo 1 caracter'
+            ]
+
+        );
+
+
+
+        cat_mat_materiaModel::create
+        ([
+            'codigo_mat'       	 => $request['codigo_mat'],
+            'nombre_mat'       	 => $request['nombre_mat'],
+            'anio_pensum'       	 => $request['anio_pensum'],
+            'ciclo'       	 => $request['ciclo']
+
+        ]);
+
+        Return redirect('catMateria')->with('message','Materia Registrada correctamente!') ;
+
     }
 
     /**
@@ -65,7 +104,16 @@ class gen_cat_catalogoController extends Controller
      */
     public function edit($id)
     {
-        //
+
+        $userLogin=Auth::user();
+        if ($userLogin->can(['catMateria.edit'])) {
+            $catMateria= cat_mat_materiaModel::find($id);
+
+            return view('catMateria.edit',compact(['catMateria']));
+        }else{
+            Session::flash('message-error', 'No tiene permisos para acceder a esta opción');
+            return  view('template');
+        }
     }
 
     /**
@@ -77,7 +125,13 @@ class gen_cat_catalogoController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $catMateria=cat_mat_materiaModel::find($id);
+
+        $catMateria->fill($request->all());
+        $catMateria->save();
+        // Session::flash('message','Tipo Documento Modificado correctamente!');
+        return Redirect::to('catMateria');
+
     }
 
     /**
@@ -88,6 +142,25 @@ class gen_cat_catalogoController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $userLogin=Auth::user();
+        if ($userLogin->can(['catMateria.destroy']))
+        {
+            try {
+                cat_mat_materiaModel::destroy($id);
+
+            } catch (\PDOException $e)
+            {
+                Session::flash('message-error', 'No es posible eliminar este registro, está siendo usado.');
+                return Redirect::to('catMateria');
+            }
+            Session::flash('message','Materia Eliminada Correctamente!');
+            return Redirect::to('catMateria');
+
+        }else{
+            Session::flash('message-error', 'No tiene permisos para acceder a esta opción');
+            return  view('template');
+        }
+
     }
+
 }
