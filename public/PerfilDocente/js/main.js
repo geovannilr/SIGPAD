@@ -209,6 +209,8 @@ function distribuirData(data) {
     var sectionData = [];
     var counters = [];
     var rowFlags = [];
+    var d = new Date();
+    var t= d.getTime();
     for(var i = 0; i<data.length; i++){
         var cargo2 = data[i]['nombre_cargo2'];
         var tpoPriv = parseInt(data[i]['perfilPrivado']);
@@ -226,7 +228,7 @@ function distribuirData(data) {
             '<div class="col-md-4"><blockquote>'+
             (tpoPriv===1?'':'<a href="'+ip+'/perfilDocente/'+data[i]['id_pdg_dcn']+'"  data-target="#myModal" target="myModal">')+
             '<div class=""><div class="text-center">'+
-            '<img class="img-circle" id="imgPerfil" src="'+ip+'/Uploads/PerfilDocente/'+data[i]['dcn_profileFoto']+' " style="object-fit: cover;" > '+
+            '<img class="img-circle" id="imgPerfil" src="'+ip+'/Uploads/PerfilDocente/'+data[i]['dcn_profileFoto']+'?'+t+'" style="object-fit: cover;" > '+
             '</div><div class=" text-center">'+
             '<p style="color:#7c0000;">'+data[i]['display_name']+'</p>'+
             '<small>'+data[i]['nombre_cargo']+ (cargo2===''?'':'&nbsp;&sol;&nbsp;<i>'+cargo2+'</i>')+'</small>'+
