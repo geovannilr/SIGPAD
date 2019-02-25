@@ -3,6 +3,7 @@ namespace App\Http\Controllers\TrabajoGraduacion;
 use App\gen_EstudianteModel;
 use App\Http\Controllers\Controller;
 use App\pdg_not_cri_tra_nota_criterio_trabajoModel;
+use App\cat_ctg_tra_categoria_trabajo_graduacionModel;
 use Illuminate\Http\Request;
 use App\pdg_dcn_docenteModel;
 use App\pdg_gru_grupoModel;
@@ -18,7 +19,8 @@ class ReportesController extends Controller{
         'Reporte de Estado de Grupos',
         'Reporte de Detalle de Grupos XYZ de Trabajo de Graduación',
         'Reporte de Estudiantes Activos en Trabajo de Graduacion',
-        'Reporte Consolidado de Notas'
+        'Reporte Consolidado de Notas',
+        'Reporte de Docentes por Categoría de Trabajo de Graduación'
     ];
 
     public function __construct(){
@@ -248,5 +250,24 @@ class ReportesController extends Controller{
         }else{
             return view("template");
         }
+    }
+    public function createDocentesCategorias(){
+         $title = self::REPORTES[6];
+        return view('TrabajoGraduacion.Reports.Create.createDocentesCategorias',compact('title'));
+    }
+    public function docentesPorCategorias(Request $request){
+         $tipo = $request['tipo'];
+       $title = self::REPORTES[6];
+       $datos =  cat_ctg_tra_categoria_trabajo_graduacionModel::getDocentesCategoria();
+       $pdf = PDF::loadView('TrabajoGraduacion.Reports.docentesPorCategoria',compact('datos', 'title'));
+       if ($tipo == 1) {
+            return $pdf->stream($title.'.pdf');
+        }elseif ($tipo == 2) {
+            return $pdf->download($title.'.pdf');
+        }else{
+            return redirect("/");
+        }
+       
+       //return view('TrabajoGraduacion.Reports.docentesPorCategoria',compact('datos', 'title'));
     }
 }

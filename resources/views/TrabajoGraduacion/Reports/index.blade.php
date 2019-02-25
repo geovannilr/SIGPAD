@@ -94,6 +94,14 @@
 						Presenta el consolidado de notas para un Grupo de Trabajo de Graduación seleccionado.
 					</td>
 				</tr>
+				<tr>
+					<td>
+						<a href="{{route('reportes/createDocentesCategorias')}}">Docentes por Categorías de trabajo de graduación</a>
+					</td>
+					<td>
+						Presenta el consolidado de notas para un Grupo de Trabajo de Graduación seleccionado.
+					</td>
+				</tr>
 				</tbody>
 			</table>
 	   </div>

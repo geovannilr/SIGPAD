@@ -107,6 +107,8 @@ Route::get('reportes/createEstadoGruposEtapa', 'TrabajoGraduacion\ReportesContro
 Route::get('reportes/createDetalleGruposTdg', 'TrabajoGraduacion\ReportesController@createDetalleGruposTdg')->name('reportes/createDetalleGruposTdg');
 Route::get('reportes/createEstudiantesTdg', 'TrabajoGraduacion\ReportesController@createEstudiantesTdg')->name('reportes/createEstudiantesTdg');
 Route::get('reportes/createConsolidadoNotas', 'TrabajoGraduacion\ReportesController@createConsolidadoNotas')->name('reportes/createConsolidadoNotas');
+Route::get('reportes/createDocentesCategorias', 'TrabajoGraduacion\ReportesController@createDocentesCategorias')->name('reportes/createDocentesCategorias');
+Route::post('reportes/docCategorias', 'TrabajoGraduacion\ReportesController@docentesPorCategorias')->name('reportes/docCategorias');
 
 //Reportes WORD
 Route::get('reportesTDGWord', 'TrabajoGraduacion\ReportesWordController@index')->name('reportesTDGWord');
