@@ -89,7 +89,7 @@
 					<th>Nombre Etapa evaluativa</th>
                     <th>Ponderación</th>
                     <th>Año</th>
-
+                    <th>Nota Grupal</th>
                     @can('etapaEvaluativa.edit')
                     <th style="text-align: center;">Modificar</th>
                     @endcan
@@ -103,6 +103,10 @@
 						<td>{{ $etapaEvaluativ->nombre_cat_eta_eva}}</td>
                         <td>{{ $etapaEvaluativ->ponderacion_cat_eta_eva}}</td>
                         <td>{{ $etapaEvaluativ->anio_cat_eta_eva}}</td>
+                        <td><?php
+                            $badge = $etapaEvaluativ->notagrupal_cat_eta_eva==1?'<span class="badge badge-info">SI</span>':'<span class="badge badge-danger">NO</span>';
+                            echo $badge?>
+                        </td>
 
                     @can('etapaEvaluativa.edit')
                           <td style="text-align: center;">

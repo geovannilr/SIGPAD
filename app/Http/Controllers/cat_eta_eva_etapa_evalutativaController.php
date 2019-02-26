@@ -59,6 +59,7 @@ class cat_eta_eva_etapa_evalutativaController extends Controller
             'nombre_cat_eta_eva' => 'required|max:45',
             'ponderacion_cat_eta_eva' => 'required|max:6',
             'anio_cat_eta_eva' => 'required|max:4'
+            ,'notagrupal_cat_eta_eva' => 'required'
         ],
             [
                 'nombre_cat_eta_eva.required' => 'El nombre de la etapa evaluativa es necesario',
@@ -71,7 +72,7 @@ class cat_eta_eva_etapa_evalutativaController extends Controller
                 'tiene_defensas_cat_eta_eva.max' => 'La cantidad maxima de caracteres para saber si tiene defensas no debe ser mayor a 11',
                 'puede_observar_cat_eta_eva.required' => 'Saber si puede observar etapa evaluativa es necesario',
                 'puede_observar_cat_eta_eva.max' => 'La cantidad maxima de caracteres para poder observar la etapa evaluativa es de 11'
-
+                ,'notagrupal_cat_eta_eva.required' => 'Debe seleccionar si la etapa se evaluará de manera grupal o individual'
             ]
             );
 
@@ -82,6 +83,7 @@ class cat_eta_eva_etapa_evalutativaController extends Controller
             'nombre_cat_eta_eva'       	 => $request['nombre_cat_eta_eva'],
             'ponderacion_cat_eta_eva'       	 => $request['ponderacion_cat_eta_eva'],
             'anio_cat_eta_eva'       	 => $request['anio_cat_eta_eva'],
+            'notagrupal_cat_eta_eva'    => $request['notagrupal_cat_eta_eva']
 
         ]);
 
