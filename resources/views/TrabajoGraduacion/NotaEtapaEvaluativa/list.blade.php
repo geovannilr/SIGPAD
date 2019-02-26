@@ -342,7 +342,7 @@
             </div>
         </div>
         <br>
-        <div id="divTblNotas" >
+        <div id="divTblNotas" class="table-responsive">
             ...
         </div>
         <input type="hidden" id="idGru" value="{{$grupo->id_pdg_gru}}"/>
