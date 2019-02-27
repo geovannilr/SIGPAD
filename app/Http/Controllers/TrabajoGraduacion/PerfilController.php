@@ -163,13 +163,20 @@ class PerfilController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    {
-        try {
-                $validatedData = $request->validate([
+    {   
+        $validatedData = $request->validate([
                     'tema_pdg_per' => 'required|max:200',
                     'id_cat_tpo_tra_gra' => 'required',
                     'documento' => 'required'
-                ]);
+                ],
+            [
+                'tema_pdg_per.required' => 'Debe ingresar un tema de perfil de  trabajo de graduación.',
+                'tema_pdg_per.max' => 'El tema de perfil de trabajo de graduación debe contener como maximo 200 caracteres',
+                'id_cat_tpo_tra_gra.required' => 'Debe seleccionar un tipo de trabajo de graduación.',
+                'documento.required' => 'Debe subir un documento de Perfil.',
+            ]);
+        try {
+                
                $userLogin=Auth::user();
                $estudiante = new gen_EstudianteModel();
                //$idGrupo = $estudiante->getIdGrupo($userLogin->user);

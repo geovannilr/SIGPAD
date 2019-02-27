@@ -183,6 +183,7 @@
 					<th>Fecha Creación</th>
 					<th>Estado</th>
 					<th>Tipo</th>
+					<th>Categoría</th>
 					<th>Acciones</th>
 
   				</thead>
@@ -209,6 +210,7 @@
 
 						</td>
 						<td>{{ $prePerfil->tipoTrabajo->nombre_cat_tpo_tra_gra}}</td>
+						<td>{{ $prePerfil->categoriaTrabajo->nombre_cat_ctg_tra}}</td>
 						<td style="width: 170px">
 							<div class="row">
 								@can('prePerfil.edit')
