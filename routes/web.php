@@ -67,6 +67,7 @@ Route::post('delRelTrib', 'TrabajoGraduacion\PrePerfilController@deleteDocenteTr
 Route::resource('perfil', 'TrabajoGraduacion\PerfilController');
 Route::post('downloadPerfil', 'TrabajoGraduacion\PerfilController@downloadPerfil')->name('downloadPerfil');
 Route::post('downloadPerfilResumen', 'TrabajoGraduacion\PerfilController@downloadPerfilResumen')->name('downloadPerfilResumen');
+Route::post('downloadPerfilBoleta', 'TrabajoGraduacion\PerfilController@downloadPerfilBoleta')->name('downloadPerfilBoleta');
 Route::post('aprobarPerfil', 'TrabajoGraduacion\PerfilController@aprobarPerfil')->name('aprobarPerfil');
 Route::post('rechazarPerfil', 'TrabajoGraduacion\PerfilController@rechazarPerfil')->name('rechazarPerfil');
 Route::get('indexPerfil/{id}', 'TrabajoGraduacion\PerfilController@indexPerfil')->name('indexPerfil');
