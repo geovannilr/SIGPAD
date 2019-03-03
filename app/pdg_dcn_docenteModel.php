@@ -340,8 +340,7 @@ class pdg_dcn_docenteModel extends Model
             left join cat_car_cargo_eisi car on car.id_cat_car=dcn.id_cargo_actual
             LEFT JOIN cat_car_cargo_eisi car2 ON car2.id_cat_car=dcn.id_segundo_cargo
             INNER JOIN cat_tpo_jrn_dcn_tipo_jornada_docente jrnd ON dcn.tipoJornada = jrnd.id_cat_tpo_jrn_dcn
-            where dcn.activo=1
-            AND dcn.es_visible_pdg_dcn=1
+            where dcn.es_visible_pdg_dcn=1
             ORDER BY dcn.tipoJornada ASC, dcn.pdg_dcn_prioridad DESC", // and dcn.tipoJornada=:jornada",
             array(
                 $jornada
