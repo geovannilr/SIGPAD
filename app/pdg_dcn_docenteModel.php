@@ -38,7 +38,7 @@ class pdg_dcn_docenteModel extends Model
     /***
      * Función: getDocentesDisponibles($id)
      * Params: $id-> Id del grupo de TDG
-     * Retorna: Lista de docentes que no han sido asignados al tribunal de un grupo
+     * Retorna: Lista de docentes que no han sido asignados al tribunal de un grupo, excluyendo coordinadores de tdg y tribunales de grupos finalizados.
     */
     public static function getDocentesDisponibles($id){
         $coordinadores = self::getDocentesCoordinadores();
