@@ -245,7 +245,7 @@ $( document ).ready(function() {
       $('#profilePicture').val('');*/
       swal({
               title: "Gestion Docente - Información General",
-              text: "Estad seguro que desea descartar los cambios realizados?", 
+              text: "Está seguro que desea descartar los cambios realizados?",
               icon: "warning",
               buttons: true,
               successMode: true,
@@ -285,7 +285,7 @@ $( document ).ready(function() {
       console.log($("#formPerfilDocente").serialize());
         swal({
               title: "Gestion Docente - Información General",
-              text: "Estad seguro que desea Guardar los cambios realizados?", 
+              text: "Está seguro que desea Guardar los cambios realizados?",
               icon: "warning",
               buttons: true,
               successMode: true,
