@@ -268,6 +268,6 @@ class ReportesController extends Controller{
             return redirect("/");
         }
        
-       //return view('TrabajoGraduacion.Reports.docentesPorCategoria',compact('datos', 'title'));
+
     }
 }

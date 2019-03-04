@@ -89,9 +89,11 @@ class pdg_gru_grupoModel extends Model{
     }
 
     public static function getEstadoGrupos($anio,$estado){
-        $condicionActivos = ($estado==1)?" AND apr.id_cat_eta_eva = 999 ":" ";
+        $condicionFinalizados = " AND apr.id_cat_eta_eva = 999 ";
+        $condicionActivos = " AND apr.inicio = 1 AND apr.aprobo = 0 ";
         $condicionAnio1 = ($anio==null)?"":"AND gru.anio_pdg_gru = :anio1";
         $condicionAnio2 = ($anio==null)?"":"AND gru.anio_pdg_gru = :anio2";
+        $condicionAnio3 = ($anio==null)?"":"AND gru.anio_pdg_gru = :anio3";
         $queryNoIniciados = "
             SELECT DISTINCT 
                 x.id_pdg_gru, x.id_pdg_tra_gra, x.numero_pdg_gru, x.nombre_cat_eta_eva, 
@@ -123,9 +125,9 @@ class pdg_gru_grupoModel extends Model{
                     ".$condicionAnio1."
                     AND gru.id_pdg_gru NOT IN (SELECT tragra.id_pdg_gru FROM pdg_tra_gra_trabajo_graduacion tragra)	
                 ) x
-            --
+            
             UNION
-            --";
+            ";
         $queryIniciados = "
             SELECT 
                 gru.id_pdg_gru,
@@ -143,19 +145,30 @@ class pdg_gru_grupoModel extends Model{
                 inner join pdg_gru_est_grupo_estudiante est on est.id_pdg_gru = gru.id_pdg_gru
                 inner join gen_est_estudiante genEst on genEst.id_gen_est = est.id_gen_est
                 where 
-                  apr.inicio = 1 AND aprobo = 0 AND est.eslider_pdg_gru_est = 1
-                  ".$condicionActivos." 
-                  ".$condicionAnio2."
+                  est.eslider_pdg_gru_est = 1 
+                  STR_CONDICION_ESTADO 
+                  STR_CONDICION_ANIO
                 group by gru.id_pdg_gru,tra.id_pdg_tra_gra,gru.numero_pdg_gru,eta.nombre_cat_eta_eva,est.id_gen_est,genEst.carnet_gen_est,
                 genEst.nombre_gen_est";
-        $fullQuery = ($estado!=1)?$queryNoIniciados.$queryIniciados:$queryIniciados;
+        switch ($estado){
+            case 0: $fullQuery = $queryNoIniciados
+                .(str_replace(["STR_CONDICION_ESTADO","STR_CONDICION_ANIO"],[$condicionActivos,$condicionAnio2],$queryIniciados));
+                $params = array('anio1'=>$anio,'anio2'=>$anio);
+                break;
+            case 1: $fullQuery = str_replace(["STR_CONDICION_ESTADO","STR_CONDICION_ANIO"],[$condicionFinalizados,$condicionAnio2],$queryIniciados);
+                $params = array('anio2'=>$anio);
+                break;
+            default: $fullQuery = $queryNoIniciados
+                .(str_replace(["STR_CONDICION_ESTADO","STR_CONDICION_ANIO"],[$condicionFinalizados,$condicionAnio2],$queryIniciados))
+                ." UNION ".(str_replace(["STR_CONDICION_ESTADO","STR_CONDICION_ANIO"],[$condicionActivos,$condicionAnio3],$queryIniciados));
+                $params = array('anio1'=>$anio,'anio2'=>$anio,'anio3'=>$anio);
+                break;
+        }
+        $fullQuery .= " ORDER BY numero_pdg_gru ASC ";
         if($anio==null)
             $grupos = DB::select($fullQuery);
         else
-            if($estado!=1)
-                $grupos = DB::select($fullQuery, array('anio1'=>$anio,'anio2'=>$anio));
-            else
-                $grupos = DB::select($fullQuery, array('anio2'=>$anio));
+            $grupos = DB::select($fullQuery,$params);
         return $grupos;
     }
     public static function getDetalleGrupos($anio,$estado){
@@ -164,7 +177,7 @@ class pdg_gru_grupoModel extends Model{
         }elseif ($estado == 2) {
             $where = " ";
         }
-        $query = "SELECT x.cantGru, x.idGru, x.numGrupo, x.nomSta, x.nomEst, x.bLider
+        $query = "SELECT x.cantGru, x.idGru, x.numGrupo, x.nomSta, x.nomEst, x.bLider, x.finalizo
                     FROM
                         (SELECT 
                                 (SELECT COUNT(*) FROM pdg_gru_est_grupo_estudiante gru2 WHERE gru2.id_pdg_gru = gru_est.id_pdg_gru) AS cantGru,
@@ -173,8 +186,8 @@ class pdg_gru_grupoModel extends Model{
                                 sta.nombre_cat_sta	AS nomSta,
                                 est.nombre_gen_est	AS nomEst,
                                 gru_est.eslider_pdg_gru_est AS bLider
-                                ,(select aprobo from pdg_apr_eta_tra_aprobador_etapa_trabajo where id_cat_eta_eva = 999 AND id_pdg_tra_gra = 
-                                    (SELECT id_pdg_tra_gra from pdg_tra_gra_trabajo_graduacion where id_pdg_gru = gru.id_pdg_gru )) as finalizo
+                                ,IFNULL((select aprobo from pdg_apr_eta_tra_aprobador_etapa_trabajo where id_cat_eta_eva = 999 AND id_pdg_tra_gra = 
+                                    (SELECT id_pdg_tra_gra from pdg_tra_gra_trabajo_graduacion where id_pdg_gru = gru.id_pdg_gru )),0) as finalizo
                             FROM
                                 pdg_gru_grupo gru
                                 INNER JOIN pdg_gru_est_grupo_estudiante gru_est ON (gru_est.id_pdg_gru=gru.id_pdg_gru)
@@ -184,7 +197,7 @@ class pdg_gru_grupoModel extends Model{
                                 gru.anio_pdg_gru = :anio
                         ) x
                     ".$where."
-                    ORDER BY x.idGru ASC, x.bLider DESC";
+                    ORDER BY x.finalizo DESC, x.idGru ASC, x.bLider DESC";
         if ($estado == 0 || $estado == 1 ) {
             $grupos = DB::select($query, array($anio,$estado));
         }elseif ($estado == 2) {

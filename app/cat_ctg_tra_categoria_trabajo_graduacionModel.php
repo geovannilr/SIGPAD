@@ -28,6 +28,7 @@ class cat_ctg_tra_categoria_trabajo_graduacionModel extends Model{
 				inner join cat_tpo_ski_tipo_skill tpoSKill on tpoSKill.id_tpo_ski = skill.id_tpo_ski 
 				inner join rel_cat_tpo_ski_cat_ctg_tra rel_cat_tpo on rel_cat_tpo.id_tpo_ski = tpoSKill.id_tpo_ski
 				inner join cat_ctg_tra_categoria_trabajo_graduacion catTdg on catTdg.id_cat_ctg_tra = rel_cat_tpo.id_cat_ctg_tra
+				where dcn.activo = 1
 				group by dcn.id_pdg_dcn,catTdg.id_cat_ctg_tra
 				order by catTdg.id_cat_ctg_tra,nombre';
 
