@@ -98,7 +98,7 @@
         <div class="col-sm-6">
           <div class="table-responsive">
                 <table class="table table-hover table-striped">
-                  <th colspan="2" style="text-align: center;">Colaboradores</th>
+                  <th colspan="2" style="text-align: center;">Docentes</th>
                   @if ($colaboradores=="NA")
                     <tr><td style="text-align: center;">NO SE HAN REGISTRADO COLABORADORES PARA ESTA PUBLICACIÓN DE TRABAJO DE GRADUACIÓN</td></tr>
                   @else
