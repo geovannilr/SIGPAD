@@ -183,7 +183,6 @@ class PrePerfilController extends Controller
                 $file = $request->file('documento');
                //obtenemos el nombre del archivo
                 $nombre = 'Grupo'.$numeroGrupo."_".$anioGrupo."_".date('his').$file->getClientOriginalName();
-                return $nombre;
                 Storage::disk('Uploads')->put($nombre, File::get($file));
                  //movemos el archivo a la ubicación correspondiente segun grupo y años
                 if ($_ENV['SERVER'] =="win") {
