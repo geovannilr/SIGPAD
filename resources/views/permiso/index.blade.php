@@ -76,7 +76,7 @@
    <div class="col-sm-3"></div>
   @can('permiso.create')
     <div class="col-sm-3">
-      <a class="btn " href="{{route('permiso.create')}}" style="background-color: #DF1D20; color: white"><i class="fa fa-plus"></i> Nuevo Permiso</a>
+      <a class="btn btn-primary" href="{{route('permiso.create')}}" ><i class="fa fa-plus"></i> Nuevo Permiso</a>
     </div>
   @endcan
   </div> 

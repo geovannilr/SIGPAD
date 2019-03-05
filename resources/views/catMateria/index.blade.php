@@ -76,7 +76,7 @@
    <div class="col-sm-3"></div>
   @can('catMateria.create')
     <div class="col-sm-3">
-      <a class="btn " href="{{route('catMateria.create')}}" style="background-color: #DF1D20; color: white"><i class="fa fa-plus"></i> Nueva Materia</a>
+      <a class="btn btn-primary" href="{{route('catMateria.create')}}" ><i class="fa fa-plus"></i> Nueva Materia</a>
     </div>
   @endcan
   </div> 

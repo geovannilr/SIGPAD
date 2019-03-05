@@ -76,7 +76,7 @@
    <div class="col-sm-3"></div>
   @can('tipoTrabajo.create')
     <div class="col-sm-3">
-      <a class="btn " href="{{route('tipoTrabajo.create')}}" style="background-color: #DF1D20; color: white"><i class="fa fa-plus"></i> Nuevo Tipo Trabajo</a>
+      <a class="btn btn-primary" href="{{route('tipoTrabajo.create')}}" ><i class="fa fa-plus"></i> Nuevo Tipo Trabajo</a>
     </div>
   @endcan
   </div> 

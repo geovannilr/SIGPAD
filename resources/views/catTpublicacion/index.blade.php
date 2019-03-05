@@ -76,7 +76,7 @@
    <div class="col-sm-3"></div>
   @can('catTpublicacion.create')
     <div class="col-sm-3">
-      <a class="btn " href="{{route('catTpublicacion.create')}}" style="background-color: #DF1D20; color: white"><i class="fa fa-plus"></i> Nuevo Tipo Publicación</a>
+      <a class="btn btn-primary" href="{{route('catTpublicacion.create')}}" ><i class="fa fa-plus"></i> Nuevo Tipo Publicación</a>
     </div>
   @endcan
   </div> 

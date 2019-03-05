@@ -147,7 +147,7 @@
 			   <div class="col-sm-3">
 			   	 	 @can('prePerfil.create')
 
-					  	 <a class="btn " href="{{route('prePerfil.create')}}" style="background-color: #DF1D20; color: white"><i class="fa fa-plus"></i> Nuevo Pre-perfil </a>
+					  	 <a class="btn btn-primary" href="{{route('prePerfil.create')}}" ><i class="fa fa-plus"></i> Nuevo Pre-perfil </a>
 
 				  @endcan
 						 @if ($tribunal!="NA")

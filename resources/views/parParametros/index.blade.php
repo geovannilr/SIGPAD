@@ -76,7 +76,7 @@
    <div class="col-sm-3"></div>
   @can('parParametros.create')
     <div class="col-sm-3">
-        <a class="btn " href="{{route('parParametros.create')}}" style="background-color: #DF1D20; color: white"><i class="fa fa-plus"></i> Nuevo Parámetro</a>
+        <a class="btn btn-primary" href="{{route('parParametros.create')}}" ><i class="fa fa-plus"></i> Nuevo Parámetro</a>
     </div>
   @endcan
   </div> 
