@@ -63,7 +63,7 @@ class PerfilController extends Controller
                 if ($idGrupo  > 0 ){
                     $miGrupo = pdg_gru_grupoModel::find($idGrupo);
                     if ($miGrupo->id_cat_sta == 3 ) {//APROBADO
-                        $prePerfiles =pdg_ppe_pre_perfilModel::where('id_pdg_gru', '=',$idGrupo)->get();
+                        $prePerfiles =pdg_ppe_pre_perfilModel::where('id_pdg_gru', '=',$idGrupo)->where('id_cat_sta','=','10')->get();
                         if (sizeof($prePerfiles)==0) {
                            Session::flash('message-error', 'Para poder ingresar a Perfiles de trabajo de graduación, primero debes enviar tus Pre-Perfiles y que al menos uno de estos sea aprobado por Coordinación.');
                             return  view('template'); 
