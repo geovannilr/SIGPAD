@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\Auth;
 use App\cat_eta_eva_etapa_evalutativaModel;
 use App\cat_tpo_tra_gra_tipo_trabajo_graduacionModel;
 use App\rel_tpo_tra_eta_tipo_trabajo_etapaModel;
+use App\rel_rol_tri_eta_eva_tribunal_etapaModel;
+
 
 
 
@@ -104,6 +106,15 @@ class cat_eta_eva_etapa_evalutativaController extends Controller
             
 
         ]);
+
+        rel_rol_tri_eta_eva_tribunal_etapaModel::create
+        ([
+            'id_pdg_tri_rol'                        =>1, //ASESOR 
+            'id_cat_eta_eva'                        => $lastId->id_cat_eta_eva,
+            'anio_rel_rol_tri_eta_eva'             => $request['anio_cat_eta_eva']
+            
+
+        ]);
         
         return redirect('etapaEvaluativa')->with('message','Etapa Evaluativa Registrada correctamente!') ;
 
@@ -183,8 +194,11 @@ class cat_eta_eva_etapa_evalutativaController extends Controller
             {
             try {
                 $relTrabajoEtapa = rel_tpo_tra_eta_tipo_trabajo_etapaModel::where('id_cat_eta_eva','=',$id)->first();
-                cat_eta_eva_etapa_evalutativaModel::destroy($id);
+                $relTribunalEtapa = rel_rol_tri_eta_eva_tribunal_etapaModel::where('id_cat_eta_eva','=',$id)->first();
                 rel_tpo_tra_eta_tipo_trabajo_etapaModel::destroy($relTrabajoEtapa->id_rel_tpo_tra_eta);
+                rel_rol_tri_eta_eva_tribunal_etapaModel::destroy($relTribunalEtapa->id_rel_rol_tri_eta_eva);
+                cat_eta_eva_etapa_evalutativaModel::destroy($id);
+
             } catch (\PDOException $e)
             {
                 Session::flash('message-error', 'No es posible eliminar este registro, está siendo usado.');
