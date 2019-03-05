@@ -37,3 +37,8 @@
 						{!! Form::select('notagrupal_cat_eta_eva',[1=>"SI",0=>"NO"],null,['class'=>'form-control','id'=>'notagrupal_cat_eta_eva']) !!}
 					</div>
 				</div>
+				<div class="row">
+					<div class="form-group col-sm-12">
+						<span class="text-danger">Tenga en cuenta que para cada etapa debe relacionar <b>por lo menos</b> un documento. Esto en el catálogo respectivo de <b>Tipo Documento</b> </span>
+					</div>
+				</div>
