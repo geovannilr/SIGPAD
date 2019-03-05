@@ -152,6 +152,7 @@ function getInformacionDocente(idDcn){
             $("#nombreDocente").append(html);
             $("#descripcionDocente").append(docente["descripcionDocente"]);
             $("#correoDocente").append(docente["email"]);
+            $("#correoDocente").attr("href","mailto:"+docente["email"]);
             $("#cargoDocente").append(docente["nombre_cargo"]);
             $("#profileFoto").attr("src",ip+"/Uploads/PerfilDocente/"+docente["dcn_profileFoto"]+"?"+t);
             $("#linkLinkedind_").attr("href",docente["link_linke"]);
