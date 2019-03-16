@@ -633,10 +633,10 @@ class PerfilController extends Controller
     function downloadPerfil(Request $request){
         //$userLogin=Auth::user();
         $id = $request['archivo'];
-        //$idGrupo=$request['grupo'];
+        $idGrupo=$request['grupo'];
         //$estudiante = new gen_EstudianteModel();
         //$idGrupo = $estudiante->getIdGrupo($userLogin->user);
-        $idGrupo = session('idGrupo');
+//        $idGrupo = session('idGrupo');
         $grupo = pdg_gru_grupoModel::find($idGrupo);
         $anioGrupo = $grupo->anio_pdg_gru;
         $numeroGrupo = $grupo->correlativo_pdg_gru_gru;
