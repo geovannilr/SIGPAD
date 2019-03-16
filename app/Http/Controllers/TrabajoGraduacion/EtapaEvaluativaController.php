@@ -592,7 +592,7 @@ class EtapaEvaluativaController extends Controller {
 	    try{
             if (self::areNotasRequired()){
                 $conteoNotas = pdg_not_cri_tra_nota_criterio_trabajoModel::verificarGrupoNotas($idGrupo);
-                if ($conteoNotas->evaluaciones == $conteoNotas->evaluadas) {
+                if ($conteoNotas[0]->evaluaciones == $conteoNotas[0]->evaluadas) {
                     $valid = true;
                 }
             } else {
