@@ -409,8 +409,8 @@ class PrePerfilController extends Controller
         $name=$prePerfil->nombre_archivo_pdg_ppe;
         //$estudiante = new gen_EstudianteModel();
         //$idGrupo = $estudiante->getIdGrupo($userLogin->user);
-        //$idGrupo=$request['grupo'];
-        $idGrupo = session('idGrupo');
+        $idGrupo=$request['grupo'];
+//        $idGrupo = session('idGrupo');
         $grupo = pdg_gru_grupoModel::find($idGrupo);
         $anioGrupo = $grupo->anio_pdg_gru;
         $numeroGrupo = $grupo->correlativo_pdg_gru_gru;
