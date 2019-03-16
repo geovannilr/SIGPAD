@@ -667,8 +667,8 @@ class PerfilController extends Controller
         $id = $request['archivo'];
         //$estudiante = new gen_EstudianteModel();
         //$idGrupo = $estudiante->getIdGrupo($userLogin->user);
-        //$idGrupo=$request['grupo'];
-        $idGrupo = session('idGrupo');
+        $idGrupo=$request['grupo'];
+//        $idGrupo = session('idGrupo');
         $grupo = pdg_gru_grupoModel::find($idGrupo);
         $anioGrupo = $grupo->anio_pdg_gru;
         $numeroGrupo = $grupo->correlativo_pdg_gru_gru;
@@ -696,7 +696,8 @@ class PerfilController extends Controller
 
     function downloadPerfilBoleta(Request $request){
         $id = $request['archivo'];
-        $idGrupo = session('idGrupo');
+        $idGrupo=$request['grupo'];
+//        $idGrupo = session('idGrupo');
         $grupo = pdg_gru_grupoModel::find($idGrupo);
         $anioGrupo = $grupo->anio_pdg_gru;
         $numeroGrupo = $grupo->correlativo_pdg_gru_gru;
