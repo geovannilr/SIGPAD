@@ -3,6 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\cat_tpo_doc_tipo_documentoModel;
+use App\cat_eta_eva_etapa_evalutativaModel;
+use App\cat_tpo_tra_gra_tipo_trabajo_graduacionModel;
+use App\rel_tpo_tra_eta_tipo_trabajo_etapaModel;
+use App\rel_tpo_doc_eta_eva_tipo_documento_etapa_evaModel;
 use Illuminate\Http\Request;
 use Session;
 use Redirect;
@@ -39,7 +43,12 @@ class cat_tpo_doc_tipo_documentoController extends Controller
     {
         $userLogin=Auth::user();
         if ($userLogin->can(['tipoDocumento.create'])) {
-            return view('tipoDocumento.create');
+            $trabajos =  cat_tpo_tra_gra_tipo_trabajo_graduacionModel::pluck('nombre_cat_tpo_tra_gra', 'id_cat_tpo_tra_gra')->toArray();
+            $trabajosGraduacion = cat_tpo_tra_gra_tipo_trabajo_graduacionModel::all();
+            $etapasEvaluativas = cat_eta_eva_etapa_evalutativaModel::getEtapasEvaluativas();
+            $idTrabajo = 0;
+            $idEtapa = 0;
+            return view('tipoDocumento.create',compact(['trabajosGraduacion','etapasEvaluativas','trabajos','idTrabajo','idEtapa']));
         }else{
           Session::flash('message-error', 'No tiene permisos para acceder a esta opción');
         return  view('template');
@@ -57,7 +66,9 @@ class cat_tpo_doc_tipo_documentoController extends Controller
         $validatedData = $request->validate([
             'nombre_pdg_tpo_doc' => 'required|max:45',
             'descripcion_pdg_tpo_doc' => 'required|max:100',
-            'anio_cat_pdg_tpo_doc' => 'required|max:4'
+            'anio_cat_pdg_tpo_doc' => 'required|max:4',
+            'etapa' => 'required',
+            'tipoTrabajo' => 'required'
         ],
             [
                 'nombre_pdg_tpo_doc.required' => 'El nombre del tipo de documento es necesario',
@@ -67,22 +78,31 @@ class cat_tpo_doc_tipo_documentoController extends Controller
                 'puede_observar_cat_pdg_tpo_doc.required' => 'Saber si el tipo de documento puede ser observado debe ser posible',
                 'puede_observar_cat_pdg_tpo_doc.max' => 'valor entre 0 y 1',
                 'anio_cat_pdg_tpo_doc.required' => 'Debe ingresar un año',
-                'anio_cat_pdg_tpo_doc.max' => 'El anio del tipo documento debe contener como maximo 4 caractéres'
+                'anio_cat_pdg_tpo_doc.max' => 'El anio del tipo documento debe contener como maximo 4 caractéres',
+                'etapa.required' => 'Debe seleccionar un tipo de trabajo de graduación.',
+                'tipoTrabajo.required' => 'Debe seleccionar una etapa evaluativa.'
                 ]
 
         );
 
 
 
-        cat_tpo_doc_tipo_documentoModel::create
+        $lastId=cat_tpo_doc_tipo_documentoModel::create
         ([
             'nombre_pdg_tpo_doc'       	 => $request['nombre_pdg_tpo_doc'],
-            'descripcion_pdg_tpo_doc'       	 => $request['descripcion_pdg_tpo_doc'],
-            'anio_cat_pdg_tpo_doc'       	 => $request['anio_cat_pdg_tpo_doc']
+            'descripcion_pdg_tpo_doc'    => $request['descripcion_pdg_tpo_doc'],
+            'anio_cat_pdg_tpo_doc'       => $request['anio_cat_pdg_tpo_doc']
 
         ]);
 
-        Return redirect('tipoDocumento')->with('message','Tipo Documento Registrado correctamente!') ;
+        rel_tpo_doc_eta_eva_tipo_documento_etapa_evaModel::create
+        ([
+            'id_cat_tpo_doc'         => $lastId->id_cat_tpo_doc,
+            'id_cat_eta_eva'         => $request['etapa']
+            
+        ]);
+        
+        return redirect('tipoDocumento')->with('message','Tipo Documento Registrado correctamente!') ;
 
     }
 
@@ -107,9 +127,18 @@ class cat_tpo_doc_tipo_documentoController extends Controller
     {
         $userLogin=Auth::user();
         if ($userLogin->can(['tipoDocumento.edit'])) {
+            $idTrabajo = 0;
+            $idEtapa = 0;
             $tipoDocumento= cat_tpo_doc_tipo_documentoModel::find($id);
-
-            return view('tipoDocumento.edit',compact(['tipoDocumento']));
+            $relacionDocEtapa = rel_tpo_doc_eta_eva_tipo_documento_etapa_evaModel::where('id_cat_tpo_doc','=',$id)->first();
+            $idEtapa = $relacionDocEtapa->id_cat_eta_eva;
+            $relacionEtapaTrabajo = rel_tpo_tra_eta_tipo_trabajo_etapaModel::where('id_cat_eta_eva','=',$idEtapa)->first();
+            $idTrabajo = $relacionEtapaTrabajo->id_cat_tpo_tra_gra;
+            $trabajos =  cat_tpo_tra_gra_tipo_trabajo_graduacionModel::pluck('nombre_cat_tpo_tra_gra', 'id_cat_tpo_tra_gra')->toArray();
+            $trabajosGraduacion = cat_tpo_tra_gra_tipo_trabajo_graduacionModel::all();
+            $etapasEvaluativas = cat_eta_eva_etapa_evalutativaModel::getEtapasEvaluativas();
+            
+            return view('tipoDocumento.edit',compact(['tipoDocumento','trabajosGraduacion','etapasEvaluativas','trabajos','idTrabajo','idEtapa']));
         }else{
             Session::flash('message-error', 'No tiene permisos para acceder a esta opción');
           return  view('template');
@@ -126,10 +155,12 @@ class cat_tpo_doc_tipo_documentoController extends Controller
     public function update(Request $request, $id)
     {
         $tipoDocumento=cat_tpo_doc_tipo_documentoModel::find($id);
-
+        $relDocEtapa=rel_tpo_doc_eta_eva_tipo_documento_etapa_evaModel::where('id_cat_tpo_doc','=',$id)->first();
+        $relDocEtapa->id_cat_eta_eva = $request['etapa'];
         $tipoDocumento->fill($request->all());
         $tipoDocumento->save();
-       // Session::flash('message','Tipo Documento Modificado correctamente!');
+        $relDocEtapa->save();
+        Session::flash('message','Tipo Documento Modificado correctamente!');
         return Redirect::to('tipoDocumento');
 
     }
@@ -146,6 +177,8 @@ class cat_tpo_doc_tipo_documentoController extends Controller
         if ($userLogin->can(['tipoDocumento.destroy']))
             {
             try {
+                $relDocEtapa = rel_tpo_doc_eta_eva_tipo_documento_etapa_evaModel::where('id_cat_tpo_doc','=',$id)->first();
+                rel_tpo_doc_eta_eva_tipo_documento_etapa_evaModel::destroy($relDocEtapa->id_rel_tpo_doc_eta_eva);
                 cat_tpo_doc_tipo_documentoModel::destroy($id);
             } catch (\PDOException $e)
             {

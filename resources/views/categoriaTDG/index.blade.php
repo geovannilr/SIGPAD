@@ -76,7 +76,7 @@
    <div class="col-sm-3"></div>
   @can('categoriaTDG.create')
     <div class="col-sm-3">
-      <a class="btn " href="{{route('categoriaTDG.create')}}" style="background-color: #DF1D20; color: white"><i class="fa fa-plus"></i> Nueva Categoría de TDG</a>
+      <a class="btn btn-primary" href="{{route('categoriaTDG.create')}}" ><i class="fa fa-plus"></i> Nueva Categoría de TDG</a>
     </div>
   @endcan
   </div> 

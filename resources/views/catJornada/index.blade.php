@@ -88,12 +88,10 @@
             $("#btnNewOrder").show();
             $("#btnSaveOrder").hide();
             $("#btnEditOrder").html(iconOrder + " Ordenar");
-            $("#btnEditOrder").removeClass("btn-secondary").addClass("btn-primary");
         }else{
             $("#btnNewOrder").hide();
             $("#btnSaveOrder").show();
             $("#btnEditOrder").html(iconCancel + " Cancelar");
-            $("#btnEditOrder").removeClass("btn-primary").addClass("btn-secondary");
         }
     }
 
@@ -165,9 +163,9 @@
     <div class="col-sm-3"></div>
     @can('catJornada.create')
         <div class="col-sm-3">
-            <a class="btn" id="btnNewOrder" href="{{route('catJornada.create')}}" style="background-color: #DF1D20; color: white"><i class="fa fa-plus"></i> Nueva Jornada </a>
+            <a class="btn btn-primary" id="btnNewOrder" href="{{route('catJornada.create')}}" ><i class="fa fa-plus"></i> Nueva Jornada </a>
             <button type="button" class="btn btn-primary" id="btnSaveOrder" onclick="saveOrder();"><i class="fa fa-save"></i> Guardar</button>
-            <button type="button" class="btn btn-primary" id="btnEditOrder" onclick="editOrder();"><i class="fa fa-sort-amount-asc"></i> Ordenar</button>
+            <button type="button" class="btn btn-secondary" id="btnEditOrder" onclick="editOrder();"><i class="fa fa-sort-amount-asc"></i> Ordenar</button>
         </div>
     @endcan
 </div>

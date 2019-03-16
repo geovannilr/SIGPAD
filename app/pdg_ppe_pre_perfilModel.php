@@ -19,6 +19,7 @@ class pdg_ppe_pre_perfilModel extends Model
 			'id_pdg_gru',
 			'id_cat_sta',
 			'id_cat_tpo_tra_gra',
+			'id_cat_ctg_tra',
 			'id_gen_usuario'
 		];
 
@@ -28,6 +29,9 @@ class pdg_ppe_pre_perfilModel extends Model
 
 	 public function tipoTrabajo(){
 	 	Return $this->belongsTo('App\cat_tpo_tra_gra_tipo_trabajo_graduacionModel','id_cat_tpo_tra_gra');
+	 }
+	 public function categoriaTrabajo(){
+	 	Return $this->belongsTo('App\cat_ctg_tra_categoria_trabajo_graduacionModel','id_cat_ctg_tra');
 	 }
 	 public function usuario(){
 	 	Return $this->belongsTo('App\gen_UsuarioModel','id');

@@ -14,4 +14,11 @@ class rel_tpo_tra_eta_tipo_trabajo_etapaModel extends Model{
 			'id_cat_eta_eva',
 			'orden_eta_eva'
 		];
-}
+		public function trabajos(){
+    		return $this->belongsTo('App\cat_tpo_tra_gra_tipo_trabajo_graduacionModel','id_cat_tpo_tra_gra','id_cat_tpo_tra_gra');
+    	}
+
+    }
+
+    
+

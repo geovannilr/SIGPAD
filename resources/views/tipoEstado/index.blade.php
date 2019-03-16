@@ -76,7 +76,7 @@
    <div class="col-sm-3"></div>
   @can('tipoEstado.create')
     <div class="col-sm-3">
-      <a class="btn " href="{{route('tipoEstado.create')}}" style="background-color: #DF1D20; color: white"><i class="fa fa-plus"></i> Nuevo Tipo Estado</a>
+      <a class="btn btn-primary" href="{{route('tipoEstado.create')}}" ><i class="fa fa-plus"></i> Nuevo Tipo Estado</a>
     </div>
   @endcan
   </div> 

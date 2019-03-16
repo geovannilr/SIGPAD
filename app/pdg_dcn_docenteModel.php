@@ -38,7 +38,7 @@ class pdg_dcn_docenteModel extends Model
     /***
      * Función: getDocentesDisponibles($id)
      * Params: $id-> Id del grupo de TDG
-     * Retorna: Lista de docentes que no han sido asignados al tribunal de un grupo
+     * Retorna: Lista de docentes que no han sido asignados al tribunal de un grupo, excluyendo coordinadores de tdg y tribunales de grupos finalizados.
     */
     public static function getDocentesDisponibles($id){
         $coordinadores = self::getDocentesCoordinadores();
@@ -94,14 +94,14 @@ class pdg_dcn_docenteModel extends Model
         }elseif ($estado == 2) {
             $where = " ";
         }
-        $query = "select distinct x.NumGrupo, x.Carnet, x.Lider
+        $query = "select distinct x.NumGrupo, x.Carnet, x.Lider, x.finalizo
             from (select gru.numero_pdg_gru as NumGrupo, 
             UPPER(est.carnet_gen_est) as Carnet,
             est.nombre_gen_est as Lider, 
             triR.nombre_tri_rol as TribunalRol,
             usr.name  as Docente,
-			(select aprobo from pdg_apr_eta_tra_aprobador_etapa_trabajo where id_cat_eta_eva = 999 AND id_pdg_tra_gra = 
-            (SELECT id_pdg_tra_gra from pdg_tra_gra_trabajo_graduacion where id_pdg_gru = gru.id_pdg_gru )) as finalizo
+			IFNULL((select aprobo from pdg_apr_eta_tra_aprobador_etapa_trabajo where id_cat_eta_eva = 999 AND id_pdg_tra_gra = 
+            (SELECT id_pdg_tra_gra from pdg_tra_gra_trabajo_graduacion where id_pdg_gru = gru.id_pdg_gru )),0) as finalizo
             from pdg_tri_gru_tribunal_grupo triG
              join pdg_gru_est_grupo_estudiante gruE on triG.id_pdg_gru=gruE.id_pdg_gru and gruE.eslider_pdg_gru_est=1
                  join pdg_tri_rol_tribunal_rol triR on triR.id_pdg_tri_rol=triG.id_pdg_tri_rol
@@ -112,7 +112,7 @@ class pdg_dcn_docenteModel extends Model
                 where gru.anio_pdg_gru = :anio
                 order by gru.numero_pdg_gru asc) x
                 ".$where."
-          order by x.NumGrupo ASC";
+          order by x.finalizo DESC, x.NumGrupo ASC";
         if ($estado == 0 || $estado == 1 ) {
             $lideres=DB::select($query, array($anio,$estado));
         }elseif ($estado == 2) {
@@ -191,15 +191,15 @@ class pdg_dcn_docenteModel extends Model
         }elseif ($estado == 2) {
             $where = " ";
         }
-        $query = "select distinct x.CarnetDoc,x.NumGrupo, x.TribunalRol
+        $query = "select distinct x.CarnetDoc,x.NumGrupo, x.TribunalRol, x.finalizo
             from (select gru.numero_pdg_gru as NumGrupo,
             est.carnet_gen_est as Carnet,
             est.nombre_gen_est as Lider,
             triR.nombre_tri_rol as TribunalRol,
             usr.name  as Docente,
             usr.user as CarnetDoc,
-            (select aprobo from pdg_apr_eta_tra_aprobador_etapa_trabajo where id_cat_eta_eva = 999 AND id_pdg_tra_gra = 
-            (SELECT id_pdg_tra_gra from pdg_tra_gra_trabajo_graduacion where id_pdg_gru = gru.id_pdg_gru )) as finalizo
+            IFNULL((select aprobo from pdg_apr_eta_tra_aprobador_etapa_trabajo where id_cat_eta_eva = 999 AND id_pdg_tra_gra = 
+            (SELECT id_pdg_tra_gra from pdg_tra_gra_trabajo_graduacion where id_pdg_gru = gru.id_pdg_gru )),0) as finalizo
             from pdg_tri_gru_tribunal_grupo triG
              join pdg_gru_est_grupo_estudiante gruE on triG.id_pdg_gru=gruE.id_pdg_gru and gruE.eslider_pdg_gru_est=1
                  join pdg_tri_rol_tribunal_rol triR on triR.id_pdg_tri_rol=triG.id_pdg_tri_rol
@@ -340,8 +340,7 @@ class pdg_dcn_docenteModel extends Model
             left join cat_car_cargo_eisi car on car.id_cat_car=dcn.id_cargo_actual
             LEFT JOIN cat_car_cargo_eisi car2 ON car2.id_cat_car=dcn.id_segundo_cargo
             INNER JOIN cat_tpo_jrn_dcn_tipo_jornada_docente jrnd ON dcn.tipoJornada = jrnd.id_cat_tpo_jrn_dcn
-            where dcn.activo=1
-            AND dcn.es_visible_pdg_dcn=1
+            where dcn.es_visible_pdg_dcn=1
             ORDER BY dcn.tipoJornada ASC, dcn.pdg_dcn_prioridad DESC", // and dcn.tipoJornada=:jornada",
             array(
                 $jornada

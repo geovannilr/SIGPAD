@@ -344,33 +344,38 @@ class TrabajoDeGraduacionController extends Controller{
 
              //INGRESAMOS LOS AUTORES
             foreach ($estudiantesGrupo as $estudiante) {
-                 //VERIFICAMOS SI EL ESTUDIANTE YA ESTA INGRESADO 3-Estudiante
-                $llaveIntegracion = gen_int_integracionModel::where("llave_gen_int","=",$estudiante->ID_Estudiante)->where("id_gen_tpo_int","=",3)->first();
-                if (empty($llaveIntegracion->id_gen_int)) {
-                    $lastIdIntegracion = gen_int_integracionModel::create
-                    ([
-                        'id_gen_tpo_int' => 3,
-                        'llave_gen_int' => $estudiante->ID_Estudiante
+                //VERIFICAMOS SI EL ESTUDIANTE NO FUE RETIRADO
+                if ($estudiantes->Cargo == 'Lider' || $estudiantes->Cargo == 'Miembro') {
+                    //VERIFICAMOS SI EL ESTUDIANTE YA ESTA INGRESADO 3-Estudiante
+                    $llaveIntegracion = gen_int_integracionModel::where("llave_gen_int","=",$estudiante->ID_Estudiante)->where("id_gen_tpo_int","=",3)->first();
+                    if (empty($llaveIntegracion->id_gen_int)) {
+                        $lastIdIntegracion = gen_int_integracionModel::create
+                        ([
+                            'id_gen_tpo_int' => 3,
+                            'llave_gen_int' => $estudiante->ID_Estudiante
 
-                    ]);
-                    $lastIdAutor = pub_aut_publicacion_autorModel::create
-                    ([
-                        'id_pub' => $lastIdPublicacion->id_pub,
-                        'id_gen_int' => $lastIdIntegracion->id_gen_int,
-                        'nombres_pub_aut' => $estudiante->Nombre,
-                        'apellidos_pub_aut' => ""
-                    ]);
+                        ]);
+                        $lastIdAutor = pub_aut_publicacion_autorModel::create
+                        ([
+                            'id_pub' => $lastIdPublicacion->id_pub,
+                            'id_gen_int' => $lastIdIntegracion->id_gen_int,
+                            'nombres_pub_aut' => $estudiante->Nombre,
+                            'apellidos_pub_aut' => ""
+                        ]);
 
-                }else{
-                    $autor=pub_aut_publicacion_autorModel::where("id_gen_int","=",$llaveIntegracion->id_gen_int)->first();
-                     $lastIdAutor = pub_aut_publicacion_autorModel::create
-                    ([
-                        'id_pub' => $lastIdPublicacion->id_pub,
-                        'id_gen_int' => $autor->id_gen_int,
-                        'nombres_pub_aut' => $estudiante->Nombre,
-                        'apellidos_pub_aut' => ""
-                    ]);
+                    }else{
+                        $autor=pub_aut_publicacion_autorModel::where("id_gen_int","=",$llaveIntegracion->id_gen_int)->first();
+                         $lastIdAutor = pub_aut_publicacion_autorModel::create
+                        ([
+                            'id_pub' => $lastIdPublicacion->id_pub,
+                            'id_gen_int' => $autor->id_gen_int,
+                            'nombres_pub_aut' => $estudiante->Nombre,
+                            'apellidos_pub_aut' => ""
+                        ]);
+                    }
                 }
+
+                 
             }
             //GUARDAMOS EL DOCUMENTO ASOCIADO A LA PUBLICACION
             $file = $request->file('tomoFinal');

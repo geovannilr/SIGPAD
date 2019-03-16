@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\DB;
 
 class pdg_not_cri_tra_nota_criterio_trabajoModel extends Model
 {
+    const T_CRITERIO_INDIVIDUAL = 0;
+    const T_CRITERIO_GRUPAL = 1;
     protected $table='pdg_not_cri_tra_nota_criterio_trabajo';
 		protected $primaryKey='id_pdg_not_cri_tra';
 		public $timestamps=false;
@@ -17,12 +19,32 @@ class pdg_not_cri_tra_nota_criterio_trabajoModel extends Model
 			'id_pdg_tra_gra',
 			'id_pdg_gru_est',
 		];
-    public static function getCriteriosEtapa($idGrupo,$idEtapa){
-        $criterios = DB::select(
-            'SELECT DISTINCT vwn.idCriterio, UPPER(vwn.nombreCriterio) as nombreCriterio, vwn.ponderaCriterio, vwn.ponderaAspecto
-              FROM view_pdg_notas vwn
-              WHERE  vwn.idEtapa = :idEtapa
-              AND vwn.idGru = :idGrupo',array($idEtapa,$idGrupo));
+    public static function getCriteriosEtapa($idGrupo,$idEtapa, $modo){
+        if($modo == self::T_CRITERIO_INDIVIDUAL){
+            $query = '  SELECT DISTINCT 
+                          vwn.idCriterio, 
+                          UPPER(vwn.nombreCriterio) as nombreCriterio, 
+                          vwn.ponderaCriterio, 
+                          vwn.ponderaAspecto
+                        FROM view_pdg_notas vwn
+                        WHERE  vwn.idEtapa = :idEtapa
+                        AND vwn.idGru = :idGrupo';
+        }
+        elseif ($modo == self::T_CRITERIO_GRUPAL){
+            $query = '  SELECT 
+                            vwn.idCriterio, 
+                            UPPER(vwn.nombreCriterio) as nombreCriterio, 
+                            vwn.ponderaCriterio, 
+                            vwn.ponderaAspecto
+                            ,vwn.notaCriterio
+                        FROM 
+                            view_pdg_notas vwn
+                        WHERE  
+                            vwn.idEtapa = :idEtapa
+                            AND vwn.idGru = :idGrupo
+                            AND vwn.rolGruEst = 1'; //idRol del líder
+        }
+        $criterios = DB::select($query,array($idEtapa,$idGrupo));
         return $criterios;
     }
 
@@ -38,7 +60,7 @@ class pdg_not_cri_tra_nota_criterio_trabajoModel extends Model
 
     public static function bulkUpdateNotas($idGrupo,$idEtapa,$notas){
         $result = -1;
-        $templateQuery = "update view_pdg_notas set notaCriterio = notaParam , yaEvaluado = 1 where idNota = idParam and idGru = '".$idGrupo."' and idEtapa = '".$idEtapa."'";
+        $templateQuery = "update view_pdg_notas set notaCriterio = (CASE WHEN rolGruEst = 2 THEN 0 ELSE notaParam END) , yaEvaluado = 1 where idNota = idParam and idGru = '".$idGrupo."' and idEtapa = '".$idEtapa."'";
         $queries = pdg_not_cri_tra_nota_criterio_trabajoModel::builtUpdateQuery($templateQuery,$notas);
         DB::beginTransaction();
         try {
@@ -117,6 +139,29 @@ class pdg_not_cri_tra_nota_criterio_trabajoModel extends Model
                         vwn.idGru = :idGrupo
                     ";
         $result = DB::select($query,array($idGrupo));
+        return $result;
+    }
+
+    public static function bulkUpdateNotasEtapa($idGrupo,$idEtapa,$notas){
+        $result = -1;
+        $templateQuery = "UPDATE 
+                            view_pdg_notas 
+                          SET 
+                            notaCriterio = (CASE WHEN rolGruEst = 2 THEN 0 ELSE notaParam END) 
+                            ,yaEvaluado = 1  
+                          where idCriterio = idParam and idGru = '".$idGrupo."' and idEtapa = '".$idEtapa."'";
+        $queries = pdg_not_cri_tra_nota_criterio_trabajoModel::builtUpdateQuery($templateQuery,$notas);
+        DB::beginTransaction();
+        try {
+            foreach($queries as $query){
+                DB::update($query);
+            }
+            DB::commit();
+            $result = 0;
+        } catch (\Exception $e) {
+            DB::rollback();
+            throw $e;
+        }
         return $result;
     }
 }

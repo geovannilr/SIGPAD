@@ -63,7 +63,7 @@ class PerfilController extends Controller
                 if ($idGrupo  > 0 ){
                     $miGrupo = pdg_gru_grupoModel::find($idGrupo);
                     if ($miGrupo->id_cat_sta == 3 ) {//APROBADO
-                        $prePerfiles =pdg_ppe_pre_perfilModel::where('id_pdg_gru', '=',$idGrupo)->get();
+                        $prePerfiles =pdg_ppe_pre_perfilModel::where('id_pdg_gru', '=',$idGrupo)->where('id_cat_sta','=','10')->get();
                         if (sizeof($prePerfiles)==0) {
                            Session::flash('message-error', 'Para poder ingresar a Perfiles de trabajo de graduación, primero debes enviar tus Pre-Perfiles y que al menos uno de estos sea aprobado por Coordinación.');
                             return  view('template'); 
@@ -163,13 +163,25 @@ class PerfilController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    {
-        try {
-                $validatedData = $request->validate([
+    {   
+        $validatedData = $request->validate([
                     'tema_pdg_per' => 'required|max:200',
                     'id_cat_tpo_tra_gra' => 'required',
-                    'documento' => 'required'
-                ]);
+                    'documento' => 'required',
+                    'resumen' => 'required',
+                    'boleta' => 'required'
+                    
+                ],
+            [
+                'tema_pdg_per.required' => 'Debe ingresar un tema de perfil de  trabajo de graduación.',
+                'tema_pdg_per.max' => 'El tema de perfil de trabajo de graduación debe contener como maximo 200 caracteres',
+                'id_cat_tpo_tra_gra.required' => 'Debe seleccionar un tipo de trabajo de graduación.',
+                'documento.required' => 'Debe subir un documento de Perfil.',
+                'resumen.required' => 'Debe subir un documento resumen de Perfil.',
+                'boleta.required' => 'Debe subir un documento con los comprobantes de inscripción de los integrantes del grupo de la materia Trabajo de graduación..'
+            ]);
+        try {
+                
                $userLogin=Auth::user();
                $estudiante = new gen_EstudianteModel();
                //$idGrupo = $estudiante->getIdGrupo($userLogin->user);
@@ -180,22 +192,28 @@ class PerfilController extends Controller
                //obtenemos el campo file definido en el formulario
                 $file = $request->file('documento');
                 $resumen = $request->file('resumen');
+                $boleta = $request->file('boleta');
                //obtenemos el nombre del archivo
                 $nombre = 'Grupo'.$numeroGrupo."_".$anioGrupo."_".date('his').$file->getClientOriginalName();
                 $nombreResumen = 'Resumen_Grupo'.$numeroGrupo."_".$anioGrupo."_".date('his').$resumen->getClientOriginalName();
+                $nombreBoleta = 'Inscripcion'.$numeroGrupo."_".$anioGrupo."_".date('his').$boleta->getClientOriginalName();
                 Storage::disk('Uploads')->put($nombre, File::get($file));
                 Storage::disk('Uploads')->put($nombreResumen, File::get($resumen));
+                Storage::disk('Uploads')->put($nombreBoleta, File::get($boleta));
                  //movemos el archivo a la ubicación correspondiente segun grupo y años
                 if ($_ENV['SERVER'] =="win") {
                         $nuevaUbicacion=trim($anioGrupo.'\Grupo'.$numeroGrupo.'\Perfil\ ').$nombre;
                         $nuevaUbicacionResumen=trim($anioGrupo.'\Grupo'.$numeroGrupo.'\Perfil\ ').$nombreResumen;
+                        $nuevaUbicacionBoleta=trim($anioGrupo.'\Grupo'.$numeroGrupo.'\Perfil\ ').$nombreBoleta;
                      }else{
                         $nuevaUbicacion=$anioGrupo.'/Grupo'.$numeroGrupo.'/Perfil/'.$nombre;
                         $nuevaUbicacionResumen=$anioGrupo.'/Grupo'.$numeroGrupo.'/Perfil/'.$nombreResumen;
+                        $nuevaUbicacionBoleta=$anioGrupo.'/Grupo'.$numeroGrupo.'/Perfil/'.$nombreBoleta;
                      }
                     
                 Storage::disk('Uploads')->move($nombre, $nuevaUbicacion);
                 Storage::disk('Uploads')->move($nombreResumen, $nuevaUbicacionResumen);
+                 Storage::disk('Uploads')->move($nombreBoleta, $nuevaUbicacionBoleta);
                 $fecha=date('Y-m-d H:i:s');
                 //$path= public_path()."\Uploads\PrePerfil\ ";
                  $path= public_path().$_ENV['PATH_UPLOADS'];
@@ -268,6 +286,22 @@ class PerfilController extends Controller
                         'nombre_arc_doc'                 => $resumen->getClientOriginalName(),
                         'activo'                         => 1
                     ]);
+
+                     $lastIdDocumentoBoleta = pdg_doc_documentoModel::create
+                    ([
+                        'id_pdg_gru'                     => $idGrupo,
+                        'id_cat_tpo_doc'                 => 26, // Boleta inscripción
+                        'fecha_creacion_pdg_doc'         => $fecha
+                    ]); 
+
+                    $lastIdArchivoBoleta = pdg_arc_doc_archivo_documentoModel::create
+                    ([
+                        'id_pdg_doc'                     => $lastIdDocumentoBoleta->id_pdg_doc,
+                        'ubicacion_arc_doc'              => $nombreBoleta,
+                        'fecha_subida_arc_doc'           => $fecha,
+                        'nombre_arc_doc'                 => $boleta->getClientOriginalName(),
+                        'activo'                         => 1
+                    ]);
                     Session::flash('message','Perfil Registrado correctamente!');
                     return Redirect::to('perfil');
         } catch (\Exception $e) {
@@ -336,15 +370,21 @@ class PerfilController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id){
-        
+        $validatedData = $request->validate([
+                        'tema_pdg_per' => 'required|max:200',
+                        'id_cat_tpo_tra_gra' => 'required',
+                 ],
+            [
+                'tema_pdg_per.required' => 'Debe ingresar un tema de perfil de  trabajo de graduación.',
+                'tema_pdg_per.max' => 'El tema de perfil de trabajo de graduación debe contener como maximo 200 caracteres',
+                'id_cat_tpo_tra_gra.required' => 'Debe seleccionar un tipo de trabajo de graduación.'
+            ]);
         try {
                 $userLogin=Auth::user();
-                $validatedData = $request->validate([
-                        'tema_pdg_per' => 'required|max:80',
-                        'id_cat_tpo_tra_gra' => 'required',
-                 ]);
+                
                 $file = $request->file('documento');
                 $resumen = $request->file('resumen');
+                $boleta = $request->file('boleta');
                 $perfil=pdg_per_perfilModel::find($id);
                 $perfil->tema_pdg_per = $request['tema_pdg_per'];
                 $perfil->id_cat_tpo_tra_gra = $request['id_cat_tpo_tra_gra'];
@@ -370,7 +410,7 @@ class PerfilController extends Controller
                         $path= public_path().$_ENV['PATH_UPLOADS'].$anioGrupo.'/Grupo'.$numeroGrupo.'/Perfil/';
                     }
                     //obtenemos el nombre del archivo
-                    $nombre = 'Grupo'.$numeroGrupo."_".$anioGrupo."_".date('hms').$file->getClientOriginalName();
+                    $nombre = 'Grupo'.$numeroGrupo."_".$anioGrupo."_".date('his').$file->getClientOriginalName();
                     Storage::disk('Uploads')->put($nombre, File::get($file));
                      //movemos el archivo a la ubicación correspondiente segun grupo y años
                     if ($_ENV['SERVER'] =="win") {
@@ -404,7 +444,7 @@ class PerfilController extends Controller
                         $path= public_path().$_ENV['PATH_UPLOADS'].$anioGrupo.'/Grupo'.$numeroGrupo.'/Perfil/';
                     }
                     //obtenemos el nombre del archivo
-                    $nombreResumen = 'Resumen_Grupo'.$numeroGrupo."_".$anioGrupo."_".date('hms').$resumen->getClientOriginalName();
+                    $nombreResumen = 'Resumen_Grupo'.$numeroGrupo."_".$anioGrupo."_".date('his').$resumen->getClientOriginalName();
                     Storage::disk('Uploads')->put($nombreResumen, File::get($resumen));
                      //movemos el archivo a la ubicación correspondiente segun grupo y años
                    if ($_ENV['SERVER'] =="win") {
@@ -417,6 +457,41 @@ class PerfilController extends Controller
                     $fecha=date('Y-m-d H:i:s');
                     $archivo->nombre_arc_doc = $resumen->getClientOriginalName();
                     $archivo->ubicacion_arc_doc = $nombreResumen; //SOLO SE GUARDA NOMBRE AHORA
+                    $archivo->fecha_subida_arc_doc = $fecha;
+                    if (File::exists(trim($path).$nombreViejo)){
+                            File::delete(trim($path).$nombreViejo);    
+                    }
+                    $archivo->save();
+               }
+
+               if (!empty($boleta)) {
+                    $ultimoDocumentoInsertado = pdg_doc_documentoModel::where('id_cat_tpo_doc', 26) // 6 Resumen
+                                        ->where('id_pdg_gru', $idGrupo)
+                                        ->orderBy('id_pdg_doc', 'desc')
+                                        ->first();
+                
+                    $archivo = pdg_arc_doc_archivo_documentoModel::where('id_pdg_doc', $ultimoDocumentoInsertado->id_pdg_doc)
+                                                                  ->first();
+                    $nombreViejo = $archivo->ubicacion_arc_doc;
+                    if ($_ENV['SERVER'] =="win") {
+                        $path= trim(public_path().$_ENV['PATH_UPLOADS'].$anioGrupo.'\Grupo'.$numeroGrupo.'\Perfil\ ');
+                    }else{
+                        $path= public_path().$_ENV['PATH_UPLOADS'].$anioGrupo.'/Grupo'.$numeroGrupo.'/Perfil/';
+                    }
+                    //obtenemos el nombre del archivo
+                    $nombreBoleta = 'Inscripcion'.$numeroGrupo."_".$anioGrupo."_".date('his').$boleta->getClientOriginalName();
+                    Storage::disk('Uploads')->put($nombreBoleta, File::get($boleta));
+                     //movemos el archivo a la ubicación correspondiente segun grupo y años
+                   if ($_ENV['SERVER'] =="win") {
+                        $nuevaUbicacionBoleta=trim($anioGrupo.'\Grupo'.$numeroGrupo.'\Perfil\ ').$nombreBoleta;
+                     }else{
+                        $nuevaUbicacionBoleta=$anioGrupo.'/Grupo'.$numeroGrupo.'/Perfil/'.$nombreBoleta;
+                     }
+                    
+                    Storage::disk('Uploads')->move($nombreBoleta, $nuevaUbicacionBoleta);
+                    $fecha=date('Y-m-d H:i:s');
+                    $archivo->nombre_arc_doc = $boleta->getClientOriginalName();
+                    $archivo->ubicacion_arc_doc = $nombreBoleta; //SOLO SE GUARDA NOMBRE AHORA
                     $archivo->fecha_subida_arc_doc = $fecha;
                     if (File::exists(trim($path).$nombreViejo)){
                             File::delete(trim($path).$nombreViejo);    
@@ -460,15 +535,23 @@ class PerfilController extends Controller
                                         ->first();
                 
                 $archivo = pdg_arc_doc_archivo_documentoModel::where('id_pdg_doc', $ultimoDocumentoInsertado->id_pdg_doc)->first();
-                 $ultimoDocumentoInsertadoResumen = pdg_doc_documentoModel::where('id_cat_tpo_doc', 7) // 7 Es Resumen
+                $ultimoDocumentoInsertadoResumen = pdg_doc_documentoModel::where('id_cat_tpo_doc', 7) // 7 Es Resumen
                                         ->where('id_pdg_gru', $idGrupo)
                                         ->orderBy('id_pdg_doc', 'desc')
                                         ->first();
                 
                 $archivoResumen = pdg_arc_doc_archivo_documentoModel::where('id_pdg_doc', $ultimoDocumentoInsertadoResumen->id_pdg_doc)->first();
+
+                $ultimoDocumentoInsertadoBoleta = pdg_doc_documentoModel::where('id_cat_tpo_doc', 26) // 7 Es Boleta
+                                        ->where('id_pdg_gru', $idGrupo)
+                                        ->orderBy('id_pdg_doc', 'desc')
+                                        ->first();
+                
+                $archivoBoleta = pdg_arc_doc_archivo_documentoModel::where('id_pdg_doc', $ultimoDocumentoInsertadoBoleta->id_pdg_doc)->first();
                                                                   
                 $nombreViejo = $archivo->ubicacion_arc_doc;
                 $nombreViejoResumen = $archivoResumen->ubicacion_arc_doc;
+                $nombreViejoBoleta = $archivoBoleta->ubicacion_arc_doc;
                 if ($_ENV['SERVER'] =="win") {
                         $path= public_path().$_ENV['PATH_UPLOADS'].$anioGrupo.'\Grupo'.$numeroGrupo.'\Perfil\ ';
                 }else{
@@ -481,11 +564,16 @@ class PerfilController extends Controller
                     if (File::exists(trim($path).$nombreViejoResumen)){
                             File::delete(trim($path).$nombreViejoResumen);    
                     }
+                    if (File::exists(trim($path).$nombreViejoBoleta)){
+                            File::delete(trim($path).$nombreViejoBoleta);    
+                    }
                     pdg_per_perfilModel::destroy($id);
                     pdg_arc_doc_archivo_documentoModel::destroy($archivo->id_pdg_arc_doc);
                     pdg_arc_doc_archivo_documentoModel::destroy($archivoResumen->id_pdg_arc_doc);
+                     pdg_arc_doc_archivo_documentoModel::destroy($archivoBoleta->id_pdg_arc_doc);
                     pdg_doc_documentoModel::destroy($ultimoDocumentoInsertado->id_pdg_doc);
                     pdg_doc_documentoModel::destroy($ultimoDocumentoInsertadoResumen->id_pdg_doc);
+                    pdg_doc_documentoModel::destroy($ultimoDocumentoInsertadoBoleta->id_pdg_doc);
                     Session::flash('message','Perfil Eliminado Correctamente!');
                     return Redirect::to('/perfil');
                 }else{
@@ -600,6 +688,34 @@ class PerfilController extends Controller
         //verificamos si el archivo existe y lo retornamos
         if (File::exists(trim($path).$nombreViejoResumen)){
           return response()->download(trim($path).$nombreViejoResumen);
+        }else{
+            Session::flash('error','El archivo no se encuentra disponible , es posible que fue borrado');
+             return redirect()->route('prePerfil.index');
+        }
+    }
+
+    function downloadPerfilBoleta(Request $request){
+        $id = $request['archivo'];
+        $idGrupo = session('idGrupo');
+        $grupo = pdg_gru_grupoModel::find($idGrupo);
+        $anioGrupo = $grupo->anio_pdg_gru;
+        $numeroGrupo = $grupo->correlativo_pdg_gru_gru;
+         $ultimoDocumentoInsertadoBoleta = pdg_doc_documentoModel::where('id_cat_tpo_doc', 26) 
+                                ->where('id_pdg_gru', $idGrupo)
+                                ->orderBy('id_pdg_doc', 'desc')
+                                ->first();
+        
+        $archivoBoleta = pdg_arc_doc_archivo_documentoModel::where('id_pdg_doc', $ultimoDocumentoInsertadoBoleta->id_pdg_doc)->first();
+        $nombreViejoBoleta = $archivoBoleta->ubicacion_arc_doc;
+        if ($_ENV['SERVER'] =="win") {
+                $path= public_path().$_ENV['PATH_UPLOADS'].$anioGrupo.'\Grupo'.$numeroGrupo.'\Perfil\ ';
+        }else{
+                $path= public_path().$_ENV['PATH_UPLOADS'].$anioGrupo.'/Grupo'.$numeroGrupo.'/Perfil/';
+        }
+    
+        //verificamos si el archivo existe y lo retornamos
+        if (File::exists(trim($path).$nombreViejoBoleta)){
+          return response()->download(trim($path).$nombreViejoBoleta);
         }else{
             Session::flash('error','El archivo no se encuentra disponible , es posible que fue borrado');
              return redirect()->route('prePerfil.index');

@@ -17,7 +17,7 @@
 	        @foreach($datos as $dato)
 	        <tr>
 	            <td>
-	                {{$dato->NumGrupo}}
+	                {{$dato->NumGrupo}}{{$dato->finalizo==1?' (finalizado)':''}}
 	            </td>
 	            <td>
 	                {{$dato->Carnet}} - {{$dato->Lider}}

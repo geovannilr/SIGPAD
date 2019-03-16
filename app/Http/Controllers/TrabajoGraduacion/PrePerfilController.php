@@ -17,6 +17,8 @@ use \App\pdg_per_perfilModel;
 use \App\gen_EstudianteModel;
 use \App\pdg_gru_grupoModel;
 use \App\cat_tpo_tra_gra_tipo_trabajo_graduacionModel;
+use \App\cat_ctg_tra_categoria_trabajo_graduacionModel;
+
 class PrePerfilController extends Controller
 {
    public function __construct(){
@@ -126,9 +128,10 @@ class PrePerfilController extends Controller
                         if ($prePerfil->id_cat_sta == 10) {
                             $prePerfilAprobado+=1;
                         }
-                    }
+                    }   
+                        $catTrabajos =  cat_ctg_tra_categoria_trabajo_graduacionModel::pluck('nombre_cat_ctg_tra', 'id_cat_ctg_tra')->toArray();
                         $tiposTrabajos =  cat_tpo_tra_gra_tipo_trabajo_graduacionModel::pluck('nombre_cat_tpo_tra_gra', 'id_Cat_tpo_tra_gra')->toArray();
-                        return view('TrabajoGraduacion.PrePerfil.create',compact('tiposTrabajos'));
+                        return view('TrabajoGraduacion.PrePerfil.create',compact('tiposTrabajos','catTrabajos'));
                     //}
 	        	}else{
 	        		//EL GRUPO AUN NO HA SIDO APROBADO
@@ -154,12 +157,21 @@ class PrePerfilController extends Controller
      */
     public function store(Request $request)
     {
-        try {
-                $validatedData = $request->validate([
+        $validatedData = $request->validate([
                 'tema_pdg_ppe' => 'required|max:200',
                 'id_cat_tpo_tra_gra' => 'required',
+                'id_cat_ctg_tra' => 'required',
                 'documento' => 'required'
-                ]);
+                ],
+            [
+                'tema_pdg_ppe.required' => 'Debe ingresar un tema de trabajo de graduación.',
+                'tema_pdg_ppe.max' => 'El tema de trabajo de graduación debe contener como maximo 200 caracteres',
+                'id_cat_tpo_tra_gra.required' => 'Debe seleccionar un tipo de trabajo de graduación.',
+                'id_cat_ctg_tra.required' => 'Debe seleccionar una categoría de trabajo de graduación.',
+                'documento.required' => 'Debe subir un documento de Pre-Perfil.',
+            ]);
+        try {
+                
                $userLogin=Auth::user();
                $estudiante = new gen_EstudianteModel();
                $idGrupo = session('idGrupo');
@@ -171,6 +183,7 @@ class PrePerfilController extends Controller
                 $file = $request->file('documento');
                //obtenemos el nombre del archivo
                 $nombre = 'Grupo'.$numeroGrupo."_".$anioGrupo."_".date('his').$file->getClientOriginalName();
+               
                 Storage::disk('Uploads')->put($nombre, File::get($file));
                  //movemos el archivo a la ubicación correspondiente segun grupo y años
                 if ($_ENV['SERVER'] =="win") {
@@ -193,6 +206,7 @@ class PrePerfilController extends Controller
                         'id_pdg_gru'                     => $idGrupo,
                         'id_cat_sta'                     => 7,
                         'id_cat_tpo_tra_gra'             => $request['id_cat_tpo_tra_gra'],
+                        'id_cat_ctg_tra'                 => $request['id_cat_ctg_tra'],
                         'id_gen_usuario'                 => $userLogin->id
                     ]); 
                     Session::flash('message','Pre-Perfil Registrado correctamente!');
@@ -241,7 +255,8 @@ class PrePerfilController extends Controller
                         return Redirect::to('prePerfil');
                    }else{
                      $tiposTrabajos =  cat_tpo_tra_gra_tipo_trabajo_graduacionModel::pluck('nombre_cat_tpo_tra_gra', 'id_Cat_tpo_tra_gra')->toArray();
-                    return view('TrabajoGraduacion.PrePerfil.edit',compact('tiposTrabajos','prePerfil'));
+                      $catTrabajos =  cat_ctg_tra_categoria_trabajo_graduacionModel::pluck('nombre_cat_ctg_tra', 'id_cat_ctg_tra')->toArray();
+                    return view('TrabajoGraduacion.PrePerfil.edit',compact('tiposTrabajos','catTrabajos','prePerfil'));
                    }
           
                 }else{
@@ -263,17 +278,20 @@ class PrePerfilController extends Controller
      */
     public function update(Request $request, $id)
     {	
+        $validatedData = $request->validate([
+                        'tema_pdg_ppe' => 'required|max:80',
+                        'id_cat_tpo_tra_gra' => 'required',
+                        'id_cat_ctg_tra' => 'required',
+                 ]);
         try 
         {
                 $userLogin=Auth::user();
-                $validatedData = $request->validate([
-                        'tema_pdg_ppe' => 'required|max:80',
-                        'id_cat_tpo_tra_gra' => 'required',
-                 ]);
                 $file = $request->file('documento');
                 $prePerfil=pdg_ppe_pre_perfilModel::find($id);
                 $prePerfil->tema_pdg_ppe = $request['tema_pdg_ppe'];
                 $prePerfil->id_cat_tpo_tra_gra = $request['id_cat_tpo_tra_gra'];
+                $prePerfil->id_cat_ctg_tra = $request['id_cat_ctg_tra'];
+                
                 $estudiante = new gen_EstudianteModel();
                 //$idGrupo = $estudiante->getIdGrupo($userLogin->user);
                 $idGrupo = session('idGrupo');
@@ -479,4 +497,6 @@ class PrePerfilController extends Controller
         }
         return response()->json(['errorCode'=>$errorCode,'errorMessage'=>$errorMessage]);
     }
+
+    
 }

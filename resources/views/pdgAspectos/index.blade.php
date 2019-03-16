@@ -76,7 +76,7 @@
    <div class="col-sm-3"></div>
   @can('pdgAspectos.create')
     <div class="col-sm-3">
-      <a class="btn " href="{{route('pdgAspectos.create')}}" style="background-color: #DF1D20; color: white"><i class="fa fa-plus"></i> Nuevo aspecto</a>
+      <a class="btn btn-primary" href="{{route('pdgAspectos.create')}}" ><i class="fa fa-plus"></i> Nuevo aspecto</a>
     </div>
   @endcan
   </div> 

@@ -27,7 +27,7 @@
                     @endif  
 
                       <td>
-                          {{$dato->numGrupo}}
+                          {{$dato->numGrupo}}{{$dato->finalizo==1?' (finalizado)':''}}
                       </td>
                       <td>
                           {{$dato->nomSta}}

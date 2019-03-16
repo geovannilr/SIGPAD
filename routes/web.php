@@ -67,6 +67,7 @@ Route::post('delRelTrib', 'TrabajoGraduacion\PrePerfilController@deleteDocenteTr
 Route::resource('perfil', 'TrabajoGraduacion\PerfilController');
 Route::post('downloadPerfil', 'TrabajoGraduacion\PerfilController@downloadPerfil')->name('downloadPerfil');
 Route::post('downloadPerfilResumen', 'TrabajoGraduacion\PerfilController@downloadPerfilResumen')->name('downloadPerfilResumen');
+Route::post('downloadPerfilBoleta', 'TrabajoGraduacion\PerfilController@downloadPerfilBoleta')->name('downloadPerfilBoleta');
 Route::post('aprobarPerfil', 'TrabajoGraduacion\PerfilController@aprobarPerfil')->name('aprobarPerfil');
 Route::post('rechazarPerfil', 'TrabajoGraduacion\PerfilController@rechazarPerfil')->name('rechazarPerfil');
 Route::get('indexPerfil/{id}', 'TrabajoGraduacion\PerfilController@indexPerfil')->name('indexPerfil');
@@ -88,7 +89,7 @@ Route::post('storeCierreTDG', 'TrabajoGraduacion\TrabajoDeGraduacionController@s
 Route::get('dataAprbEta/{ifGrupo?}/{idEtapa}','TrabajoGraduacion\EtapaEvaluativaController@dataAprbEta')->name('dataAprbEta');
 Route::post('plantillaNotasVariable','TrabajoGraduacion\EtapaEvaluativaController@downloadPlantillaNotasVariable')->name('plantillaNotasVariable');
 Route::post('aprobarCierreGrupo','TrabajoGraduacion\TrabajoDeGraduacionController@aprobarCierreGrupo')->name('aprobarCierreGrupo');
-
+Route::post('updateNotasEtapa','TrabajoGraduacion\EtapaEvaluativaController@updateNotasEtapa')->name('updateNotasEtapa');
 
 //Reportes
 Route::get('reportesTDG', 'TrabajoGraduacion\ReportesController@index')->name('reportesTDG');
@@ -107,6 +108,8 @@ Route::get('reportes/createEstadoGruposEtapa', 'TrabajoGraduacion\ReportesContro
 Route::get('reportes/createDetalleGruposTdg', 'TrabajoGraduacion\ReportesController@createDetalleGruposTdg')->name('reportes/createDetalleGruposTdg');
 Route::get('reportes/createEstudiantesTdg', 'TrabajoGraduacion\ReportesController@createEstudiantesTdg')->name('reportes/createEstudiantesTdg');
 Route::get('reportes/createConsolidadoNotas', 'TrabajoGraduacion\ReportesController@createConsolidadoNotas')->name('reportes/createConsolidadoNotas');
+Route::get('reportes/createDocentesCategorias', 'TrabajoGraduacion\ReportesController@createDocentesCategorias')->name('reportes/createDocentesCategorias');
+Route::post('reportes/docCategorias', 'TrabajoGraduacion\ReportesController@docentesPorCategorias')->name('reportes/docCategorias');
 
 //Reportes WORD
 Route::get('reportesTDGWord', 'TrabajoGraduacion\ReportesWordController@index')->name('reportesTDGWord');

@@ -178,8 +178,9 @@
 					<th>Estado</th>
 					<th>Tipo</th>
 					<th>Acciones</th>
-						<th>Documento</th>
-						<th>Resumen</th>
+					<th>Documento</th>
+					<th>Resumen</th>
+					<th>Boleta Inscripción</th>
 					@can('perfil.aprobar')
 						<th>Aprobar</th>
 					@endcan
@@ -257,7 +258,7 @@
 						</td>
 						
 						
-							<td style="text-align: center;">
+							<td style="text-align: center;width: 30px;">
 								{!! Form::open(['route'=>['downloadPerfil'],'method'=>'POST']) !!}
 							 		<div class="btn-group">
 							 			{!!Form::hidden('archivo',$perfil->id_pdg_per,['class'=>'form-control'])!!}
@@ -266,8 +267,17 @@
 									</div>
 								{!! Form:: close() !!}
 							</td>
-							<td>
+							<td style="text-align: center;width: 30px;">
 								{!! Form::open(['route'=>['downloadPerfilResumen'],'method'=>'POST']) !!}
+							 		<div class="btn-group">
+							 			{!!Form::hidden('archivo',$perfil->id_pdg_per,['class'=>'form-control'])!!}
+							 			{!!Form::hidden('grupo',$perfil->grupo->id_pdg_gru,['class'=>'form-control'])!!}
+										<button type="submit" class="btn btn-dark"><i class="fa fa-download"></i></button>
+									</div>
+								{!! Form:: close() !!}
+							</td>
+							<td style="text-align: center;width: 30px;">
+								{!! Form::open(['route'=>['downloadPerfilBoleta'],'method'=>'POST']) !!}
 							 		<div class="btn-group">
 							 			{!!Form::hidden('archivo',$perfil->id_pdg_per,['class'=>'form-control'])!!}
 							 			{!!Form::hidden('grupo',$perfil->grupo->id_pdg_gru,['class'=>'form-control'])!!}

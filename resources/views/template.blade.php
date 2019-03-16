@@ -170,7 +170,7 @@
                           <li>
                               <a class="nav-link" href="{{route('createPublicaciones')}}" style="color: #ffffff">
                                   <i class="fa fa-cloud-upload"></i>
-                                  <span class="nav-link-text">Carga de Publicaciones</span>
+                                  <span class="nav-link-text">Carga de Temas de Publicaciones</span>
                               </a>
                           </li>
                       @endcan

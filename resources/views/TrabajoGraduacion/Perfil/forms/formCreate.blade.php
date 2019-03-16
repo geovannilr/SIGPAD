@@ -33,5 +33,13 @@
 
 					</div>
 				</div>
+				<div class="row">
+					<div class="form-group col-sm-12">
+					
+						{!! Form::label('Boletas de Inscripción(Copia o captura de comprobante de inscripción de materia TRABAJO DE GRADUACIÓN de todos los integrantes del grupo.)') !!}
+						{!!Form::file('boleta',['class'=>'form-control documento','accept'=>"pdf/docx/doc"])  !!}
+
+					</div>
+				</div>
 				
 				

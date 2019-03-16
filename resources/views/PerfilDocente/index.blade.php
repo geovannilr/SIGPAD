@@ -204,7 +204,7 @@
    <div class="col-sm-3"></div>
   @can('perfilDocente.cargar')
     <div class="col-sm-3">
-      <a class="btn " href="{{route('cargarPerfilDocente')}}" style="background-color: #DF1D20; color: white"><i class="fa fa-plus"></i> Cargar Perfil</a>
+      <a class="btn btn-primary" href="{{route('cargarPerfilDocente')}}" ><i class="fa fa-cloud-upload"></i> Cargar Perfil</a>
     </div>
   @endcan
   </div> 
@@ -251,7 +251,7 @@
                         <div class="card-title mb-4">
                             <div class="d-flex justify-content-start">
                                 <div class="image-container">
-                                    <img src="{{url('/')."/".env('PATH_PERFIL_DOCENTE').$info[0]->dcn_profileFoto}}" id="imgProfile" style="width: 150px; height: 150px; object-fit: cover;" class="img-thumbnail" />
+                                    <img src="{{url('/')."/".env('PATH_PERFIL_DOCENTE').$info[0]->dcn_profileFoto.'?'.time()}}" id="imgProfile" style="width: 150px; height: 150px; object-fit: cover;" class="img-thumbnail" />
                                     <div class="middle">
                                         <input type="button" class="btn btn-secondary" id="btnChangePicture" value="Cambiar" />
                                         <!--<input type="file" style="display: none;" id="profilePicture" name="fotoPerfil" /> -->
@@ -441,7 +441,7 @@
 	  <div class="col-sm-3"></div>
 	  @can('perfilDocente.create')
 	    <div class="col-sm-3">
-	      <a class="btn " href="{{route('academico.create')}}" style="background-color: #DF1D20; color: white"><i class="fa fa-plus"></i> Nuevo Registro</a>
+			  <a class="btn btn-primary" href="{{route('academico.create')}}" ><i class="fa fa-plus"></i> Nuevo Registro</a>
 	    </div>
 	  @endcan
   	</div>
@@ -498,7 +498,7 @@
 	  <div class="col-sm-3"></div>
 	  @can('perfilDocente.create')
 	    <div class="col-sm-3">
-	      <a class="btn " href="{{route('laboral.create')}}" style="background-color: #DF1D20; color: white"><i class="fa fa-plus"></i> Nuevo Registro</a>
+	      <a class="btn btn-primary" href="{{route('laboral.create')}}" ><i class="fa fa-plus"></i> Nuevo Registro</a>
 	    </div>
 	  @endcan
   	</div>
@@ -557,7 +557,7 @@
 	  <div class="col-sm-3"></div>
 	  @can('perfilDocente.create')
 	    <div class="col-sm-3">
-	      <a class="btn " href="{{route('certificacion.create')}}" style="background-color: #DF1D20; color: white"><i class="fa fa-plus"></i> Nuevo Registro</a>
+	      <a class="btn btn-primary" href="{{route('certificacion.create')}}" ><i class="fa fa-plus"></i> Nuevo Registro</a>
 	    </div>
 	  @endcan
   	</div>
@@ -624,7 +624,7 @@
 				</div>
         <div class="row">
           <div class="form-group col-sm-6">
-            {!! Form::submit('Agregar',['class'=>'btn','style'=>'background-color: #DF1D20; color: white']) !!}
+            {!! Form::submit('Agregar',['class'=>'btn btn-primary']) !!}
           </div>
         </div>
         </div> 

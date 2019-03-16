@@ -28,7 +28,7 @@
                         @foreach($grupos as $grupo)
                             @if($grupo->CarnetDoc == $dato->CarnetDoc)
                                 <tr>
-                                    <td>{{$grupo->NumGrupo}}</td>
+                                    <td>{{$grupo->NumGrupo}}{{$grupo->finalizo==1?' (finalizado)':''}}</td>
                                     <td>{{$grupo->TribunalRol}}</td>
                                 </tr>
                             @endif

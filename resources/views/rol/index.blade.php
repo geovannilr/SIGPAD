@@ -76,7 +76,7 @@
    <div class="col-sm-3"></div>
    @can('rol.create')
     <div class="col-sm-3">
-        <a class="btn " href="{{route('rol.create')}}" style="background-color: #DF1D20; color: white"><i class="fa fa-plus"></i> Nuevo Rol</a>
+        <a class="btn btn-primary" href="{{route('rol.create')}}" ><i class="fa fa-plus"></i> Nuevo Rol</a>
     </div>
   @endcan
 </div> 

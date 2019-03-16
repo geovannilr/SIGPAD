@@ -26,28 +26,28 @@
            {
                 extend: 'excelHtml5',
                 exportOptions: {
-                    columns: [ 0, 1, 2, 3]
+                    columns: [ 0, 1, 2, 3,4]
                 },
                 title: 'Listado de Pre-Perfiles'
             },
             {
                 extend: 'pdfHtml5',
                  exportOptions: {
-                    columns: [ 0, 1, 2, 3]
+                    columns: [ 0, 1, 2, 3,4]
                 },
                 title: 'Listado de Pre-Perfiles'
             },
              {
                 extend: 'csvHtml5',
                  exportOptions: {
-                    columns: [ 0, 1, 2, 3]
+                    columns: [ 0, 1, 2, 3,4]
                 },
                 title: 'Listado de Pre-Perfiles'
             },
             {
                 extend: 'print',
                  exportOptions: {
-                    columns: [ 0, 1, 2, 3]
+                    columns: [ 0, 1, 2, 3,4]
                 },
                 title: 'Listado de Pre-Perfiles'
             }
@@ -147,7 +147,7 @@
 			   <div class="col-sm-3">
 			   	 	 @can('prePerfil.create')
 
-					  	 <a class="btn " href="{{route('prePerfil.create')}}" style="background-color: #DF1D20; color: white"><i class="fa fa-plus"></i> Nuevo Pre-perfil </a>
+					  	 <a class="btn btn-primary" href="{{route('prePerfil.create')}}" ><i class="fa fa-plus"></i> Nuevo Pre-perfil </a>
 
 				  @endcan
 						 @if ($tribunal!="NA")
@@ -183,6 +183,7 @@
 					<th>Fecha Creación</th>
 					<th>Estado</th>
 					<th>Tipo</th>
+					<th>Categoría</th>
 					<th>Acciones</th>
 
   				</thead>
@@ -209,6 +210,7 @@
 
 						</td>
 						<td>{{ $prePerfil->tipoTrabajo->nombre_cat_tpo_tra_gra}}</td>
+						<td>{{ $prePerfil->categoriaTrabajo->nombre_cat_ctg_tra}}</td>
 						<td style="width: 170px">
 							<div class="row">
 								@can('prePerfil.edit')

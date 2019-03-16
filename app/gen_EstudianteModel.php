@@ -106,6 +106,7 @@ class gen_EstudianteModel extends Model
                     INNER JOIN pdg_gru_grupo gru ON (gru.id_pdg_gru=gruest.id_pdg_gru)
                 WHERE 
                     gru.numero_pdg_gru IS NOT NULL
+                    AND gruest.eslider_pdg_gru_est != 2
                 ) x 
                 where ifnull(x.finalizo,0) = 0
                 ORDER BY x.carnet_gen_est";

@@ -76,7 +76,7 @@
    <div class="col-sm-3"></div>
   @can('catIdioma.create')
     <div class="col-sm-3">
-      <a class="btn " href="{{route('catIdioma.create')}}" style="background-color: #DF1D20; color: white"><i class="fa fa-plus"></i> Nuevo Idioma</a>
+      <a class="btn btn-primary" href="{{route('catIdioma.create')}}" ><i class="fa fa-plus"></i> Nuevo Idioma</a>
     </div>
   @endcan
   </div> 

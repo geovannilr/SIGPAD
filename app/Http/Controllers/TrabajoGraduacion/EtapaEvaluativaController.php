@@ -479,20 +479,24 @@ class EtapaEvaluativaController extends Controller {
     public function calificarEtapa(Request $request){
         $idGrupo = $request['grupo'];
         $idEtaEva = $request['etapa'];
-
-        $criterios = pdg_not_cri_tra_nota_criterio_trabajoModel::getCriteriosEtapa($idGrupo,$idEtaEva);
-        $notas = pdg_not_cri_tra_nota_criterio_trabajoModel::getNotasEtapa($idGrupo,$idEtaEva);
-        $grupo = pdg_gru_grupoModel::find($idGrupo);
         $etapa = cat_eta_eva_etapa_evalutativaModel::find($idEtaEva);
-        $subida = ($grupo->relacion_gru_tdg->id_cat_tpo_tra_gra!=1);  // 1-Tipo clásico de trabajo de graduación 2-Variable
-        //$subida = true; PARA PRUEBAS CON GRUPOS QUE NO SEAN DE TIPO VARIABLE!!!!!!!!!!!!
+        $grupo = pdg_gru_grupoModel::find($idGrupo);
         if (empty($grupo->id_pdg_gru) || empty($etapa->id_cat_eta_eva)){
             Session::flash('message-error', 'No puede acceder a esta opción.');
             return redirect('/');
+        }else{
+            if($etapa->notagrupal_cat_eta_eva==1){
+                $criterios = pdg_not_cri_tra_nota_criterio_trabajoModel::getCriteriosEtapa($idGrupo,$idEtaEva,pdg_not_cri_tra_nota_criterio_trabajoModel::T_CRITERIO_GRUPAL);
+                $notas = $criterios;
+            }else{
+                $criterios = pdg_not_cri_tra_nota_criterio_trabajoModel::getCriteriosEtapa($idGrupo,$idEtaEva,pdg_not_cri_tra_nota_criterio_trabajoModel::T_CRITERIO_INDIVIDUAL);
+                $notas = pdg_not_cri_tra_nota_criterio_trabajoModel::getNotasEtapa($idGrupo,$idEtaEva);
+            }
+            $subida = ($grupo->relacion_gru_tdg->id_cat_tpo_tra_gra!=1);  // 1-Tipo clásico de trabajo de graduación 2-Variable
+            return view('TrabajoGraduacion.NotaEtapaEvaluativa.list',
+                compact('criterios', 'notas', 'grupo','etapa', 'subida')
+            );
         }
-        return view('TrabajoGraduacion.NotaEtapaEvaluativa.list',
-            compact('criterios', 'notas', 'grupo','etapa', 'subida')
-        );
     }
     public function updateNotas(Request $request){
         $errorCode = -1;
@@ -643,5 +647,25 @@ class EtapaEvaluativaController extends Controller {
             $required = false;
         }
         return $required;
+    }
+
+    public function updateNotasEtapa(Request $request){
+        $errorCode = -1;
+        $errorMessage = "No se procesaron los datos";
+        $notas = $request['notas'];
+        try{
+            $idGru = $request['idGru'];
+            $idEtaEva = $request['idEtaEva'];
+            $notas = $request['notas'];
+            $errorCode = pdg_not_cri_tra_nota_criterio_trabajoModel::bulkUpdateNotasEtapa($idGru,$idEtaEva,$notas);
+            $grupo = pdg_gru_grupoModel::find($idGru);
+            $errorMessage = "¡Notas del grupo ".$grupo->numero_pdg_gru." guardadas éxitosamente!";
+            $info = $notas;
+        }catch (Exception $exception){
+            $info = $exception->getMessage();
+            $errorCode = 1;
+            $errorMessage = "Su solicitud no pudo ser procesada, intente más tarde.";
+        }
+        return response()->json(['errorCode'=>$errorCode,'errorMessage'=>$errorMessage,'info'=>$info]);
     }
 }
