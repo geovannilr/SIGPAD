@@ -631,95 +631,110 @@ class PerfilController extends Controller
             //return Redirect::to('/indexPerfil/'.$perfil->id_pdg_gru); 
     }
     function downloadPerfil(Request $request){
-        //$userLogin=Auth::user();
-        $id = $request['archivo'];
-        $idGrupo=$request['grupo'];
-        //$estudiante = new gen_EstudianteModel();
-        //$idGrupo = $estudiante->getIdGrupo($userLogin->user);
+        try{
+            //$userLogin=Auth::user();
+            $id = $request['archivo'];
+            $idGrupo=$request['grupo'];
+            //$estudiante = new gen_EstudianteModel();
+            //$idGrupo = $estudiante->getIdGrupo($userLogin->user);
 //        $idGrupo = session('idGrupo');
-        $grupo = pdg_gru_grupoModel::find($idGrupo);
-        $anioGrupo = $grupo->anio_pdg_gru;
-        $numeroGrupo = $grupo->correlativo_pdg_gru_gru;
-        $ultimoDocumentoInsertado = pdg_doc_documentoModel::where('id_cat_tpo_doc', 6) // 6 ES PERFIL
-                                ->where('id_pdg_gru', $idGrupo)
-                                ->orderBy('id_pdg_doc', 'desc')
-                                ->first();
-        
-         $archivo = pdg_arc_doc_archivo_documentoModel::where('id_pdg_doc', $ultimoDocumentoInsertado->id_pdg_doc)->first();                                                 
-        $nombreViejo = $archivo->ubicacion_arc_doc;
-        if ($_ENV['SERVER'] =="win") {
+            $grupo = pdg_gru_grupoModel::find($idGrupo);
+            $anioGrupo = $grupo->anio_pdg_gru;
+            $numeroGrupo = $grupo->correlativo_pdg_gru_gru;
+            $ultimoDocumentoInsertado = pdg_doc_documentoModel::where('id_cat_tpo_doc', 6) // 6 ES PERFIL
+            ->where('id_pdg_gru', $idGrupo)
+                ->orderBy('id_pdg_doc', 'desc')
+                ->first();
+
+            $archivo = pdg_arc_doc_archivo_documentoModel::where('id_pdg_doc', $ultimoDocumentoInsertado->id_pdg_doc)->first();
+            $nombreViejo = $archivo->ubicacion_arc_doc;
+            if ($_ENV['SERVER'] =="win") {
                 $path= public_path().$_ENV['PATH_UPLOADS'].$anioGrupo.'\Grupo'.$numeroGrupo.'\Perfil\ ';
-        }else{
+            }else{
                 $path= public_path().$_ENV['PATH_UPLOADS'].$anioGrupo.'/Grupo'.$numeroGrupo.'/Perfil/';
+            }
+            //$path= public_path().$_ENV['PATH_PREPERFIL'];
+            //verificamos si el archivo existe y lo retornamos
+            if (File::exists(trim($path).$nombreViejo)){
+                return response()->download(trim($path).$nombreViejo);
+            }else{
+                Session::flash('error','El archivo no se encuentra disponible , es posible que fue borrado');
+                return redirect()->route('prePerfil.index');
+            }
+        }catch (\Exception $exception){
+            Session::flash('error','El archivo no se encuentra disponible , es posible que fue borrado');
+            return redirect()->route('prePerfil.index');
         }
-    	//$path= public_path().$_ENV['PATH_PREPERFIL'];
-    	//verificamos si el archivo existe y lo retornamos
-     	if (File::exists(trim($path).$nombreViejo)){
-      	  return response()->download(trim($path).$nombreViejo);
-     	}else{
-     		Session::flash('error','El archivo no se encuentra disponible , es posible que fue borrado');
-             return redirect()->route('prePerfil.index');
-     	}
     }
 
     function downloadPerfilResumen(Request $request){
-        //$userLogin=Auth::user();
-        $id = $request['archivo'];
-        //$estudiante = new gen_EstudianteModel();
-        //$idGrupo = $estudiante->getIdGrupo($userLogin->user);
-        $idGrupo=$request['grupo'];
+        try{
+            //$userLogin=Auth::user();
+            $id = $request['archivo'];
+            //$estudiante = new gen_EstudianteModel();
+            //$idGrupo = $estudiante->getIdGrupo($userLogin->user);
+            $idGrupo=$request['grupo'];
 //        $idGrupo = session('idGrupo');
-        $grupo = pdg_gru_grupoModel::find($idGrupo);
-        $anioGrupo = $grupo->anio_pdg_gru;
-        $numeroGrupo = $grupo->correlativo_pdg_gru_gru;
-         $ultimoDocumentoInsertadoResumen = pdg_doc_documentoModel::where('id_cat_tpo_doc', 7) // 7 Es Resumen
-                                ->where('id_pdg_gru', $idGrupo)
-                                ->orderBy('id_pdg_doc', 'desc')
-                                ->first();
-        
-        $archivoResumen = pdg_arc_doc_archivo_documentoModel::where('id_pdg_doc', $ultimoDocumentoInsertadoResumen->id_pdg_doc)->first();
-        $nombreViejoResumen = $archivoResumen->ubicacion_arc_doc;
-        if ($_ENV['SERVER'] =="win") {
+            $grupo = pdg_gru_grupoModel::find($idGrupo);
+            $anioGrupo = $grupo->anio_pdg_gru;
+            $numeroGrupo = $grupo->correlativo_pdg_gru_gru;
+            $ultimoDocumentoInsertadoResumen = pdg_doc_documentoModel::where('id_cat_tpo_doc', 7) // 7 Es Resumen
+            ->where('id_pdg_gru', $idGrupo)
+                ->orderBy('id_pdg_doc', 'desc')
+                ->first();
+
+            $archivoResumen = pdg_arc_doc_archivo_documentoModel::where('id_pdg_doc', $ultimoDocumentoInsertadoResumen->id_pdg_doc)->first();
+            $nombreViejoResumen = $archivoResumen->ubicacion_arc_doc;
+            if ($_ENV['SERVER'] =="win") {
                 $path= public_path().$_ENV['PATH_UPLOADS'].$anioGrupo.'\Grupo'.$numeroGrupo.'\Perfil\ ';
-        }else{
+            }else{
                 $path= public_path().$_ENV['PATH_UPLOADS'].$anioGrupo.'/Grupo'.$numeroGrupo.'/Perfil/';
-        }
-        //$path= public_path().$_ENV['PATH_PREPERFIL'];
-        //verificamos si el archivo existe y lo retornamos
-        if (File::exists(trim($path).$nombreViejoResumen)){
-          return response()->download(trim($path).$nombreViejoResumen);
-        }else{
+            }
+            //$path= public_path().$_ENV['PATH_PREPERFIL'];
+            //verificamos si el archivo existe y lo retornamos
+            if (File::exists(trim($path).$nombreViejoResumen)){
+                return response()->download(trim($path).$nombreViejoResumen);
+            }else{
+                Session::flash('error','El archivo no se encuentra disponible , es posible que fue borrado');
+                return redirect()->route('prePerfil.index');
+            }
+        }catch (\Exception $exception){
             Session::flash('error','El archivo no se encuentra disponible , es posible que fue borrado');
-             return redirect()->route('prePerfil.index');
+            return redirect()->route('prePerfil.index');
         }
     }
 
     function downloadPerfilBoleta(Request $request){
-        $id = $request['archivo'];
-        $idGrupo=$request['grupo'];
-//        $idGrupo = session('idGrupo');
-        $grupo = pdg_gru_grupoModel::find($idGrupo);
-        $anioGrupo = $grupo->anio_pdg_gru;
-        $numeroGrupo = $grupo->correlativo_pdg_gru_gru;
-         $ultimoDocumentoInsertadoBoleta = pdg_doc_documentoModel::where('id_cat_tpo_doc', 26) 
-                                ->where('id_pdg_gru', $idGrupo)
-                                ->orderBy('id_pdg_doc', 'desc')
-                                ->first();
-        
-        $archivoBoleta = pdg_arc_doc_archivo_documentoModel::where('id_pdg_doc', $ultimoDocumentoInsertadoBoleta->id_pdg_doc)->first();
-        $nombreViejoBoleta = $archivoBoleta->ubicacion_arc_doc;
-        if ($_ENV['SERVER'] =="win") {
+        try{
+            $id = $request['archivo'];
+            $idGrupo=$request['grupo'];
+    //        $idGrupo = session('idGrupo');
+            $grupo = pdg_gru_grupoModel::find($idGrupo);
+            $anioGrupo = $grupo->anio_pdg_gru;
+            $numeroGrupo = $grupo->correlativo_pdg_gru_gru;
+            $ultimoDocumentoInsertadoBoleta = pdg_doc_documentoModel::where('id_cat_tpo_doc', 26)
+                ->where('id_pdg_gru', $idGrupo)
+                ->orderBy('id_pdg_doc', 'desc')
+                ->first();
+
+            $archivoBoleta = pdg_arc_doc_archivo_documentoModel::where('id_pdg_doc', $ultimoDocumentoInsertadoBoleta->id_pdg_doc)->first();
+            $nombreViejoBoleta = $archivoBoleta->ubicacion_arc_doc;
+            if ($_ENV['SERVER'] =="win") {
                 $path= public_path().$_ENV['PATH_UPLOADS'].$anioGrupo.'\Grupo'.$numeroGrupo.'\Perfil\ ';
-        }else{
+            }else{
                 $path= public_path().$_ENV['PATH_UPLOADS'].$anioGrupo.'/Grupo'.$numeroGrupo.'/Perfil/';
-        }
-    
-        //verificamos si el archivo existe y lo retornamos
-        if (File::exists(trim($path).$nombreViejoBoleta)){
-          return response()->download(trim($path).$nombreViejoBoleta);
-        }else{
+            }
+
+            //verificamos si el archivo existe y lo retornamos
+            if (File::exists(trim($path).$nombreViejoBoleta)){
+                return response()->download(trim($path).$nombreViejoBoleta);
+            }else{
+                Session::flash('error','El archivo no se encuentra disponible , es posible que fue borrado');
+                return redirect()->route('prePerfil.index');
+            }
+        }catch (\Exception $e){
             Session::flash('error','El archivo no se encuentra disponible , es posible que fue borrado');
-             return redirect()->route('prePerfil.index');
+            return redirect()->route('prePerfil.index');
         }
     }
 }

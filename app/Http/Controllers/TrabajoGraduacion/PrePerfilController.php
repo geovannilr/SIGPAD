@@ -403,31 +403,36 @@ class PrePerfilController extends Controller
             return Redirect::to('/indexPrePerfil/'.$prePerfil->id_pdg_gru);   
     }
     function downloadPrePerfil(Request $request){
-        //$userLogin=Auth::user();
-        $id = $request['archivo'];
-        $prePerfil=pdg_ppe_pre_perfilModel::find($id);
-        $name=$prePerfil->nombre_archivo_pdg_ppe;
-        //$estudiante = new gen_EstudianteModel();
-        //$idGrupo = $estudiante->getIdGrupo($userLogin->user);
-        $idGrupo=$request['grupo'];
+        try{
+            //$userLogin=Auth::user();
+            $id = $request['archivo'];
+            $prePerfil=pdg_ppe_pre_perfilModel::find($id);
+            $name=$prePerfil->nombre_archivo_pdg_ppe;
+            //$estudiante = new gen_EstudianteModel();
+            //$idGrupo = $estudiante->getIdGrupo($userLogin->user);
+            $idGrupo=$request['grupo'];
 //        $idGrupo = session('idGrupo');
-        $grupo = pdg_gru_grupoModel::find($idGrupo);
-        $anioGrupo = $grupo->anio_pdg_gru;
-        $numeroGrupo = $grupo->correlativo_pdg_gru_gru;
-        if ($_ENV['SERVER'] =="win") {
+            $grupo = pdg_gru_grupoModel::find($idGrupo);
+            $anioGrupo = $grupo->anio_pdg_gru;
+            $numeroGrupo = $grupo->correlativo_pdg_gru_gru;
+            if ($_ENV['SERVER'] =="win") {
                 $path= public_path().$_ENV['PATH_UPLOADS'].$anioGrupo.'\Grupo'.$numeroGrupo.'\PrePerfil\ ';
-        }else{
+            }else{
                 $path= public_path().$_ENV['PATH_UPLOADS'].$anioGrupo.'/Grupo'.$numeroGrupo.'/PrePerfil/';
+            }
+            //$path= public_path().$_ENV['PATH_PREPERFIL'];
+            //verificamos si el archivo existe y lo retornamos
+            if (File::exists(trim($path).$prePerfil->ubicacion_pdg_ppe)){
+                return response()->download(trim($path).$prePerfil->ubicacion_pdg_ppe);
+            }else{
+                Session::flash('error','El archivo no se encuentra disponible , es posible que fue borrado');
+                return redirect()->route('prePerfil.index');
+            }
+            //return $path;
+        }catch (\Exception $exception){
+            Session::flash('error','El archivo no se encuentra disponible , es posible que fue borrado');
+            return redirect()->route('prePerfil.index');
         }
-    	//$path= public_path().$_ENV['PATH_PREPERFIL'];
-    	//verificamos si el archivo existe y lo retornamos
-     	if (File::exists(trim($path).$prePerfil->ubicacion_pdg_ppe)){
-      	  return response()->download(trim($path).$prePerfil->ubicacion_pdg_ppe);
-     	}else{
-     		Session::flash('error','El archivo no se encuentra disponible , es posible que fue borrado');
-             return redirect()->route('prePerfil.index');
-     	}
-    	//return $path;
     }
     public function getTribunalData($id){
         $new = null;
