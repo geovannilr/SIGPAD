@@ -279,7 +279,7 @@ class PrePerfilController extends Controller
     public function update(Request $request, $id)
     {	
         $validatedData = $request->validate([
-                        'tema_pdg_ppe' => 'required|max:80',
+                        'tema_pdg_ppe' => 'required|max:200',
                         'id_cat_tpo_tra_gra' => 'required',
                         'id_cat_ctg_tra' => 'required',
                  ]);
