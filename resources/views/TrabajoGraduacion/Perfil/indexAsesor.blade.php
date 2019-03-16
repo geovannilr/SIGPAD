@@ -28,6 +28,7 @@
                 @endcan
                 <th>Documento</th>
                 <th>Resumen</th>
+                <th>Boleta Inscripción</th>
                 <th>Acciones</th>
                 </thead>
                 <tbody>
@@ -87,6 +88,15 @@
                             </div>
                             {!! Form:: close() !!}
                         </td>
+                            <td style="text-align: center;width: 30px;">
+                                {!! Form::open(['route'=>['downloadPerfilBoleta'],'method'=>'POST']) !!}
+                                <div class="btn-group">
+                                    {!!Form::hidden('archivo',$perfil->id_pdg_per,['class'=>'form-control'])!!}
+                                    {!!Form::hidden('grupo',$perfil->grupo->id_pdg_gru,['class'=>'form-control'])!!}
+                                    <button type="submit" class="btn btn-dark"><i class="fa fa-download"></i></button>
+                                </div>
+                                {!! Form:: close() !!}
+                            </td>
                         <td>
                             <div class="row">
                                 @can('perfil.aprobar')
@@ -140,6 +150,7 @@
                 <th>Tipo</th>
                 <th>Documento</th>
                 <th>Resumen</th>
+                <th>Boleta Inscripción</th>
 
                 </thead>
                 <tbody>
@@ -184,6 +195,15 @@
                             </div>
                             {!! Form:: close() !!}
                         </td>
+                            <td style="text-align: center;width: 30px;">
+                                {!! Form::open(['route'=>['downloadPerfilBoleta'],'method'=>'POST']) !!}
+                                <div class="btn-group">
+                                    {!!Form::hidden('archivo',$perfil->id_pdg_per,['class'=>'form-control'])!!}
+                                    {!!Form::hidden('grupo',$perfil->grupo->id_pdg_gru,['class'=>'form-control'])!!}
+                                    <button type="submit" class="btn btn-dark"><i class="fa fa-download"></i></button>
+                                </div>
+                                {!! Form:: close() !!}
+                            </td>
                     </tr>
                     @endif
                 @endforeach
