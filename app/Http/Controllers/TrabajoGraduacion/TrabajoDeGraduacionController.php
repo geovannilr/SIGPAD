@@ -345,7 +345,7 @@ class TrabajoDeGraduacionController extends Controller{
              //INGRESAMOS LOS AUTORES
             foreach ($estudiantesGrupo as $estudiante) {
                 //VERIFICAMOS SI EL ESTUDIANTE NO FUE RETIRADO
-                if ($estudiantes->Cargo == 'Lider' || $estudiantes->Cargo == 'Miembro') {
+                if ($estudiante->Cargo == 'Lider' || $estudiante->Cargo == 'Miembro') {
                     //VERIFICAMOS SI EL ESTUDIANTE YA ESTA INGRESADO 3-Estudiante
                     $llaveIntegracion = gen_int_integracionModel::where("llave_gen_int","=",$estudiante->ID_Estudiante)->where("id_gen_tpo_int","=",3)->first();
                     if (empty($llaveIntegracion->id_gen_int)) {
