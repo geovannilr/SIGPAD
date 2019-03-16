@@ -7,6 +7,11 @@
           <li class="breadcrumb-item active">Actualizar registro</li>
         </ol>
     		<div class="panel-body">
+          <div class="row">
+            <div class="mx-auto" id="loader" style="display: none;">
+              <img src="{!!asset('img/loading.gif')!!}" class="img-responsive" id="imgLoading">
+            </div>
+          </div>
           @if ($errors->any())
           <div class="alert alert-danger">
               <ul>

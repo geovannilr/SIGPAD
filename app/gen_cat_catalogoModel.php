@@ -3,7 +3,7 @@
 
 namespace App;
 use Illuminate\Database\Eloquent\Model;
-
+use Illuminate\Support\Facades\DB;
 
 class gen_cat_catalogoModel extends Model
 {
@@ -14,6 +14,7 @@ class gen_cat_catalogoModel extends Model
         [
             'nombre_gen_cat',
             'descripcion_gen_cat',
-            'tipo_gen_cat'
+            'tipo_gen_cat',
+            'ruta_gen_cat'
         ];
 }
