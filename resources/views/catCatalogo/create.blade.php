@@ -25,7 +25,7 @@
           </div>
         @endif
     		{!! Form:: open(['route'=>'catCatalogo.store','method'=>'POST']) !!}
-    			@include('catCatalogo.forms.formCreate')
+    			@include('catCatalogo.forms.formCreate2')
         <div class="row">
           <div class="form-group col-sm-6">
             {!! Form::submit('Registrar',['class'=>'btn btn-primary']) !!}
