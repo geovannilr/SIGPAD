@@ -16,7 +16,7 @@ class gen_cat_catalogoController extends Controller
     public function index()
     {
         $userLogin=Auth::user();
-        if ($userLogin->can(['catalogo.index'])) {
+        if ($userLogin->can(['catCatalogo.index'])) {
             $catCatalogo=gen_cat_catalogoModel::all();
             return view('catCatalogo.index',compact('catCatalogo'));
         }else{
@@ -34,8 +34,8 @@ class gen_cat_catalogoController extends Controller
     {
 
         $userLogin=Auth::user();
-        if ($userLogin->can(['catMateria.create'])) {
-            return view('catMateria.create');
+        if ($userLogin->can(['catCatalogo.create'])) {
+            return view('catCatalogo.create');
         }else{
             Session::flash('message-error', 'No tiene permisos para acceder a esta opción');
             return  view('template');
@@ -52,36 +52,36 @@ class gen_cat_catalogoController extends Controller
     {
 
         $validatedData = $request->validate([
-            'codigo_mat' => 'required|max:6',
-            'nombre_mat' => 'required|max:100',
-            'anio_pensum'=> 'required|max:4',
-            'ciclo' => 'required|max:1'
+            'nombre_gen_cat' => 'required|max:100',
+            'descripcion_gen_cat' => 'required|max:200',
+            'tipo_gen_cat'=> 'required|max:45',
+            'ruta_gen_cat' => 'required|max:100'
         ],
             [
-                'codigo_mat.required' => 'El código de materia es necesario',
-                'codigo_mat.max' => 'El código de materia contener como maximo 6 caracteres',
-                'nombre_mat.required'=> 'El nombre de la materia es necesario',
-                'nombre_mat.max'=> 'El nombre de la materia máximo 100 caracteres',
-                'anio_pensum.required' => 'El año de pensum es necesario',
-                'anio_pensum.max' => 'El año de pensum debe contener 4 carácteres como máximo',
-                'ciclo.required' => 'Debe ingresar ciclo',
-                'ciclo.max' => 'El ciclo debe contener como maximo 1 caracter'
+                'nombre_gen_cat.required' => 'El nombre necesario',
+                'nombre_gen_cat.max' => 'El nombre debe contener como maximo 100 caracteres',
+                'descripcion_gen_cat.required'=> 'La descripción es necesario',
+                'descripcion_gen_cat.max'=> 'La descripción debe como máximo 200 caracteres',
+                'tipo_gen_cat.required' => 'El tipo es necesario',
+                'tipo_gen_cat.max' => 'El tipo debe contener 45 carácteres como máximo',
+                'ruta_gen_cat.required' => 'Debe ingresar la Ruta',
+                'ruta_gen_cat.max' => 'La ruta debe contener como maximo 100 caracteres'
             ]
 
         );
 
 
 
-        cat_mat_materiaModel::create
+        gen_cat_catalogoModel::create
         ([
-            'codigo_mat'       	 => $request['codigo_mat'],
-            'nombre_mat'       	 => $request['nombre_mat'],
-            'anio_pensum'       	 => $request['anio_pensum'],
-            'ciclo'       	 => $request['ciclo']
+            'nombre_gen_cat'       	 => $request['nombre_gen_cat'],
+            'descripcion_gen_cat'       	 => $request['descripcion_gen_cat'],
+            'tipo_gen_cat'       	 => $request['tipo_gen_cat'],
+            'ruta_gen_cat'       	 => $request['ruta_gen_cat']
 
         ]);
 
-        Return redirect('catMateria')->with('message','Materia Registrada correctamente!') ;
+        Return redirect('catCatalogo')->with('message','Catálogo Registrado correctamente!') ;
 
     }
 
@@ -106,10 +106,10 @@ class gen_cat_catalogoController extends Controller
     {
 
         $userLogin=Auth::user();
-        if ($userLogin->can(['catMateria.edit'])) {
-            $catMateria= cat_mat_materiaModel::find($id);
+        if ($userLogin->can(['catCatalogo.edit'])) {
+            $catCatalogo= gen_cat_catalogoModel::find($id);
 
-            return view('catMateria.edit',compact(['catMateria']));
+            return view('catCatalogo.edit',compact(['catCatalogo']));
         }else{
             Session::flash('message-error', 'No tiene permisos para acceder a esta opción');
             return  view('template');
@@ -125,12 +125,12 @@ class gen_cat_catalogoController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $catMateria=cat_mat_materiaModel::find($id);
+        $catCatalogo=gen_cat_catalogoModel::find($id);
 
-        $catMateria->fill($request->all());
-        $catMateria->save();
+        $catCatalogo->fill($request->all());
+        $catCatalogo->save();
         // Session::flash('message','Tipo Documento Modificado correctamente!');
-        return Redirect::to('catMateria');
+        return Redirect::to('catCatalogo');
 
     }
 
@@ -143,18 +143,18 @@ class gen_cat_catalogoController extends Controller
     public function destroy($id)
     {
         $userLogin=Auth::user();
-        if ($userLogin->can(['catMateria.destroy']))
+        if ($userLogin->can(['catCatalogo.destroy']))
         {
             try {
-                cat_mat_materiaModel::destroy($id);
+                gen_cat_catalogoModel::destroy($id);
 
             } catch (\PDOException $e)
             {
                 Session::flash('message-error', 'No es posible eliminar este registro, está siendo usado.');
-                return Redirect::to('catMateria');
+                return Redirect::to('catCatalogo');
             }
-            Session::flash('message','Materia Eliminada Correctamente!');
-            return Redirect::to('catMateria');
+            Session::flash('message','Catálogo Eliminado Correctamente!');
+            return Redirect::to('catCatalogo');
 
         }else{
             Session::flash('message-error', 'No tiene permisos para acceder a esta opción');
