@@ -92,7 +92,7 @@
                                 {!! Form::open(['route'=>['downloadPerfilBoleta'],'method'=>'POST']) !!}
                                 <div class="btn-group">
                                     {!!Form::hidden('archivo',$perfil->id_pdg_per,['class'=>'form-control'])!!}
-                                    {!!Form::hidden('grupo',$perfil->grupo->id_pdg_gru,['class'=>'form-control'])!!}
+                                    {!!Form::hidden('grupo',$perfil->id_pdg_gru,['class'=>'form-control'])!!}
                                     <button type="submit" class="btn btn-dark"><i class="fa fa-download"></i></button>
                                 </div>
                                 {!! Form:: close() !!}
@@ -199,7 +199,7 @@
                                 {!! Form::open(['route'=>['downloadPerfilBoleta'],'method'=>'POST']) !!}
                                 <div class="btn-group">
                                     {!!Form::hidden('archivo',$perfil->id_pdg_per,['class'=>'form-control'])!!}
-                                    {!!Form::hidden('grupo',$perfil->grupo->id_pdg_gru,['class'=>'form-control'])!!}
+                                    {!!Form::hidden('grupo',$perfil->id_pdg_gru,['class'=>'form-control'])!!}
                                     <button type="submit" class="btn btn-dark"><i class="fa fa-download"></i></button>
                                 </div>
                                 {!! Form:: close() !!}
