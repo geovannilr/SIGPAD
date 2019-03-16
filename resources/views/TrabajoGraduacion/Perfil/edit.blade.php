@@ -21,7 +21,8 @@
               </ul>
           </div>
         @endif
-      		{!! Form:: model($perfil,['route'=>['perfil.update',$perfil->id_pdg_per],'method'=>'PUT','files'=>'true','enctype'=>'multipart/form-data']) !!}
+      		{!! Form:: model($perfil,['route'=>['perfil.update',$perfil->id_pdg_per],'method'=>'PUT','files'=>'true','enctype'=>'multipart/form-data','class'=>'formDocumentoLoading
+']) !!}
       			@include('TrabajoGraduacion.Perfil.forms.formCreate')
             <div class="row">
               <div class="form-group col-sm-6">

@@ -23,7 +23,8 @@
               </ul>
           </div>
         @endif
-    		{!! Form:: open(['route'=>'prePerfil.store','method'=>'POST', 'id'=>'formPrePerfil','files'=>'true','enctype'=>'multipart/form-data']) !!}
+    		{!! Form:: open(['route'=>'prePerfil.store','method'=>'POST', 'id'=>'formPrePerfil','files'=>'true','enctype'=>'multipart/form-data','class'=>'formDocumentoLoading
+']) !!}
     			@include('TrabajoGraduacion.PrePerfil.forms.formCreate')
         <div class="row">
           <div class="form-group col-sm-6">
