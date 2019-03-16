@@ -132,10 +132,10 @@ class publicacionController extends Controller{
     		$file = $request->file('documento');
     		$publicacion = pub_publicacionModel::find($request['publicacion']);
 	       //obtenemos el nombre del archivo
-	      	$nombre = "Codigo".$publicacion->codigo_pub.date('hms').$file->getClientOriginalName();
+	      	$nombre = "Codigo".$publicacion->codigo_pub.date('his').$file->getClientOriginalName();
 	       //indicamos que queremos guardar un nuevo archivo en el disco local
 	        Storage::disk('publicaciones')->put($nombre, File::get($file));
-	        $fecha=date('Y-m-d H:m:s');
+	        $fecha=date('Y-m-d H:i:s');
 	        $path= public_path().$_ENV['PATH_PUBLICACIONES'];
 	         $lastIdDocumento = pub_arc_publicacion_archivoModel::create
             ([

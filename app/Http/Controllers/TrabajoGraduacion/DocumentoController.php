@@ -214,18 +214,27 @@ class DocumentoController extends Controller{
     }
 
     function downloadDocumento(Request $request){
-    	$idArchvio = $request['documento'];
-    	$archivoDocumento = pdg_arc_doc_archivo_documentoModel::find($idArchvio);
-      $documento = pdg_doc_documentoModel::where("id_pdg_doc","=",$archivoDocumento->id_pdg_doc)->first();
-      $idGrupo = $documento->id_pdg_gru;
-    	//verificamos si el archivo existe y lo retornamos
-    	$ruta = $archivoDocumento->ubicacion_arc_doc;
-     	if (File::exists($ruta)){
-      	  return response()->download($ruta);
-     	}else{
-     		Session::flash('error','El documento no se encuentra disponible , es posible que haya sido  borrado');
+      try {
+          $idArchvio = $request['documento'];
+          $archivoDocumento = pdg_arc_doc_archivo_documentoModel::find($idArchvio);
+          if (empty($archivoDocumento->id_pdg_doc)) {
+            return Redirect::to('/');
+          }
+          $documento = pdg_doc_documentoModel::where("id_pdg_doc","=",$archivoDocumento->id_pdg_doc)->first();
+          $idGrupo = $documento->id_pdg_gru;
+          //verificamos si el archivo existe y lo retornamos
+          $ruta = $archivoDocumento->ubicacion_arc_doc;
+          if (File::exists($ruta)){
+              return response()->download($ruta);
+          }else{
+            Session::flash('error','El documento no se encuentra disponible , es posible que haya sido  borrado');
             return Redirect::to('detalleEtapa/'.$request['etapa'].'/'.$idGrupo);
-     	}
+          }
+      } catch (\Exception $e) {
+           Session::flash('error','El documento no se encuentra disponible , es posible que haya sido  borrado');
+           return Redirect::to('detalleEtapa/'.$request['etapa'].'/'.$idGrupo);
+      }
+    	
     	//return $path;
     }
 
