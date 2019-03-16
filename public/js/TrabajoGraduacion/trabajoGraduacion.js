@@ -56,6 +56,9 @@ $( document ).ready(function() {
     $("#formDocumento").submit(function( event ) {
       $("#loader").removeAttr('style');
     });
+    $(".formDocumentoLoading").submit(function( event ) {
+        $("#loader").removeAttr('style');
+    });
    $( "#buscarAlumno" ).click(function() {
    		if ($("#inputBuscar").val() == "") {
    			swal("", "Debe ingresar un carnet para buscar", "info");
